@@ -43,6 +43,17 @@ def main(argv=None):
     ai.add_argument("--project", required=True)
     ai.add_argument("--out", required=True)
     ai.add_argument("--authorized", action="store_true")
+    campaign = sub.add_parser("campaign", help="Run one bounded authorized local research campaign")
+    campaign.add_argument("--project", required=True)
+    campaign.add_argument("--out-dir", required=True)
+    campaign.add_argument("--with-ai", action="store_true")
+    campaign.add_argument("--no-graph", action="store_true")
+    campaign.add_argument("--ai-chunks", type=int, default=4)
+    campaign.add_argument("--sanitizer-log")
+    campaign.add_argument("--lab")
+    campaign.add_argument("--binary")
+    campaign.add_argument("--crashes")
+    campaign.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -81,6 +92,20 @@ def main(argv=None):
             raise PermissionError("Local AI research requires --authorized")
         from .engines.ai_research import analyze_local
         _write_json(args.out, analyze_local(_approved_root(args.project)))
+    elif args.command == "campaign":
+        from .campaign import run_campaign
+        outcome = run_campaign(
+            args.project, args.out_dir, authorized=args.authorized,
+            include_graph=not args.no_graph,
+            include_ai=args.with_ai, ai_max_chunks=args.ai_chunks,
+            sanitizer_log=args.sanitizer_log,
+            replay_lab=args.lab, replay_binary=args.binary,
+            replay_crashes=args.crashes,
+        )
+        print("Campaign:", outcome["output_directory"])
+        for name, stage in outcome["stages"].items():
+            print(f"  {name}: {stage['status']}")
+        print("Research records:", outcome["summary"]["research_records"])
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
