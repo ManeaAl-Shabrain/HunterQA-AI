@@ -38,8 +38,8 @@ def test_range_only_advisory_not_guessed():
     items[0]["affected"][0]["ranges"] = [{"type":"ECOSYSTEM","events":[{"introduced":"0"},{"fixed":"1.3.0"}]}]
     result = match_snapshot(
         [{"ecosystem": "PyPI", "name": "demo-lib", "version": "1.2.3", "source": "requirements.txt"}], items)
-    assert not result["matches"]
-    assert result["coverage"]["related_advisories_without_explicit_versions"] == 1
+    assert len(result["matches"]) == 1
+    assert result["matches"][0]["evidence_method"] == "OSV ECOSYSTEM interval"
 
 
 def test_withdrawn_not_matched():
