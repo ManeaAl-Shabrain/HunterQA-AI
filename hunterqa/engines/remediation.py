@@ -174,8 +174,23 @@ def propose_remediation(
                  and replacement != before)
     if not (applicable and good_line):
         replacement = None
+    from .patch_guard import inspect_patch_line
+    safety = (
+        inspect_patch_line(str(relative), replacement)
+        if replacement is not None
+        else {
+            "verdict": "blocked_invalid",
+            "blocking": True,
+            "reasons": ["No valid single-line proposal from local AI"],
+            "human_review_required": True,
+            "security_fix_verified": False,
+            "model_output_executed": False,
+        }
+    )
+    # Preserve the proposed source line for audit/review but never provide
+    # an actionable patch when static screening blocked it.
     diff = ""
-    if replacement is not None:
+    if replacement is not None and not safety["blocking"]:
         updated = list(lines)
         ending = "\r\n" if lines[line_no-1].endswith("\r\n") else (
             "\n" if lines[line_no-1].endswith("\n") else "")
@@ -197,7 +212,12 @@ def propose_remediation(
         "triage_report_sha256": report_sha,
         "source_file_sha256": hashlib.sha256(raw).hexdigest(),
         "model": model,
-        "status": "proposal_only" if replacement is not None else "no_safe_one_line_proposal",
+        "status": (
+            "rejected_unsafe_proposal" if replacement is not None and safety["blocking"]
+            else "proposal_only" if replacement is not None
+            else "no_safe_one_line_proposal"
+        ),
+        "safety_gate": safety,
         "original_line": before[:1000],
         "proposed_line": replacement,
         "suggested_diff": diff[:60_000],
