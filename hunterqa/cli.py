@@ -58,6 +58,11 @@ def main(argv=None):
     campaign.add_argument("--binary")
     campaign.add_argument("--crashes")
     campaign.add_argument("--authorized", action="store_true")
+    cve = sub.add_parser("cve-check", help="Match offline OSV advisories to declared exact PyPI versions")
+    cve.add_argument("--project", required=True)
+    cve.add_argument("--snapshot", required=True)
+    cve.add_argument("--out", required=True)
+    cve.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -119,6 +124,17 @@ def main(argv=None):
         for name, stage in outcome["stages"].items():
             print(f"  {name}: {stage['status']}")
         print("Research records:", outcome["summary"]["research_records"])
+    elif args.command == "cve-check":
+        if not args.authorized:
+            raise PermissionError("CVE research requires explicit --authorized")
+        from .engines.cve_intel import run_cve_check
+        _approved_root(args.project)
+        report = run_cve_check(args.project, args.snapshot)
+        output = Path(args.out).expanduser()
+        _approved_root(str(output.parent.resolve(strict=True)))
+        if output.is_symlink() or output.exists():
+            raise ValueError("Use a new output path without symlinks")
+        _write_json(str(output), report)
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
