@@ -24,7 +24,7 @@ MAX_ADVISORIES = 5000
 MAX_MATCHES = 500
 CVE_PATTERN = re.compile(r"^CVE-[0-9]{4}-[0-9]{4,}$", re.ASCII)
 HASH_PATTERN = re.compile(r"^[a-f0-9]{64}$", re.ASCII)
-PACKAGE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,159}$", re.ASCII)
+PACKAGE_PATTERN = re.compile(r"^(?:@[A-Za-z0-9_.-]+/)?[A-Za-z0-9][A-Za-z0-9_.-]{0,159}(?:/[A-Za-z0-9_.-]+)?$", re.ASCII)
 
 
 def _roots():
@@ -111,7 +111,7 @@ def _resolved_declaration(pkg: dict) -> bool:
         and isinstance(pkg.get("name"), str)
         and bool(PACKAGE_PATTERN.fullmatch(pkg["name"]))
         and isinstance(pkg.get("version"), str)
-        and bool(re.fullmatch(r"[0-9][A-Za-z0-9_.+!-]{0,100}", pkg["version"]))
+        and bool(re.fullmatch(r"[vV]?[0-9][A-Za-z0-9_.+!:-]{0,100}", pkg["version"]))
     )
 
 
