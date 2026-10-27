@@ -18,14 +18,8 @@
       <nav aria-label="Primary navigation">
         <a class="nav-link {{ 'active' if request.endpoint == 'main.dashboard' }}" href="{{ url_for('main.dashboard') }}"><span>◫</span> Overview</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.projects' }}" href="{{ url_for('main.projects') }}"><span>⌁</span> Projects</a>
-        <a class="nav-link {{ 'active' if request.endpoint == 'main.research_lab' }}" href="{{ url_for('main.research_lab') }}">
- 	 <span>⌕</span> Research Lab
-        <a class="nav-link {{ 'active' if request.endpoint == 'main.triage_dashboard' }}"
-           href="{{ url_for('main.triage_dashboard') }}">
-          <span>◇</span> Unified Triage
-        </a>
-
-      </a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.research_lab' }}" href="{{ url_for('main.research_lab') }}"><span>⌕</span> Research Lab</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.triage_dashboard' }}" href="{{ url_for('main.triage_dashboard') }}"><span>◇</span> Unified Triage</a>
 
         <a class="nav-link {{ 'active' if request.endpoint == 'main.hypotheses' }}" href="{{ url_for('main.hypotheses') }}"><span>✧</span> AI Hypotheses</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
