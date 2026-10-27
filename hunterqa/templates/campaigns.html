@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Campaign History · HunterQA AI{% endblock %}
+{% block section %}Campaign History{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">LOCAL RESEARCH CAMPAIGNS</p><h1>Campaign <em>History.</em></h1>
+<p class="lede">Read-only artifacts from explicitly authorized local research runs. Hash checks protect against accidental changes, not malicious tampering of both manifests and files.</p></div></section>
+<section class="stats-grid">
+<article class="stat"><span>Visible campaigns</span><strong>{{ history.campaigns|length }}</strong><small>Bounded recent directory inventory</small></article>
+<article class="stat"><span>Invalid manifests</span><strong>{{ history.invalid }}</strong><small>Ignored or malformed</small></article>
+<article class="stat"><span>Verified campaigns</span><strong>{{ history.campaigns|selectattr('integrity','equalto','hashes_match')|list|length }}</strong><small>Artifact hashes match</small></article>
+</section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">COMPARISON</p><h2>Compare two campaigns</h2></div></div>
+<div class="research-details">
+<form method="get" action="{{ url_for('main.campaign_history') }}">
+<label for="left">Earlier campaign</label><select id="left" name="left" required>
+<option value="">Select run</option>{% for item in history.campaigns %}<option value="{{ item.id }}" {% if selected_left==item.id %}selected{% endif %}>{{ item.id }}</option>{% endfor %}</select>
+<label for="right">Later campaign</label><select id="right" name="right" required>
+<option value="">Select run</option>{% for item in history.campaigns %}<option value="{{ item.id }}" {% if selected_right==item.id %}selected{% endif %}>{{ item.id }}</option>{% endfor %}</select>
+<button type="submit" class="button">Compare</button>
+</form>
+{% if comparison %}
+{% if comparison.status == 'ready' %}
+<p><strong>Record counts:</strong> {{ comparison.left_records }} → {{ comparison.right_records }}
+({{ "%+d"|format(comparison.record_delta) }})</p>
+<p><strong>Added candidate keys:</strong> {{ comparison.candidate_keys_added }} · <strong>Missing candidate keys:</strong> {{ comparison.candidate_keys_missing }}</p>
+{% for stage in comparison.stage_changes %}<p>{{ stage.name }}: {{ stage.left }} → {{ stage.right }}</p>{% endfor %}
+<p>{{ comparison.warning }}</p>
+{% else %}<p>Comparison unavailable: {{ comparison.status|replace('_',' ') }}.</p>{% endif %}
+{% endif %}
+</div></section>
+<section class="panel" style="margin-top:24px"><div class="panel-head"><div><p class="eyebrow">VERIFIED EVIDENCE</p><h2>Saved Campaign Runs</h2></div></div>
+<div class="research-details">
+{% if history.status != 'ready' %}<p>Campaign history root not available in approved local directories. Set the server configuration before using this page.</p>{% endif %}
+{% for item in history.campaigns %}
+<article class="research-entry">
+<h3>{{ item.id }}</h3>
+<p><strong>Started:</strong> {{ item.started_at }} · <strong>Completed:</strong> {{ item.finished_at }}</p>
+<p><strong>Source project:</strong> {{ item.project }}</p>
+<p><strong>Artifact integrity:</strong> {{ item.integrity|replace('_',' ') }} ·
+<strong>Research records:</strong> {{ item.records if item.records is not none else 'Unverified' }}</p>
+<details><summary>Show stage and hash verification</summary>
+{% for name,status in item.stages.items() %}
+<p><strong>{{ name }}</strong>: {{ status }} · {{ item.artifact_checks[name]|replace('_',' ') }}</p>
+{% endfor %}
+<p>Manifest SHA-256: <code>{{ item.manifest_sha256 }}</code></p>
+</details>
+</article>
+{% else %}<p>No saved local campaigns found yet.</p>{% endfor %}
+{% if history.truncated %}<p>Only a bounded selection of campaign directories is shown.</p>{% endif %}
+</div></section>
+<p class="callout warn" style="margin-top:24px">Comparisons concern research records, not independently confirmed vulnerabilities. A missing finding is not proof of remediation. Confirmed zero-days: 0.</p>
+{% endblock %}
