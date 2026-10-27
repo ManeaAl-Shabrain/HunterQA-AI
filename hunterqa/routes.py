@@ -399,3 +399,15 @@ def research_analytics_dashboard():
     report = decorate_records(read_triage_report(report_path), get_db())
     analytics = build_research_analytics(report, get_db())
     return render_template("analytics.html", analytics=analytics)
+
+
+@bp.get("/cve-intelligence")
+def cve_intelligence():
+    """Read-only administrator-selected local CVE evidence; never browser file paths."""
+    from pathlib import Path
+    from .engines.cve_intel import read_cve_report
+    filename = current_app.config.get("CVE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab" /
+        "verification" / "hunterqa_cve_intelligence.json"
+    )
+    return render_template("cve_intelligence.html", report=read_cve_report(filename))
