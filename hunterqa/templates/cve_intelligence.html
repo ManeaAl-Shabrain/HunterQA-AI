@@ -5,12 +5,23 @@
 <section class="hero"><div><p class="eyebrow">OFFLINE ADVISORY RESEARCH</p><h1>CVE <em>Intelligence.</em></h1><p class="lede">Exact declared package-version matches to a supplied local OSV snapshot. Advisory matches require installation and context review.</p></div></section>
 <section class="stats-grid">
 <article class="stat"><span>Advisory matches</span><strong>{{ report.matches|length }}</strong><small>Not confirmed vulnerabilities</small></article>
+<article class="stat"><span>Unique CVE / advisory groups</span><strong>{{ report.cve_groups|length if report.cve_groups is defined else 0 }}</strong><small>Source-preserving deduplication</small></article>
 <article class="stat"><span>Exact declarations checked</span><strong>{{ report.coverage.get('exact_declarations_checked',0) }}</strong><small>Currently PyPI-only</small></article>
 <article class="stat"><span>Unresolved declarations</span><strong>{{ report.coverage.get('not_exactly_resolved',0) }}</strong><small>Not assessed</small></article>
 <article class="stat"><span>Confirmed zero-days</span><strong>0</strong><small>Not inferred from advisories</small></article>
 </section>
 <section class="panel"><div class="panel-head"><div><p class="eyebrow">ADVISORY EVIDENCE</p><h2>Published Vulnerability Candidates</h2></div></div>
 <div class="research-details">
+{% if report.cve_groups is defined and report.cve_groups %}
+<h3>Deduplicated CVE groups</h3>
+{% for item in report.cve_groups %}
+<article class="research-entry">
+<p><strong>{{ item.cve_id or 'Advisory without CVE alias' }}</strong> · {{ item.package }} {{ item.declared_version }}</p>
+<p><strong>Original advisory sources:</strong> {{ item.advisory_ids|join(', ') }}</p>
+<p><strong>Verification:</strong> requires human review; not confirmed exploitable.</p>
+</article>
+{% endfor %}
+{% endif %}
 {% if report.status != 'ready' %}<p>No validated local CVE report available. Run the authorized offline CVE check first.</p>{% endif %}
 {% for item in report.matches %}
 <article class="research-entry"><h3>{{ item.advisory_id }}</h3>
