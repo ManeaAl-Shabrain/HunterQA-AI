@@ -39,6 +39,10 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
+    doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
+    doctor.add_argument("--project")
+    doctor.add_argument("--check-ollama", action="store_true")
+    doctor.add_argument("--json", action="store_true")
     ai = sub.add_parser("hypothesize", help="Local Ollama-assisted source hypotheses (never auto-confirmed)")
     ai.add_argument("--project", required=True)
     ai.add_argument("--out", required=True)
@@ -87,6 +91,15 @@ def main(argv=None):
         from .engines.hypotheses import checklist
         for x in checklist():
             print(f"{x['category']}: {x['status']}; {', '.join(x['questions'])}")
+    elif args.command == "doctor":
+        from .doctor import run_diagnostics
+        result = run_diagnostics(project=args.project, check_ollama=args.check_ollama)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            for check in result["checks"]:
+                print(f"[{check['status'].upper()}] {check['name']}: {check['detail']}")
+            print("Overall:", result["overall"])
     elif args.command == "hypothesize":
         if not args.authorized:
             raise PermissionError("Local AI research requires --authorized")
