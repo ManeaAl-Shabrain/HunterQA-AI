@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .dependencies import inventory
+from .cve_ranges import affected_entry
 
 MAX_SNAPSHOT_BYTES = 4_000_000
 MAX_REPORT_BYTES = 2_000_000
@@ -111,6 +112,46 @@ def _resolved_declaration(pkg: dict) -> bool:
     )
 
 
+
+
+def group_cve_matches(matches: list[dict]) -> list[dict]:
+    """Deduplicate aliases per package/version, retaining every advisory source."""
+    grouped = {}
+    for item in matches:
+        if not isinstance(item, dict):
+            continue
+        ecosystem = str(item.get("ecosystem") or "")[:60]
+        package = str(item.get("package") or "")[:160]
+        version = str(item.get("declared_version") or "")[:120]
+        ids = item.get("cve_ids")
+        if not isinstance(ids, list):
+            ids = []
+        valid = sorted({s for s in ids if isinstance(s, str) and CVE_PATTERN.fullmatch(s)})
+        # Advisory-only records retain a separate identity; never equate different
+        # GHSA and PYSEC advisories without a common, supplied CVE alias.
+        if not valid:
+            valid = [None]
+        for cve in valid:
+            advisory_id = str(item.get("advisory_id") or "")[:100]
+            key = (ecosystem, package, version, cve or f"advisory:{advisory_id}")
+            if key not in grouped:
+                grouped[key] = {
+                    "ecosystem": ecosystem, "package": package,
+                    "declared_version": version, "cve_id": cve,
+                    "advisory_ids": [], "confirmation_status": "requires_human_review",
+                    "confirmed_vulnerability": False, "zero_day_confirmed": False,
+                }
+            if advisory_id and advisory_id not in grouped[key]["advisory_ids"]:
+                grouped[key]["advisory_ids"].append(advisory_id)
+    result = list(grouped.values())
+    for row in result:
+        row["advisory_ids"].sort()
+    return sorted(result, key=lambda x: (
+        x["ecosystem"], x["package"], x["declared_version"],
+        x["cve_id"] or "", tuple(x["advisory_ids"]),
+    ))
+
+
 def match_snapshot(dependencies: list[dict], advisories: list[dict],
                    *, snapshot_sha256: str = "") -> dict:
     """Match only explicit OSV affected.versions to pinned declared package versions."""
@@ -154,12 +195,12 @@ def match_snapshot(dependencies: list[dict], advisories: list[dict],
                 if eco != ecosystem or _normalize_package(eco, pn) != name:
                     continue
                 had_related = True
-                listed = _versions(entry)
-                if not listed:
-                    coverage["related_advisories_without_explicit_versions"] += 1
-                    continue
-                if version not in listed:
-                    # Do not claim "not vulnerable"; another OSV range may apply.
+                matched, evidence_method, unsupported = affected_entry(version, ecosystem, entry)
+                if unsupported:
+                    coverage["unassessed_range_entries"] += 1
+                if not matched:
+                    if not _versions(entry):
+                        coverage["related_advisories_without_explicit_versions"] += 1
                     continue
                 identity = (ecosystem, name, version, ident)
                 if identity in seen:
@@ -176,7 +217,7 @@ def match_snapshot(dependencies: list[dict], advisories: list[dict],
                     "summary": str(advisory.get("summary") or "")[:400],
                     "assessment": "published_advisory_exact_declared_version_match",
                     "verification_status": "requires_installed_version_and_context_review",
-                    "evidence_method": "OSV affected.versions exact enumeration",
+                    "evidence_method": evidence_method,
                     "snapshot_sha256": snapshot_sha256,
                     "confirmed_vulnerability": False,
                     "zero_day_confirmed": False,
@@ -191,21 +232,23 @@ def match_snapshot(dependencies: list[dict], advisories: list[dict],
         if len(matches) >= MAX_MATCHES:
             break
 
+    groups = group_cve_matches(matches)
     return {
         "matches": matches,
+        "cve_groups": groups,
         "coverage": {
             "dependencies_in_inventory": len(dependencies[:2000]),
             **dict(coverage),
             "matched_advisory_records": len(matches),
+            "unique_cve_package_groups": len(groups),
             "snapshot_advisories": len(advisories),
             "malformed_advisory_entries_seen": ignored,
         },
         "limitations": (
-            "Only exact declared PyPI versions and OSV affected.versions lists "
-            "are evaluated. npm/Composer constraints, range-only advisories, "
-            "installed-package discrepancies, vendored software and unknown "
-            "vulnerabilities are NOT assessed. An exact published advisory match "
-            "is not a confirmed exploitable vulnerability. No CVE is invented."
+            "Exact PyPI declarations are evaluated against OSV affected.versions and "
+            "supported PyPI ECOSYSTEM / SEMVER ranges; unsupported ranges remain "
+            "unassessed. Manifest declarations are not installed package attestations. "
+            "No matches guarantee safety or exploitability. CVE aliases are not created."
         ),
     }
 
@@ -243,6 +286,7 @@ def run_cve_check(project: str | Path, snapshot_path: str | Path) -> dict:
         "snapshot_file": filename,
         "snapshot_sha256": digest,
         "matches": report["matches"],
+        "cve_groups": report["cve_groups"],
         "coverage": report["coverage"],
         "limitations": report["limitations"],
         "claims": {"confirmed_vulnerabilities": 0, "zero_days_confirmed": 0,
@@ -282,6 +326,7 @@ def read_cve_report(path: str | Path) -> dict:
             })
         return {
             "status": "ready", "matches": entries,
+            "cve_groups": group_cve_matches(entries),
             "coverage": {
                 str(k)[:80]: v for k, v in data["coverage"].items()
                 if isinstance(v, int) and type(v) is int
