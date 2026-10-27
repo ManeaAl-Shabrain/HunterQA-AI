@@ -16,6 +16,7 @@ from pathlib import Path
 
 from .dependencies import inventory
 from .cve_ranges import affected_entry
+from .advisory_quality import audit_snapshot
 
 MAX_SNAPSHOT_BYTES = 4_000_000
 MAX_REPORT_BYTES = 2_000_000
@@ -279,8 +280,9 @@ def run_cve_check(project: str | Path, snapshot_path: str | Path) -> dict:
         advisories = payload
     if not isinstance(advisories, list):
         raise ValueError("Expected an OSV advisory array or a 'vulns' array")
+    eligible, quality = audit_snapshot(payload)
     dependencies = inventory(root)
-    report = match_snapshot(dependencies, advisories, snapshot_sha256=digest)
+    report = match_snapshot(dependencies, eligible, snapshot_sha256=digest)
     return {
         "schema_version": 1,
         "engine": "hunterqa_offline_cve_intelligence",
@@ -291,6 +293,7 @@ def run_cve_check(project: str | Path, snapshot_path: str | Path) -> dict:
         "matches": report["matches"],
         "cve_groups": report["cve_groups"],
         "coverage": report["coverage"],
+        "advisory_quality": quality,
         "limitations": report["limitations"],
         "claims": {"confirmed_vulnerabilities": 0, "zero_days_confirmed": 0,
                    "false_positive_free": False, "complete_discovery": False},
@@ -330,6 +333,7 @@ def read_cve_report(path: str | Path) -> dict:
             })
         return {
             "status": "ready", "matches": entries,
+            "advisory_quality": data.get("advisory_quality", {}),
             "cve_groups": group_cve_matches(entries),
             "coverage": {
                 str(k)[:80]: v for k, v in data["coverage"].items()
