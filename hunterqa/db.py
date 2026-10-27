@@ -48,6 +48,27 @@ CREATE TABLE IF NOT EXISTS audit_events (
     action TEXT NOT NULL, subject TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS triage_reviews (
+    finding_id TEXT PRIMARY KEY,
+    evidence_sha256 TEXT NOT NULL,
+    analyst_status TEXT NOT NULL DEFAULT 'new'
+        CHECK(analyst_status IN ('new','in_review','confirmed','false_positive','remediated')),
+    note TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS triage_review_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    finding_id TEXT NOT NULL,
+    evidence_sha256 TEXT NOT NULL,
+    old_status TEXT NOT NULL,
+    new_status TEXT NOT NULL,
+    note TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_triage_review_events_finding
+    ON triage_review_events(finding_id);
+
 """
 
 

@@ -257,6 +257,7 @@ def hypotheses():
 def triage_dashboard():
     from pathlib import Path
     from .engines.triage_view import read_triage_report
+    from .engines.triage_review import decorate_records
 
     configured = current_app.config.get("TRIAGE_REPORT_PATH")
 
@@ -268,13 +269,15 @@ def triage_dashboard():
         / "hunterqa_unified_triage.json"
     )
 
-    report = read_triage_report(report_path)
+    report = decorate_records(read_triage_report(report_path), get_db())
 
     source = request.args.get("source", "all")
     status = request.args.get("status", "all")
+    review = request.args.get("review", "all")
 
     valid_sources = set(report["by_source"])
     valid_statuses = set(report["by_status"])
+    valid_review = set(report["by_review"])
 
     if source != "all" and source not in valid_sources:
         source = "all"
@@ -282,11 +285,15 @@ def triage_dashboard():
     if status != "all" and status not in valid_statuses:
         status = "all"
 
+    if review != "all" and review not in valid_review:
+        review = "all"
+
     visible = [
         finding
         for finding in report["findings"]
         if (source == "all" or finding["source"] == source)
         and (status == "all" or finding["status"] == status)
+        and (review == "all" or finding["analyst_status"] == review)
     ]
 
     return render_template(
@@ -295,4 +302,40 @@ def triage_dashboard():
         findings=visible[:200],
         selected_source=source,
         selected_status=status,
+        selected_review=review,
+        truncated=len(visible) > 200,
     )
+
+@bp.post("/triage/review/<record_id>")
+def update_triage_review(record_id: str):
+    """CSRF-protected local analyst decision; never modifies source evidence."""
+    from pathlib import Path
+    from .engines.triage_view import read_triage_report
+    from .engines.triage_review import change_review
+
+    require_csrf()
+    if len(record_id) > 100:
+        abort(404)
+
+    path = current_app.config.get("TRIAGE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab"
+        / "verification" / "hunterqa_unified_triage.json"
+    )
+    report = read_triage_report(path)
+    if report["status"] != "ready":
+        abort(409, "Triage evidence is unavailable")
+
+    candidates = [x for x in report["findings"] if x["id"] == record_id]
+    if len(candidates) != 1:
+        abort(404)
+
+    try:
+        change_review(
+            get_db(), candidates[0],
+            request.form.get("review_status", ""),
+            request.form.get("note", ""),
+        )
+        flash("Review decision saved with audit history.", "success")
+    except ValueError as error:
+        flash(str(error), "error")
+    return redirect(url_for("main.triage_dashboard"))

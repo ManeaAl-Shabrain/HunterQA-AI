@@ -1,167 +1,98 @@
-
 {% extends "base.html" %}
-
 {% block title %}Unified Triage · HunterQA AI{% endblock %}
 {% block section %}Unified Vulnerability Triage{% endblock %}
-
 {% block content %}
-
-<section class="page-head">
-  <div>
-    <p class="eyebrow">UNIFIED SECURITY RESEARCH</p>
-    <h1>Vulnerability Triage</h1>
-    <p>
-      Static analysis, local AI, cross-file research,
-      AFL++ and sanitizer evidence in one workspace.
-    </p>
-  </div>
-</section>
-
+<section class="page-head"><div>
+  <p class="eyebrow">EVIDENCE-BASED RESEARCH</p>
+  <h1>Vulnerability Triage</h1>
+  <p>Review local evidence, record human decisions, and track remediation without changing the original reports.</p>
+</div></section>
 <section class="stats-grid">
-  <article class="stat">
-    <span>Research Records</span>
-    <strong>{{ report.total_records }}</strong>
-    <small>All available evidence</small>
-  </article>
-
-  <article class="stat">
-    <span>Static Findings</span>
-    <strong>{{ report.by_source.get('scan', 0) }}</strong>
-    <small>Source analysis</small>
-  </article>
-
-  <article class="stat">
-    <span>AI Hypotheses</span>
-    <strong>{{ report.by_source.get('ai', 0) }}</strong>
-    <small>Unverified suggestions</small>
-  </article>
-
-  <article class="stat">
-    <span>Confirmed Zero-Days</span>
-    <strong>0</strong>
-    <small>No verified discoveries</small>
-  </article>
+  <article class="stat"><span>Research Records</span><strong>{{ report.total_records }}</strong><small>Evidence items (not unique vulnerabilities)</small></article>
+  <article class="stat"><span>In Review</span><strong>{{ report.by_review.get('in_review', 0) }}</strong><small>Analyst workflow</small></article>
+  <article class="stat"><span>Possible Duplicate Groups</span><strong>{{ report.potential_duplicate_groups }}</strong><small>Suggestions; not merged</small></article>
+  <article class="stat"><span>Confirmed Zero-Days</span><strong>0</strong><small>No automated zero-day conclusions</small></article>
 </section>
-
 <section class="panel">
-  <div class="panel-head">
-    <div>
-      <p class="eyebrow">RESEARCH QUEUE</p>
-      <h2>Unified Findings</h2>
-    </div>
-  </div>
-
-  {% if report.status != "ready" %}
-    <div class="research-details">
-      <p>
-        Triage report unavailable or invalid.
-        Generate a local unified triage report first.
-      </p>
-    </div>
+  <div class="panel-head"><div><p class="eyebrow">RESEARCH QUEUE</p><h2>Unified Findings</h2></div></div>
+  {% if report.status != 'ready' %}
+    <p class="research-details">Local triage report is missing or invalid. Generate a validated JSON report first.</p>
   {% else %}
-
-  <form method="get" style="padding:20px 24px">
-    <label for="source">Evidence source</label>
-    <select id="source" name="source">
-      <option value="all">All sources</option>
-      {% for value in report.by_source|sort %}
-        <option value="{{ value }}"
-          {% if selected_source == value %}selected{% endif %}>
-          {{ value }}
-        </option>
-      {% endfor %}
-    </select>
-
-    <label for="status">Verification status</label>
-    <select id="status" name="status">
-      <option value="all">All statuses</option>
-      {% for value in report.by_status|sort %}
-        <option value="{{ value }}"
-          {% if selected_status == value %}selected{% endif %}>
-          {{ value }}
-        </option>
-      {% endfor %}
-    </select>
-
-    <button class="button" type="submit">
-      Apply Filters
-    </button>
+  <form method="get" class="triage-filters" aria-label="Filter triage findings">
+    <label>Evidence source
+      <select name="source"><option value="all">All sources</option>
+        {% for value in report.by_source|sort %}<option value="{{ value }}" {% if selected_source == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Evidence status
+      <select name="status"><option value="all">All evidence states</option>
+        {% for value in report.by_status|sort %}<option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ value }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Analyst review
+      <select name="review"><option value="all">All review states</option>
+        {% for value in ['new','in_review','confirmed','false_positive','remediated'] %}<option value="{{ value }}" {% if selected_review == value %}selected{% endif %}>{{ value|replace('_',' ')|title }}</option>{% endfor %}
+      </select>
+    </label>
+    <button class="button" type="submit">Apply Filters</button>
   </form>
-
   <div class="table-wrap">
     <table>
-      <thead>
-        <tr>
-          <th>Source</th>
-          <th>Finding</th>
-          <th>CWE</th>
-          <th>Verification</th>
-        </tr>
-      </thead>
-
+      <thead><tr><th>Source</th><th>Finding &amp; evidence</th><th>CWE</th><th>Evidence state</th><th>Analyst review</th></tr></thead>
       <tbody>
         {% for item in findings %}
         <tr>
           <td>{{ item.source }}</td>
-          <td>
+          <td class="triage-finding">
             <strong>{{ item.title }}</strong>
             <small>{{ item.file }}{% if item.line %}:{{ item.line }}{% endif %}</small>
-
-            <details>
-              <summary>Review evidence</summary>
-
-              <p>{{ item.evidence }}</p>
-
-              <p>
-                <strong>Remediation:</strong>
-                {{ item.remediation }}
-              </p>
-
-              <p>
-                <strong>Source SHA-256:</strong>
-                <code>{{ item.source_hash }}</code>
-              </p>
-
-              <p>
-                <strong>Linked crashes:</strong>
-                {{ item.linked_crashes|length }}
-              </p>
+            {% if item.possible_group %}
+              <p class="triage-group">Possible duplicate group {{ item.possible_group }} ({{ item.possible_group_count }} records). Not automatically merged.</p>
+            {% endif %}
+            <details><summary>Original evidence and remediation</summary>
+              <p>{{ item.evidence }}</p><p><strong>Suggested remediation:</strong> {{ item.remediation or 'Source review required' }}</p>
+              <p><strong>Source report SHA-256:</strong> <code>{{ item.source_hash }}</code></p>
+              <p><strong>Linked crashes:</strong> {{ item.linked_crashes|length }}</p>
             </details>
           </td>
-
-          <td>{{ item.cwe or "Not established" }}</td>
-
-          <td>
-            <span class="badge">
-              {{ item.status }}
-            </span>
+          <td>{{ item.cwe or 'Not established' }}</td>
+          <td><span class="badge">{{ item.status }}</span></td>
+          <td class="triage-review-cell">
+            <strong>{{ item.analyst_status|replace('_',' ')|title }}</strong>
+            {% if item.analyst_note %}<details><summary>Last review note</summary><p>{{ item.analyst_note }}</p><small>{{ item.review_updated_at }}</small></details>{% endif %}
+            <details><summary>Update review</summary>
+              <form method="post" action="{{ url_for('main.update_triage_review', record_id=item.id) }}" class="triage-review-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label>New status
+                  <select name="review_status" required>
+                    {% for state in ['new','in_review','confirmed','false_positive','remediated'] %}
+                      <option value="{{ state }}" {% if item.analyst_status == state %}selected{% endif %}>{{ state|replace('_',' ')|title }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label>Review evidence / retest note
+                  <textarea name="note" maxlength="2000" rows="3" placeholder="Document specific source review or retest evidence" required></textarea>
+                </label>
+                <button class="button small" type="submit">Save decision</button>
+              </form>
+            </details>
           </td>
         </tr>
-        {% else %}
-        <tr>
-          <td colspan="4">
-            No findings match the selected filters.
-          </td>
-        </tr>
-        {% endfor %}
+        {% else %}<tr><td colspan="5">No records match these filters.</td></tr>{% endfor %}
       </tbody>
     </table>
   </div>
-
-  {% if report.total_records > 200 %}
-    <p class="research-details">
-      Display limited to 200 matching records.
-      Review the complete JSON report for all records.
-    </p>
-  {% endif %}
+  {% if truncated %}<p class="research-details">Displaying the first 200 matching records. Use the JSON file for the complete evidence list.</p>{% endif %}
   {% endif %}
 </section>
-
-<p class="callout warn">
-  Findings are research candidates, not confirmed
-  vulnerabilities. Human verification is required.
-  AI suggestions and crash signals do not establish
-  exploitability or zero-day status.
-</p>
-
+<p class="callout warn">An analyst status is a human workflow decision, not independent proof of exploitability or a zero-day. Reports remain read-only; review changes are stored in SQLite with an audit history.</p>
+<style>
+.triage-filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line)}
+.triage-filters label,.triage-review-form label{display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:12px}
+.triage-filters select,.triage-review-form select,.triage-review-form textarea{width:100%;min-width:145px;background:var(--panel-2);color:var(--text);border:1px solid var(--line);padding:10px;border-radius:4px;font:inherit}
+.triage-filters label{flex:1 1 155px}.triage-filters button{flex:0 0 auto}.triage-finding{min-width:240px}.triage-finding strong{display:block}
+.triage-finding small{white-space:normal;overflow-wrap:anywhere}.triage-finding code{word-break:break-all}.triage-group{font-size:11px;color:var(--amber)}
+.triage-review-cell{min-width:220px}.triage-review-form{margin:12px 0;display:grid;gap:10px}.triage-review-form textarea{min-width:0;resize:vertical}
+.triage-review-cell details,.triage-finding details{margin-top:10px}.triage-review-cell summary,.triage-finding summary{cursor:pointer;color:var(--acid);font-size:12px}
+</style>
 {% endblock %}
