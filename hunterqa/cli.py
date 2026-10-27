@@ -43,6 +43,10 @@ def main(argv=None):
     ai.add_argument("--project", required=True)
     ai.add_argument("--out", required=True)
     ai.add_argument("--authorized", action="store_true")
+    graph = sub.add_parser("trust-graph", help="Build a local Python call graph and trust-boundary review paths")
+    graph.add_argument("--project", required=True)
+    graph.add_argument("--out", required=True)
+    graph.add_argument("--authorized", action="store_true")
     scan = sub.add_parser("scan", help="Run unified offline Semgrep + config + API + dependency scan")
     scan.add_argument("--project", required=True)
     scan.add_argument("--out", required=True)
@@ -71,6 +75,12 @@ def main(argv=None):
             raise PermissionError("Local AI research requires --authorized")
         from .engines.ai_research import analyze_local
         _write_json(args.out, analyze_local(_approved_root(args.project)))
+    elif args.command == "trust-graph":
+        if not args.authorized:
+            raise PermissionError("Trust graph requires explicit --authorized acknowledgement")
+        from .engines.trust_graph import build_trust_graph
+        root = _approved_root(args.project)
+        _write_json(args.out, build_trust_graph(root))
     elif args.command == "scan":
         if not args.authorized:
             raise PermissionError("Local scan requires explicit --authorized acknowledgement")
