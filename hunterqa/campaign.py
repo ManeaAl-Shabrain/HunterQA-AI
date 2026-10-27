@@ -128,9 +128,9 @@ def run_campaign(
             raise ValueError("Replay files must be inside the approved lab")
 
     # Do not make a directory (or execute a stage) until the scope is checked.
-    output = _new_output_dir(out_dir, roots, source)
-    if lab is not None and not output.is_relative_to(lab):
+    if lab is not None and not Path(out_dir).expanduser().absolute().is_relative_to(lab):
         raise ValueError("For replay, output folder must be inside --lab")
+    output = _new_output_dir(out_dir, roots, source)
 
     now = lambda: datetime.now(timezone.utc).isoformat()
     manifest = {
