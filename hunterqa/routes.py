@@ -382,3 +382,20 @@ def campaign_trends_dashboard():
     history = read_campaign_history(selected_root, roots)
     trends = build_campaign_trends(history)
     return render_template("trends.html", trends=trends)
+
+
+@bp.get("/analytics")
+def research_analytics_dashboard():
+    """Read-only evidence analytics and analyst history."""
+    from pathlib import Path
+    from .engines.triage_view import read_triage_report
+    from .engines.triage_review import decorate_records
+    from .engines.research_analytics import build_research_analytics
+
+    report_path = current_app.config.get("TRIAGE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab" /
+        "verification" / "hunterqa_unified_triage.json"
+    )
+    report = decorate_records(read_triage_report(report_path), get_db())
+    analytics = build_research_analytics(report, get_db())
+    return render_template("analytics.html", analytics=analytics)
