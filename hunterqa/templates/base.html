@@ -23,6 +23,7 @@
 
         <a class="nav-link {{ 'active' if request.endpoint == 'main.hypotheses' }}" href="{{ url_for('main.hypotheses') }}"><span>✧</span> AI Hypotheses</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.research_analytics_dashboard' }}" href="{{ url_for('main.research_analytics_dashboard') }}"><span>◷</span> Research Analytics</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.cve_intelligence' }}" href="{{ url_for('main.cve_intelligence') }}"><span>◇</span> CVE Intelligence</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_history' }}" href="{{ url_for('main.campaign_history') }}"><span>▤</span> Campaign History</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_trends_dashboard' }}" href="{{ url_for('main.campaign_trends_dashboard') }}"><span>▥</span> Research Trends</a>
