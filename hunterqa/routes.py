@@ -366,3 +366,19 @@ def campaign_history():
         "campaigns.html", history=public_history(history),
         comparison=comparison, selected_left=left, selected_right=right,
     )
+
+
+@bp.get("/trends")
+def campaign_trends_dashboard():
+    """Read-only longitudinal summaries of local approved campaigns."""
+    from pathlib import Path
+    from .engines.campaign_history import read_campaign_history
+    from .engines.campaign_trends import build_campaign_trends
+
+    roots = current_app.config.get("APPROVED_ROOTS") or []
+    selected_root = current_app.config.get("CAMPAIGN_HISTORY_ROOT") or (
+        Path.home() / "ZeroScope-AI" / "research-lab"
+    )
+    history = read_campaign_history(selected_root, roots)
+    trends = build_campaign_trends(history)
+    return render_template("trends.html", trends=trends)
