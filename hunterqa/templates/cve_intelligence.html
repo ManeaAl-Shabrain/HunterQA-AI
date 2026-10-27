@@ -12,6 +12,7 @@
 </section>
 <section class="panel"><div class="panel-head"><div><p class="eyebrow">ADVISORY EVIDENCE</p><h2>Published Vulnerability Candidates</h2></div></div>
 <div class="research-details">
+{% if report.advisory_quality is defined %}<p><strong>Snapshot freshness:</strong> {{ report.advisory_quality.get("freshness", "unknown") }} · <strong>Advisories eligible:</strong> {{ report.advisory_quality.get("advisories_eligible", "unknown") }} · Source metadata is user-supplied and not authenticated.</p>{% endif %}
 {% if report.cve_groups is defined and report.cve_groups %}
 <h3>Deduplicated CVE groups</h3>
 {% for item in report.cve_groups %}
