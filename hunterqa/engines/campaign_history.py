@@ -117,6 +117,9 @@ def _load(directory: Path) -> dict | None:
     if not isinstance(findings, list) or len(findings) > 1600:
         findings = []
         integrity = False
+    # A successful triage stage must contain a triage artifact with the expected schema.
+    if statuses.get("triage") in {"completed", "partial"} and "triage" not in artifact_data:
+        integrity = False
     summaries = data.get("summary", {})
     if not isinstance(summaries, dict):
         summaries = {}
