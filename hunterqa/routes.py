@@ -339,3 +339,30 @@ def update_triage_review(record_id: str):
     except ValueError as error:
         flash(str(error), "error")
     return redirect(url_for("main.triage_dashboard"))
+
+
+@bp.get("/campaigns")
+def campaign_history():
+    """Read-only view of administrator-approved local campaign artifacts."""
+    from pathlib import Path
+    from .engines.campaign_history import (
+        read_campaign_history, compare_campaigns, public_history,
+    )
+
+    roots = current_app.config.get("APPROVED_ROOTS") or []
+    if isinstance(roots, str):
+        roots = roots.split(":")
+    selected_root = current_app.config.get("CAMPAIGN_HISTORY_ROOT") or (
+        Path.home() / "ZeroScope-AI" / "research-lab"
+    )
+    history = read_campaign_history(selected_root, roots)
+    left = request.args.get("left", "")
+    right = request.args.get("right", "")
+    comparison = (
+        compare_campaigns(history, left, right)
+        if left and right else None
+    )
+    return render_template(
+        "campaigns.html", history=public_history(history),
+        comparison=comparison, selected_left=left, selected_right=right,
+    )
