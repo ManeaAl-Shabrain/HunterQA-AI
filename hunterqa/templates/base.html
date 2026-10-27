@@ -30,6 +30,7 @@
         <a class="nav-link {{ 'active' if request.endpoint == 'main.hypotheses' }}" href="{{ url_for('main.hypotheses') }}"><span>✧</span> AI Hypotheses</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_history' }}" href="{{ url_for('main.campaign_history') }}"><span>▤</span> Campaign History</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_trends_dashboard' }}" href="{{ url_for('main.campaign_trends_dashboard') }}"><span>▥</span> Research Trends</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.audit_history' }}" href="{{ url_for('main.audit_history') }}"><span>◷</span> Audit History</a>
       </nav>
       <div class="local-guard">
