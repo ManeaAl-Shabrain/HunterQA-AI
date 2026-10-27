@@ -1,0 +1,167 @@
+
+{% extends "base.html" %}
+
+{% block title %}Unified Triage · HunterQA AI{% endblock %}
+{% block section %}Unified Vulnerability Triage{% endblock %}
+
+{% block content %}
+
+<section class="page-head">
+  <div>
+    <p class="eyebrow">UNIFIED SECURITY RESEARCH</p>
+    <h1>Vulnerability Triage</h1>
+    <p>
+      Static analysis, local AI, cross-file research,
+      AFL++ and sanitizer evidence in one workspace.
+    </p>
+  </div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat">
+    <span>Research Records</span>
+    <strong>{{ report.total_records }}</strong>
+    <small>All available evidence</small>
+  </article>
+
+  <article class="stat">
+    <span>Static Findings</span>
+    <strong>{{ report.by_source.get('scan', 0) }}</strong>
+    <small>Source analysis</small>
+  </article>
+
+  <article class="stat">
+    <span>AI Hypotheses</span>
+    <strong>{{ report.by_source.get('ai', 0) }}</strong>
+    <small>Unverified suggestions</small>
+  </article>
+
+  <article class="stat">
+    <span>Confirmed Zero-Days</span>
+    <strong>0</strong>
+    <small>No verified discoveries</small>
+  </article>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">RESEARCH QUEUE</p>
+      <h2>Unified Findings</h2>
+    </div>
+  </div>
+
+  {% if report.status != "ready" %}
+    <div class="research-details">
+      <p>
+        Triage report unavailable or invalid.
+        Generate a local unified triage report first.
+      </p>
+    </div>
+  {% else %}
+
+  <form method="get" style="padding:20px 24px">
+    <label for="source">Evidence source</label>
+    <select id="source" name="source">
+      <option value="all">All sources</option>
+      {% for value in report.by_source|sort %}
+        <option value="{{ value }}"
+          {% if selected_source == value %}selected{% endif %}>
+          {{ value }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="status">Verification status</label>
+    <select id="status" name="status">
+      <option value="all">All statuses</option>
+      {% for value in report.by_status|sort %}
+        <option value="{{ value }}"
+          {% if selected_status == value %}selected{% endif %}>
+          {{ value }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button class="button" type="submit">
+      Apply Filters
+    </button>
+  </form>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Finding</th>
+          <th>CWE</th>
+          <th>Verification</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in findings %}
+        <tr>
+          <td>{{ item.source }}</td>
+          <td>
+            <strong>{{ item.title }}</strong>
+            <small>{{ item.file }}{% if item.line %}:{{ item.line }}{% endif %}</small>
+
+            <details>
+              <summary>Review evidence</summary>
+
+              <p>{{ item.evidence }}</p>
+
+              <p>
+                <strong>Remediation:</strong>
+                {{ item.remediation }}
+              </p>
+
+              <p>
+                <strong>Source SHA-256:</strong>
+                <code>{{ item.source_hash }}</code>
+              </p>
+
+              <p>
+                <strong>Linked crashes:</strong>
+                {{ item.linked_crashes|length }}
+              </p>
+            </details>
+          </td>
+
+          <td>{{ item.cwe or "Not established" }}</td>
+
+          <td>
+            <span class="badge">
+              {{ item.status }}
+            </span>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4">
+            No findings match the selected filters.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if report.total_records > 200 %}
+    <p class="research-details">
+      Display limited to 200 matching records.
+      Review the complete JSON report for all records.
+    </p>
+  {% endif %}
+  {% endif %}
+</section>
+
+<p class="callout warn">
+  Findings are research candidates, not confirmed
+  vulnerabilities. Human verification is required.
+  AI suggestions and crash signals do not establish
+  exploitability or zero-day status.
+</p>
+
+{% endblock %}

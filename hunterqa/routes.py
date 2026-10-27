@@ -252,3 +252,47 @@ def hypotheses():
         Path.home() / "ZeroScope-AI" / "research-lab" / "hypotheses.json"
     )
     return render_template("hypotheses.html", report=read_hypotheses(Path(path)))
+
+@bp.get("/triage")
+def triage_dashboard():
+    from pathlib import Path
+    from .engines.triage_view import read_triage_report
+
+    configured = current_app.config.get("TRIAGE_REPORT_PATH")
+
+    report_path = configured or (
+        Path.home()
+        / "ZeroScope-AI"
+        / "research-lab"
+        / "verification"
+        / "hunterqa_unified_triage.json"
+    )
+
+    report = read_triage_report(report_path)
+
+    source = request.args.get("source", "all")
+    status = request.args.get("status", "all")
+
+    valid_sources = set(report["by_source"])
+    valid_statuses = set(report["by_status"])
+
+    if source != "all" and source not in valid_sources:
+        source = "all"
+
+    if status != "all" and status not in valid_statuses:
+        status = "all"
+
+    visible = [
+        finding
+        for finding in report["findings"]
+        if (source == "all" or finding["source"] == source)
+        and (status == "all" or finding["status"] == status)
+    ]
+
+    return render_template(
+        "triage.html",
+        report=report,
+        findings=visible[:200],
+        selected_source=source,
+        selected_status=status,
+    )

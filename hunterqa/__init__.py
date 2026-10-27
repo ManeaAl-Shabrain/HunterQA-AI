@@ -27,6 +27,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         OLLAMA_MODEL=_env("HUNTERQA_OLLAMA_MODEL", "ZEROSCOPE_OLLAMA_MODEL", "qwen2.5-coder:3b"),
         SCAN_TIMEOUT_SECONDS=int(_env("HUNTERQA_SCAN_TIMEOUT", "ZEROSCOPE_SCAN_TIMEOUT", "900")),
         RESEARCH_REPORT_PATH=os.environ.get("HUNTERQA_RESEARCH_REPORT", ""),
+        TRIAGE_REPORT_PATH=os.environ.get("HUNTERQA_TRIAGE_REPORT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),
         MAX_CONTENT_LENGTH=1024 * 1024,
