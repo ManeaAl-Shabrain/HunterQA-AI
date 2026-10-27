@@ -339,3 +339,20 @@ def update_triage_review(record_id: str):
     except ValueError as error:
         flash(str(error), "error")
     return redirect(url_for("main.triage_dashboard"))
+
+
+@bp.get("/analytics")
+def research_analytics_dashboard():
+    """Read-only analytics; no browser input chooses an evidence file."""
+    from pathlib import Path
+    from .engines.triage_view import read_triage_report
+    from .engines.triage_review import decorate_records
+    from .engines.research_analytics import build_research_analytics
+
+    path = current_app.config.get("TRIAGE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab" /
+        "verification" / "hunterqa_unified_triage.json"
+    )
+    report = decorate_records(read_triage_report(path), get_db())
+    analytics = build_research_analytics(report, get_db())
+    return render_template("analytics.html", analytics=analytics)
