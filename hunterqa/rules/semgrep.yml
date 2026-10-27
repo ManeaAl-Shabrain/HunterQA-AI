@@ -1,0 +1,103 @@
+rules:
+  - id: hunterqa.python.dangerous-eval
+    message: Dynamic code execution via eval can allow attacker-controlled Python execution.
+    severity: ERROR
+    metadata:
+      cwe: CWE-95
+      category: security
+    languages: [python]
+    pattern: eval(...)
+
+  - id: hunterqa.python.shell-true
+    message: subprocess with shell=True can enable command injection when arguments are untrusted.
+    severity: ERROR
+    metadata:
+      cwe: CWE-78
+      category: security
+    languages: [python]
+    patterns:
+      - pattern-either:
+          - pattern: subprocess.$F(..., shell=True, ...)
+          - pattern: $OBJ.$F(..., shell=True, ...)
+
+  - id: hunterqa.python.unsafe-yaml-load
+    message: Unsafe YAML loading may construct attacker-controlled objects.
+    severity: WARNING
+    metadata:
+      cwe: CWE-502
+      category: security
+    languages: [python]
+    pattern: yaml.load(...)
+
+  - id: hunterqa.javascript.innerhtml
+    message: Assigning untrusted data to innerHTML can create cross-site scripting.
+    severity: WARNING
+    metadata:
+      cwe: CWE-79
+      category: security
+    languages: [javascript, typescript]
+    pattern: $EL.innerHTML = $VALUE
+
+
+  - id: hunterqa.python.pickle-loads
+    message: Pickle deserialization can execute code if data is untrusted; review the trust boundary.
+    severity: WARNING
+    metadata: {cwe: CWE-502, category: security}
+    languages: [python]
+    pattern: pickle.loads(...)
+
+  - id: hunterqa.python.os-system
+    message: os.system launches a shell; review whether the command can contain untrusted input.
+    severity: WARNING
+    metadata: {cwe: CWE-78, category: security}
+    languages: [python]
+    pattern: os.system(...)
+
+  - id: hunterqa.python.requests-insecure-tls
+    message: TLS certificate verification disabled; validate the trust model.
+    severity: WARNING
+    metadata: {cwe: CWE-295, category: security}
+    languages: [python]
+    pattern: requests.$METHOD(..., verify=False, ...)
+
+  - id: hunterqa.python.unsafe-tempfile
+    message: Predictable temporary filename; consider tempfile APIs.
+    severity: INFO
+    metadata: {cwe: CWE-377, category: security}
+    languages: [python]
+    pattern: tempfile.mktemp(...)
+
+  - id: hunterqa.javascript.eval
+    message: JavaScript dynamic evaluation may execute untrusted code.
+    severity: WARNING
+    metadata: {cwe: CWE-95, category: security}
+    languages: [javascript, typescript]
+    pattern: eval(...)
+
+  - id: hunterqa.javascript.child-process-exec
+    message: Child process shell execution; trace command input and review safe alternatives.
+    severity: WARNING
+    metadata: {cwe: CWE-78, category: security}
+    languages: [javascript, typescript]
+    pattern: child_process.exec(...)
+
+  - id: hunterqa.javascript.document-write
+    message: document.write can create XSS if input is untrusted.
+    severity: INFO
+    metadata: {cwe: CWE-79, category: security}
+    languages: [javascript, typescript]
+    pattern: document.write(...)
+
+  - id: hunterqa.php.unserialize
+    message: PHP unserialize of untrusted data can cause object injection; investigate data provenance.
+    severity: WARNING
+    metadata: {cwe: CWE-502, category: security}
+    languages: [php]
+    pattern: unserialize(...)
+
+  - id: hunterqa.php.eval
+    message: PHP eval may execute arbitrary code when fed untrusted input.
+    severity: WARNING
+    metadata: {cwe: CWE-95, category: security}
+    languages: [php]
+    pattern: eval(...)

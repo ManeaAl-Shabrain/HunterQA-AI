@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hunterqa-ai"
+version = "1.0.0"
+description = "HunterQA AI: local-only authorized vulnerability research and evidence platform"
+requires-python = ">=3.11"
+dependencies = ["Flask>=3.0,<4"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+hunterqa = "hunterqa.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["hunterqa*", "zeroscope*"]
+
+[tool.setuptools.package-data]
+hunterqa = ["templates/*.html", "static/*", "rules/*.yml"]

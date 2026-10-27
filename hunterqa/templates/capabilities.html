@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Research Capabilities · HunterQA AI{% endblock %}
+{% block section %}Coverage & Engines{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">RESEARCH CAPABILITY MAP</p><h1>Coverage & Engines</h1><p>What HunterQA can currently inspect—and what still needs specialist testing.</p></div></section>
+<section class="panel"><div class="panel-head"><h2>Operational local components</h2></div><div class="research-details">
+<p><strong>Semgrep:</strong> bundled offline rules for selected Python, JavaScript/TypeScript and PHP patterns. Actual findings depend on installed Semgrep.</p>
+<p><strong>Configuration:</strong> deterministic checks of Dockerfiles, Kubernetes YAML and Terraform configuration.</p>
+<p><strong>OpenAPI:</strong> offline JSON contract checks for missing declared security requirements.</p>
+<p><strong>Dependencies:</strong> offline inventory; exact-version known-advisory matching only if the user supplies a local advisory snapshot.</p>
+<p><strong>CodeQL:</strong> read-only SARIF import. CodeQL CLI is an optional external installation.</p>
+<p><strong>Fuzzing:</strong> AFL++ harness guidance and an explicitly authorized CLI crash replay in an isolated VM.</p>
+<p><strong>Runtime:</strong> ASan/UBSan parsing, reproducibility checks, source evidence and conservative correlation.</p>
+<p><strong>AI:</strong> local Ollama-assisted triage, with all generated conclusions marked as unverified.</p>
+</div></section>
+<section class="panel"><div class="panel-head"><h2>Research categories requiring target-specific work</h2></div>
+<div class="research-details">
+{% for item in categories %}<details class="research-entry"><summary>{{ item.category }} — Manual research required</summary><ul>{% for q in item.questions %}<li>{{ q }}</li>{% endfor %}</ul></details>{% endfor %}
+</div></section>
+<p class="callout warn">No scanner can guarantee coverage of every CWE, determine every zero-day or assign a reliable CVSS score from pattern matches alone.</p>
+{% endblock %}

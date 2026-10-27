@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Overview · HunterQA AI{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">SECURITY OPERATIONS</p>
+    <h1>Source intelligence,<br><em>kept on your machine.</em></h1>
+    <p class="lede">Run authorized static analysis, triage findings, and turn local model output into a practical remediation plan.</p>
+  </div>
+  <a class="button primary" href="{{ url_for('main.projects') }}">Open projects <span>→</span></a>
+</section>
+
+<section class="stats-grid" aria-label="Workspace totals">
+  <article class="stat"><span>Registered projects</span><strong>{{ stats.projects }}</strong><small>approved directories</small></article>
+  <article class="stat"><span>Total scans</span><strong>{{ stats.scans }}</strong><small>authorization recorded</small></article>
+  <article class="stat"><span>Findings</span><strong>{{ stats.findings }}</strong><small>normalized results</small></article>
+  <article class="stat danger"><span>Rule ERROR labels</span><strong>{{ stats.critical }}</strong><small>not CVSS critical</small></article>
+</section>
+
+<div class="split-grid">
+  <section class="panel">
+    <div class="panel-head"><div><p class="eyebrow">ACTIVITY</p><h2>Recent scans</h2></div></div>
+    {% if recent %}
+    <div class="table-wrap"><table>
+      <thead><tr><th>Project</th><th>Status</th><th>Findings</th><th>Progress</th></tr></thead>
+      <tbody>{% for scan in recent %}<tr>
+        <td><a href="{{ url_for('main.scan_detail', scan_id=scan.id) }}"><strong>{{ scan.project_name }}</strong><small>#{{ scan.id }} · {{ scan.created_at }}</small></a></td>
+        <td><span class="badge {{ scan.status }}">{{ scan.status }}</span></td>
+        <td>{{ scan.finding_count }}</td>
+        <td><div class="mini-progress"><i style="width: {{ scan.progress }}%"></i></div><small>{{ scan.progress }}%</small></td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty"><span>◎</span><h3>No scans yet</h3><p>Add an approved project to begin.</p></div>{% endif %}
+  </section>
+  <section class="panel projects-card">
+    <div class="panel-head"><div><p class="eyebrow">SCOPE</p><h2>Approved projects</h2></div><a href="{{ url_for('main.projects') }}">Manage</a></div>
+    {% if projects %}<ul class="project-list">{% for project in projects %}<li><span class="project-icon">{{ project.name[0]|upper }}</span><div><strong>{{ project.name }}</strong><small>{{ project.path }}</small></div></li>{% endfor %}</ul>
+    {% else %}<div class="empty compact"><span>⌁</span><p>Your approved workspace is empty.</p></div>{% endif %}
+  </section>
+</div>
+{% endblock %}
+

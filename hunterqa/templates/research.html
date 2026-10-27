@@ -1,0 +1,244 @@
+
+{% extends "base.html" %}
+
+{% block title %}Research Lab · HunterQA AI{% endblock %}
+{% block section %}Research Lab{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">VULNERABILITY RESEARCH</p>
+    <h1>Research <em>Lab.</em></h1>
+    <p class="lede">
+      AFL++ crash verification and sanitizer evidence.
+      Local research only. Human verification required.
+    </p>
+  </div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat">
+    <span>Imported Crashes</span>
+    <strong>{{ report.summary.total_crashes }}</strong>
+    <small>AFL++ evidence</small>
+  </article>
+
+  <article class="stat">
+    <span>Sanitizer Diagnostics</span>
+    <strong>{{ report.summary.sanitizer_diagnostics }}</strong>
+    <small>ASan / UBSan evidence</small>
+  </article>
+
+  <article class="stat">
+    <span>Confirmed Zero-Days</span>
+    <strong>0</strong>
+    <small>No verified Zero-Day discoveries</small>
+  </article>
+</section>
+
+{% if report.error %}
+<section class="panel">
+  <p>{{ report.error }}</p>
+</section>
+{% endif %}
+
+<section class="panel" style="margin-bottom:24px">
+  <div class="panel-head"><div><p class="eyebrow">LOCAL CAMPAIGN</p><h2>AFL++ Fuzzer Statistics</h2></div></div>
+  <div class="research-meta">
+    {% if afl_stats.status == 'ready' %}
+      {% for key, value in afl_stats.metrics.items() %}<p><span class="research-label">{{ key }}</span><br><strong>{{ value }}</strong></p>{% endfor %}
+    {% else %}<p>No local fuzzer statistics found. Run an isolated campaign and set HUNTERQA_FUZZ_STATS if needed.</p>{% endif %}
+  </div>
+</section>
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">CRASH VERIFICATION</p>
+      <h2>AFL++ Findings</h2>
+    </div>
+  </div>
+
+  {% for finding in report.findings %}
+  <article style="padding:24px;border-bottom:1px solid #303838">
+    <h3>Crash #{{ loop.index }}</h3>
+
+    <p><strong>File:</strong> {{ finding.filename }}</p>
+    <p><strong>Signal:</strong> {{ finding.signal }}</p>
+    <p><strong>Input size:</strong> {{ finding.input_size }} bytes</p>
+    <p><strong>Reproducible:</strong>
+      {{ "Yes" if finding.reproducible else "Not established" }}
+    </p>
+    <p><strong>Classification:</strong>
+      {{ finding.classification }}
+    </p>
+    <p><strong>CWE candidate:</strong>
+      {{ finding.cwe_candidate }}
+    </p>
+    <p><strong>Verification:</strong>
+      {{ finding.verification_status }}
+    </p>
+    
+    <p><strong>Evidence correlation:</strong>
+	{% if finding.correlation_status == "matched_input_hash" %}   
+	Matched input SHA-256 (requires review)
+	{% else %}
+	Not established
+	{% endif %}
+    </p>
+    <p><strong>Linked sanitizer diagnostics:</strong>
+  	{{ finding.matched_diagnostics_count | default(0) }}
+    </p>
+
+    <p>
+     <small>
+       Matching evidence does not independently confirm
+       a vulnerability, exploitability, or zero-day status.
+     </small>
+    </p>
+
+    <p><strong>Evidence validation:</strong>
+      {{ finding.validation_status }}
+    </p>
+
+    <details>
+      <summary>Unverified AI Analysis</summary>
+      <p>{{ finding.root_cause }}</p>
+      <p>{{ finding.ai_recommendation_unverified }}</p>
+    </details>
+  </article>
+  {% else %}
+  <div class="empty">
+    <p>No crash evidence available.</p>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">SANITIZER EVIDENCE</p>
+      <h2>ASan / UBSan Diagnostics</h2>
+    </div>
+  </div>
+
+  {% for finding in report.sanitizer_evidence %}
+  <article style="padding:24px;border-bottom:1px solid #303838">
+    <h3>Diagnostic #{{ loop.index }}</h3>
+
+    <p><strong>Sanitizer:</strong>
+      {{ finding.sanitizer }}
+    </p>
+    <p><strong>Category:</strong>
+      {{ finding.category }}
+    </p>
+    <p><strong>CWE candidate:</strong>
+      {{ finding.cwe_candidate }}
+    </p>
+    <p><strong>Evidence confirmed:</strong>
+      {{ "Yes" if finding.evidence_confirmed else "No" }}
+    </p>
+    <p><strong>Security impact:</strong>
+      {{ finding.security_impact }}
+    </p>
+
+    <p><strong>Diagnostic:</strong> {{ finding.summary }}</p>
+
+    <details>
+      <summary>Source Evidence</summary>
+      {% for loc in finding.source_locations %}
+      <p>
+        {{ loc.file }}:{{ loc.line }}:{{ loc.column }}
+      </p>
+      {% endfor %}
+    </details>
+
+    <p><small>
+      Sanitizer evidence confirms a diagnostic,
+      not a Zero-Day discovery.
+    </small></p>
+  </article>
+  {% else %}
+  <div class="empty">
+    <p>No sanitizer evidence available.</p>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="panel" style="padding:24px;margin-top:24px">
+  <a class="btn" href="{{ url_for('main.export_research_evidence') }}">
+    Export Evidence JSON
+  </a>
+  <p class="eyebrow">EVIDENCE MONITOR</p>
+  <h2>Automatic Evidence Refresh</h2>
+
+  <p id="evidence-status" role="status">
+    Checking local evidence...
+  </p>
+
+  <p>
+    Last checked:
+    <span id="evidence-checked">Not yet checked</span>
+  </p>
+</section>
+
+<script>
+(() => {
+  let previousHash = null;
+  let initialized = false;
+
+  async function refreshEvidence() {
+    try {
+      const response = await fetch(
+        "{{ url_for('main.research_evidence') }}",
+        {
+          cache: "no-store",
+          credentials: "same-origin"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Evidence API unavailable");
+      }
+
+      const data = await response.json();
+
+      document.getElementById(
+        "evidence-checked"
+      ).textContent = new Date().toLocaleTimeString();
+
+      if (data.status !== "ready") {
+        document.getElementById(
+          "evidence-status"
+        ).textContent = "Evidence status: " + data.status;
+        return;
+      }
+
+      if (initialized && previousHash !== data.sha256) {
+        window.location.reload();
+        return;
+      }
+
+      previousHash = data.sha256;
+      initialized = true;
+
+      document.getElementById(
+        "evidence-status"
+      ).textContent =
+        "Monitoring " + data.findings_count +
+        " crash findings and " +
+        data.sanitizer_count +
+        " sanitizer diagnostics.";
+    } catch (error) {
+      document.getElementById(
+        "evidence-status"
+      ).textContent = "Evidence monitoring unavailable";
+    }
+  }
+
+  refreshEvidence();
+  setInterval(refreshEvidence, 10000);
+})();
+</script>
+
+{% endblock %}

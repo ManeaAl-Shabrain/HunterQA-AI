@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ finding.cwe }} · HunterQA AI{% endblock %}
+{% block section %}Finding detail{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('main.scan_detail', scan_id=finding.scan_id) }}">← Back to scan</a>
+<section class="finding-head"><div><span class="severity {{ finding.severity|lower }}">{{ finding.severity }}</span><code>{{ finding.cwe }}</code></div><h1>{{ finding.title }}</h1><p>{{ finding.message }}</p></section>
+<div class="detail-grid"><section class="panel"><p class="eyebrow">SOURCE LOCATION</p><h2>{{ finding.file_path }}</h2><p>Lines {{ finding.line_start }}–{{ finding.line_end }}</p><pre><code>{{ finding.code or 'Source excerpt was not provided by Semgrep.' }}</code></pre></section>
+<aside class="panel metadata"><p class="eyebrow">EVIDENCE</p><dl><dt>Project</dt><dd>{{ finding.project_name }}</dd><dt>Rule</dt><dd>{{ finding.rule_id }}</dd><dt>Classification</dt><dd>{{ finding.cwe }}</dd><dt>Severity</dt><dd>{{ finding.severity }}</dd></dl><p class="callout">Validate data flow and runtime context before changing code. Static analysis may produce false positives.</p></aside></div>
+{% endblock %}
+

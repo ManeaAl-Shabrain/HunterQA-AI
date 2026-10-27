@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Scan #{{ scan.id }} · HunterQA AI<section class="panel" style="margin-top:26px">
+ <div class="panel-head"><div><p class="eyebrow">SUPPLY CHAIN</p><h2>Offline dependency inventory <span class="count">{{ dependencies|length }}</span></h2></div></div>
+ <p class="research-details">Declared package versions and constraints are inventory data, not automatically confirmed vulnerable dependencies. Use a verified local advisory snapshot to check exact versions.</p>
+ {% if dependencies %}<div class="table-wrap"><table><thead><tr><th>Ecosystem</th><th>Package</th><th>Declared version/constraint</th><th>Source</th></tr></thead><tbody>
+ {% for p in dependencies %}<tr><td>{{ p.ecosystem }}</td><td>{{ p.name }}</td><td><code>{{ p.version }}</code></td><td>{{ p.source }}</td></tr>{% endfor %}
+ </tbody></table></div>{% endif %}
+</section>
+{% endblock %}
+{% block section %}Scan #{{ scan.id }}<section class="panel" style="margin-top:26px">
+ <div class="panel-head"><div><p class="eyebrow">SUPPLY CHAIN</p><h2>Offline dependency inventory <span class="count">{{ dependencies|length }}</span></h2></div></div>
+ <p class="research-details">Declared package versions and constraints are inventory data, not automatically confirmed vulnerable dependencies. Use a verified local advisory snapshot to check exact versions.</p>
+ {% if dependencies %}<div class="table-wrap"><table><thead><tr><th>Ecosystem</th><th>Package</th><th>Declared version/constraint</th><th>Source</th></tr></thead><tbody>
+ {% for p in dependencies %}<tr><td>{{ p.ecosystem }}</td><td>{{ p.name }}</td><td><code>{{ p.version }}</code></td><td>{{ p.source }}</td></tr>{% endfor %}
+ </tbody></table></div>{% endif %}
+</section>
+{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">{{ scan.project_name|upper }}</p><h1>Scan #{{ scan.id }}</h1><p>{{ scan.project_path }}</p></div><a class="button ghost" href="{{ url_for('main.export_scan', scan_id=scan.id) }}">Export JSON ↓</a></section>
+
+<section class="scan-banner" data-scan-status data-status-url="{{ url_for('main.scan_status', scan_id=scan.id) }}" data-current-status="{{ scan.status }}">
+  <div class="radar"><span></span><i></i></div>
+  <div class="scan-state"><div><span class="badge {{ scan.status }}" data-status>{{ scan.status }}</span><strong data-stage>{{ scan.stage }}</strong></div><small>Authorized {{ scan.authorized_at }}</small></div>
+  <div class="progress-block"><div><span>Progress</span><strong data-progress-label>{{ scan.progress }}%</strong></div><div class="progress"><i data-progress-bar style="width: {{ scan.progress }}%"></i></div></div>
+</section>
+{% if scan.error %}<div class="flash error" data-scan-error>{{ scan.error }}</div>{% endif %}
+
+<section class="panel">
+  <div class="panel-head"><div><p class="eyebrow">TRIAGE QUEUE</p><h2>Findings <span class="count">{{ findings|length }}</span></h2></div>{% if report %}<a class="button ghost small" href="{{ url_for('main.report_detail', scan_id=scan.id) }}">Read AI report</a>{% endif %}</div>
+  {% if findings %}<div class="table-wrap"><table class="findings-table">
+    <thead><tr><th>Severity</th><th>Finding</th><th>CWE</th><th>Location</th><th></th></tr></thead>
+    <tbody>{% for finding in findings %}<tr>
+      <td><span class="severity {{ finding.severity|lower }}">{{ finding.severity }}</span></td>
+      <td><strong>{{ finding.title }}</strong><small>{{ finding.rule_id }}</small></td>
+      <td><code>{{ finding.cwe }}</code></td><td><code>{{ finding.file_path }}:{{ finding.line_start }}</code></td>
+      <td><a class="arrow-link" href="{{ url_for('main.finding_detail', finding_id=finding.id) }}" aria-label="View finding">→</a></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% elif scan.status == 'completed' %}<div class="empty success-empty"><span>✓</span><h3>No findings</h3><p>The bundled local rules did not identify any matches.</p></div>
+  {% else %}<div class="empty"><span class="spinner"></span><h3>Analysis in progress</h3><p>Results will appear here when normalization finishes.</p></div>{% endif %}
+</section>
+<section class="panel" style="margin-top:26px">
+ <div class="panel-head"><div><p class="eyebrow">SUPPLY CHAIN</p><h2>Offline dependency inventory <span class="count">{{ dependencies|length }}</span></h2></div></div>
+ <p class="research-details">Declared package versions and constraints are inventory data, not automatically confirmed vulnerable dependencies. Use a verified local advisory snapshot to check exact versions.</p>
+ {% if dependencies %}<div class="table-wrap"><table><thead><tr><th>Ecosystem</th><th>Package</th><th>Declared version/constraint</th><th>Source</th></tr></thead><tbody>
+ {% for p in dependencies %}<tr><td>{{ p.ecosystem }}</td><td>{{ p.name }}</td><td><code>{{ p.version }}</code></td><td>{{ p.source }}</td></tr>{% endfor %}
+ </tbody></table></div>{% endif %}
+</section>
+{% endblock %}
+

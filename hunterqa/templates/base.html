@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{% block title %}HunterQA AI{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="{{ url_for('main.dashboard') }}" aria-label="HunterQA AI dashboard">
+        <span class="brand-mark" aria-hidden="true"><i></i></span>
+        <span><strong>HUNTERQA</strong><small>LOCAL AI SECURITY</small></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.dashboard' }}" href="{{ url_for('main.dashboard') }}"><span>◫</span> Overview</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.projects' }}" href="{{ url_for('main.projects') }}"><span>⌁</span> Projects</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.research_lab' }}" href="{{ url_for('main.research_lab') }}">
+ 	 <span>⌕</span> Research Lab
+      </a>
+
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.hypotheses' }}" href="{{ url_for('main.hypotheses') }}"><span>✧</span> AI Hypotheses</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.audit_history' }}" href="{{ url_for('main.audit_history') }}"><span>◷</span> Audit History</a>
+      </nav>
+      <div class="local-guard">
+        <span class="pulse"></span>
+        <div><strong>Local guard active</strong><small>127.0.0.1 only</small></div>
+      </div>
+      <div class="sidebar-foot">
+        <span class="eyebrow">ENGINE</span>
+        <strong>Semgrep + Qwen</strong>
+        <small>No remote targets</small>
+      </div>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div><span class="crumb">WORKSPACE /</span> <strong>{% block section %}Overview{% endblock %}</strong></div>
+        <div class="status-chip"><span></span> System ready</div>
+      </header>
+      <div class="content">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

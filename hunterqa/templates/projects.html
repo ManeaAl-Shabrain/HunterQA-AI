@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Projects · HunterQA AI{% endblock %}
+{% block section %}Projects{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">AUTHORIZED SCOPE</p><h1>Local projects</h1><p>Only directories inside your configured approved roots can be registered or scanned.</p></div><button class="button primary" data-open-modal="project-modal">+ Add project</button></section>
+
+<section class="panel">
+  {% if projects %}<div class="project-grid">{% for project in projects %}
+    <article class="project-card">
+      <div class="project-card-top"><span class="project-icon large">{{ project.name[0]|upper }}</span><span class="badge {{ project.last_status or 'idle' }}">{{ project.last_status or 'not scanned' }}</span></div>
+      <h2>{{ project.name }}</h2><code>{{ project.path }}</code>
+      <div class="project-meta"><span>{{ project.scan_count }} scans</span><span>Local directory</span></div>
+      <button class="button scan-button" data-open-modal="scan-{{ project.id }}">Start authorized scan <span>→</span></button>
+    </article>
+  {% endfor %}</div>{% else %}<div class="empty"><span>⌁</span><h3>No projects registered</h3><p>Add a directory contained by <code>HUNTERQA_APPROVED_ROOTS</code>.</p></div>{% endif %}
+</section>
+
+<dialog id="project-modal" class="modal">
+  <form method="post" action="{{ url_for('main.create_project') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal-head"><div><p class="eyebrow">NEW SCOPE</p><h2>Add local project</h2></div><button type="button" class="icon-button" data-close-modal aria-label="Close">×</button></div>
+    <label>Display name<input name="name" maxlength="100" required placeholder="Payments API"></label>
+    <label>Absolute local path<input name="path" required placeholder="/home/kali/projects/payments-api"></label>
+    <p class="callout">The resolved path must stay inside an administrator-approved root. Symlink escapes are rejected.</p>
+    <div class="modal-actions"><button type="button" class="button ghost" data-close-modal>Cancel</button><button class="button primary">Add project</button></div>
+  </form>
+</dialog>
+
+{% for project in projects %}<dialog id="scan-{{ project.id }}" class="modal">
+  <form method="post" action="{{ url_for('main.start_scan', project_id=project.id) }}" data-authorization-form>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="modal-head"><div><p class="eyebrow">AUTHORIZATION GATE</p><h2>Confirm scan scope</h2></div><button type="button" class="icon-button" data-close-modal aria-label="Close">×</button></div>
+    <div class="scope-box"><span>PROJECT</span><strong>{{ project.name }}</strong><code>{{ project.path }}</code></div>
+    <label class="check-row"><input type="checkbox" name="authorized" value="yes" required><span>I own this code or have explicit permission to test it.</span></label>
+    <label>Type this statement to continue<small>{{ authorization_text }}</small><input name="authorization_text" autocomplete="off" required data-auth-input></label>
+    <p class="callout warn">This scan analyzes local source code only. It does not probe websites, IPs, or remote services.</p>
+    <div class="modal-actions"><button type="button" class="button ghost" data-close-modal>Cancel</button><button class="button primary" disabled data-scan-submit>Authorize & start</button></div>
+  </form>
+</dialog>{% endfor %}
+{% endblock %}
+

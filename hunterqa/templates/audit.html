@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Audit History · HunterQA AI{% endblock %}
+{% block section %}Audit History{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">ACCOUNTABILITY</p><h1>Audit History</h1><p>Locally recorded project registrations and scan authorizations.</p></div></section>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Date (UTC)</th><th>Action</th><th>Subject</th></tr></thead><tbody>
+{% for item in events %}<tr><td>{{ item.created_at }}</td><td>{{ item.action }}</td><td><code>{{ item.subject }}</code></td></tr>
+{% else %}<tr><td colspan="3">No events recorded yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

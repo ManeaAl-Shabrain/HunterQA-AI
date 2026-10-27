@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}AI Hypotheses · HunterQA AI{% endblock %}
+{% block section %}AI Hypotheses{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">LOCAL AI RESEARCH</p><h1>Hypothesis Review</h1><p>Source-grounded ideas from your localhost Qwen model. Nothing here is automatically verified or executed.</p></div></section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">MODEL OUTPUT</p><h2>{{ report.model }} · {{ report.hypotheses|length }} hypotheses</h2></div></div>
+{% if report.status != 'ready' %}<p class="research-details">No valid local hypotheses report found. Generate one with <code>python -m hunterqa hypothesize --project /approved/local/repo --out /path/to/hypotheses.json --authorized</code> and configure HUNTERQA_HYPOTHESES_REPORT.</p>{% endif %}
+{% for item in report.hypotheses %}
+<article class="research-details" style="border-bottom:1px solid #253537">
+<p class="eyebrow">{{ item.status }} · {{ item.file }}</p>
+<h3>{{ item.potential_weakness }}</h3>
+<p><strong>Source basis:</strong> {{ item.source_basis }}</p>
+<p><strong>Suggested safe validation:</strong> {{ item.safe_validation_idea }}</p>
+<p><strong>Remediation idea:</strong> {{ item.remediation_idea }}</p>
+<p><strong>Uncertainty:</strong> {{ item.uncertainty }}</p>
+</article>
+{% endfor %}
+</section>
+<p class="callout warn">AI-generated hypotheses are not confirmed vulnerabilities, CVEs, exploits, CVSS ratings or zero-days. Human source review and controlled verification are mandatory.</p>
+{% endblock %}
