@@ -104,7 +104,9 @@ def _resolved_declaration(pkg: dict) -> bool:
     npm/package.json and composer.json contain constraints, not lockfile versions.
     """
     return (
-        pkg.get("ecosystem") == "PyPI"
+        pkg.get("resolution") != "unresolved_manifest_constraint"
+        and (pkg.get("resolution") == "lockfile_resolved" or pkg.get("ecosystem") == "PyPI")
+        and pkg.get("ecosystem") in {"PyPI", "npm", "Packagist"}
         and isinstance(pkg.get("name"), str)
         and bool(PACKAGE_PATTERN.fullmatch(pkg["name"]))
         and isinstance(pkg.get("version"), str)
@@ -214,6 +216,7 @@ def match_snapshot(dependencies: list[dict], advisories: list[dict],
                     "package": name,
                     "declared_version": version,
                     "dependency_source": str(row.get("source") or "")[:300],
+                    "dependency_resolution": str(row.get("resolution") or "legacy_declaration")[:80],
                     "summary": str(advisory.get("summary") or "")[:400],
                     "assessment": "published_advisory_exact_declared_version_match",
                     "verification_status": "requires_installed_version_and_context_review",
@@ -245,8 +248,8 @@ def match_snapshot(dependencies: list[dict], advisories: list[dict],
             "malformed_advisory_entries_seen": ignored,
         },
         "limitations": (
-            "Exact PyPI declarations are evaluated against OSV affected.versions and "
-            "supported PyPI ECOSYSTEM / SEMVER ranges; unsupported ranges remain "
+            "Pinned PyPI declarations and supported lockfile-resolved packages are evaluated against OSV affected.versions and "
+            "supported PyPI ECOSYSTEM / strict SEMVER ranges; unsupported ranges remain "
             "unassessed. Manifest declarations are not installed package attestations. "
             "No matches guarantee safety or exploitability. CVE aliases are not created."
         ),
@@ -320,6 +323,7 @@ def read_cve_report(path: str | Path) -> dict:
                 "package": str(item.get("package") or "")[:160],
                 "declared_version": str(item.get("declared_version") or "")[:100],
                 "dependency_source": str(item.get("dependency_source") or "")[:300],
+                "dependency_resolution": str(item.get("dependency_resolution") or "")[:80],
                 "summary": str(item.get("summary") or "")[:400],
                 "verification_status": "requires_installed_version_and_context_review",
                 "confirmed_vulnerability": False,
