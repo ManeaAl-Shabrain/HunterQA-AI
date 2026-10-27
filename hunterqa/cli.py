@@ -43,6 +43,12 @@ def main(argv=None):
     ai.add_argument("--project", required=True)
     ai.add_argument("--out", required=True)
     ai.add_argument("--authorized", action="store_true")
+    fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
+    fix.add_argument("--project", required=True)
+    fix.add_argument("--triage", required=True)
+    fix.add_argument("--finding", required=True)
+    fix.add_argument("--out", required=True)
+    fix.add_argument("--authorized", action="store_true")
     graph = sub.add_parser("trust-graph", help="Build a local Python call graph and trust-boundary review paths")
     graph.add_argument("--project", required=True)
     graph.add_argument("--out", required=True)
@@ -75,6 +81,18 @@ def main(argv=None):
             raise PermissionError("Local AI research requires --authorized")
         from .engines.ai_research import analyze_local
         _write_json(args.out, analyze_local(_approved_root(args.project)))
+    elif args.command == "propose-fix":
+        if not args.authorized:
+            raise PermissionError("Remediation proposals require --authorized")
+        from .engines.remediation import propose_remediation
+        root = _approved_root(args.project)
+        report = propose_remediation(root, Path(args.triage), args.finding)
+        destination = Path(args.out).expanduser()
+        approved_output = destination.parent.resolve(strict=True)
+        _approved_root(str(approved_output))
+        if destination.is_symlink() or destination.resolve() == Path(args.triage).expanduser().resolve():
+            raise ValueError("Output cannot overwrite a report or use a symlink")
+        _write_json(args.out, report)
     elif args.command == "trust-graph":
         if not args.authorized:
             raise PermissionError("Trust graph requires explicit --authorized acknowledgement")
