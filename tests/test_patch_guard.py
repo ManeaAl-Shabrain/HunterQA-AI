@@ -1,6 +1,22 @@
+import json
 import pytest
 from hunterqa.engines.patch_guard import inspect_patch_line
 from hunterqa.engines import remediation
+
+@pytest.fixture
+def project_and_report(tmp_path, monkeypatch):
+    root = tmp_path / 'approved'
+    project = root / 'source'
+    project.mkdir(parents=True)
+    file = project / 'demo.py'
+    file.write_text('def test(expr):\n    return eval(expr)\n')
+    report = root / 'triage.json'
+    report.write_text(json.dumps({'engine': 'unified_evidence_triage', 'findings': [
+        {'id': 'finding001', 'source': 'scan', 'title': 'Dynamic evaluation',
+         'file': 'demo.py', 'line': 2, 'source_report_sha256': 'a' * 64}
+    ]}))
+    monkeypatch.setenv('HUNTERQA_APPROVED_ROOTS', str(root))
+    return project, report, file
 
 
 @pytest.mark.parametrize("line", [
