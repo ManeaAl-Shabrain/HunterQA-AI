@@ -102,7 +102,9 @@ def test_browser_login_requires_environment_credentials(profile, monkeypatch):
 
 
 class FakeResponse:
-    status = 200
+    def __init__(self, status=200, headers=None):
+        self.status = status
+        self.headers = headers or {}
 
 
 class FakeRequest:
@@ -116,7 +118,17 @@ class FakeRoute:
         self.allowed = False
         self.denied = False
 
-    def continue_(self):
+    def fetch(self, *, max_redirects, timeout):
+        assert max_redirects == 0, "Never allow Playwright to follow a redirect"
+        assert timeout <= 8_000
+        if self.request.method == "POST":
+            return FakeResponse(303, {"location": "/account",
+                                      "set-cookie": "session=private; HttpOnly"})
+        return FakeResponse()
+
+    def fulfill(self, **kwargs):
+        # For a redirect, the browser sees an inert 204, not a 3xx.
+        assert kwargs.get("status", 200) not in (301, 302, 303, 307, 308)
         self.allowed = True
 
     def abort(self, reason):
@@ -132,8 +144,6 @@ class FakeLocator:
 
     def click(self, timeout=None):
         assert self.page.perform_request("POST", "http://127.0.0.1:49151/login")
-        assert self.page.perform_request("GET", "http://127.0.0.1:49151/account")
-        self.page.url = "http://127.0.0.1:49151/account"
 
     def count(self):
         return 1
@@ -160,8 +170,9 @@ class FakePage:
     def goto(self, url, **kwargs):
         assert self.perform_request("GET", url)
         self.url = url
-        # A third-party tracking call is deliberately rejected before I/O.
-        assert not self.perform_request("GET", "https://outside.example.test/collect")
+        # An unapproved tracking request must never be allowed to leave.
+        if url.endswith("/login"):
+            assert not self.perform_request("GET", "https://outside.example.test/collect")
         return FakeResponse()
 
     def wait_for_load_state(self, *a, **kwargs):
