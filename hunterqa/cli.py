@@ -105,6 +105,22 @@ def main(argv=None):
     engagement.add_argument("--targets")
     engagement.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
     engagement.add_argument("--authorized", action="store_true")
+    api12 = sub.add_parser("bounty-api-inventory", help="Offline OpenAPI 3.x authorization and object-access review")
+    api12.add_argument("--profile", required=True)
+    api12.add_argument("--spec", required=True)
+    api12.add_argument("--out", required=True)
+    api12.add_argument("--authorized", action="store_true")
+    agent12 = sub.add_parser("bounty-agent-plan", help="Build a safe, non-executing specialist-agent plan")
+    agent12.add_argument("--profile", required=True)
+    agent12.add_argument("--spec")
+    agent12.add_argument("--targets")
+    agent12.add_argument("--out", required=True)
+    agent12.add_argument("--authorized", action="store_true")
+    correlation12 = sub.add_parser("bounty-correlate", help="Deduplicate policy-matched local evidence with manual review")
+    correlation12.add_argument("--profile", required=True)
+    correlation12.add_argument("--file", action="append", required=True, help="Repeat for 1..8 verified local reports")
+    correlation12.add_argument("--out", required=True)
+    correlation12.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -224,6 +240,19 @@ def main(argv=None):
         print("Advisory records:", result["summary"]["advisory_records"])
         print("Web observations:", result["summary"]["http_observations"])
         print("Findings require human verification before submission.")
+    elif args.command == "bounty-api-inventory":
+        from .api_surface_v12 import inspect_openapi
+        report = inspect_openapi(args.spec, args.profile, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-agent-plan":
+        from .agent_workflow_v12 import plan
+        report = plan(args.profile, api_spec=args.spec, targets_path=args.targets,
+                      authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-correlate":
+        from .agent_workflow_v12 import correlate
+        report = correlate(args.profile, args.file, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
