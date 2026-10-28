@@ -6,6 +6,27 @@ HunterQA combines offline static/code analysis, local Qwen hypotheses, trust gra
 
 **HunterQA AI v1.1.0 is the stable, tested local-authorized Bug Bounty Edition.** Prior v1.0.1 and v1.0.0 releases remain available. This is not a production multi-user service or autonomous exploitation framework. Human review of research findings remains required. No tool can guarantee finding every vulnerability, zero false positives, or independent CVE issuance. A research record, advisory match or ASan diagnostic is not automatically a confirmed exploitable vulnerability.
 
+## HunterQA AI v1.2 — Research Orchestration (Development Branch)
+
+**v1.2 is under active development on `feature/v1-2-ai-research-orchestration`;
+v1.1.0 remains the latest published stable release.** This branch adds offline
+OpenAPI route authorization review, seven constrained AI research roles,
+private Ollama/Qwen role prioritization, source-linked evidence deduplication,
+a read-only AI Agent Lab dashboard and conservative low-noise HTTP stop
+conditions. This is not unrestricted autonomous exploitation or stealth mode.
+
+See [v1.2 Kali instructions](docs/V1_2_DEV.md) for
+`bounty-api-inventory`, `bounty-agent-plan`, `bounty-ai-review`,
+`bounty-correlate`, and the `/agent-lab` dashboard.
+Read [reference review and license notes](docs/INSPIRATION_V1_2.md).
+For local acceptance after installing this feature branch:
+
+```bash
+bash tools/verify_agent_1_2.sh
+```
+
+No third-party-target network scanning is part of the v1.2 offline acceptance.
+
 ## Bug Bounty Edition v1.1 — stable local release
 
 See `docs/BUG_BOUNTY_V1_1.md` for the exact scope profile, `bounty-preflight`, `bounty-assess`, `bounty-import-har`, `bounty-report` and read-only dashboard workflow. This is bounded authorization-gated reconnaissance, offline proxy evidence review, and local source/vulnerability research—not unrestricted penetration-test automation or proof of a zero-day.
