@@ -1,5 +1,13 @@
 # HunterQA AI v1.2.0 — Security Limitations
 
+Development source additionally includes [approved assessment plans](APPROVED_ASSESSMENTS.md):
+bounded fixed observations, benign WAF canaries, one designated-account HTTPS
+login, narrow remote browser form review, and offline reviewed handoff packages.
+The v1.2-specific command limits below still apply to the original commands.
+The new modes require expiring fingerprint approval and retain unverified
+observations, per-invocation budgets, no evasion/guessing, no automatic
+submission/official CVE allocation, and no guaranteed vulnerability discovery.
+
 ## Interpretation of results
 
 - **No guaranteed coverage:** HunterQA cannot find every CWE, CVE,

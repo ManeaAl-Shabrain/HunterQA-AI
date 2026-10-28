@@ -15,6 +15,22 @@ HunterQA AI unifies **local source assessment, offline API review, vulnerability
 - **License:** MIT for HunterQA-owned source; third-party tools/models have separate licenses.
 - **Important:** This is **not** autonomous exploitation, an unrestricted pentesting agent, public multi-user hosting, or a guarantee of CVE/zero-day discovery. Findings require independent, authorized human validation.
 
+## Development: approved assessment plans
+
+Current source adds an optional CLI workflow: `engagement-plan` →
+`engagement-preflight` → fingerprint-approved `engagement-run`.
+It supports exact HEAD/GET observations, a benign WAF canary, one dedicated-account
+HTTPS login check, and narrow remote HTTPS Playwright form review with JavaScript
+disabled. Expiring plans, profile binding, request budgets, DNS-pinned transport,
+and a stop-file control constrain each invocation. The existing loopback browser
+lab keeps its original scope.
+
+`engagement-package` prepares reviewed disclosure/CVE request packages from
+analyst-validated dossiers; it sends nothing and assigns no CVE IDs. Status
+observations remain unverified. There is no credential guessing, WAF evasion,
+arbitrary exploit execution, or guaranteed discovery. These additions are not in
+the immutable v1.2.0 release archive. See [setup, limits and examples](docs/APPROVED_ASSESSMENTS.md).
+
 ## Start here — from a new Kali VM
 
 - **[Zero to Start — full Kali + HunterQA setup guide](https://github.com/ManeaAl-Shabrain/HunterQA-AI/blob/main/zero%20to%20start.md)**: A beginner-friendly walkthrough from VM installation and Python setup to verified offline workflow, authorized assessment methodology, optional AI/browser testing, finding validation, reports, and troubleshooting.
@@ -300,7 +316,7 @@ python run.py
 - **No bypassing controls:** no WAF bypass, monitoring evasion, proxy rotation, stealth scanning, brute force, credential attacks, or unrestricted autonomous exploitation.
 - **Never trust AI as proof:** a Qwen hypothesis, missing header, review cue, CVE alias, sanitizer diagnostic, or HEAD status difference does not independently confirm a security vulnerability.
 - **No guaranteed zero-days:** HunterQA does not issue CVEs, prove novelty, or promise detection of all issues. Coordinate any confirmed discovery with affected maintainers.
-- **Browser scope is deliberately narrow:** the Chromium lab supports only owned loopback applications, and Playwright interception is not a network isolation boundary.
+- **Browser scope is deliberately narrow:** the original Chromium lab supports owned loopback applications. Development `engagement-run` additionally supports exact approved remote HTTPS form checks with JavaScript disabled; see [assessment limits](docs/APPROVED_ASSESSMENTS.md). Playwright interception is not a network isolation boundary.
 - **Private evidence:** do not commit `instance/`, `.env`, local HAR captures, auth material, private report files, fuzz output or user data. Use approved folders with least-privilege permissions.
 - **Not a hosted service:** Flask runs on `127.0.0.1:5000` using the development server; public/multi-user deployment is not supported.
 - **Integrity vs authenticity:** ZIP SHA-256 checks verify file integrity against a manifest, not publisher identity, official CVE assignment, or external security certification.

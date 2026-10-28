@@ -28,12 +28,22 @@ local-first, bounded analysis, not evasion of detection or monitoring.
 The dashboard is designed for loopback (`127.0.0.1`) and single-user Kali lab
 operation. Do not expose the Flask development server publicly.
 
-The optional Playwright browser lab permits only an owned, explicitly approved
+The original optional Playwright browser lab permits only an owned, explicitly approved
 `127.0.0.1` service; Playwright route interception is **not a network firewall**.
 Use OS/network isolation for untrusted web content. Controlled HTTP HEAD replay
 must follow current program automation permissions and does not forward browser
 credentials or sessions. Keep session
 secrets, evidence, analyst databases and local snapshots outside GitHub.
+
+Development `engagement-run` separately permits reviewed exact-target HTTP
+observations, benign WAF canaries and one dedicated-account HTTPS login per
+invocation. Its narrow remote browser mode disables JavaScript and only admits
+the exact start/login endpoints. Plans expire within 24 hours, bind to profile
+bytes, and require explicit fingerprint approval. Limits apply per invocation;
+hashes and account/isolation flags are local attestations, not independently
+verified permissions. Stop files act between requests, not on in-flight work.
+Private report/CVE request packages do not transmit reports or allocate CVEs.
+See [approved assessment controls and remaining limits](docs/APPROVED_ASSESSMENTS.md).
 
 Advisory and CVE matching does not establish exploitability or prove a host is
 vulnerable. Neither AI analysis nor a crash report confirms a zero-day by itself.
