@@ -10,10 +10,10 @@ import re
 import time
 from urllib.parse import urlencode
 
-from .bounty import BountyPolicy, _approved_file, _read_json
+from .bounty import BountyPolicy, _approved_file, _decode_json
 from .engagement import _expiry, digest, pinned_request, utcnow
 from .source_files import read_bounded
-from .workflow_network import NetworkJournal
+from .workflow_network import NetworkJournal, read_manifest
 from .workflow_protocol import _fields, _integer
 
 TARGETS = ["https://sts.amazonaws.com/", "https://iam.amazonaws.com/"]
@@ -37,9 +37,10 @@ def require_cloud():
 
 def credentials(binding):
     path = _approved_file(binding["secret_file"])
-    if hashlib.sha256(read_bounded(path, 32_768)).hexdigest() != binding["secret_file_sha256"]:
+    raw = read_bounded(path, 32_768)
+    if hashlib.sha256(raw).hexdigest() != binding["secret_file_sha256"]:
         raise PermissionError("AWS credential file changed after review")
-    data = _read_json(path, 32_768)
+    data = _decode_json(raw)
     _fields(data, ("access_key_id", "secret_access_key", "session_token", "expires_at"), "temporary AWS credentials")
     if not isinstance(data["access_key_id"], str) or not re.fullmatch(r"ASIA[A-Z0-9]{16}", data["access_key_id"]):
         raise ValueError("Use dedicated temporary AWS credentials, not long-lived keys")
@@ -70,7 +71,7 @@ def execute_account(request, *, transport=pinned_request, sleeper=time.sleep):
     from defusedxml import ElementTree
     policy = BountyPolicy.from_dict(request["policy"])
     binding, step = request["binding"], request["step"]
-    account = validate_account(_read_json(binding["file"], 1024))
+    account = validate_account(read_manifest(binding, 1024))
     if step["targets"] != TARGETS or step["requests"] != 2:
         raise ValueError("AWS account checks require exactly the two fixed endpoints and two requests")
     journal = NetworkJournal(request["network_log"])

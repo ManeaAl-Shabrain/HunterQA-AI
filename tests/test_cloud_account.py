@@ -27,7 +27,7 @@ def request_data(tmp_path, monkeypatch):
         "allowed_paths": ["/"], "methods": ["GET"], "allowed_ports": [443],
         "max_requests": 2, "interval_seconds": 0.5},
         "step": {"targets": TARGETS[:], "requests": 2},
-        "binding": {"file": str(scope), "secret_file": str(secrets),
+        "binding": {"file": str(scope), "file_sha256": hashlib.sha256(scope.read_bytes()).hexdigest(), "secret_file": str(secrets),
             "secret_file_sha256": hashlib.sha256(secrets.read_bytes()).hexdigest()},
         "network_log": str(tmp_path / "network.jsonl"), "interval_seconds": 0.5}
 
@@ -154,3 +154,27 @@ def test_cloud_setup_is_offline_and_binds_fixed_endpoints_without_secrets(reques
     assert review["preflight"]["network_requests"] == 0
     assert "PRIVATE_SESSION_TOKEN_FIXTURE" not in json.dumps(review)
     assert review["preflight"]["pending_checkpoints"] == ["assess"]
+
+
+def test_cloud_parses_the_exact_credential_bytes_it_verified(request_data, monkeypatch):
+    import hunterqa.cloud_account as cloud
+    original = cloud.read_bounded
+
+    def rotate_after_read(path, maximum):
+        raw = original(path, maximum)
+        path.write_text("{}")
+        return raw
+
+    monkeypatch.setattr(cloud, "read_bounded", rotate_after_read)
+    assert cloud.credentials(request_data["binding"])["session_token"] == "PRIVATE_SESSION_TOKEN_FIXTURE"
+    with pytest.raises(PermissionError, match="changed"):
+        cloud.credentials(request_data["binding"])
+
+
+def test_changed_account_manifest_is_rejected_before_any_api(request_data):
+    from pathlib import Path
+    Path(request_data["binding"]["file"]).write_text(json.dumps({"schema_version": 1, "account_id": "999999999999"}))
+    calls = []
+    with pytest.raises(ValueError, match="changed"):
+        execute_account(request_data, transport=lambda *args, **kwargs: calls.append(args))
+    assert not calls

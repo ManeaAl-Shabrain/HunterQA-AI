@@ -6,19 +6,22 @@ import json
 import os
 from urllib.parse import urlsplit
 
-from .bounty import _approved_file
+from .bounty import _approved_file, _decode_json
 from .engagement import digest, utcnow
 from .source_files import read_bounded
+
+
+def read_manifest(binding, maximum=65_536):
+    raw = read_bounded(_approved_file(binding["file"]), maximum)
+    if hashlib.sha256(raw).hexdigest() != binding["file_sha256"]:
+        raise ValueError("Assessment manifest evidence changed after review")
+    return _decode_json(raw)
 
 
 def journal_targets(step, binding):
     if step["tool"] not in ("authorization-matrix", "web-canary-check"):
         return step["targets"]
-    from .bounty import _read_json
-    raw = read_bounded(_approved_file(binding["file"]), 65_536)
-    if hashlib.sha256(raw).hexdigest() != binding["file_sha256"]:
-        raise ValueError("Assessment manifest evidence changed after review")
-    data = _read_json(binding["file"], 65_536)
+    data = read_manifest(binding)
     targets = ([case["url"] for case in data["cases"]] if step["tool"] == "authorization-matrix"
                else [check["url"] for check in data["checks"] for _ in range(2)])
     if not 1 <= len(targets) <= step["requests"] or not set(targets) <= set(step["targets"]):
@@ -29,10 +32,8 @@ def journal_targets(step, binding):
 def journal_queries(step, binding):
     if step["tool"] != "web-canary-check":
         return None
-    from .bounty import _read_json
     from .web_canaries import request_digest, variants
-    journal_targets(step, binding)
-    data = _read_json(binding["file"], 65_536)
+    data = read_manifest(binding)
     return [request_digest(check["url"], query) for check in data["checks"] for _, query in variants(check)]
 
 

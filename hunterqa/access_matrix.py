@@ -5,11 +5,11 @@ import hashlib
 import re
 import time
 
-from .bounty import BountyPolicy, _approved_file, _read_json
+from .bounty import BountyPolicy, _approved_file, _decode_json
 from .engagement import digest, pinned_request
 from .source_files import read_bounded
 from .web_discovery import origin
-from .workflow_network import NetworkJournal
+from .workflow_network import NetworkJournal, read_manifest
 from .workflow_protocol import ID, _fields, _integer
 
 
@@ -57,9 +57,10 @@ def validate_matrix(data, policy):
 
 def credentials(binding, roles):
     path = _approved_file(binding["secret_file"])
-    if hashlib.sha256(read_bounded(path, 32_768)).hexdigest() != binding["secret_file_sha256"]:
+    raw = read_bounded(path, 32_768)
+    if hashlib.sha256(raw).hexdigest() != binding["secret_file_sha256"]:
         raise PermissionError("Test credential file changed after review")
-    data = _read_json(path, 32_768)
+    data = _decode_json(raw)
     required = {name for name, role in roles.items() if role["authenticated"]}
     if not isinstance(data, dict) or set(data) != required:
         raise ValueError("Provide exactly the declared authenticated role credentials")
@@ -74,7 +75,7 @@ def credentials(binding, roles):
 def execute_matrix(request, *, transport=pinned_request, sleeper=time.sleep):
     policy = BountyPolicy.from_dict(request["policy"])
     binding, step = request["binding"], request["step"]
-    matrix = validate_matrix(_read_json(binding["file"], 65_536), policy)
+    matrix = validate_matrix(read_manifest(binding), policy)
     if len(matrix["cases"]) > step["requests"] or not {c["url"] for c in matrix["cases"]} <= set(step["targets"]):
         raise ValueError("Access matrix exceeds reviewed reservation or targets")
     observations, findings = [], []

@@ -127,6 +127,24 @@ def test_credential_rotation_requires_fresh_approval(owned):
     assert not seen and not (root / "denied").exists()
 
 
+def test_role_credentials_are_parsed_from_the_same_verified_bytes(owned, monkeypatch):
+    import hunterqa.access_matrix as access
+    secrets = owned[4]
+    binding = {"secret_file": str(secrets), "secret_file_sha256": hashlib.sha256(secrets.read_bytes()).hexdigest()}
+    roles = json.loads(owned[3].read_text())["roles"]
+    original = access.read_bounded
+
+    def rotate_after_read(path, maximum):
+        raw = original(path, maximum)
+        path.write_text("{}")
+        return raw
+
+    monkeypatch.setattr(access, "read_bounded", rotate_after_read)
+    assert access.credentials(binding, roles)["owner"] == "Bearer SENSITIVE_FIXTURE_A"
+    with pytest.raises(PermissionError, match="changed"):
+        access.credentials(binding, roles)
+
+
 def test_real_service_connects_distinguish_open_and_refused_without_http_requests(owned):
     root, profile, seed, _, _, seen, _ = owned
     with socket.socket() as closed:

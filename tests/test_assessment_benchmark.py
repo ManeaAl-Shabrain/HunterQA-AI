@@ -1,4 +1,5 @@
 import html
+import hashlib
 import json
 
 import pytest
@@ -60,7 +61,7 @@ def test_reflection_negative_contexts_do_not_become_markup_findings(tmp_path, mo
                 "body": body.encode()}
 
     result = execute_canaries({"policy": policy, "step": {"targets": [url], "requests": 2},
-        "binding": {"file": str(manifest)}, "network_log": str(tmp_path / "network.jsonl"),
+        "binding": {"file": str(manifest), "file_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, "network_log": str(tmp_path / "network.jsonl"),
         "interval_seconds": 0.5}, transport=transport, sleeper=lambda _: None)
     assert result["requests"] == 2 and not result["findings"]
 

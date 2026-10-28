@@ -77,6 +77,11 @@ def _read_json(path, maximum):
         raw = handle.read(maximum + 1)
     if len(raw) > maximum:
         raise ValueError("Local evidence exceeds size limit")
+    return _decode_json(raw)
+
+
+def _decode_json(raw):
+    """Decode the exact bytes already bounded/hashed by the caller."""
     def reject_duplicate_keys(pairs):
         result = {}
         for key, value in pairs:

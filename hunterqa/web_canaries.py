@@ -6,9 +6,9 @@ import re
 import time
 from html.parser import HTMLParser
 
-from .bounty import BountyPolicy, _read_json
+from .bounty import BountyPolicy
 from .engagement import digest, pinned_request
-from .workflow_network import NetworkJournal
+from .workflow_network import NetworkJournal, read_manifest
 from .workflow_protocol import ID, _fields, _integer
 
 KINDS = ("markup-reflection", "sql-error")
@@ -88,7 +88,7 @@ def _cue(check, response):
 def execute_canaries(request, *, transport=pinned_request, sleeper=time.sleep):
     policy = BountyPolicy.from_dict(request["policy"])
     binding, step = request["binding"], request["step"]
-    manifest = validate_canaries(_read_json(binding["file"], 65_536), policy)
+    manifest = validate_canaries(read_manifest(binding), policy)
     if 2 * len(manifest["checks"]) > step["requests"] or not {c["url"] for c in manifest["checks"]} <= set(step["targets"]):
         raise ValueError("Canary checks exceed reviewed request reservation or targets")
     journal = NetworkJournal(request["network_log"])
