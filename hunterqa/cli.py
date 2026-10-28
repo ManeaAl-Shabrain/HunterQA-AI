@@ -39,10 +39,36 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
+    doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
+    doctor.add_argument("--project")
+    doctor.add_argument("--check-ollama", action="store_true")
+    doctor.add_argument("--json", action="store_true")
     ai = sub.add_parser("hypothesize", help="Local Ollama-assisted source hypotheses (never auto-confirmed)")
     ai.add_argument("--project", required=True)
     ai.add_argument("--out", required=True)
     ai.add_argument("--authorized", action="store_true")
+    campaign = sub.add_parser("campaign", help="Run one bounded authorized local research campaign")
+    campaign.add_argument("--project", required=True)
+    campaign.add_argument("--out-dir", required=True)
+    campaign.add_argument("--with-ai", action="store_true")
+    campaign.add_argument("--no-graph", action="store_true")
+    campaign.add_argument("--ai-chunks", type=int, default=4)
+    campaign.add_argument("--sanitizer-log")
+    campaign.add_argument("--lab")
+    campaign.add_argument("--binary")
+    campaign.add_argument("--crashes")
+    campaign.add_argument("--authorized", action="store_true")
+    cve = sub.add_parser("cve-check", help="Match offline OSV advisories to declared exact PyPI versions")
+    cve.add_argument("--project", required=True)
+    cve.add_argument("--snapshot", required=True)
+    cve.add_argument("--out", required=True)
+    cve.add_argument("--authorized", action="store_true")
+    fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
+    fix.add_argument("--project", required=True)
+    fix.add_argument("--triage", required=True)
+    fix.add_argument("--finding", required=True)
+    fix.add_argument("--out", required=True)
+    fix.add_argument("--authorized", action="store_true")
     graph = sub.add_parser("trust-graph", help="Build a local Python call graph and trust-boundary review paths")
     graph.add_argument("--project", required=True)
     graph.add_argument("--out", required=True)
@@ -70,11 +96,57 @@ def main(argv=None):
         from .engines.hypotheses import checklist
         for x in checklist():
             print(f"{x['category']}: {x['status']}; {', '.join(x['questions'])}")
+    elif args.command == "doctor":
+        from .doctor import run_diagnostics
+        result = run_diagnostics(project=args.project, check_ollama=args.check_ollama)
+        if args.json:
+            print(json.dumps(result, indent=2))
+        else:
+            for check in result["checks"]:
+                print(f"[{check['status'].upper()}] {check['name']}: {check['detail']}")
+            print("Overall:", result["overall"])
     elif args.command == "hypothesize":
         if not args.authorized:
             raise PermissionError("Local AI research requires --authorized")
         from .engines.ai_research import analyze_local
         _write_json(args.out, analyze_local(_approved_root(args.project)))
+    elif args.command == "campaign":
+        from .campaign import run_campaign
+        outcome = run_campaign(
+            args.project, args.out_dir, authorized=args.authorized,
+            include_graph=not args.no_graph,
+            include_ai=args.with_ai, ai_max_chunks=args.ai_chunks,
+            sanitizer_log=args.sanitizer_log,
+            replay_lab=args.lab, replay_binary=args.binary,
+            replay_crashes=args.crashes,
+        )
+        print("Campaign:", outcome["output_directory"])
+        for name, stage in outcome["stages"].items():
+            print(f"  {name}: {stage['status']}")
+        print("Research records:", outcome["summary"]["research_records"])
+    elif args.command == "cve-check":
+        if not args.authorized:
+            raise PermissionError("CVE research requires explicit --authorized")
+        from .engines.cve_intel import run_cve_check
+        _approved_root(args.project)
+        report = run_cve_check(args.project, args.snapshot)
+        output = Path(args.out).expanduser()
+        _approved_root(str(output.parent.resolve(strict=True)))
+        if output.is_symlink() or output.exists():
+            raise ValueError("Use a new output path without symlinks")
+        _write_json(str(output), report)
+    elif args.command == "propose-fix":
+        if not args.authorized:
+            raise PermissionError("Remediation proposals require --authorized")
+        from .engines.remediation import propose_remediation
+        root = _approved_root(args.project)
+        report = propose_remediation(root, Path(args.triage), args.finding)
+        destination = Path(args.out).expanduser()
+        approved_output = destination.parent.resolve(strict=True)
+        _approved_root(str(approved_output))
+        if destination.is_symlink() or destination.resolve() == Path(args.triage).expanduser().resolve():
+            raise ValueError("Output cannot overwrite a report or use a symlink")
+        _write_json(args.out, report)
     elif args.command == "trust-graph":
         if not args.authorized:
             raise PermissionError("Trust graph requires explicit --authorized acknowledgement")

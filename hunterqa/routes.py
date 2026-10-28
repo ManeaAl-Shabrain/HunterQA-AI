@@ -339,3 +339,75 @@ def update_triage_review(record_id: str):
     except ValueError as error:
         flash(str(error), "error")
     return redirect(url_for("main.triage_dashboard"))
+
+
+@bp.get("/campaigns")
+def campaign_history():
+    """Read-only view of administrator-approved local campaign artifacts."""
+    from pathlib import Path
+    from .engines.campaign_history import (
+        read_campaign_history, compare_campaigns, public_history,
+    )
+
+    roots = current_app.config.get("APPROVED_ROOTS") or []
+    if isinstance(roots, str):
+        roots = roots.split(":")
+    selected_root = current_app.config.get("CAMPAIGN_HISTORY_ROOT") or (
+        Path.home() / "ZeroScope-AI" / "research-lab"
+    )
+    history = read_campaign_history(selected_root, roots)
+    left = request.args.get("left", "")
+    right = request.args.get("right", "")
+    comparison = (
+        compare_campaigns(history, left, right)
+        if left and right else None
+    )
+    return render_template(
+        "campaigns.html", history=public_history(history),
+        comparison=comparison, selected_left=left, selected_right=right,
+    )
+
+
+@bp.get("/trends")
+def campaign_trends_dashboard():
+    """Read-only longitudinal summaries of local approved campaigns."""
+    from pathlib import Path
+    from .engines.campaign_history import read_campaign_history
+    from .engines.campaign_trends import build_campaign_trends
+
+    roots = current_app.config.get("APPROVED_ROOTS") or []
+    selected_root = current_app.config.get("CAMPAIGN_HISTORY_ROOT") or (
+        Path.home() / "ZeroScope-AI" / "research-lab"
+    )
+    history = read_campaign_history(selected_root, roots)
+    trends = build_campaign_trends(history)
+    return render_template("trends.html", trends=trends)
+
+
+@bp.get("/analytics")
+def research_analytics_dashboard():
+    """Read-only evidence analytics and analyst history."""
+    from pathlib import Path
+    from .engines.triage_view import read_triage_report
+    from .engines.triage_review import decorate_records
+    from .engines.research_analytics import build_research_analytics
+
+    report_path = current_app.config.get("TRIAGE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab" /
+        "verification" / "hunterqa_unified_triage.json"
+    )
+    report = decorate_records(read_triage_report(report_path), get_db())
+    analytics = build_research_analytics(report, get_db())
+    return render_template("analytics.html", analytics=analytics)
+
+
+@bp.get("/cve-intelligence")
+def cve_intelligence():
+    """Read-only administrator-selected local CVE evidence; never browser file paths."""
+    from pathlib import Path
+    from .engines.cve_intel import read_cve_report
+    filename = current_app.config.get("CVE_REPORT_PATH") or (
+        Path.home() / "ZeroScope-AI" / "research-lab" /
+        "verification" / "hunterqa_cve_intelligence.json"
+    )
+    return render_template("cve_intelligence.html", report=read_cve_report(filename))

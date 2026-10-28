@@ -7,7 +7,7 @@ name = "hunterqa-ai"
 version = "1.0.0"
 description = "HunterQA AI: local-only authorized vulnerability research and evidence platform"
 requires-python = ">=3.11"
-dependencies = ["Flask>=3.0,<4"]
+dependencies = ["Flask>=3.0,<4", "packaging>=23,<27"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]

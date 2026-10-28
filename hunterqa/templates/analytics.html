@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Research Analytics · HunterQA AI{% endblock %}
+{% block section %}Research Analytics{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">EVIDENCE INTELLIGENCE</p><h1>Research <em>Analytics.</em></h1>
+<p class="lede">Source evidence, suggested relationships and analyst history. All findings require human verification.</p></div></section>
+<section class="stats-grid">
+ <article class="stat"><span>Research records</span><strong>{{ analytics.total_records }}</strong><small>Not unique vulnerabilities</small></article>
+ <article class="stat"><span>Reviewed records</span><strong>{{ analytics.reviewed_records }}</strong><small>{{ analytics.review_progress_percent }}% of records</small></article>
+ <article class="stat"><span>Suggested groups</span><strong>{{ analytics.suggested_groups|length }}</strong><small>Not verified correlation</small></article>
+ <article class="stat"><span>Confirmed zero-days</span><strong>0</strong><small>Requires independent verification</small></article>
+</section>
+{% if analytics.status != 'ready' %}
+<section class="panel" style="padding:24px">Triage report is missing or invalid. Generate the unified local report first.</section>
+{% else %}
+<div class="split-grid">
+<section class="panel"><div class="panel-head"><h2>Evidence Sources</h2></div>
+<div class="research-details">
+{% for item in analytics.source_counts %}
+<div class="research-entry"><strong>{{ item.name }}</strong> — {{ item.count }} records ({{ item.percent }}%)
+<div class="progress" role="img" aria-label="{{ item.percent }}% of evidence records"><i style="width:{{ item.percent }}%"></i></div></div>
+{% else %}<p>No evidence records yet.</p>{% endfor %}
+</div></section>
+<section class="panel"><div class="panel-head"><h2>Analyst Review Progress</h2></div>
+<div class="research-details">
+{% for item in analytics.review_counts %}<p><strong>{{ item.name|replace('_',' ')|title }}</strong>: {{ item.count }} ({{ item.percent }}%)</p>
+{% else %}<p>No analyst reviews available.</p>{% endfor %}
+</div></section></div>
+<section class="panel" style="margin-top:24px"><div class="panel-head"><div><p class="eyebrow">EVIDENCE RELATIONSHIPS</p><h2>Possible Duplicate Groups</h2></div></div>
+<div class="research-details">
+{% for group in analytics.suggested_groups %}
+<details class="research-entry"><summary>Group {{ group.id }} — {{ group.member_count }} candidate records (unverified link)</summary>
+{% for item in group.members %}<p><strong>{{ item.source }}</strong>: {{ item.title }} — {{ item.file }}{% if item.line %}:{{ item.line }}{% endif %}</p>{% endfor %}
+<p>Grouping is heuristic. Records remain separate until reviewed.</p></details>
+{% else %}<p>No conservative duplicate suggestions.</p>{% endfor %}
+</div></section>
+<section class="panel" style="margin-top:24px"><div class="panel-head"><div><p class="eyebrow">INVESTIGATION HISTORY</p><h2>Analyst Decision Timeline</h2></div></div>
+<div class="research-details">{% for event in analytics.timeline %}
+<article class="research-entry"><strong>{{ event.created_at }}</strong> · {{ event.finding_id }}
+<p>{{ event.old_status|replace('_',' ') }} → {{ event.new_status|replace('_',' ') }}
+{% if not event.current_evidence %}(historical evidence; not linked to current report){% endif %}</p>
+<p>{{ event.note }}</p></article>
+{% else %}<p>No review decisions have been recorded.</p>{% endfor %}
+</div></section>
+{% endif %}
+<p class="callout warn" style="margin-top:24px">{{ analytics.limitations }}</p>
+{% endblock %}

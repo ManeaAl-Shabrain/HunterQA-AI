@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Research Trends · HunterQA AI{% endblock %}
+{% block section %}Research Trends{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">LONGITUDINAL RESEARCH</p><h1>Research <em>Trends.</em></h1>
+<p class="lede">Integrity-checked local campaigns, research record histories, and candidate changes that require human review.</p></div></section>
+<section class="stats-grid">
+<article class="stat"><span>Verified campaigns</span><strong>{{ trends.verified_campaigns or 0 }}</strong><small>Manifest hash checks passed</small></article>
+<article class="stat"><span>Projects compared</span><strong>{{ trends.projects|length }}</strong><small>Grouped by recorded project path</small></article>
+<article class="stat"><span>Excluded runs</span><strong>{{ trends.excluded_unverified or 0 }}</strong><small>Unverified or invalid integrity</small></article>
+<article class="stat"><span>Confirmed zero-days</span><strong>0</strong><small>No verified discoveries</small></article>
+</section>
+{% if trends.status != 'ready' %}
+<section class="panel" style="padding:24px">Approved campaign history is unavailable. Check local configuration.</section>
+{% endif %}
+{% for project in trends.projects %}
+<section class="panel" style="margin-top:24px">
+<div class="panel-head"><div><p class="eyebrow">SOURCE PROJECT</p><h2>{{ project.project }}</h2><p>{{ project.campaign_count }} verified snapshots</p></div></div>
+<div class="research-details">
+<h3>Research record history</h3>
+{% for run in project.runs %}
+<article class="research-entry">
+<p><strong>{{ run.id }}</strong> · {{ run.started_at }} · {{ run.records }} research records</p>
+<div style="height:8px;background:#26302e;border-radius:6px;overflow:hidden"><div style="width:{{ run.record_bar_percent }}%;height:100%;background:#a7f529"></div></div>
+<p>Static: {{ run.static_records }} · AI: {{ run.ai_records }} · Other: {{ run.other_records }} · Static engine: {{ run.scan_stage }}</p>
+</article>
+{% endfor %}
+<h3>Observed changes</h3>
+{% for change in project.transitions %}
+<details class="research-entry">
+<summary>{{ change.from }} → {{ change.to }} · {{ change.comparison|replace('_',' ') }}</summary>
+<p>{{ change.explanation }}</p>
+{% if change.new_static_candidates is not none %}
+<p>Newly observed static candidates: {{ change.new_static_candidates }} · Not observed in later run: {{ change.no_longer_observed }} · Persisting: {{ change.persisting_static_candidates }}</p>
+{% for candidate in change.new_candidate_examples %}
+<p>{{ candidate.file }}:{{ candidate.line }} — {{ candidate.title }} ({{ candidate.cwe_candidate or 'CWE not established' }})</p>
+{% endfor %}
+{% endif %}
+</details>
+{% else %}<p>At least two verified campaigns are needed to show changes.</p>{% endfor %}
+</div></section>
+{% else %}
+<section class="panel" style="padding:24px">No verified campaign series to display.</section>
+{% endfor %}
+<p class="callout warn" style="margin-top:24px">{{ trends.limitations or 'No vulnerability claims are made from trend counts.' }}</p>
+{% endblock %}
