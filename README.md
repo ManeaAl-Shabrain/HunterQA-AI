@@ -46,6 +46,15 @@ two approved HEAD reports **offline** without new network requests.
 No automated CVE or zero-day confirmation is provided. See
 [the private analyst review guide](docs/REVIEW_V1_2.md).
 
+**Offline Review Cue Benchmark:** `bounty-benchmark` evaluates labeled,
+fully synthetic OpenAPI schemas for useful versus unnecessary API review
+prompts. The CI gate checks for missed suggestions, unexpected suggestions,
+and unlabeled predictions. Review-cue precision is NOT real security
+vulnerability accuracy. No targets are contacted. See
+[the synthetic benchmark guide](docs/BENCHMARK_V1_2.md) and the
+read-only Agent Lab calibration card.
+
+
 Install optional browser support with `python -m pip install -e '.[dev,browser]'`.
 
 
