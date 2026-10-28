@@ -25,6 +25,11 @@ EXCLUDED_EXTS = {
 }
 EXCLUDED_FILES = {".env", ".env.local", ".env.production", "id_rsa", "id_ed25519"}
 ALLOW_ROOTS = {".github", "hunterqa", "zeroscope", "tests", "docs", "examples", "tools", "labs"}
+PUBLIC_TEMPLATES = {
+    "README.md", "HunterQA-scope-template.json", "HunterQA-targets-template.txt",
+    "HunterQA-first-configuration-review.md", "01-scope-and-approval-notes.md",
+    "02-plan-and-run-checklist.md", "03-findings-and-report.md", "04-retest-record.md",
+}
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",
     "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh", "zero to start.md",
@@ -40,7 +45,9 @@ def tracked_files(repo: Path):
         rel = Path(name)
         if rel.is_absolute() or ".." in rel.parts:
             raise ValueError("Invalid repository path")
-        if rel.parts[0] not in ALLOW_ROOTS and name not in ALLOW_FILES:
+        public_template = (len(rel.parts) == 2 and rel.parts[0] == "templates"
+                           and rel.name in PUBLIC_TEMPLATES)
+        if not public_template and rel.parts[0] not in ALLOW_ROOTS and name not in ALLOW_FILES:
             continue
         if any(part in EXCLUDED_DIRS for part in rel.parts):
             continue

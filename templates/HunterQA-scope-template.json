@@ -1,0 +1,17 @@
+{
+  "program": "REPLACE_WITH_ORGANIZATION_AND_ASSESSMENT_NAME",
+  "platform": "private",
+  "authorization_reference": "REPLACE_WITH_WRITTEN_APPROVAL_REFERENCE",
+  "acknowledged_authorization": false,
+  "allowed_hosts": ["app.company.example"],
+  "excluded_hosts": [],
+  "allowed_paths": ["/"],
+  "excluded_paths": [],
+  "methods": ["GET"],
+  "allowed_ports": [443],
+  "max_requests": 1,
+  "interval_seconds": 2,
+  "lab_mode": false,
+  "allow_private_network": false,
+  "allow_http": false
+}
