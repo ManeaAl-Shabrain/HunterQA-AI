@@ -335,7 +335,7 @@ positive/negative fixtures. Ubuntu CI exercises Python 3.11 and 3.13.
 See the [repository review and verification scope](docs/REPOSITORY_REVIEW_2026_10.md).
 
 ```bash
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip setuptools
 python -m pip install -e '.[dev,quality]'
 python -m ruff check hunterqa zeroscope tools --select F
 python -m bandit -r hunterqa zeroscope tools -ll

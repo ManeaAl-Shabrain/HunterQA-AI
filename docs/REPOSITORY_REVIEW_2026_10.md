@@ -38,7 +38,7 @@ rendering escapes all imported text before adding fixed tags, and scan-update
 SQL column names come exclusively from a fixed allowlist with bound values.
 Those narrow exceptions do not suppress checks elsewhere. Remaining low-severity
 subprocess warnings concern the intentional local scanner, generated rule QA,
-release builder and explicitly authorized isolated crash replay; they are not
+  release builder and explicitly authorized isolated crash replay; they are not
 evidence of arbitrary model command execution.
 
 ## Added evidence workflow
@@ -70,10 +70,13 @@ and source package verification on Ubuntu with Python 3.11 and 3.13. A separate
 job validates the actual optional Semgrep executable against all 13 bundled
 rules using generated positive/negative Python, JavaScript and PHP snippets;
 the snippets are parsed, never executed. This follows the engine's documented
-[local rule validation workflow](https://github.com/semgrep/skills/blob/main/skills/semgrep/SKILL.md).
+[local rule validation workflow](https://semgrep.dev/docs/writing-rules/testing-rules).
 Passing these synthetic cases does not measure real-world precision or recall.
 Dependency advisory checks use public package metadata and require internet;
 they are separate from the tool's default offline research workflow.
+The Python 3.11 audit also detected old runner-provided setuptools; CI upgrades
+both pip and setuptools before auditing instead of ignoring those advisories.
+Checkout/setup actions use their maintained v7 lines.
 
 ## Remaining limits
 
