@@ -15,6 +15,12 @@ HunterQA AI unifies **local source assessment, offline API review, vulnerability
 - **License:** MIT for HunterQA-owned source; third-party tools/models have separate licenses.
 - **Important:** This is **not** autonomous exploitation, an unrestricted pentesting agent, public multi-user hosting, or a guarantee of CVE/zero-day discovery. Findings require independent, authorized human validation.
 
+## Start here — from a new Kali VM
+
+- **[Zero to Start — full Kali + HunterQA setup guide](zero%20to%20start.md)**: A beginner-friendly bullet-point walkthrough from VM installation and Python setup to verified offline workflow, authorized assessment methodology, optional AI/browser testing, finding validation, reports, and troubleshooting.
+- **Quick verification:** `hunterqa --version` → `hunterqa doctor` → `bash tools/verify_agent_1_2.sh`.
+- **Safety:** Live testing requires written permission, exact target scope and explicit method/rate limits. The guide uses fictional sample assets for offline exercises.
+
 ## Contents
 
 - [Purpose and use cases](#purpose-and-use-cases)
@@ -277,6 +283,8 @@ python run.py
 - Get the exact parameters with `python -m hunterqa COMMAND --help`; many actions require `--authorized`.
 
 ### Reference guides
+
+- **From zero:** [Zero to Start — complete Kali VM and HunterQA walkthrough](zero%20to%20start.md).
 
 - **Start here:** [v1.2 Kali workflow](docs/V1_2_DEV.md) · [Architecture](docs/ARCHITECTURE.md) · [Security boundaries](SECURITY.md).
 - **Bounty:** [Authorization and HAR](docs/BUG_BOUNTY_V1_1.md) · [Browser Lab](docs/BROWSER_LAB_V1_2.md).
