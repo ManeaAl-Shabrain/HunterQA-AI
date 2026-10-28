@@ -15,7 +15,7 @@ import re
 import time
 from collections import Counter
 from datetime import datetime, timezone
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 from .bounty import BountyPolicy, _approved_file
 
@@ -69,6 +69,7 @@ class BrowserRequestGate:
         self.post_used = False
         self.last_request_at = None
         self.stop = False
+        self.approved_login_redirect = None
         self.max_requests = min(20, policy.max_requests)
 
     def admit(self, method: str, url: str) -> bool:
@@ -163,9 +164,50 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                 )
                 try:
                     def route_check(route):
-                        if gate.admit(route.request.method, route.request.url):
-                            route.continue_()
-                        else:
+                        # Playwright's route.continue_ may allow redirect hops
+                        # to bypass another policy interception. Fetch exactly
+                        # ONE response with redirect following disabled.
+                        request = route.request
+                        if not gate.admit(request.method, request.url):
+                            route.abort("blockedbyclient")
+                            return
+                        try:
+                            response = route.fetch(max_redirects=0, timeout=8_000)
+                            status = int(response.status)
+                            gate.on_response(status)
+                            if 300 <= status < 400:
+                                location = response.headers.get("location")
+                                if not location:
+                                    raise ValueError("Missing redirect location")
+                                next_url = urljoin(request.url, location)
+                                # For owned-lab login only: allow a preflighted
+                                # GET location; NEVER hand the redirect to
+                                # Chromium, which may auto-follow outside scope.
+                                if (request.method != "POST" or
+                                        not gate.post_used or
+                                        gate.approved_login_redirect is not None or
+                                        status not in (302, 303)):
+                                    raise ValueError("Unexpected browser redirect denied")
+                                dest, dest_host, dest_port, _ = gate.policy.authorize_url(
+                                    next_url, "GET")
+                                if (dest_host != "127.0.0.1" or
+                                        dest_port != gate.port or
+                                        dest.scheme != gate.parts.scheme):
+                                    raise ValueError("Redirect is outside the owned app")
+                                gate.approved_login_redirect = next_url
+                                # Return an inert 204 with any local session
+                                # cookie applied in memory. No Location header
+                                # reaches Chromium; the driver later starts a
+                                # fresh GET that passes policy interception.
+                                cookie = response.headers.get("set-cookie")
+                                safe_headers = {"set-cookie": cookie} if cookie else {}
+                                route.fulfill(status=204, headers=safe_headers, body="")
+                                return
+                            if gate.stop:
+                                raise ValueError("Rate limit or denial blocked browser run")
+                            route.fulfill(response=response)
+                        except Exception:
+                            gate.stop = True
                             route.abort("blockedbyclient")
 
                     context.route("**/*", route_check)
@@ -183,7 +225,13 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                         page.locator(username_selector).fill(user, timeout=5_000)
                         page.locator(password_selector).fill(secret, timeout=5_000)
                         page.locator(submit_selector).click(timeout=8_000)
-                        page.wait_for_load_state("domcontentloaded", timeout=8_000)
+                        # Follow only the verified, single approved location
+                        # as a NEW navigation; no native HTTP redirects.
+                        if gate.approved_login_redirect:
+                            page.goto(gate.approved_login_redirect,
+                                      wait_until="domcontentloaded", timeout=12_000)
+                        else:
+                            page.wait_for_load_state("domcontentloaded", timeout=8_000)
                     if gate.stop:
                         raise RuntimeError("Browser session stopped after rejection or rate limit")
                     # Final URL must remain within the same exact origin + allowed paths.
