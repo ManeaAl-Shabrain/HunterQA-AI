@@ -233,7 +233,20 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                         phase = "password_field"
                         page.locator(password_selector).fill(secret, timeout=5_000)
                         phase = "login_submit"
-                        page.locator(submit_selector).click(timeout=8_000, no_wait_after=True)
+                        expected_post = (
+                            f"{gate.parts.scheme}://127.0.0.1:{gate.port}"
+                            f"{login_post_path}"
+                        )
+                        # click(no_wait_after=True) can return BEFORE the POST.
+                        # Wait for the exact approved POST response before
+                        # following any independently validated login location.
+                        with page.expect_response(
+                            lambda resp: resp.request.method == "POST"
+                            and resp.url == expected_post, timeout=8_000
+                        ):
+                            page.locator(submit_selector).click(
+                                timeout=8_000, no_wait_after=True
+                            )
                         # Follow only the verified, single approved location
                         # as a NEW navigation; no native HTTP redirects.
                         if gate.approved_login_redirect:
