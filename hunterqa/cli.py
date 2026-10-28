@@ -164,6 +164,12 @@ def main(argv=None):
     review_export.add_argument("--dossier", required=True)
     review_export.add_argument("--out", required=True)
     review_export.add_argument("--authorized", action="store_true")
+    repeat = sub.add_parser("bounty-repeatability", help="Compare two same-scope HEAD replay reports offline")
+    repeat.add_argument("--profile", required=True)
+    repeat.add_argument("--first", required=True)
+    repeat.add_argument("--second", required=True)
+    repeat.add_argument("--out", required=True)
+    repeat.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -332,6 +338,11 @@ def main(argv=None):
         from .verification_v12 import disclosure_draft
         content = disclosure_draft(args.profile, args.dossier, authorized=args.authorized)
         _write_bounty_output(args.out, content)
+    elif args.command == "bounty-repeatability":
+        from .repeatability_v12 import compare_head_replays
+        report = compare_head_replays(args.profile, args.first, args.second,
+                                      authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
