@@ -1,0 +1,80 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Synthetic Authenticated API Contract",
+    "version": "1",
+    "description": "For offline rule-coverage testing ONLY; not a deployed app."
+  },
+  "servers": [
+    {
+      "url": "https://app.example.test"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/v1/accounts/{accountId}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Authorized own lab object"
+          }
+        }
+      },
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Owned account update"
+          }
+        }
+      }
+    },
+    "/v1/admin/permissions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Owned permission listing"
+          }
+        }
+      },
+      "post": {
+        "responses": {
+          "204": {
+            "description": "Owned permissions adjustment"
+          }
+        }
+      }
+    },
+    "/v1/payments/transfer": {
+      "post": {
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Public test interface fixture"
+          }
+        }
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Healthy fixture"
+          }
+        }
+      }
+    }
+  }
+}
