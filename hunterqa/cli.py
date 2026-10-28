@@ -141,6 +141,29 @@ def main(argv=None):
     replay12.add_argument("--har-report", required=True)
     replay12.add_argument("--out", required=True)
     replay12.add_argument("--authorized", action="store_true")
+    review_init = sub.add_parser("bounty-review-init", help="Create an offline, scope-matched review dossier from correlated findings")
+    review_init.add_argument("--profile", required=True)
+    review_init.add_argument("--correlation", required=True)
+    review_init.add_argument("--out", required=True)
+    review_init.add_argument("--authorized", action="store_true")
+    review_decide = sub.add_parser("bounty-review-decide", help="Record one human decision to a NEW private dossier version")
+    review_decide.add_argument("--profile", required=True)
+    review_decide.add_argument("--dossier", required=True)
+    review_decide.add_argument("--case", required=True)
+    review_decide.add_argument("--decision", required=True, choices=(
+        "needs_more_evidence", "not_reproducible", "false_positive", "out_of_scope",
+        "analyst_validated"))
+    review_decide.add_argument("--reviewer", required=True, help="3..40 character local analyst alias")
+    review_decide.add_argument("--impact", default="", help="Human-authored one-line impact summary (validated only)")
+    review_decide.add_argument("--reproduction", default="", help="Human-authored safe reproduction summary (validated only)")
+    review_decide.add_argument("--evidence", help="Path to already saved local reproduction artifact (validated only)")
+    review_decide.add_argument("--out", required=True, help="New file; prior dossier never overwritten")
+    review_decide.add_argument("--authorized", action="store_true")
+    review_export = sub.add_parser("bounty-review-export", help="Create a private disclosure draft for human-validated cases only")
+    review_export.add_argument("--profile", required=True)
+    review_export.add_argument("--dossier", required=True)
+    review_export.add_argument("--out", required=True)
+    review_export.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -293,6 +316,22 @@ def main(argv=None):
             args.profile, args.har_report, authorized=args.authorized
         )
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-init":
+        from .verification_v12 import prepare_dossier
+        report = prepare_dossier(args.profile, args.correlation, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-decide":
+        from .verification_v12 import record_review
+        report = record_review(
+            args.profile, args.dossier, args.case, args.decision, args.reviewer,
+            impact=args.impact, reproduction=args.reproduction,
+            evidence_path=args.evidence, authorized=args.authorized,
+        )
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-export":
+        from .verification_v12 import disclosure_draft
+        content = disclosure_draft(args.profile, args.dossier, authorized=args.authorized)
+        _write_bounty_output(args.out, content)
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
