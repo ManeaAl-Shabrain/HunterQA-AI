@@ -45,6 +45,8 @@ def tracked_files(repo: Path):
             continue
         if rel.suffix.lower() in EXCLUDED_EXTS or rel.name in EXCLUDED_FILES:
             continue
+        if rel.parts[0] == "labs" and rel.suffix.lower() not in {".py", ".c", ".h", ".sh", ".md", ".yml", ".yaml", ".toml"}:
+            continue  # Lab evidence and arbitrary data files are not publishable source.
         if any(part.startswith(".env") for part in rel.parts):
             continue
         file = repo / rel
