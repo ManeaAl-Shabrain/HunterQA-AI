@@ -15,7 +15,7 @@ from tools.verify_release_archive import verify_archive
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_STABLE = "1.2.0"
+EXPECTED_STABLE = "1.3.0"
 
 
 def test_version_from_project_metadata_and_installed_cli(capsys):
@@ -26,11 +26,11 @@ def test_version_from_project_metadata_and_installed_cli(capsys):
     with pytest.raises(SystemExit) as out:
         main(["--version"])
     assert out.value.code == 0
-    assert capsys.readouterr().out.strip() == "HunterQA AI 1.2.0"
+    assert capsys.readouterr().out.strip() == "HunterQA AI " + EXPECTED_STABLE
 
 
 def test_stable_archive_uses_canonical_version_and_preserves_source_integrity(tmp_path):
-    archive = tmp_path / "HunterQA-AI-1.2.0-source.zip"
+    archive = tmp_path / f"HunterQA-AI-{EXPECTED_STABLE}-source.zip"
     manifest = build(ROOT, archive)
     assert manifest["project"] == "HunterQA AI"
     assert manifest["release"] == EXPECTED_STABLE
@@ -39,8 +39,13 @@ def test_stable_archive_uses_canonical_version_and_preserves_source_integrity(tm
     with ZipFile(archive) as reader:
         embedded = json.loads(reader.read("HunterQA-AI/RELEASE_MANIFEST.json"))
         assert embedded == manifest
-        assert b"version = \"1.2.0\"" in reader.read("HunterQA-AI/pyproject.toml")
+        assert f'version = "{EXPECTED_STABLE}"'.encode() in reader.read("HunterQA-AI/pyproject.toml")
         required = {
+            "HunterQA-AI/docs/RELEASE_1_3_0.md",
+            "HunterQA-AI/docs/WORKFLOW_RUNNER.md",
+            "HunterQA-AI/docs/assets/hunterqa-cybersecurity-infographic.png",
+            "HunterQA-AI/zero to start.md",
+            "HunterQA-AI/tools/verify_release_1_3.py",
             "HunterQA-AI/docs/VERSIONING.md",
             "HunterQA-AI/docs/RELEASE_1_2_0.md",
             "HunterQA-AI/docs/REVIEW_V1_2.md",

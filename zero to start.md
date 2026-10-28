@@ -1,651 +1,332 @@
-# Zero to Start — HunterQA AI on Kali Linux
+# Zero to Start · HunterQA 1.3.0
 
-> **Complete beginner-to-operator guide:** install Kali in a VM, configure HunterQA AI, run the tools, perform authorized vulnerability assessments, review evidence and prepare reports.
->
-> **Version covered:** HunterQA AI **v1.2.0 Stable**. Check [GitHub Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/latest) for a newer stable version. This document is a public setup guide, **not** authorization to test any external target.
+![HunterQA cybersecurity assessment flow](docs/assets/hunterqa-cybersecurity-infographic.png)
 
-## Table of contents
+**From a clean Kali environment to a reviewed, traceable assessment.**
 
-1. [What HunterQA does](#1-what-hunterqa-does)
-2. [Prepare your Kali VM](#2-prepare-your-kali-vm)
-3. [Install HunterQA AI from scratch](#3-install-hunterqa-ai-from-scratch)
-4. [Verify the entire installation](#4-verify-the-entire-installation)
-5. [First complete offline workflow](#5-first-complete-offline-workflow)
-6. [Configure optional local Qwen AI](#6-configure-optional-local-qwen-ai)
-7. [Start and use the web dashboard](#7-start-and-use-the-web-dashboard)
-8. [How to perform authorized security assessments](#8-how-to-perform-authorized-security-assessments)
-9. [HTTP observations, scope and HAR](#9-http-observations-scope-and-har)
-10. [Playwright owned-browser lab](#10-playwright-owned-browser-lab)
-11. [Validate findings and create a security report](#11-validate-findings-and-create-a-security-report)
-12. [Other tools and commands](#12-other-tools-and-commands)
-13. [Updates, backups and versions](#13-updates-backups-and-versions)
-14. [Troubleshooting](#14-troubleshooting)
-15. [Final readiness checklist](#15-final-readiness-checklist)
+[Overview](README.md) · [Release inventory](docs/RELEASE_1_3_0.md) · [Runtime contracts](docs/WORKFLOW_RUNNER.md) · [Security](SECURITY.md)
 
----
+> This guide covers source version **1.3.0**. Confirm the published tag on [GitHub Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases). A prepared release branch is not a published release. The first walkthrough below is entirely offline and uses files you create yourself.
 
-## 1. What HunterQA does
+## Your route
 
-- **HunterQA AI** is an authorization-gated, local-first security research platform for a **single operator**, with a Python CLI and local Flask dashboard.
-- **Implemented in v1.2.0:**
-  - Source/configuration/Semgrep and SARIF analysis.
-  - Local dependency inventory and offline OSV/CVE-advisory correlation.
-  - OpenAPI 3.0/3.1 inventory for authorization, object-reference and sensitive-operation **review cues**.
-  - Seven fixed specialist-agent research roles and optional local Ollama/Qwen suggestions.
-  - Bounded, expressly authorized HEAD/GET HTTP observations.
-  - Offline HAR import, evidence correlation and conservative HEAD replay.
-  - Owned **127.0.0.1-only** Chromium/Playwright browser lab with an optional single approved login.
-  - Human-review dossiers, reproduction attestations and disclosure drafts.
-  - Synthetic rule-calibration benchmarks and a read-only AI Agent Lab.
-  - Local fuzz/sanitizer crash evidence review in isolated owned labs.
-- **Not supported:** unrestricted autonomous exploitation, stealth/WAF bypass, password attacks, remote authenticated Playwright pentesting, automatic submission, automatic CVE assignment, or guaranteed zero-day discovery.
-- **Remember:** review candidates, model hypotheses, missing headers and advisory matches are **not confirmed vulnerabilities**.
+| Step | Outcome |
+| --- | --- |
+| 1. Prepare | Python environment and current source |
+| 2. Verify | Correct installed version and passing checks |
+| 3. Create a case | Private source, policy, configuration and output |
+| 4. Review and run | An offline workflow with an explicit execution fingerprint |
+| 5. Assess evidence | Analyst review, reports and a conservative retest |
+| 6. Extend carefully | Optional approved HTTP, browser and local-AI workflows |
+| 7. Maintain | Updates, backups, diagnostics and release verification |
 
-## 2. Prepare your Kali VM
+## 1. Prepare Kali and install
 
-### Hardware and downloads
-
-- Install a hypervisor: **VirtualBox** or **VMware**.
-- Download a Kali installer or prebuilt virtual-machine image from the [official Kali website](https://www.kali.org/get-kali/).
-- Enable Intel VT-x / AMD-V hardware virtualization if necessary.
-- Suggested starting configuration:
-  - **CPU:** 2–4 virtual processors.
-  - **RAM:** 4 GB for basic research; **8 GB or more** preferred for browser/AI tasks.
-  - **Storage:** 50–80 GB expandable virtual disk.
-  - **Network:** **NAT** for downloads and ordinary updates; an **isolated/host-only** network for deliberately vulnerable practice services.
-- Install Kali, choose a strong password and keep the machine's test traffic away from your normal home/work network.
-- **Do not bridge** deliberately vulnerable lab machines onto an accessible LAN or expose them publicly.
-
-### Update Kali first
+Use a Kali/Linux environment you control. Keep assessment data separate from the public repository. A disposable VM is useful for executable lab research; a VM alone does not enforce target scope.
 
 ```bash
 sudo apt update
-sudo apt full-upgrade -y
-sudo reboot
-```
+sudo apt install -y git python3 python3-venv python3-pip
 
-- Reopen Terminal after reboot.
-- Take a **clean baseline VM snapshot** before adding additional research dependencies.
-
-### Install required packages
-
-```bash
-sudo apt install -y \
-  git curl ca-certificates \
-  python3 python3-venv python3-pip \
-  build-essential
-
-python3 --version
-git --version
-```
-
-- HunterQA requires **Python 3.11+**.
-- Always install project Python packages in a dedicated virtual environment.
-- Avoid using Kali's system Python with `pip --break-system-packages`.
-
-### Create a private evidence area
-
-```bash
-mkdir -p "$HOME/ZeroScope-AI/targets" \
-         "$HOME/ZeroScope-AI/research-lab/v12"
-
-chmod 700 "$HOME/ZeroScope-AI" \
-          "$HOME/ZeroScope-AI/targets" \
-          "$HOME/ZeroScope-AI/research-lab" \
-          "$HOME/ZeroScope-AI/research-lab/v12"
-```
-
-- **`targets/`:** approved local application source and assessment materials.
-- **`research-lab/`:** private policies, HAR/evidence files, plans and reports.
-- Never commit real credentials, original captures, customer data or engagement reports to the public GitHub repository.
-
-## 3. Install HunterQA AI from scratch
-
-### Clone the official project
-
-```bash
-cd ~/Desktop
 git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
 cd HunterQA-AI
-
-git branch --show-current
-git status --short
-git fetch origin --tags
-```
-
-- Normal operation uses `main`, which tracks the current project.
-- If you must reproduce the exact v1.2.0 release, use `git switch --detach v1.2.0` after fetching tags; a detached tag is for **running**, not normal development.
-- Read [VERSIONING.md](docs/VERSIONING.md) for release policy.
-
-### Create a Python virtual environment
-
-```bash
 python3 -m venv .venv
 source .venv/bin/activate
-
 python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
-```
-
-- The terminal typically shows `(.venv)` after activation.
-- `-e` installs the current checkout in editable mode; `[dev]` adds testing dependencies.
-
-### Confirm the package
-
-```bash
+python -m pip install -e '.[dev,quality]'
 hunterqa --version
-hunterqa --help
-hunterqa capabilities
-hunterqa doctor
 ```
 
-- On the v1.2.0 checkout, the version should be **HunterQA AI 1.2.0**.
-- For any feature: `hunterqa COMMAND --help`.
-- If the `hunterqa` console command isn't found, try `python -m hunterqa --help` in the activated venv.
+Expected for this source: **HunterQA AI 1.3.0**. Before its PR is merged or release published, use the reviewed release branch/archive rather than assuming `main` already contains it. After publication, use `git switch --detach v1.3.0` for the immutable release, or stay on `main` for development.
 
-### Initialize the dashboard session key
+| Component | Required? | Purpose |
+| --- | --- | --- |
+| Python 3.11+, Git and virtual environment | Yes | CLI, local app and fixed workers |
+| Semgrep executable | Optional | SAST scan/campaign commands |
+| Ollama plus supported local Qwen model | Optional | Local AI suggestions |
+| Playwright extra and Chromium | Optional | Browser workflows/tests |
+| Instrumented compiler/AFL++ | Optional | Isolated executable lab research |
 
-```bash
-bash tools/setup_verify_kali.sh
-```
+Install Semgrep only for source scanning: `python -m pip install semgrep`. Optional local model/browser dependencies are not required for the offline lesson.
 
-- This setup script verifies the local Kali environment and provisions a session key if needed at `~/.config/hunterqa/session-key`.
-- Keep the key secret. Do not upload it or copy it into an issue, PR or report.
-
-## 4. Verify the entire installation
-
-### Offline regression + end-to-end workflow
+## 2. Verify the installation
 
 ```bash
-cd ~/Desktop/HunterQA-AI
-source .venv/bin/activate
-
-python -m compileall -q hunterqa zeroscope
+hunterqa doctor --json
+python -m ruff check hunterqa zeroscope tools --select F
+python -m bandit -r hunterqa zeroscope tools -ll
 python -m pytest -q
-bash tools/verify_agent_1_2.sh
+python tools/verify_release_1_3.py
 ```
 
-- Runs existing v1.1 scope checks and the v1.2 offline research workflow using disposable files.
-- Checks API inventory, specialist plan, evidence correlation, review dossier, reproduction-note fixture, report draft, repeatability and synthetic benchmark.
-- Exercises **11 local dashboard routes** and verifies a source ZIP with per-file SHA-256.
-- **Does not scan any external website.**
-- A passing test run verifies expected software behavior, **not** real-world vulnerability-detection accuracy.
+The release verifier creates its own temporary synthetic case, exercises the actual workflow CLI, verifies reports/retesting and makes no target requests. Optional browser/platform tests may be skipped in the default suite.
 
-### Optional real Chromium testing
+For browser acceptance:
 
 ```bash
-python -m pip install -e '.[dev,browser]'
-python -m playwright install chromium
-
-HUNTERQA_REAL_BROWSER_CI=1 \
-  python -m pytest -q tests/test_browser_lab_playwright_v12.py
+python -m pip install -e '.[dev,quality,browser]'
+python -m playwright install --with-deps chromium
+HUNTERQA_REAL_BROWSER_CI=1 HUNTERQA_ENGAGEMENT_BROWSER_CI=1 python -m pytest -q
 ```
 
-- These tests launch a disposable owned `127.0.0.1` server and check a permitted login and blocked cross-port redirect.
-- Browser routes are **not a network firewall**. Run untrusted browser code only in a network-isolated lab.
-- Take a new snapshot named **HunterQA v1.2.0 — tested install** once your local tests pass.
-
-## 5. First complete offline workflow
-
-**Goal:** use the included fictional JSON data to get review candidates, a specialist plan, correlated evidence and a human-review dossier **with zero external HTTP requests**.
-
-### Step 1 — Copy samples to your PRIVATE workspace
+These tests use owned loopback services or synthetic intercepted responses. They do not assess a public website. Re-run optional bundled-rule checks after installing Semgrep:
 
 ```bash
-cd ~/Desktop/HunterQA-AI
-source .venv/bin/activate
-
-folder="$HOME/ZeroScope-AI/research-lab/v12"
-
-cp examples/bounty_profile.example.json "$folder/profile.json"
-cp examples/bounty_targets.example.txt "$folder/targets.txt"
-cp examples/v12_owned_api_openapi.json "$folder/openapi.json"
-
-export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
+python tools/verify_semgrep_rules.py
 ```
 
-- The example domain **`app.example.test` is fictional**.
-- Use sample files only for offline examples; **never send network scans or real HTTP assessments to this domain**.
-- A program profile is an explicit record of authorization boundaries, **not evidence that a third party granted permission**.
+## 3. Create your first private offline case
 
-### Step 2 — Analyze a local API contract
+Keep this terminal in the repository with the virtual environment active. Choose a fresh case name if the example directory already exists.
 
 ```bash
-hunterqa bounty-api-inventory \
-  --profile "$folder/profile.json" \
-  --spec "$folder/openapi.json" \
-  --out "$folder/inventory-001.json" --authorized
-```
+umask 077
+mkdir ../hunterqa-demo-v130
+export HUNTERQA_CASEDIR="$(realpath ../hunterqa-demo-v130)"
+export HUNTERQA_APPROVED_ROOTS="$HUNTERQA_CASEDIR"
+mkdir "$HUNTERQA_CASEDIR/source"
 
-- **Purpose:** list local API routes, methods, declared security and manually reviewable object/authorization cues.
-- **Limitation:** the schema cannot prove that a deployed service is vulnerable.
+printf 'FROM example:latest\nUSER root\n' > "$HUNTERQA_CASEDIR/source/Dockerfile"
 
-### Step 3 — Plan analyst-agent roles
-
-```bash
-hunterqa bounty-agent-plan \
-  --profile "$folder/profile.json" \
-  --spec "$folder/openapi.json" \
-  --targets "$folder/targets.txt" \
-  --out "$folder/plan-001.json" --authorized
-```
-
-- **Purpose:** make a non-executing plan for the fixed specialist research roles.
-- **Limitation:** this command doesn't launch automatic exploitation or approve new targets.
-
-### Step 4 — Correlate evidence offline
-
-```bash
-hunterqa bounty-correlate \
-  --profile "$folder/profile.json" \
-  --file "$folder/inventory-001.json" \
-  --out "$folder/correlation-001.json" --authorized
-```
-
-- **Purpose:** deduplicate only known candidate signals with matching policy provenance.
-- **Limitation:** correlated observations are still **unverified**.
-
-### Step 5 — Create an analyst review dossier
-
-```bash
-hunterqa bounty-review-init \
-  --profile "$folder/profile.json" \
-  --correlation "$folder/correlation-001.json" \
-  --out "$folder/dossier-001.json" --authorized
-```
-
-- **Purpose:** create a case list for manual evidence review.
-- **Do not mark a synthetic candidate validated merely to make the report export succeed.**
-
-### Step 6 — View finding IDs
-
-```bash
-python - "$folder/dossier-001.json" <<'PY'
-import json
-import sys
+python - <<'PY'
+import json, os
 from pathlib import Path
-
-dossier = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-for item in dossier["cases"]:
-    print(item["id"], item["rule_id"], item["status"])
+root = Path(os.environ["HUNTERQA_CASEDIR"])
+profile = {
+    "program": "Owned offline teaching fixture",
+    "platform": "local-lab",
+    "authorization_reference": "Owned synthetic local files; this lesson authorizes no external traffic",
+    "acknowledged_authorization": True,
+    "allowed_hosts": ["app.example.test"],
+    "excluded_hosts": [],
+    "allowed_paths": ["/"],
+    "excluded_paths": [],
+    "methods": ["HEAD"],
+    "allowed_ports": [443],
+    "max_requests": 1,
+    "interval_seconds": 1,
+    "lab_mode": False,
+    "allow_private_network": False,
+    "allow_http": False
+}
+with (root / "profile.json").open("x", encoding="utf-8") as stream:
+    json.dump(profile, stream, indent=2)
 PY
 ```
 
-- Use the exact **20-character case ID** for later decisions.
-- Outputs are private and **create-only**; reruns must use **new filenames** such as `inventory-002.json`.
+The fictional URL below supplies a scope label; the default workflow sends no traffic and performs no DNS lookup. **Do not add `--observe` to this teaching case.** Any real target needs a separate profile backed by actual written authorization.
 
-## 6. Configure optional local Qwen AI
+Your case will contain:
 
-- Install [Ollama for Linux](https://ollama.com/download/linux) using its official setup instructions.
-- Start the local Ollama service, then obtain the approved model:
-
-```bash
-ollama pull qwen2.5-coder:3b
-ollama list
+```text
+hunterqa-demo-v130/
+├── source/             owned source/configuration
+├── profile.json        permission reference and exact scope
+├── plan-001/           reviewed protocol, bindings and execution plan
+├── run-001/            private SQLite state, evidence and reports
+└── run-002/            independent retest
 ```
 
-- Use the supported local model `qwen2.5-coder:3b` or `qwen2.5-coder:7b`; the larger model needs more resources.
-- With the local model running, review the saved specialist plan:
+## 4. Plan, inspect and run offline
+
+Create the starter:
 
 ```bash
-hunterqa bounty-ai-review \
-  --plan "$folder/plan-001.json" \
-  --model qwen2.5-coder:3b \
-  --out "$folder/ai-review-001.json" --authorized
+hunterqa workflow-setup \
+  --profile "$HUNTERQA_CASEDIR/profile.json" \
+  --project "$HUNTERQA_CASEDIR/source" \
+  --target "https://app.example.test/" \
+  --out-dir "$HUNTERQA_CASEDIR/plan-001" --authorized
+
+python -m json.tool "$HUNTERQA_CASEDIR/plan-001/execution-plan.json"
 ```
 
-- **Purpose:** prioritizes **known**, approved analyst review roles from aggregate local plan metadata.
-- **Safety:** AI output cannot execute arbitrary shell commands or change the target allowlist.
-- **Result:** hypothesis/prioritization, **not** proof of a flaw.
+Read the scope, bindings, selected adapters, limits and fingerprints. This starter selects declared assets → local configuration/API review → evidence index → reporting. Service enumeration and active validation are unselected, not silently completed.
 
-## 7. Start and use the web dashboard
+After reviewing this wholly offline fixture, obtain its execution fingerprint:
 
 ```bash
-cd ~/Desktop/HunterQA-AI
-source .venv/bin/activate
+export HUNTERQA_EXECUTION_SHA="$(python -c 'import json,os; from pathlib import Path; print(json.loads((Path(os.environ["HUNTERQA_CASEDIR"])/"plan-001"/"execution-plan.json").read_text())["execution_sha256"])')"
 
-folder="$HOME/ZeroScope-AI/research-lab/v12"
-export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
-export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
+hunterqa workflow-run \
+  --profile "$HUNTERQA_CASEDIR/profile.json" \
+  --protocol "$HUNTERQA_CASEDIR/plan-001/protocol.json" \
+  --bindings "$HUNTERQA_CASEDIR/plan-001/bindings.json" \
+  --approve-execution "$HUNTERQA_EXECUTION_SHA" \
+  --out-dir "$HUNTERQA_CASEDIR/run-001" \
+  --operator "Local teaching operator" --authorized
+```
 
-export HUNTERQA_API_SURFACE_REPORT="$folder/inventory-001.json"
-export HUNTERQA_AGENT_PLAN="$folder/plan-001.json"
-export HUNTERQA_AGENT_CORRELATION_REPORT="$folder/correlation-001.json"
-export HUNTERQA_REVIEW_DOSSIER="$folder/dossier-001.json"
+Expected: a completed offline run with two configuration candidates, zero charged requests and new report files. The Dockerfile is inspected as text; no container is built or executed.
 
+| Artifact | Meaning |
+| --- | --- |
+| `run.sqlite3` | Durable state, quota, reviews and event chain |
+| `*.result.json` | Fixed-worker result artifacts |
+| `summary.json` | Initial run summary |
+| `report.html` | Printable report |
+| `report.sarif` | Conservative candidate export |
+| `*.network.jsonl` | Only present for applicable live workers; durable intent/outcome records |
+
+An existing output directory is rejected. Never delete a prior case to bypass this; choose a new run name. If a plan expires, create and review a fresh plan.
+
+## 5. Open the dashboard and review evidence
+
+```bash
+export HUNTERQA_WORKFLOW_RUN="$HUNTERQA_CASEDIR/run-001"
 python run.py
 ```
 
-| Local address | What it's for |
+Open **http://127.0.0.1:5000/workflows**. Keep the server on loopback. Stop it with Ctrl+C before continuing CLI examples in the same terminal.
+
+The page shows recorded state, charged reservations, selected/completed stages, candidates and audit references. Refresh for current records. It cannot start a workflow or accept arbitrary file paths.
+
+Review the generated HTML directly in your browser, or export a fresh report:
+
+```bash
+hunterqa workflow-status --run "$HUNTERQA_CASEDIR/run-001"
+hunterqa workflow-export --run "$HUNTERQA_CASEDIR/run-001" \
+  --format html --out "$HUNTERQA_CASEDIR/report-after-review.html"
+```
+
+Use browser Print → Save as PDF for a PDF copy. Keep detailed evidence private. An initial generated report does not automatically change after later analyst decisions; export again under a new filename.
+
+### Record a responsible analyst decision
+
+Get a candidate ID from `workflow-status`. Create an evidence note based on your own inspection, then record `needs-review` while deployment impact remains unknown:
+
+```bash
+printf 'Inspected the owned Dockerfile declaration; runtime deployment impact is unverified.\n' \
+  > "$HUNTERQA_CASEDIR/analyst-note.txt"
+
+hunterqa workflow-review --run "$HUNTERQA_CASEDIR/run-001" \
+  --finding EXACT_CANDIDATE_ID --decision needs-review \
+  --reviewer "Local analyst" --note "Deployment impact needs independent verification" \
+  --evidence "$HUNTERQA_CASEDIR/analyst-note.txt" --authorized
+```
+
+Replace `EXACT_CANDIDATE_ID` with the full ID. `confirmed` and `false-positive` are also analyst attestations; they are not independently verified owner identities or proofs of exploitability. SARIF remains conservative and labels exported candidates unverified.
+
+## 6. Make a change and retest
+
+Change only the synthetic Dockerfile you created:
+
+```bash
+printf 'FROM example:1\nUSER 10001\n' > "$HUNTERQA_CASEDIR/source/Dockerfile"
+
+hunterqa workflow-run \
+  --profile "$HUNTERQA_CASEDIR/profile.json" \
+  --protocol "$HUNTERQA_CASEDIR/plan-001/protocol.json" \
+  --bindings "$HUNTERQA_CASEDIR/plan-001/bindings.json" \
+  --approve-execution "$HUNTERQA_EXECUTION_SHA" \
+  --out-dir "$HUNTERQA_CASEDIR/run-002" \
+  --operator "Local retest operator" --authorized
+
+hunterqa workflow-compare --first "$HUNTERQA_CASEDIR/run-001" \
+  --second "$HUNTERQA_CASEDIR/run-002" --out "$HUNTERQA_CASEDIR/retest.json"
+
+hunterqa workflow-benchmark --out "$HUNTERQA_CASEDIR/fixture-benchmark.json"
+```
+
+Within the still-valid plan window, the retest should report two candidates not observed. This demonstrates configuration-rule behavior, not proof that a deployed vulnerability was repaired. A project binding approves a mutable directory; it is not an immutable source snapshot. Each new invocation is an explicit local attestation, and budgets are per run.
+
+The benchmark covers three synthetic Docker fixtures. Its score does not measure overall vulnerability discovery accuracy.
+
+## 7. Move to explicitly authorized live checks
+
+Use a separate real assessment case. Obtain the owner's written permission and define exact targets, ports, methods, paths, testing window, traffic limits and permitted actions. Empty exclusions never expand an allowlist.
+
+1. Create a private real scope profile using `examples/bounty_profile.example.json`.
+2. Use `bounty-preflight` for an existing target list, or review a new workflow protocol.
+3. Use `workflow-setup --observe` only when HEAD/GET observations are permitted.
+4. Inspect `workflow-run-plan` output. Approve its exact execution hash.
+5. For every required checkpoint, also pass `--approve-protocol EXACT_PROTOCOL_SHA256 --approve-step STEP_ID`.
+6. Start with the smallest necessary request budget and retain an emergency-stop terminal.
+
+The observation adapter prefers HEAD when the profile permits it, otherwise GET. It uses pinned DNS/TLS transport, no proxies/retries/redirects, sequential calls and conservative stop conditions. HTTP status matches do not prove successful authentication or a vulnerability.
+
+```bash
+hunterqa workflow-stop --run /absolute/path/to/your/run
+hunterqa workflow-abandon --run /absolute/path/to/crashed-run --authorized
+```
+
+Stop is supervised outside the worker; workers also watch expiry, deadlines and parent death. An already sent request cannot be recalled. Abandon refuses a held coordinator lock, reconciles unfinished records and never replays traffic.
+
+For separate account/browser checks, follow [approved engagements](docs/APPROVED_ASSESSMENTS.md). The dedicated-account HTTPS check and narrow remote form browser remain separate from workflow workers. The original `bounty-browser-lab` supports only an owned loopback application. Playwright interception is not an OS firewall.
+
+## 8. Add evidence and optional research tools
+
+| Need | Command or guide |
 | --- | --- |
-| `http://127.0.0.1:5000/` | Overview and local research dashboard |
-| `http://127.0.0.1:5000/bounty` | Authorized Bug Bounty Lab |
-| `http://127.0.0.1:5000/agent-lab` | Agent roles, API findings, validation and benchmark summaries |
+| Offline Nuclei/ZAP evidence | `external-import`; [formats and limits](docs/RESEARCH_WORKFLOWS.md) |
+| Source SAST | `scan` or `campaign` after installing Semgrep |
+| Configuration/API/dependencies | `audit`, `bounty-api-inventory`, `cve-check` with a local advisory snapshot |
+| Original methodology | `research-playbooks`, `research-init`, `research-note`, `research-resume` |
+| Local AI | `hypothesize`, `bounty-ai-review`, `propose-fix`; model advice is unverified |
+| Private disclosure dossier | `bounty-review-init` → `bounty-review-decide` → `bounty-review-export` |
+| Reviewed package | `engagement-package`; private unsent disclosure/CVE-request draft |
+| Executable crash research | `verify-crashes` only in a separately isolated owned lab |
 
-- Other available routes include Projects, Research, Triage, Analytics, Trends, CVE Intelligence, Capabilities and Audit.
-- Visiting `/bounty` or `/agent-lab` **does not start an active scan**.
-- Stop the server with **Ctrl+C** in the terminal.
-- Do not publish the Flask development service to the internet.
-
-## 8. How to perform authorized security assessments
-
-Follow these phases for **owned applications or systems with explicit written permission**.
-
-### Phase 0 — Authorization and assessment plan
-
-- Identify the real asset owner and obtain written testing permission.
-- List exact **hosts, ports, paths, IPs, allowed methods, exclusions and test accounts**.
-- Confirm permitted activity: document/source review, low-noise HTTP checks, service discovery, authenticated tests, scanning, fuzzing, reporting.
-- Agree on **time window, rate limits, emergency contact and immediate stop conditions**.
-- Avoid other users' private data, destructive changes, financial operations and DoS/stress tests.
-
-### Phase 1 — Inventory the attack surface
-
-- Collect authorized source, API specifications, architecture, dependencies, configurations and test accounts.
-- Document important entry points:
-  - Login/session flows and permission checks.
-  - Public versus restricted API paths.
-  - Resource identifiers and owner/tenant boundaries.
-  - Sensitive operations, file uploads and dependency services.
-- Use `bounty-api-inventory` for **offline** OpenAPI review.
-- For service discovery, use only approved tools/ranges in an **owned lab**; open ports do not automatically mean vulnerabilities.
-
-### Phase 2 — Static security checks
-
-- Ask the CLI for the exact supported commands:
+Install Ollama from its official distribution and run it locally. Supported model examples in the constrained agent review are `qwen2.5-coder:3b` and `qwen2.5-coder:7b`. Downloading a model requires network access; subsequent supported model calls use the fixed loopback service.
 
 ```bash
-hunterqa audit --help
-hunterqa scan --help
-hunterqa campaign --help
-hunterqa trust-graph --help
-hunterqa cve-check --help
-hunterqa import-sarif --help
+ollama pull qwen2.5-coder:3b
+hunterqa doctor --check-ollama --json
 ```
 
-- Review local code/configurations for:
-  - Secrets, unsafe defaults and debug features.
-  - Authentication and object-level authorization.
-  - Input validation, SQL query construction, unsafe deserialization.
-  - File handling/path traversal and sensitive information exposure.
-  - CORS, sessions, cookie attributes and security headers.
-  - Dependency versions against local advisory data.
-- Use local Semgrep/SARIF sources where available.
-- A rule match or advisory association is only a **research candidate** until validated.
+Ollama must be running for the probe/model commands. No external model provider is required. Imported reports and AI output never become executable instructions.
 
-### Phase 3 — Non-destructive application security checks
+## 9. Update, back up and verify archives
 
-- **Authentication:** confirm sign-in/session boundaries with owned accounts; no credential stuffing.
-- **Authorization:** compare two owned test identities to confirm that each is limited to its permitted data.
-- **Sessions:** inspect normal cookie protections and expected logout behavior.
-- **API controls:** compare declared methods, intended access and actual authorized behavior.
-- **Inputs:** test with harmless synthetic values; avoid destructive payloads or oversized traffic.
-- **Configuration:** inspect TLS, headers, CORS, debug exposure and unnecessary services.
-- **Availability:** never load-test, fuzz production at scale or disrupt service without separate written approval.
-- Record status codes, configuration observations and actual behavior—but distinguish them from verified impact.
-
-### Phase 4 — Reproduce and assess impact
-
-- Select one candidate and document **expected** versus **observed** behavior.
-- Reproduce with the **minimum safe steps**, using permitted test identities and owned data.
-- Confirm the affected version, asset, prerequisites and repeatability.
-- Explain tangible confidentiality/integrity/availability impact, not just a scary scanner title.
-- Assign severity from demonstrated conditions and impact; note any uncertainty.
-- Record false positives and non-reproducible reports accurately.
-
-### Phase 5 — Remediate, retest and disclose
-
-- Suggest fixes such as correct server-side authorization, input validation, least privilege, patching and safe configuration.
-- Retest in an approved environment.
-- Prepare a private security report with impact, reproduction steps, evidence and remediation.
-- Follow the owner's program rules and coordinated disclosure window.
-- Never upload sensitive evidence or unannounced vulnerability details publicly.
-
-## 9. HTTP observations, scope and HAR
-
-### Create a **real, explicitly approved** scope profile
+Before updating, preserve local edits and back up the complete private case directory, including SQLite and evidence artifacts. Avoid replacing guides/source while a worker run is active.
 
 ```bash
-cp examples/bounty_profile.example.json \
-  "$folder/approved-real-profile.json"
-```
-
-- Edit `allowed_hosts`, `excluded_hosts`, `allowed_paths`, `excluded_paths`, `methods`, `allowed_ports`, `max_requests`, `interval_seconds` and `authorization_reference`.
-- Use the **actual approved program policy**, not the fictional example.
-- Create a private file `$folder/approved-real-targets.txt` with one exact approved URL per line.
-- The following preflight is **offline** and does not establish permission on its own:
-
-```bash
-hunterqa bounty-preflight \
-  --profile "$folder/approved-real-profile.json" \
-  --targets "$folder/approved-real-targets.txt" --method HEAD
-```
-
-### Optional live HEAD observation
-
-**Only when the asset owner/program explicitly permits these automated requests:**
-
-```bash
-hunterqa bounty-assess \
-  --profile "$folder/approved-real-profile.json" \
-  --targets "$folder/approved-real-targets.txt" \
-  --method HEAD \
-  --out "$folder/http-head-001.json" --authorized
-```
-
-- This **does send HTTP requests**. It applies exact scope and budget restrictions.
-- Stop on authorization denials, rate limits, server errors or owner instructions.
-- It has no WAF bypass, proxy rotation or automatic exploitation.
-
-### Offline import of an authorized HAR
-
-```bash
-hunterqa bounty-import-har \
-  --profile "$folder/approved-real-profile.json" \
-  --har "$folder/authorized-capture.har" \
-  --out "$folder/imported-har-001.json" --authorized
-```
-
-- This import is **offline**.
-- Raw HAR may contain authentication tokens and private records; protect the original.
-
-### Optional conservative HEAD replay
-
-```bash
-hunterqa bounty-replay-head \
-  --profile "$folder/approved-real-profile.json" \
-  --har-report "$folder/imported-har-001.json" \
-  --out "$folder/replayed-head-001.json" --authorized
-```
-
-- Replay **sends real network HEAD requests**, so it needs separate active-traffic permission.
-- It doesn't forward user cookies, sessions or request bodies.
-- Comparing two replay reports is **offline**:
-
-```bash
-hunterqa bounty-repeatability \
-  --profile "$folder/approved-real-profile.json" \
-  --first "$folder/replayed-head-001.json" \
-  --second "$folder/replayed-head-002.json" \
-  --out "$folder/repeatability-001.json" --authorized
-```
-
-- Stable or changed response codes are **not** vulnerability proofs.
-- Additional rules: [Authorized Bounty Guide](docs/BUG_BOUNTY_V1_1.md).
-
-## 10. Playwright owned-browser lab
-
-- **Only supported for a test application you own**, bound to `127.0.0.1` on one explicitly approved port.
-- Install browser support as shown in section 4.
-- Use a private profile with:
-  - `platform: "local-lab"`
-  - `allowed_hosts: ["127.0.0.1"]`
-  - `allowed_ports: [8765]` (or your actual test port)
-  - `methods: ["GET","HEAD"]`
-  - `lab_mode: true`, `allow_private_network: true`, `allow_http: true`
-  - Correct allowed/excluded paths and request budgets.
-- With your owned app genuinely running, the basic command is:
-
-```bash
-hunterqa bounty-browser-lab \
-  --profile "$folder/browser-scope.json" \
-  --url "http://127.0.0.1:8765/" \
-  --out "$folder/browser-observation-001.json" --authorized
-```
-
-- A single explicitly allowed login POST is optional; see the [Browser Lab Guide](docs/BROWSER_LAB_V1_2.md) for `--login --login-post-path /login` and selector/credential requirements.
-- Outputs contain hashes and counts, **not HTML, passwords, cookies or screenshots**.
-- Playwright request guards are **not a firewall**. Use a disposable OS/network-isolated lab.
-
-## 11. Validate findings and create a security report
-
-### Review statuses
-
-| Decision | When to use |
-| --- | --- |
-| `needs_more_evidence` | Not enough support to decide |
-| `not_reproducible` | Behavior could not be repeated |
-| `false_positive` | Initial issue hypothesis is unsupported |
-| `out_of_scope` | Testing is not authorized |
-| `analyst_validated` | A permitted analyst attests to controlled reproduction; third-party impact remains unverified |
-
-### Record a case decision
-
-```bash
-hunterqa bounty-review-decide \
-  --profile "$folder/profile.json" \
-  --dossier "$folder/dossier-001.json" \
-  --case REPLACE_WITH_EXACT_20_HEX_CASE_ID \
-  --decision needs_more_evidence \
-  --reviewer local_analyst \
-  --out "$folder/dossier-002.json" --authorized
-```
-
-- All updated dossiers must use **new filenames**; earlier versions remain untouched.
-- A `false_positive`, `not_reproducible` or `needs_more_evidence` case must **not** be exported as a proven vulnerability.
-
-### Only after genuine authorized reproduction
-
-- Create a `bounty-reproduction-note` with the **same policy, case ID and analyst alias**, using truthful `--expected` and `--observed` information plus `--attest`.
-- Then use `bounty-review-decide --decision analyst_validated` with human-authored `--impact`, `--reproduction`, and the matching `--evidence` note.
-- Do not create an attestation unless you actually performed the approved test.
-- See [Analyst Review & Disclosure Guide](docs/REVIEW_V1_2.md) for exact reviewed CLI examples.
-
-### Export a validated private Markdown draft
-
-```bash
-hunterqa bounty-review-export \
-  --profile "$folder/profile.json" \
-  --dossier "$folder/dossier-validated-002.json" \
-  --out "$folder/private-disclosure-draft.md" --authorized
-```
-
-- This works **only when the given dossier contains analyst-validated cases**. Filename is an example; don't use a nonexistent dossier.
-- HunterQA does not submit findings automatically.
-
-### Your final security report should contain
-
-- Assessment title, tester, date and written scope.
-- Executive summary of what was reviewed.
-- Exact tools, package versions, and allowed methods.
-- Finding category, affected approved asset and impacted feature.
-- Expected behavior, actual result and minimal safe reproduction.
-- Evidence summary, artifact hashes and private storage locations.
-- Real impact, severity, assumptions and confidence.
-- Proposed remediation, retest procedure, exclusions and remaining risks.
-- Disclosure/retest owner and current status.
-
-## 12. Other tools and commands
-
-| CLI command | Purpose | Safety boundary |
-| --- | --- | --- |
-| `hunterqa scan`, `audit`, `trust-graph` | Local source/configuration review | Local approved projects |
-| `hunterqa campaign` | Bounded local source research campaign | Explicitly approved local inputs |
-| `hunterqa hypothesize` | Optional local LLM research hypotheses | Not validated evidence |
-| `hunterqa import-sarif` | Review existing SARIF results | Doesn't execute the scanner |
-| `hunterqa cve-check` | Compare local dependency/advisory snapshot | Doesn't prove deployment exposure |
-| `hunterqa parse-sanitizer`, `verify-crashes` | Research owned crash/sanitizer evidence | Isolated lab only |
-| `hunterqa bounty-campaign` | Local SAST, optional HAR/advisory and optional web observations | `--with-web` requires actual permission |
-| `hunterqa bounty-benchmark` | Synthetic OpenAPI review-prompt scoring | **Not real-world vulnerability accuracy** |
-| `hunterqa bounty-report` | Create human-reviewed bounty report draft | Does not submit externally |
-
-- Use `hunterqa COMMAND --help` to see exact arguments rather than guessing.
-- Read [README.md](README.md), [Architecture](docs/ARCHITECTURE.md), [Security Policy](SECURITY.md) and [v1.2 Release Notes](docs/RELEASE_1_2_0.md).
-
-## 13. Updates, backups and versions
-
-### Update to the latest reviewed main checkout
-
-```bash
-cd ~/Desktop/HunterQA-AI
 git status --short --untracked-files=all
 git fetch origin --tags
 git switch main
 git pull --ff-only origin main
-
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[dev,quality]'
 hunterqa --version
-bash tools/verify_agent_1_2.sh
+python tools/verify_release_1_3.py
 ```
 
-- Check and preserve uncommitted local code before switching branches.
-- Back up private research data and `instance/hunterqa.sqlite3` using encrypted, authorized storage.
-- Never force-reset to discard a private evidence file or bypass a protected branch.
-- The current `main` branch can change after v1.2.0; use a tagged checkout to reproduce an exact historical release.
-- GitHub releases are under [Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases).
-- Verify the matching official ZIP and checksum after download:
+Resolve local edits deliberately if Git refuses the switch/pull. Do not use `reset --hard`, `git clean` or force-push as an update procedure. Updating source/runtime code invalidates old execution fingerprints; generate and review a new plan.
+
+Build a new archive from a clean, reviewed checkout:
 
 ```bash
-sha256sum -c HunterQA-AI-1.2.0-source.zip.sha256
+python tools/build_release.py --repo . --out ../HunterQA-AI-1.3.0-source.zip
+python tools/verify_release_archive.py ../HunterQA-AI-1.3.0-source.zip
 ```
 
-- Expected: `OK`. A checksum checks file integrity against the provided digest; it is not an external authenticity certification.
+For downloaded published assets, run `sha256sum -c HunterQA-AI-1.3.0-source.zip.sha256` beside the archive, then verify its internal manifest. Only trust checksums from the authenticated release source. Immutable historical releases remain separate.
 
-## 14. Troubleshooting
+## 10. Troubleshooting
 
-| Problem | Action |
+| Symptom | Check and next step |
 | --- | --- |
-| `hunterqa: command not found` | Activate `.venv`; run `python -m hunterqa --help` |
-| `No module named hunterqa` | From project root, run `python -m pip install -e '.[dev]'` |
-| Unsupported Python version | Run `python3 --version`; use Python 3.11+ |
-| Permission or approved-root failure | Check `HUNTERQA_APPROVED_ROOTS` and whether the exact local file resides inside it |
-| Output already exists | Use a **new** `--out` filename; files are intentionally create-only |
-| Preflight denies a target | Fix the policy/target mismatch; **do not bypass** the denied scope |
-| Ollama unavailable | Check local service, `ollama list`, supported model name and RAM |
-| Chromium missing | Install `.[dev,browser]`, Chromium and required Linux libraries |
-| Dashboard unavailable | Run `python run.py` in the venv, verify port 5000 and local session key |
-| Git pull fails with local edits | Inspect `git status`, save changes and retry; don't force reset |
-| Tests fail | Read the first error and address it before treating the installation as ready |
+| Wrong version after pulling | Activate the intended environment; reinstall with `python -m pip install -e '.[dev,quality]'`; inspect `python -m pip show hunterqa-ai` |
+| Directory outside approved roots | Use canonical absolute paths and explicitly set `HUNTERQA_APPROVED_ROOTS`; keep source/config/run as siblings |
+| Execution fingerprint mismatch | Recreate `workflow-run-plan` after code, profile, protocol or binding changes; read it before approving |
+| Plan expired or window closed | Obtain a valid testing window and generate a new reviewed plan |
+| Output already exists | Choose a fresh output filename/run directory; preserve previous evidence |
+| Missing approval checkpoint | Review and explicitly name every pending checkpoint against the exact protocol fingerprint |
+| Worker failed/timed out | Inspect recorded step state and selected limits; distinguish missing/invalid input from a security finding |
+| Recorded running after a crash | Confirm the coordinator is gone; use `workflow-abandon`; no automatic replay |
+| Integrity check failed | Preserve the complete case, investigate changed/missing artifacts, and do not treat it as verified evidence |
+| Browser unavailable | Install the browser extra, Chromium and required Linux libraries |
+| Semgrep/Ollama warning | Install/start only the optional engine you need; offline configuration review still works |
+| Dashboard unavailable | Use 127.0.0.1:5000 and inspect port use; do not expose the server publicly |
+| Missing findings on retest | Compare matching scope/assessment coverage; absence alone does not prove repair |
 
-## 15. Final readiness checklist
+## Readiness before a real assessment
 
-- [ ] Kali VM installed, updated and snapshotted.
-- [ ] Python 3.11+, Git and private venv configured.
-- [ ] HunterQA cloned, installed and version verified.
-- [ ] `hunterqa doctor` and `hunterqa capabilities` work.
-- [ ] Full offline acceptance passes without external targets.
-- [ ] Optional local Ollama and owned Chromium lab work where needed.
-- [ ] Private research folders are outside Git, with restrictive permissions.
-- [ ] Real scope and written authorization exist **before any live check**.
-- [ ] Approved hosts, paths, accounts, methods and rate limits are documented.
-- [ ] Every candidate is marked honestly as unverified, false-positive, unrepeatable or analyst-validated.
-- [ ] Reproduction evidence is truthful and scoped.
-- [ ] Final report includes real impact, remediation and limitations.
-- [ ] No secrets, credentials, private HAR, SQLite, customer data or raw vulnerability evidence are uploaded publicly.
+- Written authorization and exact scope are current.
+- The local environment and selected adapters passed relevant checks.
+- The execution plan and all required checkpoints were personally reviewed.
+- Traffic, concurrency, deadline and emergency-stop behavior are understood.
+- Private evidence storage and retention are established.
+- Findings, severity labels and AI suggestions will receive human review.
 
----
-
-## Official project references
-
-- [HunterQA AI README](README.md)
-- [v1.2.0 Stable Release](docs/RELEASE_1_2_0.md)
-- [Kali Workflow](docs/V1_2_DEV.md)
-- [Bug Bounty Authorization](docs/BUG_BOUNTY_V1_1.md)
-- [Owned Chromium Browser Lab](docs/BROWSER_LAB_V1_2.md)
-- [Finding Verification & Disclosure](docs/REVIEW_V1_2.md)
-- [Synthetic Benchmark](docs/BENCHMARK_V1_2.md)
-- [Versioning Policy](docs/VERSIONING.md)
-- [Security Policy](SECURITY.md)
-
-**Rule of thumb:** **permission → scope → inventory → safe review → manual reproduction → severity → remediation → private report**. HunterQA supports the workflow, but does not replace the human responsibility to verify findings and follow testing rules.
+**Release-ready means the documented local capability set passes its checks. It does not mean unrestricted testing, zero false positives, guaranteed discovery, a verified company grant service or safe public multi-user deployment.**

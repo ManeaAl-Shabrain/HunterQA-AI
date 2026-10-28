@@ -1,4 +1,4 @@
-# Approved assessment plans (development branch)
+# Approved assessment plans (1.3.0)
 
 These CLI features extend the v1.2 research workflow. They are not part of the
 immutable v1.2.0 release archive. The dashboard does not launch assessments.

@@ -17,6 +17,24 @@ HunterQA AI follows **Semantic Versioning**: MAJOR.MINOR.PATCH.
 | `v1.1.0` | 1.1.0 | Explicitly authorized Bug Bounty Edition |
 | `v1.2.0` | 1.2.0 | AI Agent Lab, owned local Playwright lab, offline OpenAPI review, evidence correlation, human finding verification and synthetic review benchmarking |
 
+## Current prepared release: 1.3.0
+
+`pyproject.toml` now declares 1.3.0 for compatible supervised workflow, engagement,
+research interoperability, reporting, maintenance and documentation additions.
+See [the complete inventory](RELEASE_1_3_0.md). It becomes a published release only
+when the reviewed `v1.3.0` tag and assets exist on GitHub Releases.
+
+After green release-PR CI and explicit owner merge approval, dispatch
+`Publish HunterQA v1.3.0` on `main` with the exact merged commit SHA. Its
+manual-only workflow checks that SHA against the event/checkout, repeats static,
+dependency, offline, regression, Chromium and Semgrep checks, verifies the source
+archive/checksum, then creates the new tag and release. It refuses existing tags
+or releases and cannot be triggered merely by pushing this file.
+
+If publication fails after creating a tag, preserve that tag. Inspect the failed
+job and perform deliberate recovery against the same reviewed commit; never
+move/delete the tag or overwrite assets to make a rerun pass.
+
 Git tags and published release assets are **immutable**. Never rewrite,
 delete or reuse historical tags, force-push `main`, or overwrite versioned
 source archives. Historical tagged releases remain downloadable.
@@ -66,9 +84,10 @@ Only approved analysts may create attestations and private disclosure drafts.
 
 ## Next proposed versions
 
-- `v1.2.1`: maintenance and compatible v1.2 fixes.
-- `v1.3.0`: next compatible capability release.
+- `v1.2.1`: optional maintenance on an explicitly maintained historical branch.
+- `v1.3.0`: current prepared compatible capability release.
+- `v1.3.1`: future compatible maintenance after 1.3.0 publication.
 - `v1.3.0-rc.1`: optional pre-release candidate, not stable.
 - `v2.0.0`: future incompatible major version.
 
-Refer to docs/RELEASE_1_2_0.md for the explicit release capability inventory.
+Refer to docs/RELEASE_1_3_0.md for current scope; docs/RELEASE_1_2_0.md preserves the historical inventory.

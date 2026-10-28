@@ -1,0 +1,100 @@
+name: Publish HunterQA v1.3.0
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact reviewed merged main commit SHA to publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hunterqa-v1-3-0-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'ManeaAl-Shabrain/HunterQA-AI' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify exact reviewed source and immutable release intent
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, re, subprocess, tomllib
+          from pathlib import Path
+          expected = os.environ['EXPECTED_SHA']
+          assert re.fullmatch(r'[0-9a-f]{40}', expected), 'An exact commit SHA is required'
+          assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() == expected == os.environ['GITHUB_SHA']
+          assert tomllib.loads(Path('pyproject.toml').read_text())['project']['version'] == '1.3.0'
+          for name in ('README.md', 'zero to start.md', 'docs/RELEASE_1_3_0.md', 'docs/assets/hunterqa-cybersecurity-infographic.png'):
+              assert Path(name).is_file(), name
+          PY
+          if gh release view v1.3.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing overwrite'; exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v1.3.0" >/dev/null 2>&1; then
+            echo 'Tag already exists; refusing movement or reuse'; exit 1
+          fi
+      - name: Install reviewed release checks and Chromium
+        run: |
+          python -m pip install --upgrade pip setuptools
+          python -m pip install -e '.[dev,quality,browser]'
+          python -m playwright install --with-deps chromium
+      - name: Static and dependency checks
+        run: |
+          python -m ruff check hunterqa zeroscope tools --select F
+          python -m bandit -r hunterqa zeroscope tools -ll
+          python -m pip_audit --skip-editable --progress-spinner off
+          python -m compileall -q hunterqa zeroscope tools
+      - name: Complete regression and real owned-browser acceptance
+        env:
+          HUNTERQA_REAL_BROWSER_CI: '1'
+          HUNTERQA_ENGAGEMENT_BROWSER_CI: '1'
+        run: python -m pytest -q
+      - name: Offline CLI acceptance across supported feature generations
+        run: |
+          bash tools/verify_bounty_1_1.sh
+          bash tools/verify_agent_1_2.sh
+          python tools/verify_release_1_3.py
+      - name: Bundled Semgrep checks in a separate tool environment
+        run: |
+          python -m venv "$RUNNER_TEMP/rule-env"
+          "$RUNNER_TEMP/rule-env/bin/python" -m pip install semgrep -e .
+          export PATH="$RUNNER_TEMP/rule-env/bin:$PATH"
+          "$RUNNER_TEMP/rule-env/bin/python" tools/verify_semgrep_rules.py
+      - name: Build and verify versioned archive and checksum
+        run: |
+          set -euo pipefail
+          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.3.0-source.zip"
+          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.3.0-source.zip"
+          (cd "$RUNNER_TEMP" && sha256sum HunterQA-AI-1.3.0-source.zip > HunterQA-AI-1.3.0-source.zip.sha256)
+      - name: Create immutable tag and publish verified assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if gh release view v1.3.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; never overwrite'; exit 1
+          fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref=refs/tags/v1.3.0 -f sha="$GITHUB_SHA"
+          gh release create v1.3.0 --verify-tag --repo "$GITHUB_REPOSITORY" \
+            "$RUNNER_TEMP/HunterQA-AI-1.3.0-source.zip" \
+            "$RUNNER_TEMP/HunterQA-AI-1.3.0-source.zip.sha256" \
+            --title 'HunterQA v1.3.0 — Controlled Workflows and Evidence' \
+            --notes-file docs/RELEASE_1_3_0.md --latest

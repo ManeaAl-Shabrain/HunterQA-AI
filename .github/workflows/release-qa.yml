@@ -43,6 +43,8 @@ jobs:
         run: bash tools/verify_bounty_1_1.sh
       - name: HunterQA AI 1.2 offline agent and API acceptance
         run: bash tools/verify_agent_1_2.sh
+      - name: HunterQA 1.3 offline workflow CLI acceptance
+        run: python tools/verify_release_1_3.py
       - name: Install owned-lab Chromium test dependency
         run: |
           python -m pip install -e '.[browser]'
@@ -58,8 +60,8 @@ jobs:
       - name: Build and verify complete source package
         shell: bash
         run: |
-          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.2.0-qa-source.zip"
-          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.2.0-qa-source.zip"
+          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.3.0-qa-source.zip"
+          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.3.0-qa-source.zip"
 
   bundled-rule-qa:
     runs-on: ubuntu-latest
