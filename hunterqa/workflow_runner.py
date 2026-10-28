@@ -11,6 +11,7 @@ import subprocess
 import sys
 import time
 import uuid
+from importlib.metadata import PackageNotFoundError, version as distribution_version
 from pathlib import Path
 
 from .bounty import _approved_file, _read_json
@@ -24,10 +25,15 @@ from .workflow_network import inspect_network
 
 def _runtime_identity():
     root = Path(__file__).resolve().parent
+    try:
+        package_version = distribution_version("hunterqa-ai")
+    except PackageNotFoundError:
+        package_version = "uninstalled-source"
     fingerprints = {str(path.relative_to(root)).replace("\\", "/"):
                     hashlib.sha256(read_bounded(path, 2_000_000)).hexdigest()
                     for path in sorted(root.rglob("*.py")) if not path.is_symlink()}
-    return digest({"python": sys.version, "package_sources": fingerprints})
+    return digest({"python": sys.version, "distribution_version": package_version,
+                   "package_sources": fingerprints})
 
 
 def execution_plan(profile, protocol, bindings, *, now=None):

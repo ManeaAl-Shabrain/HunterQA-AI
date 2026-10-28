@@ -64,7 +64,7 @@ Every step must have exactly one binding object with the expected fields. Input
 files must be in approved local roots and are capped at 2 MB each, 16 MB total.
 Their exact bytes are fingerprinted at review and copied into the private run
 directory before execution. A changed file requires another execution review.
-The execution fingerprint also binds the Python runtime identifier and trusted
+The execution fingerprint also binds the installed distribution version, Python runtime identifier and trusted
 package Python-source fingerprints; changes are checked before dispatch. This
 is provenance checking, not code signing or independent software attestation.
 Project bindings approve a **mutable local directory**, not an immutable source
