@@ -84,6 +84,37 @@ not independent proof that the program permits the scan. Always check the
 current Bounty Brief / Security Page and program policy, rate limits, forbidden
 techniques, asset exclusions and disclosure rules before sending any request.
 
+
+
+## Offline penetration-testing proxy evidence (Burp / ZAP / browser HAR)
+
+Export a HAR after manually testing an authorized app. Place the HAR in the
+approved private research folder and **never commit** its raw contents: it may
+contain authentication headers, personal data or response bodies.
+
+\`\`\`bash
+python -m hunterqa bounty-import-har \
+  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \
+  --har "$HOME/ZeroScope-AI/research-lab/bounty/capture.har" \
+  --out "$HOME/ZeroScope-AI/research-lab/bounty/har-reviewed.json" \
+  --authorized
+
+python -m hunterqa bounty-report \
+  --file "$HOME/ZeroScope-AI/research-lab/bounty/har-reviewed.json" \
+  --out "$HOME/ZeroScope-AI/research-lab/bounty/report-draft.md"
+\`\`\`
+
+HAR input is never replayed. Out-of-scope entries are skipped. Query strings,
+cookies, authorization headers, response bodies and any request bodies are
+excluded from the resulting JSON. All observations remain unverified until
+independently reproduced with demonstrable impact; do not submit merely
+missing-security-header observations as confirmed vulnerabilities.
+
+The Markdown output is a **draft** for analyst correction and subsequent
+HackerOne/Bugcrowd submission; there is no automatic API submission or ticket
+filing. Build your own minimal safe reproduction and check the program's
+policy, severity matrix, known issues and exclusions.
+
 ## Broader penetration testing and zero-day research
 
 Use the existing local source tools for authorized repositories:
