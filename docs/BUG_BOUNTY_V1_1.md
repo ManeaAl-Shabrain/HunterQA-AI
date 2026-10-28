@@ -1,7 +1,6 @@
-# HunterQA AI 1.1 — Authorized Bug Bounty Edition (Development Branch)
+# HunterQA AI 1.1.0 — Authorized Bug Bounty Edition
 
-**Branch:** `feature/v1-1-authorized-bug-bounty`  
-**Status:** feature integration / regression testing; v1.0.1 remains the published stable release.
+**Release:** Stable v1.1.0 for authorized, bounded Kali security research. Prior v1.0.1 is available as a historical release.
 
 This increment introduces real, bounded remote HTTP observations under explicit
 HackerOne, Bugcrowd, private-program or local-lab profiles. It adds controlled
@@ -24,10 +23,11 @@ disposable SQLite database; and builds/verifies the complete source ZIP. It
 never tests a public website, does not touch saved analyst data, and deletes
 its temporary fixtures at the end.
 
-**Human checks still required:** confirm the browser page opens at
-`http://127.0.0.1:5000/bounty`, review the exact real program's
-in-scope/out-of-scope assets, and confirm automation is explicitly permitted
-before running `bounty-assess`. Do not merge or tag v1.1 stable on CI alone.
+**Manual Kali acceptance:** Operator verified the `/bounty` page and the
+complete offline acceptance suite (154 tests, 10 routes, source ZIP SHA-256).
+**For every real bounty program**, re-read its scope and current terms, confirm
+that automation is permitted, and obtain written authorization before active
+web testing. Local acceptance is not permission for any third-party testing.
 
 ## Initial Kali setup
 
@@ -35,7 +35,8 @@ before running `bounty-assess`. Do not merge or tag v1.1 stable on CI alone.
 cd ~/Desktop/HunterQA-AI
 git status --short
 git fetch origin
-git switch --track origin/feature/v1-1-authorized-bug-bounty
+git switch main
+git pull --ff-only origin main
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 python -m pytest -q
@@ -189,5 +190,6 @@ permissions, OWASP API checks with consenting test accounts, proof validation,
 issue deduplication, and HackerOne/Bugcrowd markdown report templates.
 Those are **planned**, not implemented by this first network-safe increment.
 
-Do not merge or publish a stable 1.1.0 release until full Kali regression,
-scope-negative testing, and manual review succeed.
+A stable tag identifies tested local workflows; it does not independently
+certify live-target safety, comprehensive vulnerability coverage or discovery
+of any zero-day. Review each program's legal and operational conditions.
