@@ -10,6 +10,25 @@ Semgrep, local Qwen research, AFL++/ASan/UBSan validation, OSV/CVE intelligence
 and the unified dashboard. It is NOT an unconstrained autonomous exploitation
 framework.
 
+## Full, offline Kali acceptance
+
+After checking out the feature branch and activating the venv, run:
+
+```bash
+bash tools/verify_bounty_1_1.sh
+```
+
+This runs all Python tests; rejects an out-of-scope target without contacting it;
+imports and redacts a synthetic HAR; verifies 10 Flask dashboard routes against a
+disposable SQLite database; and builds/verifies the complete source ZIP. It
+never tests a public website, does not touch saved analyst data, and deletes
+its temporary fixtures at the end.
+
+**Human checks still required:** confirm the browser page opens at
+`http://127.0.0.1:5000/bounty`, review the exact real program's
+in-scope/out-of-scope assets, and confirm automation is explicitly permitted
+before running `bounty-assess`. Do not merge or tag v1.1 stable on CI alone.
+
 ## Initial Kali setup
 
 ```bash
@@ -34,8 +53,8 @@ cp examples/bounty_targets.example.txt "$HOME/ZeroScope-AI/research-lab/bounty/t
 
 export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
 
-python -m hunterqa bounty-preflight \\
-  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \\
+python -m hunterqa bounty-preflight \
+  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \
   --targets "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt"
 ```
 
@@ -43,10 +62,10 @@ Once the program's rules allow HEAD requests, change the example to real
 approved assets and run:
 
 ```bash
-python -m hunterqa bounty-assess \\
-  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \\
-  --targets "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt" \\
-  --method HEAD --authorized \\
+python -m hunterqa bounty-assess \
+  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \
+  --targets "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt" \
+  --method HEAD --authorized \
   --out "$HOME/ZeroScope-AI/research-lab/bounty/assessment-001.json"
 ```
 
@@ -148,11 +167,11 @@ policy, severity matrix, known issues and exclusions.
 Use the existing local source tools for authorized repositories:
 
 ```bash
-python -m hunterqa scan --project "$HOME/ZeroScope-AI/targets" \\
+python -m hunterqa scan --project "$HOME/ZeroScope-AI/targets" \
   --out "$HOME/ZeroScope-AI/research-lab/local-sast.json" --authorized
 
-python -m hunterqa campaign --project "$HOME/ZeroScope-AI/targets" \\
-  --out-dir "$HOME/ZeroScope-AI/research-lab/bounty-local-campaign" \\
+python -m hunterqa campaign --project "$HOME/ZeroScope-AI/targets" \
+  --out-dir "$HOME/ZeroScope-AI/research-lab/bounty-local-campaign" \
   --with-ai --ai-chunks 4 --authorized
 ```
 
