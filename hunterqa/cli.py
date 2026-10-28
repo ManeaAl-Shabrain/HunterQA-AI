@@ -180,6 +180,12 @@ def main(argv=None):
     manual_proof.add_argument("--out", required=True)
     manual_proof.add_argument("--attest", action="store_true", help="I personally reproduced the behavior on authorized assets")
     manual_proof.add_argument("--authorized", action="store_true")
+    benchmark = sub.add_parser("bounty-benchmark", help="Score offline synthetic OpenAPI review cues against independent positive/negative labels")
+    benchmark.add_argument("--profile", required=True)
+    benchmark.add_argument("--pack", required=True)
+    benchmark.add_argument("--out", required=True)
+    benchmark.add_argument("--strict", action="store_true", help="Exit nonzero if a labeled review cue is missed or a false-positive suggestion appears")
+    benchmark.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -361,6 +367,13 @@ def main(argv=None):
             attest=args.attest, authorized=args.authorized,
         )
         _write_bounty_output(args.out, json.dumps(note, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-benchmark":
+        from .benchmark_v12 import benchmark_gate, evaluate_pack
+        report = evaluate_pack(args.profile, args.pack, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        print("Synthetic review cue metrics:", json.dumps(report["metrics"], indent=2))
+        benchmark_gate(report, fail_on_review_regression=args.strict)
+        print("Review expectation gate:", "PASS" if report["golden_review_expectations_met"] else "REVIEW NEEDED")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
