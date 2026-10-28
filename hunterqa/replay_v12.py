@@ -104,3 +104,28 @@ def replay_har_head(profile_path, imported_har_path, *, authorized=False,
                        "may originate from an authenticated GET and is NOT equivalent to "
                        "authenticated replay. No payloads or CVE confirmation.",
     }
+
+
+
+def read_replay_summary(path):
+    """Read safely grouped local HEAD results without displaying URL evidence."""
+    empty = {"status": "not_configured", "requests_attempted": 0,
+             "status_differences": 0}
+    if not path:
+        return empty
+    from .bounty import _read_json
+    try:
+        report = _read_json(path, 100_000)
+        if not isinstance(report, dict) or report.get("engine") != "hunterqa_v12_controlled_head_replay":
+            return empty
+        stats = report.get("summary")
+        if not isinstance(stats, dict):
+            return empty
+        hits, differences = stats.get("requests_attempted"), stats.get("status_differences")
+        if (type(hits) is not int or type(differences) is not int or
+                not 0 <= differences <= hits <= 20):
+            return empty
+        return {"status": "ready", "requests_attempted": hits,
+                "status_differences": differences}
+    except (OSError, ValueError, UnicodeError, TypeError, KeyError):
+        return empty
