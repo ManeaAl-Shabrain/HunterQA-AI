@@ -9,7 +9,7 @@ from collections import Counter
 from pathlib import Path
 
 from .bounty import _approved_file, _read_json
-from .engagement import digest, utcnow
+from .engagement import _policy_snapshot, digest, utcnow
 from .source_files import read_bounded, positive_line
 from .workflow_protocol import CATALOG, STAGES
 from .workflow_store import Store, run_lock
@@ -20,6 +20,13 @@ REMEDIATIONS = {
     "CWE-1104": "Pin a reviewed dependency or image version/digest and establish an update process.",
     "CWE-284": "Review intended access boundaries and restrict access to approved principals.",
     "CWE-306": "Verify runtime authentication and authorization; document required OpenAPI security controls.",
+}
+OBSERVATION_REMEDIATIONS = {
+    "header.hsts.absent": "Review HTTPS-only host policy; enable HSTS after verifying HTTPS coverage and subdomain requirements.",
+    "header.nosniff.absent": "Serve correct content types and review adding X-Content-Type-Options: nosniff.",
+    "header.csp.absent": "Review a restrictive Content Security Policy against required application scripts and resources; test before enforcing.",
+    "cookie.secure.absent": "Review setting Secure on cookies that should only travel over HTTPS.",
+    "cookie.httponly.absent": "Review setting HttpOnly on sensitive cookies that application JavaScript does not need to read.",
 }
 
 
@@ -34,13 +41,16 @@ def summarize_run(run, *, store=None):
         execution = store.meta("execution")
         if digest(execution["review"]) != execution["execution_sha256"]:
             raise ValueError("Execution review fingerprint mismatch")
-        steps, candidates, assets, observations = [], {}, [], []
+        steps, candidates, assets, observations, discoveries = [], {}, [], [], []
         review_rows = {row["finding"]: json.loads(row["value"])
                        for row in store.db.execute("SELECT * FROM reviews LIMIT 1001")}
         # Bind review state to its append-only event record as well.
         review_events, recorded_status, charged, network_evidence = {}, None, 0, []
         stored_protocol = _read_json(store.run / "protocol.json", 65_536)
+        if digest(stored_protocol) != execution["review"]["protocol_sha256"]:
+            raise ValueError("Stored protocol fingerprint mismatch")
         targets_by_step = {step["id"]: step["targets"] for step in stored_protocol["steps"]}
+        declarations = {step["id"]: step for step in stored_protocol["steps"]}
         for row in store.db.execute("SELECT value FROM events ORDER BY seq LIMIT 2001"):
             event = json.loads(row[0])
             if event["kind"] == "run-start" and event["details"]["execution_sha256"] != execution["execution_sha256"]:
@@ -61,7 +71,14 @@ def summarize_run(run, *, store=None):
                     raise ValueError("Quota event sequence mismatch")
             elif event["kind"] == "network-evidence":
                 details = event["details"]
-                journal = inspect_network(store.run / f"{details['step']}.network.jsonl", targets_by_step[details["step"]])
+                declaration = declarations[details["step"]]
+                kwargs = {}
+                if declaration["tool"] == "web-discovery":
+                    policy, snapshot_hash = _policy_snapshot(store.run / "profile.json")
+                    if snapshot_hash != execution["review"]["policy_sha256"]:
+                        raise ValueError("Stored discovery profile fingerprint mismatch")
+                    kwargs = {"discovery_policy": policy, "request_budget": declaration["requests"]}
+                journal = inspect_network(store.run / f"{details['step']}.network.jsonl", targets_by_step[details["step"]], **kwargs)
                 if any(journal[key] != details[key] for key in ("sha256", "intents", "responses", "incomplete_tail")):
                     raise ValueError("Network journal does not match audit record")
                 network_evidence.append({"step": details["step"], **journal})
@@ -79,6 +96,10 @@ def summarize_run(run, *, store=None):
             assets.extend(result.get("assets", []))
             assets.extend(result.get("services", []))
             observations.extend(result.get("observations", []))
+            if step["tool"] == "web-discovery" and result:
+                discoveries.append({"step": step["id"], "summary": result["discovery"],
+                                    "endpoints": result["discovered_endpoints"], "forms": result["forms"],
+                                    "limitations": result["limitations"]})
             project = execution["review"]["bindings"][step["id"]].get("project")
             project_hash = digest(project) if project else ""
             for row in result.get("findings", []):
@@ -101,7 +122,7 @@ def summarize_run(run, *, store=None):
                     "project_ref_hash": project_hash,
                     "verification_status": review["decision"] if review else "unverified",
                     "confidence_basis": "analyst-attestation" if review else "scanner-assertion",
-                    "remediation": REMEDIATIONS.get(cwe, "Independently reproduce the reported condition, assess impact, and review the relevant security control."),
+                    "remediation": OBSERVATION_REMEDIATIONS.get(row["rule_id"], REMEDIATIONS.get(cwe, "Independently reproduce the reported condition, assess impact, and review the relevant security control.")),
                     "review": review, "evidence": [evidence]}
                 if len(candidates) > 1000:
                     raise ValueError("Workflow candidate limit exceeded")
@@ -117,6 +138,8 @@ def summarize_run(run, *, store=None):
                  "projects": sorted(binding["project"] for binding in execution["review"]["bindings"].values()
                                     if "project" in binding)}
         assessment = [{"id": step["id"], "tool": step["tool"], "targets": sorted(step["targets"]),
+                       "request_reservation": step["requests"],
+                       "discovery_depth": execution["review"]["bindings"][step["id"]].get("max_depth"),
                        "depends_on": sorted(step["depends_on"]),
                        "project": execution["review"]["bindings"][step["id"]].get("project"),
                        "import_format": execution["review"]["bindings"][step["id"]].get("tool")}
@@ -133,6 +156,7 @@ def summarize_run(run, *, store=None):
                 "charged_requests": store.meta("charged_requests"), "steps": steps,
                 "assets": assets[:1000], "observations": observations[:1000],
                 "network_evidence": network_evidence,
+                "web_discovery": discoveries,
                 "findings": findings, "severity_counts": dict(Counter(row["severity"] for row in findings)),
                 "review_counts": dict(Counter(row["verification_status"] for row in findings)),
                 "coverage": coverage, "audit_events": count, "audit_head_sha256": chain,
@@ -238,6 +262,7 @@ def export_report(run, out, kind):
                    + rows + "</table><h2>Coverage and audit</h2><pre>" + esc(json.dumps(
                        {"coverage": summary["coverage"], "steps": summary["steps"],
                         "audit_head_sha256": summary["audit_head_sha256"]}, indent=2))
+                   + "</pre><h2>HTML discovery and forms</h2><pre>" + esc(json.dumps(summary["web_discovery"], indent=2))
                    + "</pre><h2>Limits</h2><ul>" + "".join(f"<li>{esc(x)}</li>" for x in summary["limitations"]) + "</ul></html>")
     else:
         raise ValueError("Report format must be json, html or sarif")

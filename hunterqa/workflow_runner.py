@@ -55,12 +55,17 @@ def execution_plan(profile, protocol, bindings, *, now=None):
         tool, step_id = step["tool"], step["id"]
         if tool not in ADAPTERS:
             raise ValueError("Adapter is planning-only and unavailable to the runner")
-        if CATALOG[tool][1] and ((len(step["targets"]) - 1) * data["limits"]["interval_seconds"] >= step["timeout_seconds"]):
+        dispatches = step["requests"] if tool == "web-discovery" else len(step["targets"])
+        if CATALOG[tool][1] and ((dispatches - 1) * data["limits"]["interval_seconds"] >= step["timeout_seconds"]):
             raise ValueError("Step timeout cannot accommodate target spacing; split this step")
         value = binding_data["steps"][step_id]
         fields = {"source-review": ("project",), "service-evidence": ("file",),
+                  "web-discovery": ("max_depth",),
                   "external-findings": ("file", "tool")}.get(tool, ())
         _fields(value, fields, "adapter binding")
+        if tool == "web-discovery":
+            from .workflow_protocol import _integer
+            _integer(value["max_depth"], 0, 3, "max_depth")
         for field in ("project", "file"):
             if field in value and (not isinstance(value[field], str) or not 1 <= len(value[field]) <= 4096):
                 raise ValueError("Binding paths must be bounded strings")
@@ -202,7 +207,11 @@ def _coordinate(store, protocol, bindings, profile_copy, original_profile, origi
     sequence = [step_id for batch in batches for step_id in batch]
 
     def record_network(step_id):
-        journal = inspect_network(store.run / f"{step_id}.network.jsonl", by_id[step_id]["targets"])
+        step = by_id[step_id]
+        kwargs = {}
+        if step["tool"] == "web-discovery":
+            kwargs = {"discovery_policy": _policy_snapshot(profile_copy)[0], "request_budget": step["requests"]}
+        journal = inspect_network(store.run / f"{step_id}.network.jsonl", step["targets"], **kwargs)
         store.event("network-evidence", step=step_id, **{key: value for key, value in journal.items() if key != "records"})
 
     try:

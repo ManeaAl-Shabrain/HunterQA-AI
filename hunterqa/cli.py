@@ -328,7 +328,20 @@ def main(argv=None):
     retest.add_argument("--out", required=True)
     benchmark = sub.add_parser("workflow-benchmark", help="Exercise original offline positive/negative configuration fixtures")
     benchmark.add_argument("--out", required=True)
+    discovery = sub.add_parser("discovery-setup", help="Plan bounded same-origin HTML discovery; sends no requests")
+    discovery.add_argument("--profile", required=True)
+    discovery.add_argument("--seed", action="append", required=True)
+    discovery.add_argument("--out-dir", required=True)
+    discovery.add_argument("--max-pages", type=int, default=5)
+    discovery.add_argument("--max-depth", type=int, default=1)
+    discovery.add_argument("--authorized", action="store_true")
     args = parser.parse_args(argv)
+    if args.command == "discovery-setup":
+        from .web_discovery import setup_discovery
+        result = setup_discovery(args.profile, args.seed, args.out_dir,
+                                 max_pages=args.max_pages, max_depth=args.max_depth, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
     if args.command == "workflow-abandon":
         from .workflow_runner import abandon_run
         print(json.dumps(abandon_run(args.run, authorized=args.authorized), indent=2))

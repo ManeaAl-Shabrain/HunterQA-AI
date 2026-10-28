@@ -5,6 +5,13 @@ workflow system. It provides a baseline for all ten platform priorities below.
 It is not a distributed service, an independently authenticated authorization
 system, a general exploit executor, or an operating-system sandbox.
 
+**Post-v1.3.0 development:** the eighth runnable adapter, `web-discovery`, adds
+bounded HTML link following and form inventory. See [setup, approval and
+limits](SCOPED_WEB_DISCOVERY.md). It is absent from the original release archive.
+For this adapter only, step targets are reviewed seeds; discovered URLs must
+remain inside seed origins and the bound profile. Other adapters retain their
+exact-target behavior. The following delivery table describes the v1.3.0 baseline.
+
 ## Delivered capabilities and boundaries
 
 | Priority | Delivered | Boundary |
@@ -33,6 +40,7 @@ means untested. They do not claim ASVS/WSTG compliance or comprehensive coverage
 | ID | Binding fields | Execution |
 | --- | --- | --- |
 | `declared-assets` | `{}` | Inventory explicitly declared targets; no network |
+| `web-discovery` (development) | `max_depth` (0–3) | GET approved seeds and admitted same-origin HTML links; at most 20 requests; inventory forms without submission or JavaScript |
 | `service-evidence` | `file` | Import bounded service assertions; no network |
 | `source-review` | `project` | Existing local configuration and JSON OpenAPI checks plus declared dependency inventory; target source is never imported, built or run |
 | `external-findings` | `file`, `tool` (`nuclei` or `zap`) | Existing offline importer, narrowed again to exact step targets; scanners are not installed/launched |
