@@ -273,3 +273,39 @@ def test_different_case_or_reviewer_proof_cannot_be_reused(sample):
                       "analyst_validated", "other_reviewer",
                       impact="A" * 40, reproduction="B" * 40,
                       evidence_path=proof, authorized=True)
+
+
+def test_agent_lab_review_cards_hide_reproduction_text(sample, app, client):
+    root, profile, correlated, dossier, file, proof = sample
+    app.config["REVIEW_DOSSIER_PATH"] = str(file)
+    first = client.get("/agent-lab")
+    assert first.status_code == 200
+    assert b"Analyst-validated: 0" in first.data
+    impact = "The controlled fixture crossed a private boundary for two disposable test identities."
+    reproduction = "The reviewer repeated the controlled fixture discrepancy with two owned isolated accounts."
+    reviewed = record_review(
+        profile, file, dossier["cases"][0]["id"], "analyst_validated",
+        "analyst01", impact=impact, reproduction=reproduction,
+        evidence_path=proof, authorized=True,
+    )
+    second_file = root / "private-reviewed.json"
+    second_file.write_text(json.dumps(reviewed))
+    app.config["REVIEW_DOSSIER_PATH"] = str(second_file)
+    response = client.get("/agent-lab")
+    assert b"Analyst-validated: 1" in response.data
+    assert impact.encode() not in response.data
+    assert reproduction.encode() not in response.data
+    assert b"Owned developer lab" not in response.data
+
+
+def test_dashboard_rejects_tampered_review_history(sample):
+    root, profile, correlated, dossier, file, proof = sample
+    reviewed = record_review(
+        profile, file, dossier["cases"][0]["id"], "analyst_validated",
+        "analyst01", impact="A" * 40, reproduction="B" * 40,
+        evidence_path=proof, authorized=True,
+    )
+    reviewed["cases"][0]["history"][0]["analyst_alias"] = "changed_alias"
+    bad = root / "modified.json"
+    bad.write_text(json.dumps(reviewed))
+    assert read_review_summary(bad)["status"] == "not_configured"
