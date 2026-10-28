@@ -416,7 +416,8 @@ def import_har(profile_path, har_path, *, authorized=False):
         raise PermissionError("Importing program evidence requires --authorized")
     policy = BountyPolicy.load(profile_path)
     data = _read_json(har_path, 2_000_000)
-    entries = (data.get("log") or {}).get("entries") if isinstance(data, dict) else None
+    log = data.get("log") if isinstance(data, dict) else None
+    entries = log.get("entries") if isinstance(log, dict) else None
     if not isinstance(entries, list) or len(entries) > 300:
         raise ValueError("HAR must contain up to 300 entries")
     observations, findings = [], []
@@ -458,7 +459,7 @@ def import_har(profile_path, har_path, *, authorized=False):
         findings.extend(inspect_headers({"url": safe_url,
                                           "method": str(request.get("method") or "")[:8],
                                           "headers": headers, "status": status}))
-        if len(observations) >= 100:
+        if len(observations) >= MAX_REPORT_ITEMS:
             break
     return {
         "schema_version": 1,
