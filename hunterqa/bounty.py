@@ -77,7 +77,14 @@ def _read_json(path, maximum):
         raw = handle.read(maximum + 1)
     if len(raw) > maximum:
         raise ValueError("Local evidence exceeds size limit")
-    return json.loads(raw.decode("utf-8"))
+    def reject_duplicate_keys(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("Duplicate JSON key rejected")
+            result[key] = value
+        return result
+    return json.loads(raw.decode("utf-8"), object_pairs_hook=reject_duplicate_keys)
 
 
 def _host(value: str) -> str:
@@ -87,6 +94,8 @@ def _host(value: str) -> str:
     if (not HOST_RE.fullmatch(host) or ".." in host or
             any(not label or len(label) > 63 for label in host.split("."))):
         raise ValueError("Hosts must be exact ASCII DNS names or IPv4 addresses")
+    if any(label.startswith("-") or label.endswith("-") for label in host.split(".")):
+        raise ValueError("Invalid DNS hostname label")
     return host
 
 
@@ -144,7 +153,10 @@ class BountyPolicy:
         if not isinstance(reference, str) or not 8 <= len(reference) <= 300:
             raise ValueError("Record the exact authorization/policy reference")
         hosts = _names(value.get("allowed_hosts"))
-        excluded = tuple(_host(h) for h in value.get("excluded_hosts", []))
+        excluded_raw = value.get("excluded_hosts", [])
+        if not isinstance(excluded_raw, list):
+            raise ValueError("Excluded hosts must be a list")
+        excluded = tuple(_host(h) for h in excluded_raw)
         if len(excluded) > 40:
             raise ValueError("Too many excluded hosts")
         ports = value.get("allowed_ports", [443])
