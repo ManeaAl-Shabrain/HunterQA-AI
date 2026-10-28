@@ -39,6 +39,10 @@ jobs:
         env:
           HUNTERQA_REAL_BROWSER_CI: "1"
         run: python -m pytest -q tests/test_browser_lab_playwright_v12.py
+      - name: Real Chromium approved-form checks with synthetic intercepted responses
+        env:
+          HUNTERQA_ENGAGEMENT_BROWSER_CI: "1"
+        run: python -m pytest -q tests/test_engagement.py
       - name: Build and verify complete source package
         shell: bash
         run: |

@@ -11,7 +11,6 @@ from .engines.openapi import audit_openapi
 from .engines.hypotheses import checklist
 from .engines.sanitizers import parse_sanitizer_log
 from .engines.sarif import import_sarif
-from .engines.fuzzing import verify_crashes
 from .research import load_research_report
 
 
@@ -220,8 +219,79 @@ def main(argv=None):
     s.add_argument("--lab", required=True); s.add_argument("--binary", required=True)
     s.add_argument("--crashes", required=True); s.add_argument("--out", required=True)
     s.add_argument("--authorized", action="store_true", help="I have authorization and isolation in place")
+    plan_cmd = sub.add_parser("engagement-plan", help="Create an offline assessment plan for review")
+    plan_cmd.add_argument("--profile", required=True)
+    plan_cmd.add_argument("--url", action="append", required=True)
+    plan_cmd.add_argument("--mode", choices=("observe", "waf-canary", "auth-check", "browser"), default="observe")
+    plan_cmd.add_argument("--method", choices=("GET", "HEAD", "POST"), default="GET")
+    plan_cmd.add_argument("--ttl-minutes", type=int, default=60)
+    plan_cmd.add_argument("--dedicated-test-account", action="store_true")
+    plan_cmd.add_argument("--browser-isolated", action="store_true")
+    plan_cmd.add_argument("--login-url")
+    plan_cmd.add_argument("--expected-status", type=int)
+    plan_cmd.add_argument("--out", required=True)
+    preflight = sub.add_parser("engagement-preflight", help="Offline review of an expiring exact assessment plan")
+    preflight.add_argument("--profile", required=True)
+    preflight.add_argument("--plan", required=True)
+    run = sub.add_parser("engagement-run", help="Execute fingerprint-approved bounded assessment steps")
+    run.add_argument("--profile", required=True)
+    run.add_argument("--plan", required=True)
+    run.add_argument("--approve-plan", required=True)
+    run.add_argument("--stop-file", required=True)
+    run.add_argument("--out", required=True)
+    run.add_argument("--authorized", action="store_true")
+    package = sub.add_parser("engagement-package", help="Offline reviewed disclosure/CVE request handoff; does not send")
+    package.add_argument("--profile", required=True)
+    package.add_argument("--dossier", required=True)
+    package.add_argument("--kind", choices=("disclosure", "cve-request"), required=True)
+    package.add_argument("--assigned-cve")
+    package.add_argument("--reviewed", action="store_true")
+    package.add_argument("--authorized", action="store_true")
+    package.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    if args.command == "engagement-plan":
+        from .engagement import create_plan
+        plan = create_plan(args.profile, args.url, mode=args.mode, method=args.method,
+                           ttl_minutes=args.ttl_minutes, dedicated_test_account=args.dedicated_test_account,
+                           browser_isolated=args.browser_isolated, login_url=args.login_url,
+                           expected_status=args.expected_status)
+        _write_bounty_output(args.out, json.dumps(plan, indent=2) + "\n")
+        return
+    if args.command == "engagement-preflight":
+        from .engagement import load_plan, digest
+        _, plan = load_plan(args.profile, args.plan)
+        print(json.dumps({"plan": plan, "approval_sha256": digest(plan),
+                          "network_requests": 0, "approval_is_operator_attestation": True}, indent=2))
+        return
+    if args.command == "engagement-run":
+        from .engagement import run_assessment
+        # Reserve private output BEFORE traffic, so an existing/unwritable output
+        # cannot cause an unrecorded repeat assessment.
+        destination = Path(args.out).expanduser()
+        _approved_root(str(destination.parent.resolve(strict=True)))
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(destination, flags, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            try:
+                report = run_assessment(args.profile, args.plan, args.approve_plan,
+                                        args.stop_file, authorized=args.authorized)
+            except Exception as exc:
+                stream.write(json.dumps({"outcome": "preflight_failed", "error_type": type(exc).__name__}) + "\n")
+                raise
+            stream.write(json.dumps(report, indent=2) + "\n")
+        print("Saved:", destination)
+        return
+    if args.command == "engagement-package":
+        from .engagement import prepare_package
+        report = prepare_package(args.profile, args.dossier, kind=args.kind,
+                                 reviewed=args.reviewed, authorized=args.authorized,
+                                 assigned_cve=args.assigned_cve)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        return
     if args.command == "capabilities":
+        print("Approved assessments: engagement-plan/preflight/run; exact targets, expiring fingerprint approval, bounded requests.")
+        print("Modes: observe, benign WAF canary, one designated-account login check, narrow remote browser form review.")
+        print("Reviewed handoff: engagement-package; offline disclosure/CVE requests, no automatic sending or CVE assignment.")
         from .engines.hypotheses import checklist
         for x in checklist():
             print(f"{x['category']}: {x['status']}; {', '.join(x['questions'])}")
@@ -432,6 +502,7 @@ def main(argv=None):
     elif args.command == "research-report":
         _write_json(args.out, load_research_report(args.file))
     elif args.command == "verify-crashes":
+        from .engines.fuzzing import verify_crashes
         root = _approved_root(args.lab)
         result = verify_crashes(approved_lab=root, binary_path=Path(args.binary), crash_dir=Path(args.crashes),
                                 output=Path(args.out), authorized=args.authorized)
