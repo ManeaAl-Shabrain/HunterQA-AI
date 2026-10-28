@@ -209,3 +209,35 @@ def test_cli_strict_gates_synthetic_regressions(synthetic, capsys):
         main(["bounty-benchmark", "--profile", str(profile), "--pack", str(pack),
               "--out", str(fail_path), "--strict", "--authorized"])
     assert json.loads(fail_path.read_text())["metrics"]["false_positive_review_suggestions"] == 1
+
+
+
+def test_agent_lab_shows_only_bounded_synthetic_benchmark_metrics(synthetic, app, client):
+    root, profile, pack = synthetic
+    result = evaluate_pack(profile, pack, authorized=True)
+    result["private_raw_api_url"] = "https://private.example.test/top-secret"
+    result["private_token"] = "NEVER-DISPLAY-BENCHMARK-TOKEN"
+    file = root / "dashboard-benchmark.json"
+    file.write_text(json.dumps(result))
+    app.config["BENCHMARK_REPORT_PATH"] = str(file)
+    response = client.get("/agent-lab?start-scan=true")
+    assert response.status_code == 200
+    assert b"OpenAPI review benchmark: ready" in response.data
+    assert b"Synthetic test cases: 2" in response.data
+    assert b"Labeled-review precision:" in response.data
+    assert b"100.0%" in response.data
+    assert b"NEVER-DISPLAY-BENCHMARK-TOKEN" not in response.data
+    assert b"private.example.test" not in response.data
+    assert b"not real vulnerability accuracy" in response.data.lower() or b"NOT real vulnerability accuracy" in response.data
+
+
+def test_agent_lab_does_not_read_nonapproved_benchmark_file(synthetic, app, client, monkeypatch):
+    root, profile, pack = synthetic
+    result = evaluate_pack(profile, pack, authorized=True)
+    file = root / "hidden-benchmark.json"
+    file.write_text(json.dumps(result))
+    app.config["BENCHMARK_REPORT_PATH"] = str(file)
+    monkeypatch.setenv("HUNTERQA_APPROVED_ROOTS", str(root / "different"))
+    response = client.get("/agent-lab")
+    assert response.status_code == 200
+    assert b"OpenAPI review benchmark: not_configured" in response.data
