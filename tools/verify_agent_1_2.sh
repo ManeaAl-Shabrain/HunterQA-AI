@@ -74,6 +74,73 @@ for item in correlation["review_queue"]:
 print("PASS: API, agent plan, provenance and no-claim review queue")
 PY
 
+echo "[4B/6] Offline analyst review dossier, attestation and repeatability"
+HUNTERQA_APPROVED_ROOTS="$tmp" python -m hunterqa bounty-review-init \
+  --profile "$tmp/policy.json" --correlation "$tmp/correlation.json" \
+  --out "$tmp/dossier-001.json" --authorized
+case_id="$(TMP_V12="$tmp" python - <<'PY'
+import json
+import os
+from pathlib import Path
+root = Path(os.environ["TMP_V12"])
+data = json.loads((root / "dossier-001.json").read_text())
+print(data["cases"][0]["id"])
+PY
+)"
+HUNTERQA_APPROVED_ROOTS="$tmp" python -m hunterqa bounty-reproduction-note \
+  --profile "$tmp/policy.json" --case "$case_id" --reviewer qa_analyst \
+  --context owned_local_lab \
+  --expected "The owned disposable fixture should honor its documented access-control boundary." \
+  --observed "The reviewer independently observed a controlled discrepancy in the owned local lab." \
+  --out "$tmp/reproduction.json" --attest --authorized
+HUNTERQA_APPROVED_ROOTS="$tmp" python -m hunterqa bounty-review-decide \
+  --profile "$tmp/policy.json" --dossier "$tmp/dossier-001.json" \
+  --case "$case_id" --reviewer qa_analyst --decision analyst_validated \
+  --impact "This is a synthetic training case only; no third-party security vulnerability has been established." \
+  --reproduction "In a disposable authorized fixture, a reviewer manually repeated the recorded behavior using owned accounts." \
+  --evidence "$tmp/reproduction.json" --out "$tmp/dossier-002.json" --authorized
+HUNTERQA_APPROVED_ROOTS="$tmp" python -m hunterqa bounty-review-export \
+  --profile "$tmp/policy.json" --dossier "$tmp/dossier-002.json" \
+  --out "$tmp/local-draft.md" --authorized
+TMP_V12="$tmp" python - <<'PY'
+import hashlib
+import json
+import os
+from pathlib import Path
+root = Path(os.environ["TMP_V12"])
+policy_hash = hashlib.sha256((root / "policy.json").read_bytes()).hexdigest()
+fixture = {
+    "engine": "hunterqa_v12_controlled_head_replay",
+    "program": "Owned HunterQA 1.2 fixture", "platform": "local-lab",
+    "policy_sha256": policy_hash, "source_evidence_sha256": "a" * 64,
+    "comparisons": [{"target_hash": "b" * 24, "baseline_status": 200,
+                     "observed_status": 200, "confirmed_vulnerability": False}],
+}
+(root / "head-001.json").write_text(json.dumps(fixture), encoding="utf-8")
+(root / "head-002.json").write_text(json.dumps(fixture, indent=2), encoding="utf-8")
+PY
+HUNTERQA_APPROVED_ROOTS="$tmp" python -m hunterqa bounty-repeatability \
+  --profile "$tmp/policy.json" --first "$tmp/head-001.json" \
+  --second "$tmp/head-002.json" --out "$tmp/repeatability.json" --authorized
+TMP_V12="$tmp" python - <<'PY'
+import json
+import os
+from pathlib import Path
+root = Path(os.environ["TMP_V12"])
+dossier = json.loads((root / "dossier-002.json").read_text())
+repeat = json.loads((root / "repeatability.json").read_text())
+draft = (root / "local-draft.md").read_text()
+assert dossier["summary"]["analyst_validated"] == 1
+assert dossier["summary"]["confirmed_zero_days"] == 0
+assert dossier["cases"][0]["last_review"]["artifact_sha256"]
+assert repeat["summary"]["stable_status_observations"] == 1
+assert repeat["summary"]["confirmed_vulnerabilities"] == 0
+assert "CVE: Not assigned by HunterQA" in draft
+assert "Zero-day status: Not established" in draft
+assert "automatically submitted" in draft
+print("PASS: offline human-review chain, mandatory proof and HEAD repeatability")
+PY
+
 echo "[5/6] Read-only Agent Lab UI with disposable SQLite"
 TMP_V12="$tmp" HUNTERQA_APPROVED_ROOTS="$tmp" python - <<'PY'
 import os
@@ -91,6 +158,7 @@ app = create_app({
     "AGENT_PLAN_PATH": str(root / "plan.json"),
     "API_SURFACE_REPORT_PATH": str(root / "api.json"),
     "AGENT_CORRELATION_REPORT_PATH": str(root / "correlation.json"),
+    "REVIEW_DOSSIER_PATH": str(root / "dossier-002.json"),
     "CAMPAIGN_HISTORY_ROOT": str(root),
     "TRIAGE_REPORT_PATH": str(root / "none-triage.json"),
     "RESEARCH_REPORT_PATH": str(root / "none-research.json"),
@@ -108,6 +176,7 @@ with app.test_client() as client:
     html = client.get("/agent-lab").data
     assert b"Owned HunterQA 1.2 fixture" in html
     assert b"scope-guard" in html
+    assert b"Analyst-validated: 1" in html
 print("PASS: all 11 routes and local no-execution agent dashboard")
 PY
 
@@ -128,6 +197,9 @@ required = {
     "HunterQA-AI/hunterqa/agent_ai_v12.py",
     "HunterQA-AI/hunterqa/browser_lab_v12.py",
     "HunterQA-AI/hunterqa/replay_v12.py",
+    "HunterQA-AI/hunterqa/verification_v12.py",
+    "HunterQA-AI/hunterqa/repeatability_v12.py",
+    "HunterQA-AI/docs/REVIEW_V1_2.md",
     "HunterQA-AI/docs/BROWSER_LAB_V1_2.md",
     "HunterQA-AI/hunterqa/templates/agent_lab.html",
     "HunterQA-AI/docs/V1_2_DEV.md",
