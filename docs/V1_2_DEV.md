@@ -132,7 +132,7 @@ There is no guarantee of finding unknown flaws.
 
 ## v1.2 owned-browser and controlled replay milestone
 
-A second implementation milestone now lives on this same development branch:
+The stable 1.2.0 release includes the following browser/replay milestone:
 
 - `bounty-browser-lab`: isolated, non-persistent headless Playwright
   against an **owned local loopback application only**, with optional
@@ -149,7 +149,7 @@ No browser automation against public HackerOne/Bugcrowd assets is available.
 
 ## Human verification dossiers and offline reproducibility
 
-This v1.2 branch also includes a new create-only local analyst review
+Stable v1.2.0 also includes a create-only local analyst review
 workflow. Correlation suggestions are always unverified. A reviewer may
 record a `not_reproducible`, `false_positive`, `out_of_scope`,
 `needs_more_evidence`, or `analyst_validated` decision. Validated
@@ -166,7 +166,7 @@ approved-root restrictions, privacy limitations and disclosure rules.
 
 ## Offline review-cue accuracy benchmarking
 
-The v1.2 development branch includes an independently labeled, completely
+Stable v1.2.0 includes an independently labeled, completely
 synthetic OpenAPI regression pack. Run `bounty-benchmark --strict` against the
 private profile and local pack to score review prompts, not live security
 vulnerabilities. It measures false positives, missed review prompts and
@@ -175,7 +175,7 @@ unlabeled suggestions, and exports privacy-safe aggregate metrics for the
 
 See `docs/BENCHMARK_V1_2.md` for complete Kali commands and label caveats.
 
-## Next v1.2 milestones (not yet implemented)
+## Potential future improvements (not part of v1.2.0)
 
 - Independent host-level browser network isolation for trusted future
   expansions beyond the currently owned-loopback-only browser lab.
