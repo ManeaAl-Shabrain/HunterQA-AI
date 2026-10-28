@@ -36,6 +36,14 @@
 </article>
 <p>Reports are administrator-selected local files; this page never starts a browser or replays traffic.</p>
 </section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">HUMAN VERIFICATION</p>
+<h2>Finding Review Dossier</h2></div></div>
+<article style="padding:18px">
+<strong>Review dossier: {{ review.status }}</strong>
+<p>Cases awaiting further action: {{ review.unvalidated }} · Analyst-validated: {{ review.analyst_validated }} · Total: {{ review.total }}</p>
+<p>Review decisions and private reproduction evidence remain only in approved local files. Human validation is not independently confirmed exploitability or a confirmed zero-day.</p>
+</article>
+</section>
 <section class="panel"><div class="panel-head"><div><p class="eyebrow">LOCAL SPECIALISTS</p>
 <h2>Constrained research skills</h2></div></div>
 {% for skill in skills %}
