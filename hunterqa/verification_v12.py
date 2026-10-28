@@ -126,6 +126,54 @@ def _note(value, name, minimum=30, maximum=500):
     return value.strip()
 
 
+def create_reproduction_note(profile_path, case_id, reviewer, expected, observed,
+                             context, *, attest=False, authorized=False):
+    """Manual, offline attestation; never automatically claims a defect."""
+    if not authorized or not attest:
+        raise PermissionError("Reproduction note requires --authorized and --attest")
+    policy, digest = _identity(profile_path)
+    if not isinstance(case_id, str) or not HEX20.fullmatch(case_id):
+        raise ValueError("Expected a valid candidate case ID")
+    if not isinstance(reviewer, str) or not ALIAS.fullmatch(reviewer):
+        raise ValueError("Invalid reviewer alias")
+    if context not in ("owned_local_lab", "approved_test_accounts"):
+        raise ValueError("Reproduction context must be an owned lab or approved test accounts")
+    expected = _note(expected, "Expected behavior")
+    observed = _note(observed, "Observed behavior")
+    return {
+        "schema_version": 1, "engine": "hunterqa_v12_manual_reproduction",
+        "recorded_at": datetime.now(timezone.utc).isoformat(),
+        "program": policy.program, "policy_sha256": digest,
+        "case_id": case_id, "reviewer_alias": reviewer,
+        "context": context, "human_reproduced_attestation": True,
+        "third_party_data_exported": False,
+        "expected_behavior": expected, "observed_behavior": observed,
+        "limitations": "Researcher-supplied attestation, not automatically "
+                       "verified impact or vulnerability. No active testing performed here.",
+    }
+
+
+def _check_reproduction_note(path, policy, digest, case_id, reviewer):
+    evidence = _approved_file(path)
+    size = evidence.stat().st_size
+    if not 1 <= size <= 100_000:
+        raise ValueError("Private reproduction note must be at most 100 KB")
+    note = _read_json(evidence, 100_000)
+    if (not isinstance(note, dict) or
+            note.get("engine") != "hunterqa_v12_manual_reproduction" or
+            note.get("schema_version") != 1 or
+            note.get("case_id") != case_id or
+            note.get("reviewer_alias") != reviewer or
+            note.get("human_reproduced_attestation") is not True or
+            note.get("third_party_data_exported") is not False or
+            note.get("context") not in ("owned_local_lab", "approved_test_accounts")):
+        raise ValueError("Reviewer-approved, matching manual reproduction note required")
+    _scope_check(note, policy, digest)
+    _note(note.get("expected_behavior"), "Expected behavior")
+    _note(note.get("observed_behavior"), "Observed behavior")
+    return _hash(evidence.read_bytes()), size
+
+
 def _check_case_history(case):
     events = case.get("history")
     if not isinstance(events, list) or len(events) > MAX_EVENTS:
@@ -223,12 +271,13 @@ def record_review(profile_path, dossier_path, case_id, decision, reviewer, *,
         if evidence_path is None:
             raise ValueError("Analyst validation requires local reproduction evidence")
         evidence = _approved_file(evidence_path)
-        size = evidence.stat().st_size
-        if not 1 <= size <= 1_000_000:
-            raise ValueError("Evidence must be 1..1,000,000 bytes")
         if evidence == _approved_file(dossier_path):
             raise ValueError("A dossier is not valid independent reproduction evidence")
-        proof_hash, proof_size = _hash(evidence.read_bytes()), size
+        proof_hash, proof_size = _check_reproduction_note(
+            evidence, policy, digest, case_id, reviewer
+        )
+        if proof_hash in (data.get("correlation_sha256"), digest):
+            raise ValueError("Evidence must not be a copied program policy or correlation")
     else:
         if evidence_path is not None or impact or reproduction:
             raise ValueError("Only analyst_validated may attach proof and impact notes")
