@@ -403,3 +403,113 @@ def read_bounty_report(path: str | Path | None) -> dict:
                 "observations": observations, "findings": findings}
     except (OSError, ValueError, UnicodeError, TypeError, KeyError, json.JSONDecodeError):
         return empty
+
+
+
+def import_har(profile_path, har_path, *, authorized=False):
+    """Offline passive review of already-authorized HAR responses.
+
+    Does NOT replay requests, store cookies, parse request bodies or store HAR
+    headers wholesale. Out-of-scope captures are skipped and counted.
+    """
+    if not authorized:
+        raise PermissionError("Importing program evidence requires --authorized")
+    policy = BountyPolicy.load(profile_path)
+    data = _read_json(har_path, 2_000_000)
+    entries = (data.get("log") or {}).get("entries") if isinstance(data, dict) else None
+    if not isinstance(entries, list) or len(entries) > 300:
+        raise ValueError("HAR must contain up to 300 entries")
+    observations, findings = [], []
+    skipped = 0
+    for entry in entries:
+        if not isinstance(entry, dict):
+            skipped += 1
+            continue
+        request, response = entry.get("request"), entry.get("response")
+        if not isinstance(request, dict) or not isinstance(response, dict):
+            skipped += 1
+            continue
+        raw_url = request.get("url")
+        if not isinstance(raw_url, str):
+            skipped += 1
+            continue
+        try:
+            parts = urlsplit(raw_url)
+            # HAR may contain credentials in query strings; never copy them.
+            safe_url = parts._replace(query="", fragment="").geturl()
+            policy.authorize_url(safe_url, "HEAD" if "HEAD" in policy.methods else "GET")
+        except ValueError:
+            skipped += 1
+            continue
+        status = response.get("status")
+        if type(status) is not int or status < 100 or status > 599:
+            skipped += 1
+            continue
+        raw_headers = response.get("headers", [])
+        headers = [(str(h["name"])[:100], str(h["value"])[:2000])
+                   for h in raw_headers[:100] if isinstance(h, dict)
+                   and isinstance(h.get("name"), str)
+                   and isinstance(h.get("value"), str)] if isinstance(raw_headers, list) else []
+        observation = {"url": safe_url, "method": "HAR", "status": status,
+                       "response_headers": {str(k).lower(): str(v)[:300] for k, v in headers
+                                            if str(k).lower() in VISIBLE_HEADERS},
+                       "cookie_count": sum(str(k).lower() == "set-cookie" for k, _ in headers)}
+        observations.append(observation)
+        findings.extend(inspect_headers({"url": safe_url,
+                                          "method": str(request.get("method") or "")[:8],
+                                          "headers": headers, "status": status}))
+        if len(observations) >= 100:
+            break
+    return {
+        "schema_version": 1,
+        "engine": "hunterqa_authorized_bounty_observation",
+        "mode": "offline_har_import",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "program": policy.program, "platform": policy.platform,
+        "policy_sha256": hashlib.sha256(_approved_file(profile_path).read_bytes()).hexdigest(),
+        "scope": {"authorized_hosts": len(policy.allowed_hosts), "method": "OFFLINE"},
+        "observations": observations,
+        "findings": findings[:100],
+        "skipped_out_of_scope_or_invalid": skipped,
+        "claims": {"verified_vulnerabilities": 0, "confirmed_zero_days": 0,
+                   "cve_ids_created": 0, "false_positive_free": False},
+        "limitations": "Offline HAR import does not replay traffic or confirm exploitability. "
+                       "Cookie and auth values are discarded.",
+    }
+
+
+def bounty_markdown(report):
+    """Prepare a human-editable finding draft, not an auto-submitted bounty claim."""
+    if not isinstance(report, dict) or report.get("engine") != "hunterqa_authorized_bounty_observation":
+        raise ValueError("Not a HunterQA bounty evidence report")
+    program = str(report.get("program") or "Unspecified")[:100].replace("\n", " ")
+    lines = [
+        f"# HunterQA Bug Bounty Research — {program}",
+        "",
+        "**Status:** Unverified observations requiring manual security review.",
+        "**Submission:** Draft only; do not submit without reproduction and impact.",
+        "",
+        "## Scope & methodology",
+        "Authorized program scope, bounded read-only responses and/or offline HAR import.",
+        "No exploit payloads, mutation or unauthorized scanning were performed by this engine.",
+        "",
+        "## Findings for analyst review",
+    ]
+    findings = report.get("findings") if isinstance(report.get("findings"), list) else []
+    for i, finding in enumerate(findings[:100], 1):
+        if not isinstance(finding, dict):
+            continue
+        title = str(finding.get("title") or "Unverified observation")[:200].replace("\n", " ")
+        url = str(finding.get("source_url") or "")[:350].replace("\n", " ")
+        lines.extend([f"### {i}. {title}", f"- Source: {url}",
+                      "- Impact: Not established",
+                      "- Reproduction: Must be independently verified",
+                      "- CWE / CVE: Not assigned",
+                      "- Remediation: Review the relevant configuration and intended policy",
+                      ""])
+    if not findings:
+        lines.append("No reportable findings established by this research run.")
+    lines.extend(["", "## Evidence handling",
+                  "HTTP bodies, cookies, tokens and private HAR content are not included.",
+                  "This draft must be checked against the program's disclosure rules."])
+    return "\n".join(lines) + "\n"
