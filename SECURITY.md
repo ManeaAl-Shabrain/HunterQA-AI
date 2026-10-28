@@ -2,7 +2,9 @@
 
 ## Supported versions
 
-Security maintenance targets the latest version on `main`, starting with HunterQA AI v1.0.0.
+- **Current maintained line:** the current `main` branch (v1.2.0 code line).
+- **Historical release tags:** `v1.0.0`, `v1.0.1`, and `v1.1.0` remain available for reproducibility but do not necessarily receive security backports.
+- **Latest published stable:** `v1.2.0`; updates to `main` after tagging do not change the immutable `v1.2.0` archive.
 
 ## Responsible reporting
 
@@ -24,7 +26,13 @@ laboratory binaries. Do not use it for unauthorized scanning. "Low-noise" means
 local-first, bounded analysis, not evasion of detection or monitoring.
 
 The dashboard is designed for loopback (`127.0.0.1`) and single-user Kali lab
-operation. Do not expose the Flask development server publicly. Keep session
+operation. Do not expose the Flask development server publicly.
+
+The optional Playwright browser lab permits only an owned, explicitly approved
+`127.0.0.1` service; Playwright route interception is **not a network firewall**.
+Use OS/network isolation for untrusted web content. Controlled HTTP HEAD replay
+must follow current program automation permissions and does not forward browser
+credentials or sessions. Keep session
 secrets, evidence, analyst databases and local snapshots outside GitHub.
 
 Advisory and CVE matching does not establish exploitability or prove a host is
