@@ -1,5 +1,12 @@
 # Development maintenance and assessment evidence improvements
 
+Further development additions include ten original non-executing review playbooks,
+a private policy-bound research journal/context resume, offline Nuclei HTTP JSONL
+and ZAP traditional JSON evidence adapters, conservative SARIF export, and a reusable
+source-only GitHub Action. See the [seven-reference comparison](docs/FRAMEWORK_COMPARISON_2026_10.md)
+and [usage/limits](docs/RESEARCH_WORKFLOWS.md). These are original implementations;
+external framework source and offensive skills are not vendored or executed.
+
 Current source adds a read-only assessment dashboard, offline same-plan
 comparison, stricter loopback-only AI transport, dashboard peer/Host and CSP
 controls, resilient analyzer import, conservative advisory withdrawal handling,

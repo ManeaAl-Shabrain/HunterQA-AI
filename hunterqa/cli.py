@@ -251,7 +251,59 @@ def main(argv=None):
     comparison.add_argument("--first", required=True)
     comparison.add_argument("--second", required=True)
     comparison.add_argument("--out", required=True)
+    sub.add_parser("research-playbooks", help="List original non-executing research review checklists")
+    workspace = sub.add_parser("research-init", help="Initialize a new private policy-bound research journal")
+    workspace.add_argument("--profile", required=True)
+    workspace.add_argument("--out-dir", required=True)
+    workspace.add_argument("--playbook", action="append", required=True)
+    workspace.add_argument("--authorized", action="store_true")
+    note = sub.add_parser("research-note", help="Append an operator observation, hypothesis, negative result or next step")
+    note.add_argument("--profile", required=True)
+    note.add_argument("--workspace", required=True)
+    note.add_argument("--kind", choices=("observation", "hypothesis", "negative-result", "next-step"), required=True)
+    note.add_argument("--summary", required=True)
+    note.add_argument("--evidence")
+    note.add_argument("--authorized", action="store_true")
+    resume = sub.add_parser("research-resume", help="Read and verify private research context; executes no tests")
+    resume.add_argument("--workspace", required=True)
+    external = sub.add_parser("external-import", help="Offline scoped import of existing Nuclei JSONL or ZAP traditional JSON")
+    external.add_argument("--profile", required=True)
+    external.add_argument("--file", required=True)
+    external.add_argument("--tool", choices=("nuclei", "zap"), required=True)
+    external.add_argument("--out", required=True)
+    external.add_argument("--authorized", action="store_true")
+    sarif_out = sub.add_parser("report-sarif", help="Export normalized candidates as SARIF 2.1.0 without source snippets or uploading")
+    sarif_out.add_argument("--file", required=True)
+    sarif_out.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    if args.command == "research-playbooks":
+        from .research_workspace import PLAYBOOKS
+        print(json.dumps({"playbooks": PLAYBOOKS, "execution": "none"}, indent=2))
+        return
+    if args.command == "research-init":
+        from .research_workspace import create_workspace
+        result = create_workspace(args.profile, args.out_dir, args.playbook, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command == "research-note":
+        from .research_workspace import append_note
+        result = append_note(args.profile, args.workspace, args.kind, args.summary,
+                             evidence=args.evidence, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command == "research-resume":
+        from .research_workspace import resume_workspace
+        print(json.dumps(resume_workspace(args.workspace), indent=2))
+        return
+    if args.command == "external-import":
+        from .external_evidence import import_external
+        result = import_external(args.profile, args.file, args.tool, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+        return
+    if args.command == "report-sarif":
+        from .sarif_export import export_sarif
+        _write_bounty_output(args.out, json.dumps(export_sarif(args.file), indent=2) + "\n")
+        return
     if args.command == "engagement-compare":
         from .assessment_evidence import compare_assessments
         report = compare_assessments(args.first, args.second)
@@ -297,6 +349,8 @@ def main(argv=None):
         _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
         return
     if args.command == "capabilities":
+        print("Research context: original review playbooks, private policy-bound journal, context-only resume; no tool execution.")
+        print("Interoperability: offline Nuclei/ZAP evidence, conservative SARIF export, and an acknowledgment-gated source-only GitHub Action.")
         print("Approved assessments: engagement-plan/preflight/run; exact targets, expiring fingerprint approval, bounded requests.")
         print("Modes: observe, benign WAF canary, one designated-account login check, narrow remote browser form review.")
         print("Reviewed handoff: engagement-package; offline disclosure/CVE requests, no automatic sending or CVE assignment.")

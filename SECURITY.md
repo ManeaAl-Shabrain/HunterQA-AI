@@ -58,6 +58,18 @@ Advisory and CVE matching does not establish exploitability or prove a host is
 vulnerable. Neither AI analysis nor a crash report confirms a zero-day by itself.
 No scanner provides comprehensive vulnerability coverage or zero false positives.
 
+## Research workflow boundaries
+
+Development research journals and external scanner adapters are offline. Notes
+are private operator text; their hash chain is not an identity signature or proof
+of the stated impact. Context resume launches no test and cannot extend scope.
+Imports omit captured request/response material and remain unverified candidates.
+SARIF exports omit raw source and arbitrary finding prose; exporting a format is
+not a disclosure action. The root GitHub Action analyzes only an explicitly
+acknowledged checkout and performs no target execution, live assessment, automatic
+upload, PR comment or CVE assignment. Tool installation in that action uses network
+package repositories. See [research workflow limits](docs/RESEARCH_WORKFLOWS.md).
+
 ## Third-party licenses
 
 The root MIT License applies to HunterQA-owned source. Third-party libraries,

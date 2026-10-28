@@ -75,3 +75,33 @@ jobs:
         run: python -m pip install semgrep -e .
       - name: Validate and exercise bundled rules on synthetic positive and negative fixtures
         run: python tools/verify_semgrep_rules.py
+
+  source-action-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Run local source action against an owned synthetic fixture
+        id: source
+        uses: ./
+        with:
+          authorized: 'true'
+          project-path: examples/ci-source-fixture
+          fail-on: none
+      - name: Verify runner-local SARIF without uploading it
+        env:
+          HUNTERQA_TEST_SARIF: ${{ steps.source.outputs.sarif-path }}
+          HUNTERQA_TEST_COUNT: ${{ steps.source.outputs.candidate-count }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path(os.environ["HUNTERQA_TEST_SARIF"]).read_text())
+          if data["version"] != "2.1.0" or int(os.environ["HUNTERQA_TEST_COUNT"]) < 1:
+              raise ValueError("Source action did not preserve synthetic review candidates")
+          if any(row["properties"]["verificationStatus"] != "unverified" for row in data["runs"][0]["results"]):
+              raise ValueError("Source action overclaimed validation")
+          print("PASS: source-only action produced private SARIF candidates without uploading")
+          PY

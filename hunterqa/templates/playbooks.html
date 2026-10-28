@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Review Playbooks · HunterQA AI{% endblock %}
+{% block section %}Research Playbooks{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">ORIGINAL REVIEW CHECKLISTS</p><h1>Research playbooks</h1><p>Use focused questions to record observations, test assumptions, and identify missing evidence. These checklists do not run tools or confirm findings.</p></div></section>
+<section class="panel"><div class="panel-head"><h2>{{ playbooks|length }} review areas</h2></div><div class="research-details">
+{% for playbook in playbooks %}<details class="research-entry"><summary>{{ playbook.title }}</summary><p><code>{{ playbook.id }}</code></p><ul>{% for question in playbook.questions %}<li>{{ question }}</li>{% endfor %}</ul></details>{% endfor %}
+</div></section>
+<section class="panel"><div class="research-details"><h2>Preserve research context privately</h2>
+<p>Initialize a private workspace with <code>research-init</code>, record an observation, hypothesis, negative result, or next step with <code>research-note</code>, then read the checked journal with <code>research-resume</code>.</p>
+<p>Notes remain operator statements. Evidence references store file fingerprints, not raw captures. Resuming context never launches an assessment or renews an approval.</p></div></section>
+{% endblock %}

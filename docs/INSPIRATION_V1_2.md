@@ -1,5 +1,10 @@
 # HunterQA AI v1.2 — External Framework Review & Attribution
 
+For the later, source-backed comparison and implemented workflow additions,
+see [the seven-reference comparison](FRAMEWORK_COMPARISON_2026_10.md). The article
+was successfully retrieved for that review; the earlier retrieval limitation
+recorded below is historical.
+
 Reviewed on 2026-10-28. These are **architectural references**, not copied,
 vendored or installed code. A repository README is a feature description,
 not independent evidence that every claimed feature is safe or effective.

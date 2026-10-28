@@ -1,0 +1,56 @@
+name: HunterQA Source Review
+description: Explicitly authorized local source analysis with private SARIF output; no live target testing or automatic uploads.
+inputs:
+  authorized:
+    description: Set true only when you may analyze the checked-out source.
+    required: true
+    default: 'false'
+  project-path:
+    description: Relative source directory within the checked-out repository. Source is never built or executed.
+    default: '.'
+  fail-on:
+    description: none or error; uses scanner labels, not confirmed vulnerability severity.
+    default: none
+outputs:
+  sarif-path:
+    description: Private runner-local SARIF file; upload only through an explicitly configured workflow step.
+    value: ${{ steps.review.outputs.sarif_path }}
+  candidate-count:
+    description: Unverified review candidates.
+    value: ${{ steps.review.outputs.candidate_count }}
+runs:
+  using: composite
+  steps:
+    - name: Check source-review acknowledgment
+      shell: bash
+      env:
+        HUNTERQA_ACTION_AUTHORIZED: ${{ inputs.authorized }}
+      run: |
+        if [ "$HUNTERQA_ACTION_AUTHORIZED" != "true" ]; then
+          echo "Source review requires authorized: true."
+          exit 1
+        fi
+        if [ "$RUNNER_OS" != "Linux" ]; then
+          echo "This action supports Linux runners."
+          exit 1
+        fi
+    - uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+    - name: Analyze source without executing the target project
+      id: review
+      shell: bash
+      env:
+        HUNTERQA_ACTION_AUTHORIZED: ${{ inputs.authorized }}
+        HUNTERQA_ACTION_PROJECT: ${{ inputs.project-path }}
+        HUNTERQA_ACTION_FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        umask 077
+        review_env="$(mktemp -d "$RUNNER_TEMP/hunterqa-env.XXXXXXXX")"
+        python -m venv "$review_env"
+        "$review_env/bin/python" -m pip install --upgrade pip setuptools
+        "$review_env/bin/python" -m pip install "$GITHUB_ACTION_PATH" semgrep
+        PATH="$review_env/bin:$PATH" PYTHONPATH= PYTHONNOUSERSITE=1 "$review_env/bin/python" "$GITHUB_ACTION_PATH/tools/action_review.py"
+branding:
+  icon: shield
+  color: green
