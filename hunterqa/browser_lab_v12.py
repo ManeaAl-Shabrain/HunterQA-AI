@@ -130,7 +130,9 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
             raise ValueError("Login POST path must be explicitly approved")
         for value in (username_selector, password_selector, submit_selector):
             _selector(value)
-        user, secret = os.environ.get(LOGIN_ENV_USERNAME), os.environ.get(LOGIN_ENV_PASSWORD)
+        # Remove secrets from this process environment before spawning Chromium.
+        # The invoking shell environment remains unchanged.
+        user, secret = os.environ.pop(LOGIN_ENV_USERNAME, None), os.environ.pop(LOGIN_ENV_PASSWORD, None)
         if not user or not secret:
             raise ValueError("Set both HUNTERQA_LAB_USERNAME and HUNTERQA_LAB_PASSWORD")
     else:
