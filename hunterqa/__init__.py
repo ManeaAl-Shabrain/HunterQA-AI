@@ -36,6 +36,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         BROWSER_LAB_REPORT_PATH=os.environ.get("HUNTERQA_BROWSER_LAB_REPORT", ""),
         HEAD_REPLAY_REPORT_PATH=os.environ.get("HUNTERQA_HEAD_REPLAY_REPORT", ""),
         REVIEW_DOSSIER_PATH=os.environ.get("HUNTERQA_REVIEW_DOSSIER", ""),
+        BENCHMARK_REPORT_PATH=os.environ.get("HUNTERQA_BENCHMARK_REPORT", ""),
         CAMPAIGN_HISTORY_ROOT=os.environ.get("HUNTERQA_CAMPAIGN_HISTORY_ROOT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),
