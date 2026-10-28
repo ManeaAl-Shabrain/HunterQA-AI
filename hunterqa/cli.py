@@ -1,6 +1,7 @@
 """HunterQA AI local research command line. No remote scan endpoints."""
 from __future__ import annotations
 import argparse
+from importlib.metadata import PackageNotFoundError, version as package_version
 import json
 import os
 from pathlib import Path
@@ -50,6 +51,11 @@ def _write_bounty_output(path: str, content: str) -> None:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
+    try:
+        installed_version = package_version("hunterqa-ai")
+    except PackageNotFoundError:
+        installed_version = "development (not installed)"
+    parser.add_argument("--version", action="version", version="HunterQA AI " + installed_version)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
     doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
