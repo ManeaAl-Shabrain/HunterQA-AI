@@ -121,6 +121,11 @@ def main(argv=None):
     correlation12.add_argument("--file", action="append", required=True, help="Repeat for 1..8 verified local reports")
     correlation12.add_argument("--out", required=True)
     correlation12.add_argument("--authorized", action="store_true")
+    ai12 = sub.add_parser("bounty-ai-review", help="Local Ollama agent-role recommendations without tool execution")
+    ai12.add_argument("--plan", required=True)
+    ai12.add_argument("--model", choices=("qwen2.5-coder:3b", "qwen2.5-coder:7b"), default="qwen2.5-coder:3b")
+    ai12.add_argument("--out", required=True)
+    ai12.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -252,6 +257,10 @@ def main(argv=None):
     elif args.command == "bounty-correlate":
         from .agent_workflow_v12 import correlate
         report = correlate(args.profile, args.file, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-ai-review":
+        from .agent_ai_v12 import suggest_reviews
+        report = suggest_reviews(args.plan, model=args.model, authorized=args.authorized)
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "propose-fix":
         if not args.authorized:
