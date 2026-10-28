@@ -36,7 +36,7 @@ class OwnedHandler(BaseHTTPRequestHandler):
             html = b"<html><head><title>Private fixture content</title></head><body>Owned lab account</body></html>"
         elif self.path == "/redirect":
             self.send_response(302)
-            self.send_header("Location", "http://127.0.0.1:9/private")
+            self.send_header("Location", type(self).redirect_target)
             self.end_headers()
             return
         else:
@@ -60,9 +60,28 @@ class OwnedHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
 
+class DisallowedHandler(BaseHTTPRequestHandler):
+    hits = 0
+
+    def log_message(self, *args):
+        pass
+
+    def do_GET(self):
+        type(self).hits += 1
+        self.send_response(200)
+        self.end_headers()
+
+
 @pytest.fixture
 def owned_http_server(tmp_path, monkeypatch):
     playwright = pytest.importorskip("playwright.sync_api")
+    guarded = ThreadingHTTPServer(("127.0.0.1", 0), DisallowedHandler)
+    guarded_thread = Thread(target=guarded.serve_forever, daemon=True)
+    guarded_thread.start()
+    DisallowedHandler.hits = 0
+    OwnedHandler.redirect_target = (
+        f"http://127.0.0.1:{guarded.server_address[1]}/private"
+    )
     server = ThreadingHTTPServer(("127.0.0.1", 0), OwnedHandler)
     thread = Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -83,6 +102,9 @@ def owned_http_server(tmp_path, monkeypatch):
     server.shutdown()
     server.server_close()
     thread.join(timeout=3)
+    guarded.shutdown()
+    guarded.server_close()
+    guarded_thread.join(timeout=3)
 
 
 def test_real_chromium_owned_authenticated_flow(owned_http_server, monkeypatch):
@@ -108,3 +130,4 @@ def test_real_chromium_cross_port_redirect_is_blocked(owned_http_server):
     profile, origin = owned_http_server
     with pytest.raises(RuntimeError):
         inspect_owned_browser(profile, origin + "/redirect", authorized=True)
+    assert DisallowedHandler.hits == 0, "Browser contacted an unapproved local service"
