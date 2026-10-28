@@ -411,3 +411,11 @@ def cve_intelligence():
         "verification" / "hunterqa_cve_intelligence.json"
     )
     return render_template("cve_intelligence.html", report=read_cve_report(filename))
+
+
+@bp.get("/bounty")
+def bounty_dashboard():
+    """Read-only local authorized bounty assessment evidence; never scans on page load."""
+    from .bounty import read_bounty_report, METHOD_CATALOG
+    report = read_bounty_report(current_app.config.get("BOUNTY_REPORT_PATH"))
+    return render_template("bounty.html", report=report, methods=METHOD_CATALOG)
