@@ -18,6 +18,16 @@
 <section class="panel"><div class="panel-head"><h2>Selected coverage</h2></div><div class="table-wrap"><table><thead><tr><th>Stage</th><th>Completed / selected</th></tr></thead><tbody>
 {% for stage in report.coverage %}<tr><td>{{ stage.stage }}</td><td>{{ stage.completed }} / {{ stage.selected }}</td></tr>{% endfor %}
 </tbody></table></div><p class="research-details">Unselected stages are untested. Counts do not establish complete security coverage or standards compliance.</p></section>
+{% for discovery in report.web_discovery %}
+<section class="panel"><div class="panel-head"><h2>HTML discovery · {{ discovery.step }}</h2></div>
+<p class="research-details">{{ discovery.summary.visited }} pages visited; {{ discovery.forms|length }} forms inventoried. Limits reached: {{ discovery.summary.limits_reached }}. Forms were not submitted and JavaScript was not executed.</p>
+<div class="table-wrap"><table><thead><tr><th>Discovered endpoint</th><th>Visited</th></tr></thead><tbody>
+{% for endpoint in discovery.endpoints %}<tr><td>{{ endpoint.url }}</td><td>{{ endpoint.visited }}</td></tr>{% else %}<tr><td colspan="2">No admitted HTML link endpoints recorded.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Form action</th><th>Declared method</th><th>Field types</th></tr></thead><tbody>
+{% for form in discovery.forms %}<tr><td>{{ form.action_url or 'Outside admitted scope / unsupported URL' }}</td><td>{{ form.method }}</td><td>{{ form.input_types|join(', ') }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endfor %}
 <section class="panel"><div class="panel-head"><h2>Findings and next actions</h2></div><div class="table-wrap"><table><thead><tr><th>Rule</th><th>Source severity</th><th>Review</th><th>Remediation</th></tr></thead><tbody>
 {% for finding in report.findings %}<tr><td>{{ finding.rule_id }}<br>{{ finding.file_path }}:{{ finding.line_start }}</td><td>{{ finding.source_severity }}</td><td>{{ finding.verification_status }}</td><td>{{ finding.remediation }}</td></tr>{% else %}<tr><td colspan="4">No candidates recorded. Review coverage and execution state before drawing conclusions.</td></tr>{% endfor %}
 </tbody></table></div></section>

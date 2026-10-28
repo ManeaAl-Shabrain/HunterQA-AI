@@ -20,6 +20,7 @@ STAGES = (
 # A closed planning catalog. IDs are never resolved to shell commands, imports,
 # entry points, executable paths, or instructions supplied by an external report.
 CATALOG = {
+    "web-discovery": (STAGES[0], True, "Bounded same-origin HTML discovery within profile scope; GET, no JS or form submission"),
     "declared-assets": (STAGES[0], False, "Review explicitly declared assets; no discovery traffic"),
     "service-evidence": (STAGES[1], False, "Review previously collected service evidence"),
     "source-review": (STAGES[2], False, "Plan existing local source and configuration review"),
@@ -124,13 +125,16 @@ def compile_protocol(profile_path, protocol_path, *, approved_steps=(),
         if type(step["approval_required"]) is not bool or (active and not step["approval_required"]):
             raise ValueError("Active validation requires an explicit approval checkpoint")
         if active:
-            required_method = "GET" if tool == "approved-account-check" else method
+            required_method = "GET" if tool in ("approved-account-check", "web-discovery") else method
             for target in step["targets"]:
                 parts = policy.authorize_url(target, required_method)[0]
                 if tool == "approved-account-check" and parts.scheme != "https":
                     raise ValueError("Account checks require HTTPS")
             if step["requests"] < len(step["targets"]):
                 raise ValueError("Active reservations must cover every declared target")
+            if tool == "web-discovery":
+                if step["requests"] > 20 or any(len(target) > 1024 or not policy.authorize_url(target, "GET")[0].path for target in step["targets"]):
+                    raise ValueError("Discovery permits at most 20 requests and 1024-character seeds with explicit paths")
         requests += step["requests"]
         duration += step["timeout_seconds"]
         by_id[step_id] = step
@@ -185,6 +189,7 @@ def compile_protocol(profile_path, protocol_path, *, approved_steps=(),
         "reserved_step_seconds": duration, "stop_file": stop_file,
         "planning_batches": batches, "pending_checkpoints": pending,
         "reviewed_checkpoints": sorted(approved_steps),
+        "dynamic_scope_steps": sorted(key for key, step in by_id.items() if step["tool"] == "web-discovery"),
         "review_kind": "local_operator_attestation",
         "steps": [{"id": key, "tool": step["tool"],
                    "stage": CATALOG[step["tool"]][0],
@@ -197,6 +202,7 @@ def compile_protocol(profile_path, protocol_path, *, approved_steps=(),
                   for key, step in sorted(by_id.items())],
         "execution_enabled": False, "tools_launched": 0, "network_requests": 0,
         "limitations": ["Preflight only: supported adapters require separate workflow-run execution approval",
+                        "web-discovery targets are seeds; it may follow same-origin HTML links admitted by the bound profile and reserved budget",
                         "Limits are validated reservations, not runtime enforcement",
                         "Local attestations do not verify target-owner authorization",
                         "Step reviews do not authorize existing commands or confirm findings"],

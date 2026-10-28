@@ -26,8 +26,9 @@ from hunterqa.engines.openapi import audit_openapi  # noqa: E402
 from hunterqa.external_evidence import import_external  # noqa: E402
 from hunterqa.workflow_store import approved_directory, private_write  # noqa: E402
 from hunterqa.workflow_network import NetworkJournal  # noqa: E402
+from hunterqa.web_discovery import discover  # noqa: E402
 
-ADAPTERS = {"declared-assets", "service-evidence", "source-review", "external-findings",
+ADAPTERS = {"web-discovery", "declared-assets", "service-evidence", "source-review", "external-findings",
             "approved-observation", "evidence-index", "report-draft"}
 
 
@@ -80,6 +81,8 @@ def execute(request):
     tool = step["tool"]
     if tool not in ADAPTERS:
         raise ValueError("Unsupported fixed adapter")
+    if tool == "web-discovery":
+        return discover(request)
     result = {"adapter": tool, "adapter_version": 1, "findings": [], "observations": [],
               "requests": 0, "verification_status": "unverified"}
     if tool == "declared-assets":

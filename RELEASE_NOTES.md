@@ -1,4 +1,23 @@
-# HunterQA v1.3.0 · Release preparation
+# HunterQA development and release notes
+
+## Unreleased · scoped HTML discovery
+
+- Added `discovery-setup` and the supervised `web-discovery` workflow adapter:
+  approved seed origins, profile-scoped GET link following, depth/page limits,
+  form inventory, and informational header/cookie observations.
+- Extended private network-journal validation, JSON/HTML reports, the local
+  dashboard, and retest coverage comparison for dynamic discovery.
+- Added owned-loopback regression tests, offline positive/negative observation
+  controls, and a real Chromium dashboard check in release QA.
+- Added the [discovery guide](docs/SCOPED_WEB_DISCOVERY.md) and an honest
+  [seven-area implementation roadmap](docs/ASSESSMENT_EXPANSION_ROADMAP.md).
+
+This increment does not implement all requested assessment areas. JavaScript,
+session-aware crawling, general active validation, network/AD and cloud runtime
+assessment, verified customer grants, OS sandboxing and shared organization quotas
+remain incomplete or planned. Published v1.3.0 artifacts are unchanged.
+
+## HunterQA v1.3.0 · Release preparation
 
 Version 1.3.0 consolidates the supervised workflow runner, controlled engagements,
 research interoperability, evidence review, reporting and maintenance work below.

@@ -41,6 +41,16 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Development addition after v1.3.0:** `discovery-setup` plans approved, bounded
+HTML discovery with link following, form inventory and private workflow reports.
+It follows only admitted seed origins and profile paths, requires explicit
+approval, and does not execute JavaScript or submit forms. See the
+[discovery guide](docs/SCOPED_WEB_DISCOVERY.md) and the
+[seven-area expansion roadmap](docs/ASSESSMENT_EXPANSION_ROADMAP.md).
+This code is absent from the original v1.3.0 archive. The table below describes
+the published release; the broader assessment gaps remain partially implemented
+or planned, as recorded in the roadmap.
+
 | Area | Available in 1.3.0 | Interpretation |
 | --- | --- | --- |
 | Workflow execution | Persistent run state, dependency scheduling, seven fixed adapters, explicit review checkpoints | A controlled local runner; no arbitrary tool execution |
