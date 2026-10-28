@@ -1,176 +1,114 @@
 # HunterQA AI
 
-**One local vulnerability research platform for Kali Linux.** A unified Flask dashboard, fixed local Semgrep rules, configuration and API policy checks, dependency inventory, AFL++ crash replay, ASan/UBSan evidence parsing, optional CodeQL SARIF import, and Ollama-assisted review. No cloud account, remote scanning, stealth/evasion mechanism, or automatic exploit execution.
+**One local, authorization-gated AI-assisted vulnerability research platform for Kali Linux.**
 
-> **Scope/accuracy:** This repository is a serious **research foundation**, not a machine that proves every vulnerability or discovers every zero-day. Rules only flag candidates; dedicated lab tests and human review determine actual impact. The platform never automatically marks a zero-day or assigns an unsupported CVSS score.
+HunterQA combines offline static/code analysis, local Qwen hypotheses, trust graphs, bounded lab crash replay, sanitizer evidence, advisory/CVE intelligence and analyst review in one Python/Flask repository.
 
-## Install on the existing Kali VM
+**The 1.0 branch is a release review candidate, not yet a published stable release.** Human review and Kali acceptance are required. No tool can guarantee finding every vulnerability, zero false positives, or independent CVE issuance. A research record, advisory match or ASan diagnostic is not automatically a confirmed exploitable vulnerability.
 
-Test environment: 2 vCPUs and ~5 GiB RAM. Run Ollama and CPU-heavy fuzzing **separately** to avoid resource exhaustion.
+## Current local install / update (existing Kali checkout)
 
-1. Stop your currently running ZeroScope/HunterQA Flask server (`Ctrl+C`). Keep your old folder as a backup.
-2. Extract **one** packaged repository:
-
-```bash
-cd ~/Desktop
-tar -xzf HunterQA-AI.tar.gz
-cd HunterQA-AI
-```
-
-3. Preserve old scan history (if available). For an in-place/renamed previous dashboard the legacy database may be under `~/Desktop/hunterqa-dashboard/instance/zeroscope.sqlite3`:
-
-```bash
-mkdir -p instance
-cp -n ~/Desktop/hunterqa-dashboard/instance/zeroscope.sqlite3 instance/zeroscope.sqlite3 2>/dev/null || true
-./scripts-migrate.sh
-```
-
-This does not overwrite the old database and migrates `instance/zeroscope.sqlite3` to `instance/hunterqa.sqlite3`. If the previous database uses SQLite WAL, stop the old server before copying.
-
-4. Create the Python environment. Flask and pytest require internet access **once for installation**; runtime checks do not require a cloud connection.
-
-```bash
-python3 -m venv .venv
+\`\`\`bash
+cd ~/Desktop/HunterQA-AI
+git status --short
+git fetch origin
+git switch --track origin/release/hunterqa-ai-1-0-review
 source .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-semgrep --version
-ollama list
-```
+python -m pip install -e '.[dev]'
+\`\`\`
 
-Existing installations of Semgrep and Ollama may be reused. If Semgrep is missing, install it with `pipx install semgrep`; install Ollama from its official Linux installer (review before executing). Pull the model if not present: `ollama pull qwen2.5-coder:3b`.
+If this branch is already checked out locally, use \`git switch release/hunterqa-ai-1-0-review\` instead. Stop before switching if \`git status\` shows uncommitted work; preserve it separately. Keep your existing \`instance/\` SQLite data and \`~/ZeroScope-AI/research-lab/\` evidence intact.
 
-5. **Authorize local directories** and point at your existing research evidence. Do not include remote domains or an arbitrary user's directory.
+For a brand-new local checkout, install Python >= 3.11, Git, and a Python virtual environment first. Semgrep and Ollama are optional external local tools for relevant engines. See \`docs/\` for detailed workflows.
 
-```bash
+## Single-command acceptance check
+
+\`\`\`bash
 export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
-export HUNTERQA_RESEARCH_REPORT="$HOME/ZeroScope-AI/research-lab/verification/integrated_report.json"
-export HUNTERQA_OLLAMA_MODEL="qwen2.5-coder:3b"
-export HUNTERQA_FUZZ_STATS="$HOME/ZeroScope-AI/research-lab/fuzz-output-v3/default/fuzzer_stats"
-export HUNTERQA_HYPOTHESES_REPORT="$HOME/ZeroScope-AI/research-lab/hypotheses.json"
-export HUNTERQA_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
+export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
+bash tools/verify_release_8_6.sh
+\`\`\`
+
+This verifies Python compilation, the full regression suite, Release Doctor, nine Flask routes against **disposable SQLite data**, and a bounded SHA-256 source release ZIP. Review all failures and warnings. It does not certify real-world vulnerability-detection coverage. CI runs source QA on pull requests, without credentials or web-app deployment.
+
+## Run the dashboard (Kali VM only)
+
+\`\`\`bash
+export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
+export HUNTERQA_CAMPAIGN_HISTORY_ROOT="$HOME/ZeroScope-AI/research-lab"
+export HUNTERQA_CVE_REPORT="$HOME/ZeroScope-AI/research-lab/verification/cve_validation_8_6.json"
+export HUNTERQA_TRIAGE_REPORT="$HOME/ZeroScope-AI/research-lab/verification/hunterqa_unified_triage.json"
+export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
 python run.py
-```
+\`\`\`
 
-6. Open **http://127.0.0.1:5000** in Firefox **inside Kali**. The server never binds to `0.0.0.0`. The app uses the existing Flask authorization confirmation before each web scan.
+Open \`http://127.0.0.1:5000\` **inside Kali**. Check \`ss -ltnp | grep ':5000'\` for loopback-only binding. If the local secret file is missing, create it with \`bash tools/setup_verify_kali.sh\`, or follow \`docs/RELEASE_DOCTOR_8_1.md\`; never commit it.
 
-> Set the secret key consistently across restarts if you want existing sessions to remain valid. Consider saving environment variables in a private local setup script (`chmod 600`) that is never added to Git.
+Pages include Overview, Projects, Research Lab, Unified Triage, AI Hypotheses, Research Analytics, Campaign History, Research Trends, CVE Intelligence, Coverage & Engines, and Audit History.
 
-## All components in one repository
+## Research capabilities and limits
 
-```text
-HunterQA-AI/
-├── hunterqa/
-│   ├── __init__.py               Flask app + migration / config
-│   ├── routes.py                 Web routes, CSRF and authorized scan workflow
-│   ├── db.py                     SQLite projects, findings, dependencies, audit
-│   ├── orchestrator.py           Unified offline source scan coordinator
-│   ├── scanner.py                One-worker asynchronous Flask scan service
-│   ├── research.py               Old/new report normalization
-│   ├── evidence.py               SHA256 + conservative provenance correlation
-│   ├── evidence_refresh.py       Read-only atomic file snapshot
-│   ├── security.py               Approved-roots and CSRF
-│   ├── agent_adapter.py          Read-only legacy agent JSON normalization
-│   ├── cli.py / __main__.py      CLI entry points
-│   ├── engines/
-│   │   ├── config_audit.py       Docker/K8s/Terraform hints
-│   │   ├── dependencies.py       Local package inventory + offline advisory match
-│   │   ├── openapi.py            Offline JSON OpenAPI policy hints
-│   │   ├── sarif.py              CodeQL/SARIF import adapter
-│   │   ├── sanitizers.py         ASan and UBSan evidence parsing
-│   │   ├── fuzzing.py            Limited crash replay in approved local lab
-│   │   ├── ai_research.py        Ollama local code hypotheses (not executed)
-│   │   └── hypotheses.py         Manual research taxonomy/checklist
-│   ├── rules/semgrep.yml        Bundled offline Semgrep source rules
-│   ├── templates/              Dashboard and research views
-│   └── static/                 Local CSS/JS
-├── zeroscope/                  Tiny legacy Python import compatibility shims
-├── examples/local_lab/        Deliberately vulnerable isolated C test programs
-├── tests/                     Regression, correlation, routes and engine tests
-├── docs/                      Architecture, security model and limitations
-├── run.py                     Loopback-only Flask entrypoint
-└── scripts-migrate.sh         Non-destructive legacy database rename
-```
-
-## Daily workflow
-
-**Browser:** the Research Lab can also display AFL++ `fuzzer_stats` (set `HUNTERQA_FUZZ_STATS`) and a separate AI Hypotheses page from `HUNTERQA_HYPOTHESES_REPORT`. Register your own source directory in `Projects`, type the exact authorization statement, start a scan, review unverified findings and dependency inventory, then use `Research Lab` to inspect crash/sanitizer evidence from your local lab. `Coverage & Engines` shows current functionality and research-only categories. JSON export includes the input report SHA-256.
-
-**CLI:** use the *same repository* for offline research jobs. All source/lab commands require an approved root and/or explicit authorization.
-
-```bash
-# One unified source scan: Semgrep + local configuration + OpenAPI + inventory
-python -m hunterqa scan --project "$HOME/ZeroScope-AI/targets" --out "$HOME/ZeroScope-AI/research-lab/source_scan.json" --authorized
-
-# Fast deterministic audit even if Semgrep is unavailable
-python -m hunterqa audit --project "$HOME/ZeroScope-AI/targets" --out "$HOME/ZeroScope-AI/research-lab/local_audit.json"
-
-# Local Qwen research hypotheses; no generated code is executed
-python -m hunterqa hypothesize --project "$HOME/ZeroScope-AI/targets" --out "$HOME/ZeroScope-AI/research-lab/hypotheses.json" --authorized
-
-# Parse existing ASan log into normalized JSON
-python -m hunterqa parse-sanitizer --file "$HOME/ZeroScope-AI/research-lab/uaf_sanitizer.log" --out "$HOME/ZeroScope-AI/research-lab/sanitizer.json"
-
-# Import a manually produced local CodeQL SARIF report
-python -m hunterqa import-sarif --file /path/to/result.sarif --out /path/to/sarif-findings.json
-
-# Normalize old and integrated research evidence
-python -m hunterqa research-report --file "$HUNTERQA_RESEARCH_REPORT" --out "$HOME/ZeroScope-AI/research-lab/normalized_report.json"
-```
-
-### Crash verification (isolated VM only)
-
-The browser **never executes binaries or fuzzers**. Research binaries can run arbitrary code, so use an isolated Kali VM without access to sensitive networks. The CLI checks approved paths and explicit authorization, limits duration and output, and never accepts hostnames or remote URLs. These controls are **not** a secure sandbox on their own.
-
-```bash
-export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/research-lab"
-python -m hunterqa verify-crashes \
-  --lab "$HOME/ZeroScope-AI/research-lab" \
-  --binary "$HOME/ZeroScope-AI/research-lab/fuzz_target_san" \
-  --crashes "$HOME/ZeroScope-AI/research-lab/fuzz-output-v3/default/crashes" \
-  --out "$HOME/ZeroScope-AI/research-lab/verification/integrated_report.json" \
-  --authorized
-```
-
-**Important:** replay only with the **same corresponding build** if possible. A sanitizer report is linked to an input only if *both* input and executable SHA-256 match. Your old `FUZZTEST2026` intentional abort and `uaf_test.c` UAF remain **separate evidence**.
-
-## Coverage and detection claims
-
-| Research area | Actual implementation | Limits |
+| Engine | Current functionality | What it does not prove |
 |---|---|---|
-| Injection, XSS, insecure deserialization | Selected bundled Semgrep rules | Candidate patterns, not verified vulnerabilities |
-| Memory safety | ASan/UBSan parser and controlled crash replay | Requires instrumented local executable / test harness |
-| Config/cloud/container | Selected Docker, Terraform, K8s file checks | Not a complete cloud posture assessment |
-| APIs/auth | Offline OpenAPI JSON contract policy hints | Cannot prove backend authorization without tailored tests |
-| Dependency / supply chain | Local inventory; optional user-provided advisory snapshot | No live CVE feed, constraint resolution or automatic patching |
-| Binary analysis | Import analyzer SARIF when available | Does not automatically reverse engineer arbitrary binaries |
-| Logic and privilege boundaries | Structured manual checklist + local Qwen hypotheses | Needs domain-specific invariants, test accounts, code context |
-| Fuzzing | AFL++ local lab fixtures, bounded replay | Fuzz campaigns prepared/executed separately in VM |
-| CWE/CVSS | CWE candidates from explicit evidence; CVSS human review | Pattern severity is not CVSS; no automatic zero-day designation |
+| Semgrep + local source checks | Selected offline rules and config checks | Complete CWE detection or exploitability |
+| Trust graph | AST-based local functions/routes/call edges | General accurate taint analysis in every language |
+| Local Ollama/Qwen | Bounded hypotheses and remediation proposals | Verified weaknesses or safe code changes |
+| Patch guard | Rejects known unsafe replacement patterns | Semantic correctness of all patches |
+| AFL++ lab / sanitizer | Crash replay and ASan/UBSan evidence parsing | Every crash is security-relevant |
+| Unified triage and analyst review | Evidence-linked candidate and review history | An AI-only confirmed zero-day |
+| Offline CVE engine | User-supplied OSV snapshot, exact and selected range matches | Current verified installed packages |
+| Dependency inventory | Pinned requirements and supported npm, Poetry, uv, Composer lockfiles | That every dependency is installed/reachable |
+| History / trends / analytics | Compare local evidence over time | That record differences are actual regressions |
+| Release Doctor / QA | Local readiness, regression, bounded archive checks | Production-grade deployment certification |
 
-## Security model / guardrails
+Unrecognized lockfile entries, advisory ranges, missing snapshots, absent source files and uncertain scope remain **unassessed**; they do not mean “secure.” CVE aliases come from external advisories and are not created by the model. Source revisions, advisory age and incomplete test coverage can change results.
 
-- Loopback-only Flask server, CSRF tokens, signed sessions, safe HTML escaping, no frontend-supplied CLI arguments, and approved local directory constraints with path resolution.
-- Scans require explicit authorization and run one worker at a time (fits small Kali VM).
-- Semgrep uses local rules and `--metrics=off`; it does not retrieve registry rules in this configuration.
-- Local Ollama is fixed to `127.0.0.1:11434`. Its generated text is not trusted evidence or executable code.
-- Read-only research report loader: maximum 1 MiB, symlink rejection, older and newer JSON schemas, bounded fields.
-- Sanitizer evidence is tracked separately from AFL++ crashes unless cryptographic provenance matches. Even matched provenance requires review.
-- `audit_events` records local project registration and scan authorization. The app is designed for single-user local use; it is not multi-user hardened or a production network service.
-- No stealth, evasion, password attacks, unsolicited scanning, remote probes, or exploit payload delivery.
+## Example authorized local campaign
 
-## Automated tests
+\`\`\`bash
+python -m hunterqa campaign \
+  --project "$HOME/ZeroScope-AI/targets" \
+  --out-dir "$HOME/ZeroScope-AI/research-lab/authorized-campaign" \
+  --with-ai --ai-chunks 4 --authorized
+\`\`\`
 
-```bash
-source .venv/bin/activate
-python -m compileall -q hunterqa zeroscope
-python -m pytest -q
-```
+Use a fresh output directory. Crash replay and sanitizer execution are **separate explicit opt-in lab actions**; run untrusted binaries only in an isolated VM. No stealth, evasion or unsolicited remote scanning is included.
 
-The package is supplied as source; install and run the full Flask/Semgrep/Ollama integration tests on Kali. Individual tests do not by themselves prove detection accuracy in real repositories.
+## Example offline CVE check
 
-## References
+An OSV-format snapshot must already be present **inside** approved local roots. This command does not download any vulnerability intelligence or execute project code.
 
-- [Semgrep CLI and local rules](https://semgrep.dev/docs/)
-- [AFL++ comparison instrumentation](https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.laf-intel.md)
-- [OWASP Web Security Testing Guide](https://owasp.org/www-project-web-security-testing-guide/)
-- [MITRE CWE](https://cwe.mitre.org/)
+\`\`\`bash
+python -m hunterqa cve-check \
+  --project "$HOME/ZeroScope-AI/research-lab/cve-validation-demo" \
+  --snapshot "$HOME/ZeroScope-AI/research-lab/osv_validation_demo.json" \
+  --out "$HOME/ZeroScope-AI/research-lab/verification/cve_review_new.json" \
+  --authorized
+\`\`\`
+
+For the user's historical Jinja2 3.1.3 test input, eight saved GHSA/PYSEC advisory records represented four distinct CVE aliases. That fixture is **not** proof of four exploitable installed vulnerabilities, and the OSV snapshot may go stale. See \`docs/ADVISORY_QUALITY_8_6.md\` and \`docs/RESOLVED_DEPENDENCIES_8_5.md\`.
+
+## Generate a complete, self-contained source ZIP
+
+\`\`\`bash
+python tools/build_release.py --repo . --out "$HOME/Desktop/HunterQA-AI-1.0.0-source.zip"
+python tools/verify_release_archive.py "$HOME/Desktop/HunterQA-AI-1.0.0-source.zip"
+\`\`\`
+
+The builder packages tracked project code, templates, docs and tests; it excludes common local SQLite databases, secrets, logs and fuzz outputs. Review the ZIP before public distribution. SHA-256 archive manifest verification proves consistency with the included manifest, not independent publisher authenticity.
+
+## Security model
+
+- Flask app listens on loopback in single-user Kali lab; not a public production service.
+- Browser form writes use CSRF protections and require explicit project authorization.
+- Local evidence is bounded and should be kept outside the published repository.
+- Model output is not executed automatically and cannot independently mark a finding a zero-day.
+- Signature/manifest integrity is not equivalent to trusted provenance.
+- Approved roots, offline-only research, audit logs, sanitized evidence display and review gates are design controls, not a sandbox around arbitrary project code.
+- Back up \`instance/hunterqa.sqlite3\` before migration or switching to a new release. Never overwrite analyst history as a testing shortcut.
+
+## Release and contributors
+
+Review the single aggregate PR to \`main\` and the detailed \`docs/RELEASE_1_0_CHECKLIST.md\`. Earlier stacked phase PRs represent intermediate changes and should not be merged again on top of the cumulative release without branch-ancestry review. Do not publish a GitHub tag or stable release until approved acceptance and a license/security review are complete.
+
+This is a research project. Findings should be validated and reported responsibly to affected maintainers.
