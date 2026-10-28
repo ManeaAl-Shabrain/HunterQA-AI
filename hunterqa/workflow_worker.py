@@ -27,8 +27,12 @@ from hunterqa.external_evidence import import_external  # noqa: E402
 from hunterqa.workflow_store import approved_directory, private_write  # noqa: E402
 from hunterqa.workflow_network import NetworkJournal  # noqa: E402
 from hunterqa.web_discovery import discover  # noqa: E402
+from hunterqa.access_matrix import execute_matrix  # noqa: E402
+from hunterqa.service_probe import enumerate_services  # noqa: E402
+from hunterqa.cloud_account import execute_account  # noqa: E402
+from hunterqa.web_canaries import execute_canaries  # noqa: E402
 
-ADAPTERS = {"web-discovery", "declared-assets", "service-evidence", "source-review", "external-findings",
+ADAPTERS = {"web-canary-check", "aws-account-audit", "authorization-matrix", "service-enumeration", "web-discovery", "declared-assets", "service-evidence", "source-review", "external-findings",
             "approved-observation", "evidence-index", "report-draft"}
 
 
@@ -83,6 +87,14 @@ def execute(request):
         raise ValueError("Unsupported fixed adapter")
     if tool == "web-discovery":
         return discover(request)
+    if tool == "authorization-matrix":
+        return execute_matrix(request)
+    if tool == "service-enumeration":
+        return enumerate_services(request)
+    if tool == "aws-account-audit":
+        return execute_account(request)
+    if tool == "web-canary-check":
+        return execute_canaries(request)
     result = {"adapter": tool, "adapter_version": 1, "findings": [], "observations": [],
               "requests": 0, "verification_status": "unverified"}
     if tool == "declared-assets":

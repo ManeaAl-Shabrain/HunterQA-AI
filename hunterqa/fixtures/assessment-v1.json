@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "fixture_version": "owned-assessment-1.0.0",
+  "cases": [
+    {"id":"markup-raw","class":"markup-reflection","path":"/app/markup/raw","expected":["web.markup-reflection-review"]},
+    {"id":"markup-escaped","class":"markup-reflection","path":"/app/markup/escaped","expected":[]},
+    {"id":"markup-textarea","class":"markup-reflection","path":"/app/markup/textarea","expected":[]},
+    {"id":"markup-json","class":"markup-reflection","path":"/app/markup/json","expected":[]},
+    {"id":"sql-concatenated","class":"sql-error","path":"/app/sql/concatenated","expected":["web.sql-error-review"]},
+    {"id":"sql-parameterized","class":"sql-error","path":"/app/sql/parameterized","expected":[]},
+    {"id":"access-broken","class":"authorization-contract","path":"/app/access/broken","expected":["access.unexpected-success"]},
+    {"id":"access-denied","class":"authorization-contract","path":"/app/access/denied","expected":[]}
+  ]
+}

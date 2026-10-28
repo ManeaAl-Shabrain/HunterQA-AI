@@ -7,6 +7,7 @@ not authenticated owner consent.
 from __future__ import annotations
 
 import math
+import importlib.util
 import re
 from datetime import timedelta
 
@@ -23,9 +24,13 @@ CATALOG = {
     "web-discovery": (STAGES[0], True, "Bounded same-origin HTML discovery within profile scope; GET, no JS or form submission"),
     "declared-assets": (STAGES[0], False, "Review explicitly declared assets; no discovery traffic"),
     "service-evidence": (STAGES[1], False, "Review previously collected service evidence"),
+    "service-enumeration": (STAGES[1], True, "Bounded TCP connect checks of exact admitted host/ports; no banner or OS probes"),
     "source-review": (STAGES[2], False, "Plan existing local source and configuration review"),
+    "aws-account-audit": (STAGES[2], True, "Two read-only AWS account APIs using explicitly supplied temporary credentials"),
     "external-findings": (STAGES[2], False, "Plan offline Nuclei/ZAP evidence import"),
     "approved-observation": (STAGES[3], True, "Plan a separately reviewed exact HEAD/GET assessment"),
+    "authorization-matrix": (STAGES[3], True, "Dedicated-role exact GET access contracts; no SSO or resource enumeration"),
+    "web-canary-check": (STAGES[3], True, "Fixed baseline/probe pairs for inert markup reflection and SQL error cues; unverified candidates"),
     "approved-account-check": (STAGES[3], True, "Plan a separately reviewed dedicated-account check"),
     "evidence-index": (STAGES[4], False, "Plan evidence fingerprints and analyst review"),
     "report-draft": (STAGES[5], False, "Plan an unverified report and remediation review"),
@@ -36,7 +41,9 @@ MAX_PROTOCOL = 65_536
 
 def tool_catalog():
     return [{"id": key, "stage": stage, "active": active, "description": description,
-             "workflow_execution_available": key != "approved-account-check"}
+             "workflow_execution_available": key != "approved-account-check" and (key != "aws-account-audit" or
+                 all(importlib.util.find_spec(name) is not None for name in ("botocore", "defusedxml"))),
+             "optional_extra": "cloud" if key == "aws-account-audit" else None}
             for key, (stage, active, description) in CATALOG.items()]
 
 
@@ -125,7 +132,7 @@ def compile_protocol(profile_path, protocol_path, *, approved_steps=(),
         if type(step["approval_required"]) is not bool or (active and not step["approval_required"]):
             raise ValueError("Active validation requires an explicit approval checkpoint")
         if active:
-            required_method = "GET" if tool in ("approved-account-check", "web-discovery") else method
+            required_method = "GET" if tool in ("approved-account-check", "web-discovery", "authorization-matrix", "aws-account-audit", "web-canary-check") else method
             for target in step["targets"]:
                 parts = policy.authorize_url(target, required_method)[0]
                 if tool == "approved-account-check" and parts.scheme != "https":

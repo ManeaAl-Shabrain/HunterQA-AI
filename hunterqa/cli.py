@@ -335,7 +335,59 @@ def main(argv=None):
     discovery.add_argument("--max-pages", type=int, default=5)
     discovery.add_argument("--max-depth", type=int, default=1)
     discovery.add_argument("--authorized", action="store_true")
+    assessment = sub.add_parser("assessment-setup", help="Plan fixed access, service or read-only AWS checks without traffic")
+    assessment.add_argument("--profile", required=True)
+    assessment.add_argument("--tool", choices=("authorization-matrix", "service-enumeration", "aws-account-audit", "web-canary-check"), required=True)
+    assessment.add_argument("--out-dir", required=True)
+    assessment.add_argument("--input")
+    assessment.add_argument("--credentials")
+    assessment.add_argument("--target", action="append", default=[])
+    assessment.add_argument("--authorized", action="store_true")
+    sub.add_parser("coverage-audit", help="Show honest delivery and missing coverage across seven assessment areas")
+    assessment_benchmark = sub.add_parser("assessment-benchmark", help="Run versioned owned-loopback application controls; never a real-world accuracy score")
+    assessment_benchmark.add_argument("--out-dir", required=True)
+    assessment_benchmark.add_argument("--authorized", action="store_true")
+    quota_init = sub.add_parser("quota-init", help="Initialize a host-local shared quota window")
+    quota_init.add_argument("--ledger", required=True)
+    quota_init.add_argument("--max-requests", type=int, required=True)
+    quota_init.add_argument("--max-active-runs", type=int, required=True)
+    quota_init.add_argument("--expires-at", required=True)
+    quota_init.add_argument("--authorized", action="store_true")
+    for name in ("quota-status", "quota-stop", "quota-reconcile"):
+        quota_command = sub.add_parser(name, help="Inspect, stop or reconcile shared local quotas")
+        quota_command.add_argument("--ledger", required=True)
+        if name != "quota-status":
+            quota_command.add_argument("--authorized", action="store_true")
+        if name == "quota-reconcile":
+            quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "coverage-audit":
+        from .coverage_audit import coverage_audit
+        print(json.dumps(coverage_audit(), indent=2))
+        return
+    if args.command == "assessment-benchmark":
+        from .assessment_benchmark import benchmark_assessments
+        print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
+        return
+    if args.command == "assessment-setup":
+        from .assessment_setup import setup_assessment
+        result = setup_assessment(args.profile, args.tool, args.out_dir, targets=args.target,
+            input_file=args.input, secret_file=args.credentials, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command.startswith("quota-"):
+        from . import shared_quota
+        if args.command == "quota-init":
+            result = shared_quota.initialize(args.ledger, max_requests=args.max_requests,
+                max_active_runs=args.max_active_runs, expires_at=args.expires_at, authorized=args.authorized)
+        elif args.command == "quota-stop":
+            result = shared_quota.stop(args.ledger, authorized=args.authorized)
+        elif args.command == "quota-reconcile":
+            result = shared_quota.reconcile(args.ledger, args.run_id, authorized=args.authorized)
+        else:
+            result = shared_quota.status(args.ledger)
+        print(json.dumps(result, indent=2))
+        return
     if args.command == "discovery-setup":
         from .web_discovery import setup_discovery
         result = setup_discovery(args.profile, args.seed, args.out_dir,
@@ -472,6 +524,8 @@ def main(argv=None):
         _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
         return
     if args.command == "capabilities":
+        print("Assessment coverage: run coverage-audit for the seven-area implementation inventory and explicit missing features.")
+        print("Development adapters: assessment-setup; fixed web canaries, role GET contracts, TCP reachability and optional read-only AWS account APIs.")
         print("Research context: original review playbooks, private policy-bound journal, context-only resume; no tool execution.")
         print("Interoperability: offline Nuclei/ZAP evidence, conservative SARIF export, and an acknowledgment-gated source-only GitHub Action.")
         print("Approved assessments: engagement-plan/preflight/run; exact targets, expiring fingerprint approval, bounded requests.")

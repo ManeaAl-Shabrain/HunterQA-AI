@@ -12,6 +12,7 @@ dependencies = ["Flask>=3.0,<4", "packaging>=23,<27"]
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
 browser = ["playwright>=1.48,<2"]
+cloud = ["botocore>=1.35,<2", "defusedxml>=0.7,<1"]
 quality = ["ruff>=0.14,<1", "bandit>=1.9,<2", "pip-audit>=2.10,<3"]
 
 [project.scripts]
@@ -24,4 +25,4 @@ testpaths = ["tests"]
 include = ["hunterqa*", "zeroscope*"]
 
 [tool.setuptools.package-data]
-hunterqa = ["templates/*.html", "static/*", "rules/*.yml"]
+hunterqa = ["templates/*.html", "static/*", "rules/*.yml", "fixtures/*.json"]

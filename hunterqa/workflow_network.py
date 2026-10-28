@@ -6,9 +6,35 @@ import json
 import os
 from urllib.parse import urlsplit
 
-from .bounty import _approved_file
+from .bounty import _approved_file, _decode_json
 from .engagement import digest, utcnow
 from .source_files import read_bounded
+
+
+def read_manifest(binding, maximum=65_536):
+    raw = read_bounded(_approved_file(binding["file"]), maximum)
+    if hashlib.sha256(raw).hexdigest() != binding["file_sha256"]:
+        raise ValueError("Assessment manifest evidence changed after review")
+    return _decode_json(raw)
+
+
+def journal_targets(step, binding):
+    if step["tool"] not in ("authorization-matrix", "web-canary-check"):
+        return step["targets"]
+    data = read_manifest(binding)
+    targets = ([case["url"] for case in data["cases"]] if step["tool"] == "authorization-matrix"
+               else [check["url"] for check in data["checks"] for _ in range(2)])
+    if not 1 <= len(targets) <= step["requests"] or not set(targets) <= set(step["targets"]):
+        raise ValueError("Access matrix journal exceeds reviewed scope")
+    return targets
+
+
+def journal_queries(step, binding):
+    if step["tool"] != "web-canary-check":
+        return None
+    from .web_canaries import request_digest, variants
+    data = read_manifest(binding)
+    return [request_digest(check["url"], query) for check in data["checks"] for _, query in variants(check)]
 
 
 class NetworkJournal:
@@ -31,9 +57,11 @@ class NetworkJournal:
         self.stream.close()
 
 
-def inspect_network(path, targets, *, discovery_policy=None, request_budget=None):
+def inspect_network(path, targets, *, discovery_policy=None, request_budget=None, transport="http", request_digests=None):
+    if transport not in ("http", "tcp", "aws-query"):
+        raise ValueError("Unsupported journal transport")
     if not path.exists():
-        return {"sha256": None, "intents": 0, "responses": 0, "incomplete_tail": False, "records": []}
+        return {"sha256": None, "intents": 0, "responses": 0, "connections": 0, "incomplete_tail": False, "records": []}
     raw = read_bounded(_approved_file(path), 65_536)
     lines = raw.splitlines(keepends=True)
     incomplete = bool(lines and not lines[-1].endswith(b"\n"))
@@ -50,14 +78,15 @@ def inspect_network(path, targets, *, discovery_policy=None, request_budget=None
         return parts.scheme, parts.hostname, parts.port or (443 if parts.scheme == "https" else 80)
     origins = {origin(target) for target in targets} if dynamic else set()
     admitted = set()
-    previous, records, intents, responses, pending = "0" * 64, [], 0, 0, None
+    previous, records, intents, responses, connections, pending = "0" * 64, [], 0, 0, 0, None
     for index, line in enumerate(lines, start=1):
         row = json.loads(line)
         value = row["value"]
         if value["seq"] != index or value["previous"] != previous or digest(value) != row["sha256"]:
             raise ValueError("Network journal hash chain mismatch")
         previous = row["sha256"]
-        if value["method"] not in ("HEAD", "GET"):
+        methods = {"tcp": ("TCP",), "aws-query": ("POST",), "http": ("HEAD", "GET")}
+        if value["method"] not in methods[transport]:
             raise ValueError("Network journal method mismatch")
         if value["kind"] == "intent":
             if pending is not None or intents >= maximum:
@@ -74,12 +103,21 @@ def inspect_network(path, targets, *, discovery_policy=None, request_budget=None
                 admitted.add(url)
             elif value["target_sha256"] != digest(targets[intents]):
                 raise ValueError("Network intent order/scope mismatch")
+            if request_digests is not None and (len(request_digests) != len(targets)
+                    or value["details"].get("request_sha256") != request_digests[intents]):
+                raise ValueError("Query request does not match the reviewed fixed probe")
             intents += 1
             pending = (value["target_sha256"], value["method"])
-        elif value["kind"] in ("response", "error"):
+        elif value["kind"] in ("response", "error", "connect-outcome"):
             if pending is None or (value["target_sha256"], value["method"]) != pending:
                 raise ValueError("Network outcome lacks a matching intent")
             pending = None
+            if transport == "tcp" and value["kind"] == "response":
+                raise ValueError("TCP journals cannot assert HTTP responses")
+            if value["kind"] == "connect-outcome":
+                if transport != "tcp" or value["details"].get("outcome") not in ("connected", "refused", "timeout", "unreachable"):
+                    raise ValueError("Invalid TCP outcome")
+                connections += 1
             if value["kind"] == "response":
                 status = value["details"].get("status")
                 if type(status) is not int or not 100 <= status <= 999:
@@ -89,4 +127,4 @@ def inspect_network(path, targets, *, discovery_policy=None, request_budget=None
             raise ValueError("Unknown network journal event")
         records.append(value)
     return {"sha256": hashlib.sha256(raw).hexdigest(), "intents": intents,
-            "responses": responses, "incomplete_tail": incomplete, "records": records}
+            "responses": responses, "connections": connections, "incomplete_tail": incomplete, "records": records}

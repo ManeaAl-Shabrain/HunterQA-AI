@@ -41,6 +41,20 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Further development:** [assessment adapters and quotas](docs/ASSESSMENT_ADAPTERS.md)
+add `assessment-setup` for fixed `web-canary-check`, `authorization-matrix`,
+`service-enumeration` and optional `aws-account-audit` workflows. These provide
+inert markup/SQL-error comparisons, dedicated-role GET contracts, exact TCP
+reachability and two read-only AWS account APIs. All need reviewed scope and
+explicit checkpoints; findings remain unverified.
+
+Use `coverage-audit` for the seven-area status and `assessment-benchmark` for a
+versioned owned application baseline. `quota-init`, `quota-status`, `quota-stop`
+and `quota-reconcile` manage optional shared host-local quotas configured through
+`HUNTERQA_QUOTA_LEDGER`. This is partial assessment coverage and cooperating local
+quota enforcement, not a complete pentesting platform or production multi-user
+service. These additions are absent from the immutable v1.3.0 archive.
+
 **Development addition after v1.3.0:** `discovery-setup` plans approved, bounded
 HTML discovery with link following, form inventory and private workflow reports.
 It follows only admitted seed origins and profile paths, requires explicit

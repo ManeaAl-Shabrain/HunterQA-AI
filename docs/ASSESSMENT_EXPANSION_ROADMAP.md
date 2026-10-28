@@ -1,24 +1,27 @@
 # Assessment expansion: delivery and acceptance gates
 
 This tracks the seven requested gaps. **The platform is not complete across these
-areas.** The first development increment adds scoped HTML discovery; it does not
-change the published v1.3.0 release or silently enable other assessment modes.
+areas.** Development includes scoped HTML discovery, four additional fixed
+assessment adapters, shared host-local quotas and a versioned owned application
+benchmark. None changes the immutable published v1.3.0 release. See
+[setup and boundaries](ASSESSMENT_ADAPTERS.md), or run `hunterqa coverage-audit`.
 
 | Priority | Area | Current delivery | Next acceptance gate |
 | --- | --- | --- | --- |
 | P0 | Website discovery | Bounded unauthenticated HTML link following, form inventory, scope/pacing/quota controls and private evidence | Add owned SPA fixtures and explicit browser request admission before JavaScript/session coverage; measure reachable-route coverage |
-| P0 | Platform hardening | Existing supervised fixed workers, local approval fingerprints, per-run quotas, stop/timeout controls | Independently verified owner grants and authenticated roles; an OS sandbox with denied egress tests; shared quota ledger before distributed workers |
-| P0 | Detection effectiveness | Synthetic positive/negative source controls; new header/cookie controls and real loopback discovery boundary tests | Versioned owned vulnerable applications, independently labeled ground truth, per-class recall/false positives and reproducibility manifest; publish limitations |
-| P1 | Active vulnerability validation | Existing exact observations, separate narrow approved account/browser checks and offline evidence import | Individually specified non-destructive validators with explicit approval, positive/negative fixtures, response redaction and cancellation tests before enabling each class |
-| P1 | Authentication/authorization | Separate dedicated-account form checks; manual review workflows | Explicit role-pair fixtures, isolated sessions, expected-access matrix and no cross-role credential leakage; SSO and business logic need application-specific assertions |
-| P2 | Infrastructure/network | Declared inventory and offline service-evidence import | Reviewed enumeration adapter with exact host/port admission and service impact controls; isolated AD fixtures and evidence import before broader attack-path claims |
-| P2 | Cloud runtime | Selected local configuration/dependency patterns | Read-only provider adapters, scoped identities, account/project binding, pagination and cost budgets; provider-specific fixtures and denied-write tests |
+| P0 | Platform hardening | Supervised fixed workers, per-run controls and optional atomic shared host-local quota/active-run ledger with stop/expiry and crash reconciliation | Independently verified owner grants, authenticated roles, OS sandbox with denied-egress tests, enforced cross-host quotas and distributed workers |
+| P0 | Detection effectiveness | Eight versioned owned application cases, retained evidence, source/label hashes and per-class metrics; existing source/header/cookie controls | Externally reviewed ground truth, representative real-world datasets, detection rates across remaining classes and standards coverage |
+| P1 | Active vulnerability validation | Fixed baseline/probe pairs for inert markup reflection and SQL error cues; no automatic exploitability confirmation | Confirmed class-specific validators; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
+| P1 | Authentication/authorization | Exact multi-role/anonymous GET matrix, per-request dedicated credentials, expected status/optional body-digest contracts, cross-origin credential blocking | SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
+| P2 | Infrastructure/network | Exact admitted TCP host/port connect enumeration with pinned DNS and connection-outcome journals; existing offline evidence import | Broader service/version and OS assessment, UDP, isolated AD fixtures and internal attack-path testing |
+| P2 | Cloud runtime | Fixed AWS STS identity/account binding and IAM summary counters with temporary credentials; selected local configuration checks | Real sandbox-account validation; resource/effective-permission inventory, Azure/GCP and broader infrastructure assessment |
 
 ## Implementation sequence
 
-1. Ship and review the [scoped discovery increment](SCOPED_WEB_DISCOVERY.md).
-2. Establish the versioned owned assessment lab and coverage manifest; report
-   unknown or untested classes explicitly, including negative controls.
+1. Review the [scoped discovery](SCOPED_WEB_DISCOVERY.md) and
+   [assessment adapter contracts](ASSESSMENT_ADAPTERS.md); all seven areas remain partial.
+2. Extend the versioned owned assessment lab with externally reviewed labels and
+   representative applications; preserve negative controls and publish unknowns.
 3. Implement hardening foundations before adding external tool execution or
    multiple operators. Treat local operator attestations as attestations until
    verified grants and authenticated roles actually exist.
