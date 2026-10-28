@@ -63,6 +63,16 @@ def main(argv=None):
     cve.add_argument("--snapshot", required=True)
     cve.add_argument("--out", required=True)
     cve.add_argument("--authorized", action="store_true")
+    bounty_check = sub.add_parser("bounty-preflight", help="Offline scope preflight; makes no network requests")
+    bounty_check.add_argument("--profile", required=True)
+    bounty_check.add_argument("--targets", required=True)
+    bounty_check.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    bounty = sub.add_parser("bounty-assess", help="Bounded authorized HEAD/GET web observations")
+    bounty.add_argument("--profile", required=True)
+    bounty.add_argument("--targets", required=True)
+    bounty.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    bounty.add_argument("--out", required=True)
+    bounty.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -134,6 +144,30 @@ def main(argv=None):
         _approved_root(str(output.parent.resolve(strict=True)))
         if output.is_symlink() or output.exists():
             raise ValueError("Use a new output path without symlinks")
+        _write_json(str(output), report)
+    elif args.command == "bounty-preflight":
+        from .bounty import BountyPolicy, _approved_file, MAX_TARGET_LIST
+        profile = BountyPolicy.load(args.profile)
+        file = _approved_file(args.targets)
+        if file.stat().st_size > MAX_TARGET_LIST:
+            raise ValueError("Target list exceeds size limit")
+        targets = [x.strip() for x in file.read_text(encoding="utf-8").splitlines()
+                   if x.strip() and not x.lstrip().startswith("#")]
+        if not targets or len(targets) > profile.max_requests:
+            raise ValueError("Target list exceeds explicit request budget")
+        for url in targets:
+            profile.authorize_url(url, args.method)
+        print("PASS: all", len(targets), "targets are inside the declared program scope")
+        print("No network requests were made; preflight does not prove program permission.")
+    elif args.command == "bounty-assess":
+        from .bounty import assess
+        if not args.authorized:
+            raise PermissionError("Explicit --authorized flag required for network requests")
+        output = Path(args.out).expanduser()
+        _approved_root(str(output.parent.resolve(strict=True)))
+        if output.exists() or output.is_symlink():
+            raise ValueError("Use a new output file; do not overwrite previous evidence")
+        report = assess(args.profile, args.targets, authorized=True, method=args.method)
         _write_json(str(output), report)
     elif args.command == "propose-fix":
         if not args.authorized:
