@@ -10,6 +10,7 @@ from .bounty import _read_json
 from .source_files import positive_line
 
 RULE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,199}\Z")
+CONTEXT = re.compile(r"[a-z][a-z0-9-]{0,47}\Z")
 
 
 def _relative_uri(value):
@@ -50,6 +51,15 @@ def export_sarif(file_path):
         else:
             omitted += 1
         identity = f"{rule_id}\0{uri or ''}\0{row.get('target_ref_hash', '')}\0{positive_line(row.get('line_start'))}"
+        if row.get("test_case") is not None:
+            case, role = row["test_case"], row.get("test_role")
+            if (not isinstance(case, str) or not CONTEXT.fullmatch(case)
+                    or (role is not None and (not isinstance(role, str) or not CONTEXT.fullmatch(role)))):
+                raise ValueError("Invalid assessment case/role context")
+            identity += f"\0{case}\0{role or ''}"
+            result["properties"]["assessmentCase"] = case
+            if role is not None:
+                result["properties"]["assessmentRole"] = role
         result["partialFingerprints"] = {"hunterqaCandidate/v1": hashlib.sha256(identity.encode()).hexdigest()}
         results.append(result)
     return {"version": "2.1.0", "$schema": "https://json.schemastore.org/sarif-2.1.0.json",

@@ -1,5 +1,24 @@
 # HunterQA development and release notes
 
+## Unreleased · assessment coverage and shared quotas
+
+- Added `assessment-setup` with four closed adapters: fixed inert-markup/SQL-error
+  canaries, dedicated-role GET authorization contracts, exact TCP connect
+  enumeration and optional read-only AWS identity/account-summary checks.
+- Added hash-bound original credential-file references without copying secrets
+  into run output; role credentials cannot cross their declared origin.
+- Extended journals for reviewed query fingerprints, repeated role/resource
+  requests, TCP outcomes and fixed AWS POSTs. Reports retain case/role context,
+  access contracts and selected cloud counters; findings remain unverified.
+- Added atomic optional host-local shared request/active-run quotas, shared stop,
+  expiry and explicit crash-slot reconciliation without request refunds.
+- Added `coverage-audit` and a versioned eight-case owned application benchmark
+  with retained evidence and per-class positive/negative metrics.
+- Updated [usage](docs/ASSESSMENT_ADAPTERS.md), README, Zero to Start and the
+  [seven-area status](docs/ASSESSMENT_EXPANSION_ROADMAP.md). All seven areas remain
+  partial; full JS/SSO/AD/multi-cloud coverage, verified grants, OS sandboxing and
+  distributed production operation are not claimed. Published v1.3.0 is unchanged.
+
 ## Unreleased · scoped HTML discovery
 
 - Added `discovery-setup` and the supervised `web-discovery` workflow adapter:

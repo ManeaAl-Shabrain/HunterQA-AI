@@ -20,7 +20,8 @@ from .source_files import read_bounded
 from .workflow_protocol import CATALOG, compile_protocol, _fields
 from .workflow_store import Store, approved_directory, private_write, run_lock
 from .workflow_worker import ADAPTERS
-from .workflow_network import inspect_network
+from .workflow_network import inspect_network, journal_targets, journal_queries
+from . import shared_quota
 
 
 def _runtime_identity():
@@ -29,10 +30,17 @@ def _runtime_identity():
         package_version = distribution_version("hunterqa-ai")
     except PackageNotFoundError:
         package_version = "uninstalled-source"
+    components = {}
+    for name in ("botocore", "defusedxml"):
+        try:
+            components[name] = distribution_version(name)
+        except PackageNotFoundError:
+            components[name] = None
     fingerprints = {str(path.relative_to(root)).replace("\\", "/"):
                     hashlib.sha256(read_bounded(path, 2_000_000)).hexdigest()
                     for path in sorted(root.rglob("*.py")) if not path.is_symlink()}
     return digest({"python": sys.version, "distribution_version": package_version,
+                   "optional_cloud_components": components,
                    "package_sources": fingerprints})
 
 
@@ -50,23 +58,26 @@ def execution_plan(profile, protocol, bindings, *, now=None):
     ids = {step["id"] for step in data["steps"]}
     if set(binding_data["steps"]) != ids:
         raise ValueError("Provide one explicit binding object for every step")
-    normalized, input_bytes = {}, 0
+    normalized, input_bytes, request_contracts = {}, 0, {}
     for step in data["steps"]:
         tool, step_id = step["tool"], step["id"]
         if tool not in ADAPTERS:
             raise ValueError("Adapter is planning-only and unavailable to the runner")
-        dispatches = step["requests"] if tool == "web-discovery" else len(step["targets"])
+        dispatches = step["requests"] if tool in ("web-discovery", "authorization-matrix", "web-canary-check") else len(step["targets"])
         if CATALOG[tool][1] and ((dispatches - 1) * data["limits"]["interval_seconds"] >= step["timeout_seconds"]):
             raise ValueError("Step timeout cannot accommodate target spacing; split this step")
         value = binding_data["steps"][step_id]
         fields = {"source-review": ("project",), "service-evidence": ("file",),
+                  "authorization-matrix": ("file", "secret_file"),
+                  "web-canary-check": ("file",),
+                  "aws-account-audit": ("file", "secret_file"),
                   "web-discovery": ("max_depth",),
                   "external-findings": ("file", "tool")}.get(tool, ())
         _fields(value, fields, "adapter binding")
         if tool == "web-discovery":
             from .workflow_protocol import _integer
             _integer(value["max_depth"], 0, 3, "max_depth")
-        for field in ("project", "file"):
+        for field in ("project", "file", "secret_file"):
             if field in value and (not isinstance(value[field], str) or not 1 <= len(value[field]) <= 4096):
                 raise ValueError("Binding paths must be bounded strings")
         normalized[step_id] = dict(value)
@@ -81,9 +92,35 @@ def execution_plan(profile, protocol, bindings, *, now=None):
             if input_bytes > 16_000_000:
                 raise ValueError("Aggregate bound input exceeds 16 MB")
             normalized[step_id].update(file=str(path), file_sha256=hashlib.sha256(raw).hexdigest())
+        if "secret_file" in value:
+            path = _approved_file(value["secret_file"])
+            raw = read_bounded(path, 32_768)
+            normalized[step_id].update(secret_file=str(path), secret_file_sha256=hashlib.sha256(raw).hexdigest())
+        if tool == "authorization-matrix":
+            from .access_matrix import validate_matrix, credentials
+            matrix = validate_matrix(_read_json(value["file"], 65_536), _policy_snapshot(profile)[0])
+            if len(matrix["cases"]) > step["requests"] or not {c["url"] for c in matrix["cases"]} <= set(step["targets"]):
+                raise ValueError("Access cases exceed step reservation or targets")
+            credentials(normalized[step_id], matrix["roles"])
+        if tool == "web-canary-check":
+            from .web_canaries import validate_canaries, variants
+            manifest = validate_canaries(_read_json(value["file"], 65_536), _policy_snapshot(profile)[0])
+            if 2 * len(manifest["checks"]) > step["requests"] or not {c["url"] for c in manifest["checks"]} <= set(step["targets"]):
+                raise ValueError("Canary checks exceed step reservation or targets")
+            request_contracts[step_id] = [{"case": check["id"], "url": check["url"], "method": "GET",
+                "variant": variant, "query": query} for check in manifest["checks"] for variant, query in variants(check)]
+        if tool == "aws-account-audit":
+            from .cloud_account import TARGETS, validate_account, credentials, require_cloud
+            require_cloud()
+            validate_account(_read_json(value["file"], 1024))
+            credentials(normalized[step_id])
+            if step["targets"] != TARGETS or step["requests"] != 2:
+                raise ValueError("AWS checks require exactly the two fixed endpoints and two requests")
     review = {"protocol_sha256": preflight["protocol_sha256"],
               "policy_sha256": preflight["policy_sha256"], "bindings": normalized,
               "runtime_sha256": _runtime_identity(),
+              "shared_quota": shared_quota.configured_review(),
+              "request_contracts": request_contracts,
               "adapter_contract": "hunterqa-fixed-workers-v1"}
     return {"engine": "hunterqa_execution_plan", "execution_sha256": digest(review),
             "review": review, "preflight": preflight,
@@ -136,12 +173,20 @@ def run_workflow(profile, protocol, bindings, out_dir, *, execution_approval,
         if "project" in binding and destination.is_relative_to(Path(binding["project"])):
             raise ValueError("Run directory must be outside reviewed source trees")
     destination = parent / destination.name
-    destination.mkdir(mode=0o700)  # A run is create-only; never silently resume/replay.
+    run_id = uuid.uuid4().hex
+    quota = plan["review"]["shared_quota"]
+    reserved = False
     store = None
     try:
+        if destination.exists():
+            raise FileExistsError("A workflow run is create-only")
+        if quota:
+            shared_quota.reserve(quota, run_id, checked["reserved_requests"])
+            reserved = True
+        destination.mkdir(mode=0o700)  # Never silently resume/replay.
         with run_lock(destination):
             store = Store(destination, create=True)
-            store.meta("run_id", uuid.uuid4().hex)
+            store.meta("run_id", run_id)
             store.meta("execution", plan)
             store.meta("status", "running")
             store.meta("created_at", utcnow().isoformat())
@@ -191,6 +236,8 @@ def run_workflow(profile, protocol, bindings, out_dir, *, execution_approval,
     finally:
         if store:
             store.close()
+        if reserved:
+            shared_quota.release(quota, run_id)
 
 
 def _coordinate(store, protocol, bindings, profile_copy, original_profile, original_protocol,
@@ -205,13 +252,19 @@ def _coordinate(store, protocol, bindings, profile_copy, original_profile, origi
     worker = Path(__file__).with_name("workflow_worker.py").resolve()
     batches = store.meta("execution")["preflight"]["planning_batches"]
     sequence = [step_id for batch in batches for step_id in batch]
+    quota = store.meta("execution")["review"].get("shared_quota")
 
     def record_network(step_id):
         step = by_id[step_id]
         kwargs = {}
         if step["tool"] == "web-discovery":
             kwargs = {"discovery_policy": _policy_snapshot(profile_copy)[0], "request_budget": step["requests"]}
-        journal = inspect_network(store.run / f"{step_id}.network.jsonl", step["targets"], **kwargs)
+        elif step["tool"] == "service-enumeration":
+            kwargs = {"transport": "tcp"}
+        elif step["tool"] == "aws-account-audit":
+            kwargs = {"transport": "aws-query"}
+        journal = inspect_network(store.run / f"{step_id}.network.jsonl", journal_targets(step, bindings[step_id]),
+                                  request_digests=journal_queries(step, bindings[step_id]), **kwargs)
         store.event("network-evidence", step=step_id, **{key: value for key, value in journal.items() if key != "records"})
 
     try:
@@ -223,6 +276,8 @@ def _coordinate(store, protocol, bindings, profile_copy, original_profile, origi
                 halted = "authorization-changed"
             if stop.exists():
                 halted = "emergency-stop"
+            elif quota and not shared_quota.check(quota, store.meta("run_id")):
+                halted = "shared-quota-stopped-or-changed"
             elif now >= deadline:
                 halted = "run-timeout"
             elif utcnow() >= _expiry(protocol["expires_at"]):

@@ -10,6 +10,13 @@
 
 ## Your route
 
+For post-release development features, use the [assessment adapters and shared
+quota guide](docs/ASSESSMENT_ADAPTERS.md). `coverage-audit` reports the seven-area
+implementation status; `assessment-benchmark` runs the versioned owned application
+baseline. Neither command certifies complete pentest coverage. These additions
+are absent from the original v1.3.0 archive; the walkthrough below remains the
+offline release baseline.
+
 | Step | Outcome |
 | --- | --- |
 | 1. Prepare | Python environment and current source |

@@ -199,9 +199,15 @@ def credentials():
     return user, secret
 
 
-def pinned_request(policy, url, method, *, body=None, headers=None):
+def pinned_request(policy, url, method, *, body=None, headers=None, query=None):
     """One pinned request; no retries, proxies, redirects, or TLS exceptions."""
     parts, host, port, path = policy.authorize_url(url, "GET" if method == "POST" else method)
+    if query is not None:
+        if (method != "GET" or not isinstance(query, dict) or len(query) != 1
+                or any(not isinstance(k, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,63}", k)
+                       or not isinstance(v, str) or not 1 <= len(v) <= 256 for k, v in query.items())):
+            raise ValueError("Only one bounded, explicitly reviewed GET query parameter is supported")
+        path += "?" + urlencode(query)
     ip = resolve_pinned(policy, host, port)
     cls = _PinnedHTTPS if parts.scheme == "https" else _PinnedHTTP
     connection = cls(host, port, ip, timeout=5)

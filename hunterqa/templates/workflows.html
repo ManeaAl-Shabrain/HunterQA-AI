@@ -29,8 +29,23 @@
 </tbody></table></div></section>
 {% endfor %}
 <section class="panel"><div class="panel-head"><h2>Findings and next actions</h2></div><div class="table-wrap"><table><thead><tr><th>Rule</th><th>Source severity</th><th>Review</th><th>Remediation</th></tr></thead><tbody>
-{% for finding in report.findings %}<tr><td>{{ finding.rule_id }}<br>{{ finding.file_path }}:{{ finding.line_start }}</td><td>{{ finding.source_severity }}</td><td>{{ finding.verification_status }}</td><td>{{ finding.remediation }}</td></tr>{% else %}<tr><td colspan="4">No candidates recorded. Review coverage and execution state before drawing conclusions.</td></tr>{% endfor %}
+{% for finding in report.findings %}<tr><td>{{ finding.rule_id }}<br>{{ finding.file_path }}:{{ finding.line_start }}{% if finding.test_case %}<br>Case: {{ finding.test_case }}{% endif %}{% if finding.test_role %}<br>Role: {{ finding.test_role }}{% endif %}</td><td>{{ finding.source_severity }}</td><td>{{ finding.verification_status }}</td><td>{{ finding.remediation }}</td></tr>{% else %}<tr><td colspan="4">No candidates recorded. Review coverage and execution state before drawing conclusions.</td></tr>{% endfor %}
 </tbody></table></div></section>
+{% for access in report.access_checks %}
+<section class="panel"><div class="panel-head"><h2>Role access contracts · {{ access.step }}</h2></div>
+<p class="research-details">{{ access.summary.cases_executed }} / {{ access.summary.cases_selected }} cases observed; {{ access.summary.contracts_matched }} matched their configured contract. Matches do not prove correct authorization.</p>
+<div class="table-wrap"><table><thead><tr><th>Case / role</th><th>Expected</th><th>Status</th><th>Contract matched</th></tr></thead><tbody>
+{% for case in access.cases %}<tr><td>{{ case.case }} / {{ case.role }}</td><td>{{ case.expected }}</td><td>{{ case.status }}</td><td>{{ case.contract_matched }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endfor %}
+{% for cloud in report.cloud_checks %}
+<section class="panel"><div class="panel-head"><h2>AWS account checks · {{ cloud.step }}</h2></div>
+<p class="research-details">Identity matched: {{ cloud.summary.identity_matched }}. Summary observed: {{ cloud.summary.summary_observed }}. Selected counters do not establish complete cloud posture.</p>
+<div class="table-wrap"><table><thead><tr><th>Counter</th><th>Observed value</th></tr></thead><tbody>
+{% for key, value in cloud.summary.selected_counters.items() %}<tr><td>{{ key }}</td><td>{{ value }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endfor %}
+{% if report.shared_quota %}<section class="panel"><div class="research-details workflow-evidence"><h2>Shared quota binding</h2><p>Cooperating local coordinators only. Configuration fingerprint: <code>{{ report.shared_quota.configuration_sha256 }}</code>. Inspect current usage with quota-status.</p></div></section>{% endif %}
 <section class="panel"><div class="research-details workflow-evidence"><h2>Trust and scope</h2><p>Evidence chain: <code>{{ report.audit_head_sha256 }}</code></p><ul>{% for item in report.limitations %}<li>{{ item }}</li>{% endfor %}</ul></div></section>
 {% endif %}
 {% endblock %}

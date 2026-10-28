@@ -12,6 +12,17 @@ For this adapter only, step targets are reviewed seeds; discovered URLs must
 remain inside seed origins and the bound profile. Other adapters retain their
 exact-target behavior. The following delivery table describes the v1.3.0 baseline.
 
+**Further development:** four more fixed adapters bring the catalog to twelve
+runnable adapters, plus the existing planning-only account-check declaration.
+[Assessment setup and quotas](ASSESSMENT_ADAPTERS.md) documents fixed web canaries,
+role access contracts, TCP enumeration, optional read-only AWS account checks,
+shared local quota admission and the versioned owned application benchmark.
+`coverage-audit` records the remaining gaps across all seven requested areas.
+Credential files are hash-bound but are not copied into run artifacts. Only fixed
+web canaries may add their reviewed query parameter to an admitted base URL; other
+HTTP discovery/observation adapters retain their query prohibition. AWS alone sends
+two fixed read-only API POSTs; TCP journals record connections rather than HTTP.
+
 ## Delivered capabilities and boundaries
 
 | Priority | Delivered | Boundary |
@@ -41,6 +52,10 @@ means untested. They do not claim ASVS/WSTG compliance or comprehensive coverage
 | --- | --- | --- |
 | `declared-assets` | `{}` | Inventory explicitly declared targets; no network |
 | `web-discovery` (development) | `max_depth` (0–3) | GET approved seeds and admitted same-origin HTML links; at most 20 requests; inventory forms without submission or JavaScript |
+| `web-canary-check` (development) | `file` | Two fixed baseline/probe GET requests per manifest check; inert markup or SQL error cues only |
+| `authorization-matrix` (development) | `file`, `secret_file` | Exact role/resource GET contracts; credential origin binding; no session negotiation |
+| `service-enumeration` (development) | `{}` | One TCP connect per exact admitted host/port; no banner or OS probes |
+| `aws-account-audit` (development) | `file`, `secret_file` | Two fixed read-only AWS APIs; temporary credentials, account matching, optional cloud dependencies |
 | `service-evidence` | `file` | Import bounded service assertions; no network |
 | `source-review` | `project` | Existing local configuration and JSON OpenAPI checks plus declared dependency inventory; target source is never imported, built or run |
 | `external-findings` | `file`, `tool` (`nuclei` or `zap`) | Existing offline importer, narrowed again to exact step targets; scanners are not installed/launched |
