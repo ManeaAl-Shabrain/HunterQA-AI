@@ -1,174 +1,354 @@
 # HunterQA AI
 
-**One local, authorization-gated AI-assisted vulnerability research platform for Kali Linux.**
+**Local-first, authorization-gated AI-assisted security research for Kali Linux.**
 
-HunterQA combines offline static/code analysis, local Qwen hypotheses, trust graphs, bounded lab crash replay, sanitizer evidence, advisory/CVE intelligence and analyst review in one Python/Flask repository. HunterQA AI 1.1 additionally introduces strictly scoped, explicitly authorized HEAD/GET observations and offline HAR review, while retaining all existing research engines.
+[![Latest stable release](https://img.shields.io/github/v/release/ManeaAl-Shabrain/HunterQA-AI?label=stable)](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Release QA](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/workflows/release-qa.yml/badge.svg)](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/workflows/release-qa.yml)
 
-**HunterQA AI v1.2.0 is the stable local AI Research & Verification release.** Prior v1.1.0, v1.0.1 and v1.0.0 releases remain available. This is not a production multi-user service or autonomous exploitation framework. Human review of research findings remains required. No tool can guarantee finding every vulnerability, zero false positives, or independent CVE issuance. A research record, advisory match or ASan diagnostic is not automatically a confirmed exploitable vulnerability.
+HunterQA AI unifies **local source assessment, offline API review, vulnerability/advisory correlation, optional local AI hypotheses, isolated crash research, authorized low-noise HTTP observations, and human-reviewed findings** in a Python CLI and a Flask dashboard.
 
-## HunterQA AI v1.2.0 — Authorized AI Research & Verification (Stable)
+- **Latest published stable version:** [v1.2.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0)
+- **Supported environment:** Python **3.11+**, Kali Linux / local single-operator workstation; CI uses Ubuntu and Python 3.13.
+- **Repository:** [ManeaAl-Shabrain/HunterQA-AI](https://github.com/ManeaAl-Shabrain/HunterQA-AI)
+- **Primary interface:** `hunterqa` / `python -m hunterqa` (CLI) and `http://127.0.0.1:5000` (local dashboard).
+- **License:** MIT for HunterQA-owned source; third-party tools/models have separate licenses.
+- **Important:** This is **not** autonomous exploitation, an unrestricted pentesting agent, public multi-user hosting, or a guarantee of CVE/zero-day discovery. Findings require independent, authorized human validation.
 
-**v1.2.0 is the latest stable release on `main`.** The release adds offline
-OpenAPI route authorization review, seven constrained AI research roles,
-private Ollama/Qwen role prioritization, source-linked evidence deduplication,
-a read-only AI Agent Lab dashboard and conservative low-noise HTTP stop
-conditions. This is not unrestricted autonomous exploitation or stealth mode.
+## Contents
 
-See [v1.2 Kali instructions](docs/V1_2_DEV.md) for
-`bounty-api-inventory`, `bounty-agent-plan`, `bounty-ai-review`,
-`bounty-correlate`, and the `/agent-lab` dashboard.
-Read [reference review and license notes](docs/INSPIRATION_V1_2.md).
-For full offline acceptance after upgrading to the stable version:
+- [Purpose and use cases](#purpose-and-use-cases)
+- [Features in v1.2.0](#features-in-v120)
+- [How HunterQA works](#how-hunterqa-works)
+- [Requirements](#requirements)
+- [Installation and updates](#installation-and-updates)
+- [Quick start: fully offline research workflow](#quick-start-fully-offline-research-workflow)
+- [Optional AI, browser, and HTTP features](#optional-ai-browser-and-http-features)
+- [Run the dashboard](#run-the-dashboard)
+- [Commands and documentation](#commands-and-documentation)
+- [Security and limitations](#security-and-limitations)
+- [Tests and release integrity](#tests-and-release-integrity)
+- [Version history](#version-history)
 
-```bash
-bash tools/verify_agent_1_2.sh
+## Purpose and use cases
+
+Use HunterQA to:
+
+- Review **source code, API contracts, dependency manifests, and configurations** from a project you own or are authorized to assess.
+- Triage source-scanner, sanitizer, and already captured HTTP evidence into **unverified research candidates**.
+- Build a **bounded analyst work plan** and optionally ask a local Qwen model which review roles to prioritize.
+- Compare local advisory snapshots against declared package versions; **an advisory match is not proof that an installed service is exploitable**.
+- Examine captured HAR files **offline**, with scope filters and redacted outputs.
+- Conduct **explicitly authorized, limited HEAD/GET observations** only where a program permits that automation.
+- Test an **owned application bound to `127.0.0.1`** with an ephemeral Chromium browser and optional single approved login POST.
+- Record reproducibility decisions and generate **private disclosure drafts only from analyst-validated cases**.
+- Run synthetic, labeled QA to detect regressions in **review-cue suggestions**, not to claim real-world vulnerability accuracy.
+
+## Features in v1.2.0
+
+| Area | Available functionality | Verification boundary |
+| --- | --- | --- |
+| Local SAST and configuration audit | Semgrep-backed local rules, configuration checks, static OpenAPI checks, dependencies and SARIF import | Findings are patterns/candidates, not exploits |
+| Trust graph and local AI | Source trust-boundary review; optional localhost Ollama/Qwen hypotheses | No LLM-created arbitrary tool execution or automatic verification |
+| Offline CVE intelligence | User-supplied OSV/advisory snapshots and declared dependency version correlation | Not a live CVE feed; version/range coverage is incomplete |
+| Lab crash research | AFL++ workflows, bounded replay and ASan/UBSan log parsing | Run executable experiments only in an isolated owned lab |
+| Authorized bug bounty assessment | Exact-host/path/port policies, offline preflight, bounded HEAD/GET, offline HAR sanitization | No mass crawling, authentication attacks, stealth/WAF bypass, or automatic submission |
+| API review | Local OpenAPI 3.0/3.1 inventory, authorization declarations, object IDs, sensitive operations | No contract-server requests; potential issues require runtime tests |
+| Specialist research roles | Seven predefined analyst roles with deterministic, non-executing task plans | These are constrained plans, **not autonomous attackers** |
+| Evidence correlation | Same-policy, whitelisted-source candidate deduplication with hashed references | Multiple observations do not prove impact |
+| Owned browser lab | Optional Playwright Chromium against one approved `127.0.0.1` service, with one approved login POST | Not an external bug bounty browser; browser guards are not a firewall |
+| Controlled HEAD replay | Recheck sanitized in-scope HAR endpoints without forwarding sessions or credentials | HEAD results may differ from authenticated GET; no automatic retry |
+| Human verification | Private review dossiers, linked decision history, reproduction-note attestations, disclosure drafts | Human attestations are not independently authenticated or exploit proofs |
+| Synthetic benchmark | 10 expected review cues and 21 negative labels across two original synthetic contracts | Accuracy applies **only to these review rules/fixtures** |
+| Flask dashboard | Read-only research cards and local scan interface on loopback | Not for internet-facing or shared production deployment |
+
+## How HunterQA works
+
+**Default: private, local-first analysis.** Only separately selected commands send limited traffic.
+
+1. **Authorize and define scope**
+   - Set `HUNTERQA_APPROVED_ROOTS` to directories you control.
+   - Create a private program profile for bounty workflows, including precise hosts, ports, exclusions, authorization reference, and limits.
+   - Check a target list with `bounty-preflight` **before any optional HTTP assessment**.
+2. **Collect local evidence**
+   - Run an approved source campaign, inspect a local OpenAPI JSON file, or import previously captured HAR / offline advisory data.
+   - Keep raw captures, project data, account secrets, and local SQLite outside the public repository.
+3. **Map research tasks**
+   - `bounty-agent-plan` organizes fixed review roles; optional `bounty-ai-review` asks *local* Ollama to prioritize known roles.
+   - The model does not select arbitrary shell tools, issue network requests, or certify vulnerabilities.
+4. **Correlate and verify**
+   - `bounty-correlate` deduplicates **matching-policy** local evidence.
+   - `bounty-review-init` creates a private dossier; analysts record `not_reproducible`, `false_positive`, `needs_more_evidence`, `out_of_scope`, or `analyst_validated`.
+   - A validated case requires a matching, explicitly attested local reproduction note, but still needs independent impact review.
+5. **Report responsibly**
+   - `bounty-review-export` creates a **manual disclosure draft** for analyst-validated cases only.
+   - Nothing is automatically submitted to HackerOne, Bugcrowd, or a CVE authority.
+
+**Workflow at a glance:**
+
+```text
+Written permission + approved local roots
+    |
+    +--> Local source/SAST, dependency and optional offline CVE review
+    +--> OpenAPI JSON --> API review candidates
+    +--> Sanitized HAR --> offline review / optional scoped HEAD replay
+    |
+    v
+Fixed specialist plan (+ optional local Qwen prioritization)
+    |
+    v
+Same-program evidence correlation
+    |
+    v
+Private analyst dossier --> authorized manual reproduction --> review decision
+    |
+    +--> Private disclosure draft (validated cases only)
+    +--> Read-only local dashboards
 ```
 
-No third-party-target network scanning is part of the v1.2 offline acceptance.
+## Requirements
 
-**New owned-browser milestone:** `bounty-browser-lab` optionally performs a
-single approved login on a locally owned `127.0.0.1` test application using
-ephemeral Playwright Chromium. `bounty-replay-head` rechecks only exact,
-previously sanitized HAR endpoints with a credential-free HEAD request.
-Neither mode provides WAF evasion, remote authenticated exploitation, brute
-force, or live browser access to third-party bounty programs. Both modes keep
-private user data and credentials out of the public repository and report.
-See [the browser lab and safe replay guide](docs/BROWSER_LAB_V1_2.md).
+- **Required:** Linux/Kali, Git, Python 3.11+, pip and a Python virtual environment.
+- **Python packages:** installed from `pyproject.toml`; Flask and packaging are runtime dependencies. Pytest is in the optional `dev` group.
+- **For local source scanning:** install the **Semgrep** executable separately and make it available on `PATH`.
+- **For AI analysis:** install and run **Ollama** locally; model example: `qwen2.5-coder:3b`. No remote AI provider is required.
+- **For the owned browser lab:** optional `playwright` Python extra and Chromium browser; needs compatible Linux libraries.
+- **For memory/sanitizer research:** separately install appropriate Clang, AFL++ and compiler instrumentation; isolate executable tests.
+- **No external dependencies are required** to parse the included synthetic OpenAPI fixtures or run the basic offline benchmark.
 
-**New analyst verification milestone:** `bounty-review-init` builds a
-scope-bound finding dossier from existing correlation evidence.
-`bounty-reproduction-note` requires an explicit human attestation tied
-to the exact finding, `bounty-review-decide` creates a new hash-linked
-dossier revision, and `bounty-review-export` creates a private Markdown
-draft only for analyst-validated cases. `bounty-repeatability` compares
-two approved HEAD reports **offline** without new network requests.
-No automated CVE or zero-day confirmation is provided. See
-[the private analyst review guide](docs/REVIEW_V1_2.md).
+## Installation and updates
 
-**Offline Review Cue Benchmark:** `bounty-benchmark` evaluates labeled,
-fully synthetic OpenAPI schemas for useful versus unnecessary API review
-prompts. The CI gate checks for missed suggestions, unexpected suggestions,
-and unlabeled predictions. Review-cue precision is NOT real security
-vulnerability accuracy. No targets are contacted. See
-[the synthetic benchmark guide](docs/BENCHMARK_V1_2.md) and the
-read-only Agent Lab calibration card.
+### New Kali installation
 
+```bash
+git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
+cd HunterQA-AI
 
-Install optional browser support with `python -m pip install -e '.[dev,browser]'`.
+python3 -m venv .venv
+source .venv/bin/activate
 
+python -m pip install -e '.[dev]'
+hunterqa --version
+```
 
-## Bug Bounty Edition v1.1 — stable local release
+- Expected installed version from current `main`: **HunterQA AI 1.2.0**.
+- Add browser testing only if needed: `python -m pip install -e '.[dev,browser]'` and `python -m playwright install chromium`.
+- Initialize a local session key using `bash tools/setup_verify_kali.sh`. It creates `~/.config/hunterqa/session-key` with restricted permissions if missing.
+- Install optional Semgrep/Ollama/AFL++ only for the corresponding engines.
 
-See `docs/BUG_BOUNTY_V1_1.md` for the exact scope profile, `bounty-preflight`, `bounty-assess`, `bounty-import-har`, `bounty-report` and read-only dashboard workflow. This is bounded authorization-gated reconnaissance, offline proxy evidence review, and local source/vulnerability research—not unrestricted penetration-test automation or proof of a zero-day.
-
-## Current local install / update (existing Kali checkout)
+### Update an existing Kali checkout
 
 ```bash
 cd ~/Desktop/HunterQA-AI
-git status --short
-git fetch origin
+
+# Review and preserve any local edits BEFORE switching branches.
+git status --short --untracked-files=all
+git fetch origin --tags
 git switch main
 git pull --ff-only origin main
+
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
+hunterqa --version
 ```
 
-If your current branch has uncommitted changes, preserve them before switching. Stop before switching if `git status` shows uncommitted work; preserve it separately. Keep your existing `instance/` SQLite data and `~/ZeroScope-AI/research-lab/` evidence intact.
+- Use your **actual repository path** if it is not under `~/Desktop`.
+- Do not force-reset a branch or commit private evidence just to make a pull succeed.
+- Back up `instance/hunterqa.sqlite3` and your private research folders before making environment changes.
+- Historic versions remain tagged; use [Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases) when you need to inspect an earlier version.
 
-For a brand-new local checkout, install Python >= 3.11, Git, and a Python virtual environment first. Semgrep and Ollama are optional external local tools for relevant engines. See `docs/` for detailed workflows.
+## Quick start: fully offline research workflow
 
-## Single-command acceptance check
+The examples use **fictional** `app.example.test`. They are for **offline JSON processing only**—never attempt to scan that hostname. Create a private research directory:
 
 ```bash
-export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
-export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
-bash tools/verify_agent_1_2.sh
+cd ~/Desktop/HunterQA-AI
+source .venv/bin/activate
+
+mkdir -p "$HOME/ZeroScope-AI/research-lab/v12"
+
+cp examples/bounty_profile.example.json "$HOME/ZeroScope-AI/research-lab/v12/profile.json"
+cp examples/bounty_targets.example.txt "$HOME/ZeroScope-AI/research-lab/v12/targets.txt"
+cp examples/v12_owned_api_openapi.json "$HOME/ZeroScope-AI/research-lab/v12/openapi.json"
+
+export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/research-lab"
+folder="$HOME/ZeroScope-AI/research-lab/v12"
+
+python -m hunterqa bounty-api-inventory \
+  --profile "$folder/profile.json" \
+  --spec "$folder/openapi.json" \
+  --out "$folder/inventory-001.json" --authorized
+
+python -m hunterqa bounty-agent-plan \
+  --profile "$folder/profile.json" \
+  --spec "$folder/openapi.json" \
+  --targets "$folder/targets.txt" \
+  --out "$folder/plan-001.json" --authorized
+
+python -m hunterqa bounty-correlate \
+  --profile "$folder/profile.json" \
+  --file "$folder/inventory-001.json" \
+  --out "$folder/correlation-001.json" --authorized
+
+python -m hunterqa bounty-review-init \
+  --profile "$folder/profile.json" \
+  --correlation "$folder/correlation-001.json" \
+  --out "$folder/dossier-001.json" --authorized
 ```
 
-This verifies Python compilation, the full regression suite, scope rejection, privacy-safe HAR review, eleven Flask routes against **disposable SQLite data**, and a bounded SHA-256 source release ZIP. Review all failures and warnings. It does not certify real-world vulnerability-detection coverage. CI runs source QA on pull requests, without credentials or web-app deployment.
+- **All commands above are offline.** No web request or browser session is started.
+- `--authorized` records your acknowledgment; it cannot independently establish legal permission.
+- New v1.2 bounty output files are created privately (mode `0600`) and **must have new names** for subsequent runs.
+- Review IDs and subsequent commands for human reproduction, evidence-attached decisions, and report export are explained in [docs/REVIEW_V1_2.md](docs/REVIEW_V1_2.md).
+- To run the labeled synthetic benchmark, see [docs/BENCHMARK_V1_2.md](docs/BENCHMARK_V1_2.md).
 
-## Run the dashboard (Kali VM only)
+## Optional AI, browser, and HTTP features
+
+### Local Qwen suggestions (optional)
 
 ```bash
-export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/research-lab"
-export HUNTERQA_CAMPAIGN_HISTORY_ROOT="$HOME/ZeroScope-AI/research-lab"
-export HUNTERQA_CVE_REPORT="$HOME/ZeroScope-AI/research-lab/verification/cve_validation_8_6.json"
-export HUNTERQA_TRIAGE_REPORT="$HOME/ZeroScope-AI/research-lab/verification/hunterqa_unified_triage.json"
+ollama list
+
+python -m hunterqa bounty-ai-review \
+  --plan "$folder/plan-001.json" \
+  --model qwen2.5-coder:3b \
+  --out "$folder/ai-review-001.json" --authorized
+```
+
+- Requires a running local Ollama service and the model to be installed.
+- The v1.2 reviewer sends **bounded aggregate plan data** to localhost and accepts only known role identifiers.
+- A model suggestion is an analyst priority, **not vulnerability evidence**.
+
+### Owned Playwright browser lab (optional)
+
+- Limited to a self-owned service bound to **127.0.0.1** on **one explicitly approved port**.
+- May submit **one** approved login POST with disposable credentials from local environment variables; it does **not** automate public website authentication.
+- Does not export passwords, cookies, page HTML, HAR, or screenshots.
+- Browser interception is **not a system firewall**. Use an isolated VM/network environment for untrusted browser code.
+- Setup, scope-policy example, and local test: [docs/BROWSER_LAB_V1_2.md](docs/BROWSER_LAB_V1_2.md).
+
+### Authorized HEAD/GET and HAR workflows (optional)
+
+- First create a **real, program-specific approved scope profile** and target list outside Git.
+- Run `bounty-preflight --profile ... --targets ...` to check format and exact declared scope **without network**.
+- Run `bounty-assess ... --method HEAD --authorized --out ...` **only when the program permits automation**. This makes real network requests within strict policy and request budgets.
+- `bounty-import-har` reads an existing capture **offline**; `bounty-replay-head` optionally sends a credential-free HEAD to the preflighted, previously sanitized targets.
+- No credential forwarding, automatic redirect following, rate-limit bypass, mass scanning, or stealth evasion.
+- Exact example commands and scope restrictions: [docs/BUG_BOUNTY_V1_1.md](docs/BUG_BOUNTY_V1_1.md).
+
+## Run the dashboard
+
+```bash
+cd ~/Desktop/HunterQA-AI
+source .venv/bin/activate
+
+export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/research-lab"
 export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
+
+# Optional: display saved approved local v1.2 research reports.
+export HUNTERQA_AGENT_PLAN="$HOME/ZeroScope-AI/research-lab/v12/plan-001.json"
+export HUNTERQA_API_SURFACE_REPORT="$HOME/ZeroScope-AI/research-lab/v12/inventory-001.json"
+export HUNTERQA_AGENT_CORRELATION_REPORT="$HOME/ZeroScope-AI/research-lab/v12/correlation-001.json"
+export HUNTERQA_REVIEW_DOSSIER="$HOME/ZeroScope-AI/research-lab/v12/dossier-001.json"
+
 python run.py
 ```
 
-Open `http://127.0.0.1:5000` **inside Kali**. Check `ss -ltnp | grep ':5000'` for loopback-only binding. If the local secret file is missing, create it with `bash tools/setup_verify_kali.sh`, or follow `docs/RELEASE_DOCTOR_8_1.md`; never commit it.
+- **Overview:** [http://127.0.0.1:5000](http://127.0.0.1:5000)
+- **Bug Bounty Lab:** [http://127.0.0.1:5000/bounty](http://127.0.0.1:5000/bounty)
+- **AI Agent Lab:** [http://127.0.0.1:5000/agent-lab](http://127.0.0.1:5000/agent-lab)
+- Additional local pages: Projects, Research Lab, Unified Triage, Hypotheses, Analytics, Campaign History/Trends, CVE Intelligence, Capabilities, and Audit.
+- The **read-only bounty/agent dashboards** load administrator-selected approved local reports. Visiting these pages does not launch scans or replay network traffic.
+- The general project scan interface requires explicit authorized inputs; never expose the Flask development server to a public network.
+- Other optional report variables include `HUNTERQA_BOUNTY_REPORT`, `HUNTERQA_BROWSER_LAB_REPORT`, `HUNTERQA_HEAD_REPLAY_REPORT` and `HUNTERQA_BENCHMARK_REPORT`.
+- If the session key is missing, first run `bash tools/setup_verify_kali.sh`. Never commit the key.
 
-Pages include Overview, Projects, Research Lab, Unified Triage, AI Hypotheses, Research Analytics, Campaign History, Research Trends, CVE Intelligence, Coverage & Engines, Audit History, and **Bug Bounty Lab** at `http://127.0.0.1:5000/bounty`, and **AI Agent Lab** at `http://127.0.0.1:5000/agent-lab`. Opening a dashboard page never runs a remote scan.
+## Commands and documentation
 
-## Research capabilities and limits
+### CLI command groups
 
-| Engine | Current functionality | What it does not prove |
-|---|---|---|
-| Semgrep + local source checks | Selected offline rules and config checks | Complete CWE detection or exploitability |
-| Trust graph | AST-based local functions/routes/call edges | General accurate taint analysis in every language |
-| Local Ollama/Qwen | Bounded hypotheses and remediation proposals | Verified weaknesses or safe code changes |
-| Patch guard | Rejects known unsafe replacement patterns | Semantic correctness of all patches |
-| AFL++ lab / sanitizer | Crash replay and ASan/UBSan evidence parsing | Every crash is security-relevant |
-| Unified triage and analyst review | Evidence-linked candidate and review history | An AI-only confirmed zero-day |
-| Offline CVE engine | User-supplied OSV snapshot, exact and selected range matches | Current verified installed packages |
-| Dependency inventory | Pinned requirements and supported npm, Poetry, uv, Composer lockfiles | That every dependency is installed/reachable |
-| History / trends / analytics | Compare local evidence over time | That record differences are actual regressions |
-| Release Doctor / QA | Local readiness, regression, bounded archive checks | Production-grade deployment certification |
+- **Readiness:** `hunterqa --version`, `hunterqa doctor`, `hunterqa capabilities`.
+- **Local research:** `campaign`, `scan`, `audit`, `trust-graph`, `hypothesize`, `propose-fix`, `cve-check`.
+- **Source/evidence utilities:** `import-sarif`, `parse-sanitizer`, `research-report`, `verify-crashes`.
+- **Authorized bounty:** `bounty-preflight`, `bounty-assess`, `bounty-import-har`, `bounty-report`, `bounty-campaign`.
+- **v1.2 offline API/agents:** `bounty-api-inventory`, `bounty-agent-plan`, `bounty-ai-review`, `bounty-correlate`.
+- **v1.2 browser/replay:** `bounty-browser-lab`, `bounty-replay-head`, `bounty-repeatability`.
+- **v1.2 verification:** `bounty-review-init`, `bounty-reproduction-note`, `bounty-review-decide`, `bounty-review-export`, `bounty-benchmark`.
+- Get the exact parameters with `python -m hunterqa COMMAND --help`; many actions require `--authorized`.
 
-Unrecognized lockfile entries, advisory ranges, missing snapshots, absent source files and uncertain scope remain **unassessed**; they do not mean “secure.” CVE aliases come from external advisories and are not created by the model. Source revisions, advisory age and incomplete test coverage can change results.
+### Reference guides
 
-## Example authorized local campaign
+- **Start here:** [v1.2 Kali workflow](docs/V1_2_DEV.md) · [Architecture](docs/ARCHITECTURE.md) · [Security boundaries](SECURITY.md).
+- **Bounty:** [Authorization and HAR](docs/BUG_BOUNTY_V1_1.md) · [Browser Lab](docs/BROWSER_LAB_V1_2.md).
+- **Verification:** [Analyst review workflow](docs/REVIEW_V1_2.md) · [Synthetic benchmark](docs/BENCHMARK_V1_2.md).
+- **Project quality:** [Limitations](docs/LIMITATIONS.md) · [Release versioning](docs/VERSIONING.md) · [v1.2.0 release notes](docs/RELEASE_1_2_0.md).
+- **External references and licenses:** [AI research inspiration review](docs/INSPIRATION_V1_2.md).
+- **Additional engines:** Browse [docs/](docs/) for CVE ranges, trust graphs, remediation safety, research trends, and audit history.
+
+## Security and limitations
+
+- **Authorization is mandatory:** only test assets/accounts for which you have written permission and where the applicable program terms allow the selected method.
+- **Local-first is the default:** `bounty-assess`, `bounty-replay-head`, and the owned browser lab perform **explicitly requested** traffic; most v1.2 research/verification commands work offline.
+- **No bypassing controls:** no WAF bypass, monitoring evasion, proxy rotation, stealth scanning, brute force, credential attacks, or unrestricted autonomous exploitation.
+- **Never trust AI as proof:** a Qwen hypothesis, missing header, review cue, CVE alias, sanitizer diagnostic, or HEAD status difference does not independently confirm a security vulnerability.
+- **No guaranteed zero-days:** HunterQA does not issue CVEs, prove novelty, or promise detection of all issues. Coordinate any confirmed discovery with affected maintainers.
+- **Browser scope is deliberately narrow:** the Chromium lab supports only owned loopback applications, and Playwright interception is not a network isolation boundary.
+- **Private evidence:** do not commit `instance/`, `.env`, local HAR captures, auth material, private report files, fuzz output or user data. Use approved folders with least-privilege permissions.
+- **Not a hosted service:** Flask runs on `127.0.0.1:5000` using the development server; public/multi-user deployment is not supported.
+- **Integrity vs authenticity:** ZIP SHA-256 checks verify file integrity against a manifest, not publisher identity, official CVE assignment, or external security certification.
+- **Responsible disclosure:** see [SECURITY.md](SECURITY.md).
+
+## Tests and release integrity
+
+### Full offline regression and local browser integration
 
 ```bash
-python -m hunterqa campaign \
-  --project "$HOME/ZeroScope-AI/targets" \
-  --out-dir "$HOME/ZeroScope-AI/research-lab/authorized-campaign" \
-  --with-ai --ai-chunks 4 --authorized
+cd ~/Desktop/HunterQA-AI
+source .venv/bin/activate
+
+python -m compileall -q hunterqa zeroscope
+python -m pytest -q
+bash tools/verify_agent_1_2.sh
+
+# Optional real Chromium acceptance: owned temporary 127.0.0.1 only.
+python -m pip install -e '.[dev,browser]'
+python -m playwright install chromium
+HUNTERQA_REAL_BROWSER_CI=1 \
+  python -m pytest -q tests/test_browser_lab_playwright_v12.py
 ```
 
-Use a fresh output directory. Crash replay and sanitizer execution are **separate explicit opt-in lab actions**; run untrusted binaries only in an isolated VM. No stealth, evasion or unsolicited remote scanning is included.
+- The original **v1.2.0 stable publishing workflow passed on GitHub**. See [v1.2.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0).
+- Release QA uses disposable fixtures, tests authorization failures and redaction, verifies all **11** Flask dashboard routes, and checks the source archive and per-file SHA-256 manifest.
+- The synthetic benchmark's **10 expected / 21 negative review labels** do not measure real-world bug-detection precision.
+- GitHub Actions tests run on Ubuntu; re-check browser dependencies and local permissions on Kali.
 
-## Example offline CVE check
-
-An OSV-format snapshot must already be present **inside** approved local roots. This command does not download any vulnerability intelligence or execute project code.
+### Verify a locally built source archive
 
 ```bash
-python -m hunterqa cve-check \
-  --project "$HOME/ZeroScope-AI/research-lab/cve-validation-demo" \
-  --snapshot "$HOME/ZeroScope-AI/research-lab/osv_validation_demo.json" \
-  --out "$HOME/ZeroScope-AI/research-lab/verification/cve_review_new.json" \
-  --authorized
+python tools/build_release.py \
+  --repo . --out "$HOME/Desktop/HunterQA-AI-1.2.0-source.zip"
+
+python tools/verify_release_archive.py \
+  "$HOME/Desktop/HunterQA-AI-1.2.0-source.zip"
 ```
 
-For the user's historical Jinja2 3.1.3 test input, eight saved GHSA/PYSEC advisory records represented four distinct CVE aliases. That fixture is **not** proof of four exploitable installed vulnerabilities, and the OSV snapshot may go stale. See `docs/ADVISORY_QUALITY_8_6.md` and `docs/RESOLVED_DEPENDENCIES_8_5.md`.
+- This is a **new local build from your current tracked checkout**, not necessarily byte-for-byte identical to the historical tagged ZIP.
+- For the **official v1.2.0 archive**, download the release ZIP **and** its corresponding `.sha256` checksum from [GitHub Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0), then verify with `sha256sum -c HunterQA-AI-1.2.0-source.zip.sha256`.
+- Do **not** retag v1.2.0 or overwrite historical artifacts when updating the README.
 
-## Generate a complete, self-contained source ZIP
+## Version history
 
-```bash
-python tools/build_release.py --repo . --out "$HOME/Desktop/HunterQA-AI-1.2.0-source.zip"
-python tools/verify_release_archive.py "$HOME/Desktop/HunterQA-AI-1.1.0-source.zip"
-```
+| Version | Release focus | Availability |
+| --- | --- | --- |
+| [v1.0.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.0.0) | Initial stable local research foundation | Historical stable |
+| [v1.0.1](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.0.1) | Kali Research Lab and release verification | Historical stable |
+| [v1.1.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.1.0) | Authorized Bug Bounty Edition, scope controls and HAR | Historical stable |
+| **[v1.2.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0)** | Offline AI Agent Lab, owned browser, evidence validation and benchmark | **Latest published stable** |
 
-The builder packages tracked project code, templates, docs and tests; it excludes common local SQLite databases, secrets, logs and fuzz outputs. Review the ZIP before public distribution. SHA-256 archive manifest verification proves consistency with the included manifest, not independent publisher authenticity.
+- Versioning policy: [docs/VERSIONING.md](docs/VERSIONING.md) — MAJOR.MINOR.PATCH; potential next fixes in `v1.2.1` and compatible new features in `v1.3.0`.
+- The **v1.2.0 Git tag and release ZIP are immutable historical artifacts**. New documentation commits to `main` do not alter the released tag.
+- See [Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases) for downloads and checksums.
 
-## Security model
+---
 
-- Flask app listens on loopback in single-user Kali lab; not a public production service.
-- Browser form writes use CSRF protections and require explicit project authorization.
-- Local evidence is bounded and should be kept outside the published repository.
-- Model output is not executed automatically and cannot independently mark a finding a zero-day.
-- Signature/manifest integrity is not equivalent to trusted provenance.
-- Approved roots, offline-only research, audit logs, sanitized evidence display and review gates are design controls, not a sandbox around arbitrary project code.
-- Back up `instance/hunterqa.sqlite3` before migration or switching to a new release. Never overwrite analyst history as a testing shortcut.
-
-## License and release
-
-HunterQA-owned source is licensed under the **MIT License**; see `LICENSE`. See `SECURITY.md` for vulnerability reporting and local authorized research boundaries. External dependencies, models and advisory datasets retain their own licenses and terms.
-
-## Release and contributors
-
-For full release validation, rollback and security limitations, see `docs/RELEASE_1_0_CHECKLIST.md`. Earlier stacked phase PRs are intermediate historical development changes. For official v1.2.0 release notes, see `docs/RELEASE_1_2_0.md` and the versioning policy in `docs/VERSIONING.md`. Historical v1.1.0 notes remain in `docs/RELEASE_1_1_0.md`. The version tag points to the reviewed `main` release commit.
-
-This is a research project. Findings should be validated and reported responsibly to affected maintainers.
+**Use HunterQA only on systems you own or have permission to assess. Treat every generated finding as a hypothesis until verified and disclosed responsibly.**
