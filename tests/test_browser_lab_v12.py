@@ -150,6 +150,14 @@ class FakeLocator:
         return 1
 
 
+class FakeExpectedResponse:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+
 class FakePage:
     def __init__(self, context):
         self.context = context
@@ -160,6 +168,10 @@ class FakePage:
     def on(self, event, handler):
         assert event == "response"
         self.response_handler = handler
+
+    def expect_response(self, predicate, timeout):
+        assert timeout <= 8_000
+        return FakeExpectedResponse()
 
     def perform_request(self, method, url):
         route = FakeRoute(method, url)
