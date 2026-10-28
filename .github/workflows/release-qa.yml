@@ -27,6 +27,8 @@ jobs:
         run: python -m compileall -q hunterqa zeroscope
       - name: Regression tests
         run: python -m pytest -q
+      - name: HunterQA AI 1.1 offline bounty acceptance
+        run: bash tools/verify_bounty_1_1.sh
       - name: Build and verify complete source package
         shell: bash
         run: |
