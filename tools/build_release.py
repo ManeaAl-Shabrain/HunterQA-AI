@@ -23,7 +23,7 @@ EXCLUDED_EXTS = {
     ".pem", ".key", ".p12", ".pfx", ".bin", ".gz", ".zip", ".tar",
 }
 EXCLUDED_FILES = {".env", ".env.local", ".env.production", "id_rsa", "id_ed25519"}
-ALLOW_ROOTS = {".github", "hunterqa", "zeroscope", "tests", "docs", "examples", "tools"}
+ALLOW_ROOTS = {".github", "hunterqa", "zeroscope", "tests", "docs", "examples", "tools", "labs"}
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml",
     "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh",
@@ -45,6 +45,8 @@ def tracked_files(repo: Path):
             continue
         if rel.suffix.lower() in EXCLUDED_EXTS or rel.name in EXCLUDED_FILES:
             continue
+        if rel.parts[0] == "labs" and rel.suffix.lower() not in {".py", ".c", ".h", ".sh", ".md", ".yml", ".yaml", ".toml"}:
+            continue  # Lab evidence and arbitrary data files are not publishable source.
         if any(part.startswith(".env") for part in rel.parts):
             continue
         file = repo / rel
@@ -61,7 +63,7 @@ def build(repo: Path, output: Path) -> dict:
     if output.exists():
         raise FileExistsError("Use a new output ZIP filename")
     output.parent.mkdir(parents=True, exist_ok=True)
-    manifest = {"project": "HunterQA AI", "release": "1.0.0", "files": []}
+    manifest = {"project": "HunterQA AI", "release": "1.0.1", "files": []}
     with zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED) as archive:
         for rel, file in sorted(tracked_files(repo), key=lambda r: r[0].as_posix()):
             content = file.read_bytes()

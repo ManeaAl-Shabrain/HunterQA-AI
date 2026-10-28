@@ -1,0 +1,83 @@
+name: Publish HunterQA AI v1.0.1
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/publish-v1.0.1.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hunterqa-v1-0-1-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'ManeaAl-Shabrain/HunterQA-AI' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out merged stable main commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run full regression suite
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m compileall -q hunterqa zeroscope labs
+          python -m pytest -q
+
+      - name: Verify source release ZIP and source coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.0.1-source.zip"
+          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.0.1-source.zip"
+          python - "$RUNNER_TEMP/HunterQA-AI-1.0.1-source.zip" <<'PY'
+          import sys
+          import zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              names = set(archive.namelist())
+          required = {
+              "HunterQA-AI/LICENSE",
+              "HunterQA-AI/labs/research-lab/ai_crash_analyzer.py",
+              "HunterQA-AI/labs/research-lab/verification/sanitizer_parser.py",
+              "HunterQA-AI/labs/research-lab/verification/verify_crashes.py",
+          }
+          if not required.issubset(names):
+              raise SystemExit("Missing required Kali research source files")
+          PY
+          (cd "$RUNNER_TEMP" && sha256sum HunterQA-AI-1.0.1-source.zip > HunterQA-AI-1.0.1-source.zip.sha256)
+
+      - name: Publish unique v1.0.1 tag and release with source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v1.0.1 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release v1.0.1 already exists; refusing overwrite."
+            exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v1.0.1" >/dev/null 2>&1; then
+            echo "Tag v1.0.1 already exists; refusing overwrite."
+            exit 1
+          fi
+          gh release create v1.0.1 \
+            "$RUNNER_TEMP/HunterQA-AI-1.0.1-source.zip" \
+            "$RUNNER_TEMP/HunterQA-AI-1.0.1-source.zip.sha256" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "HunterQA AI 1.0.1 — Kali Research Lab Integration" \
+            --notes-file docs/RELEASE_1_0_1.md \
+            --latest
