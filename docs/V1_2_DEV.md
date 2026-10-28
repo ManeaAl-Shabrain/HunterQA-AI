@@ -165,6 +165,17 @@ Stable HTTP response codes are not proof of vulnerability.
 See `docs/REVIEW_V1_2.md` for exact CLI examples, report export,
 approved-root restrictions, privacy limitations and disclosure rules.
 
+## Offline review-cue accuracy benchmarking
+
+The v1.2 development branch includes an independently labeled, completely
+synthetic OpenAPI regression pack. Run `bounty-benchmark --strict` against the
+private profile and local pack to score review prompts, not live security
+vulnerabilities. It measures false positives, missed review prompts and
+unlabeled suggestions, and exports privacy-safe aggregate metrics for the
+`/agent-lab` calibration card. No scans, exploitation or external requests.
+
+See `docs/BENCHMARK_V1_2.md` for complete Kali commands and label caveats.
+
 ## Next v1.2 milestones (not yet implemented)
 
 - Independent host-level browser network isolation for trusted future
