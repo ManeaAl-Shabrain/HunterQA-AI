@@ -72,6 +72,9 @@ rules using generated positive/negative Python, JavaScript and PHP snippets;
 the snippets are parsed, never executed. This follows the engine's documented
 [local rule validation workflow](https://semgrep.dev/docs/writing-rules/testing-rules).
 Passing these synthetic cases does not measure real-world precision or recall.
+The same fixtures also pass through the production scanner adapter to verify
+stable bundled rule IDs and relative file paths. Production Semgrep calls disable
+version checks as well as metrics; this does not sandbox the external executable.
 Dependency advisory checks use public package metadata and require internet;
 they are separate from the tool's default offline research workflow.
 The Python 3.11 audit also detected old runner-provided setuptools; CI upgrades

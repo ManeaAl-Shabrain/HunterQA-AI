@@ -72,6 +72,6 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install the optional Semgrep engine for real rule validation
-        run: python -m pip install semgrep
+        run: python -m pip install semgrep -e .
       - name: Validate and exercise bundled rules on synthetic positive and negative fixtures
         run: python tools/verify_semgrep_rules.py

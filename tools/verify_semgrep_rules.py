@@ -80,7 +80,14 @@ def main():
         found = {row["check_id"] for row in findings}
         if found != EXPECTED:
             raise ValueError(f"Rule coverage mismatch: missing={sorted(EXPECTED-found)}, unexpected={sorted(found-EXPECTED)}")
+        # Exercise the real production adapter too, including normalized IDs and paths.
+        from hunterqa.orchestrator import scan_local_source
+        scan = scan_local_source(target, RULES, timeout=120)
+        actual = {row["rule_id"] for row in scan["findings"] if row["engine"] == "semgrep"}
+        if actual != EXPECTED or any(Path(row["file_path"]).is_absolute() for row in scan["findings"]):
+            raise ValueError("Production scanner lost fixture findings or normalized source identity")
         print(f"PASS: {len(found)} bundled rules matched synthetic positive fixtures; negative fixtures stayed unflagged")
+        print("PASS: production scanner adapter preserved rule IDs and relative source paths")
 
 
 if __name__ == "__main__":

@@ -59,6 +59,7 @@ def scan_local_source(project: Path, rules: Path, timeout: int = 900) -> dict:
     if not project.is_dir() or not rules.is_file():
         raise ValueError("Invalid local directory or rule file")
     command = ["semgrep", "scan", "--json", "--quiet", "--metrics=off",
+               "--disable-version-check", "--no-rewrite-rule-ids",
                "--exclude", ".venv", "--exclude", "node_modules", "--exclude", ".git",
                "--config", str(rules), str(project)]
     completed = subprocess.run(command, shell=False, capture_output=True, text=True,
