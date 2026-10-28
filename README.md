@@ -9,7 +9,7 @@
 HunterQA AI unifies **local source assessment, offline API review, vulnerability/advisory correlation, optional local AI hypotheses, isolated crash research, authorized low-noise HTTP observations, and human-reviewed findings** in a Python CLI and a Flask dashboard.
 
 - **Latest published stable version:** [v1.2.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0)
-- **Supported environment:** Python **3.11+**, Kali Linux / local single-operator workstation; CI uses Ubuntu and Python 3.13.
+- **Supported environment:** Python **3.11+**, Kali Linux / local single-operator workstation; CI covers Ubuntu with Python 3.11 and 3.13.
 - **Repository:** [ManeaAl-Shabrain/HunterQA-AI](https://github.com/ManeaAl-Shabrain/HunterQA-AI)
 - **Primary interface:** `hunterqa` / `python -m hunterqa` (CLI) and `http://127.0.0.1:5000` (local dashboard).
 - **License:** MIT for HunterQA-owned source; third-party tools/models have separate licenses.
@@ -34,6 +34,19 @@ analyst-validated dossiers; it sends nothing and assigns no CVE IDs. Status
 observations remain unverified. There is no credential guessing, WAF evasion,
 arbitrary exploit execution, or guaranteed discovery. These additions are not in
 the immutable v1.2.0 release archive. See [setup, limits and examples](docs/APPROVED_ASSESSMENTS.md).
+
+## Development: research workflow additions
+
+- `research-playbooks`, `research-init`, `research-note`, and `research-resume`:
+  original review checklists and a private policy-bound context journal.
+- `external-import`: offline scoped Nuclei HTTP JSONL and ZAP traditional JSON
+  evidence adapters; neither scanner is installed or launched by an import.
+- `report-sarif`: conservative SARIF export without source excerpts or uploads.
+- Root `action.yml`: reusable source-only GitHub Action with explicit acknowledgment.
+- Read-only `/playbooks`: browse the original checklists in the local dashboard.
+
+See the [seven-reference capability comparison](docs/FRAMEWORK_COMPARISON_2026_10.md)
+and [usage, formats and limitations](docs/RESEARCH_WORKFLOWS.md).
 
 ## Start here — from a new Kali VM
 

@@ -26,6 +26,7 @@
         <a class="nav-link {{ 'active' if request.endpoint == 'main.agent_lab_dashboard' }}" href="{{ url_for('main.agent_lab_dashboard') }}"><span>✦</span> AI Agent Lab</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.bounty_dashboard' }}" href="{{ url_for('main.bounty_dashboard') }}"><span>◎</span> Bug Bounty Lab</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.assessments_dashboard' }}" href="{{ url_for('main.assessments_dashboard') }}"><span>▤</span> Assessments</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.research_playbooks_dashboard' }}" href="{{ url_for('main.research_playbooks_dashboard') }}"><span>◇</span> Review Playbooks</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.cve_intelligence' }}" href="{{ url_for('main.cve_intelligence') }}"><span>◇</span> CVE Intelligence</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_history' }}" href="{{ url_for('main.campaign_history') }}"><span>▤</span> Campaign History</a>

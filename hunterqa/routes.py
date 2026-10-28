@@ -247,6 +247,13 @@ def assessments_dashboard():
     return render_template("assessments.html", evidence=evidence)
 
 
+@bp.get("/playbooks")
+def research_playbooks_dashboard():
+    """Original static review data only; no third-party prompts or tool execution."""
+    from .research_workspace import PLAYBOOKS
+    return render_template("playbooks.html", playbooks=PLAYBOOKS)
+
+
 @bp.get("/audit")
 def audit_history():
     rows = get_db().execute("SELECT * FROM audit_events ORDER BY id DESC LIMIT 100").fetchall()
