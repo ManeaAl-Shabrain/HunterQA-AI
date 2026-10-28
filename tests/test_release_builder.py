@@ -34,6 +34,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         assert "HunterQA-AI/zeroscope/__init__.py" in names
         assert "HunterQA-AI/tests/test_basic.py" in names
         assert "HunterQA-AI/labs/research-lab/verification/sanitizer_parser.py" in names
+        assert "HunterQA-AI/labs/research-lab/verification/local_evidence.json" not in names
         assert "HunterQA-AI/LICENSE" in names
         assert "HunterQA-AI/SECURITY.md" in names
         assert "HunterQA-AI/.github/workflows/release-qa.yml" in names
