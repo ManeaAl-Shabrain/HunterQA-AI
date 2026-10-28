@@ -1,0 +1,140 @@
+name: Publish HunterQA AI v1.2.0 Stable
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-v1.2.0.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hunterqa-v1-2-0-stable-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'ManeaAl-Shabrain/HunterQA-AI' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out exact merged main release commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install stable package and optional local-browser acceptance dependencies
+        run: |
+          python -m pip install -e '.[dev,browser]'
+          python -m playwright install --with-deps chromium
+
+      - name: Confirm exact version, stable channel and non-overwriting release intent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import tomllib
+          from importlib.metadata import version
+          from pathlib import Path
+          project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          assert project["project"]["version"] == "1.2.0", "Not the reviewed stable v1.2.0"
+          assert version("hunterqa-ai") == "1.2.0", "Distribution and project version differ"
+          for filename in ("docs/RELEASE_1_2_0.md", "docs/VERSIONING.md",
+                           "docs/BENCHMARK_V1_2.md", "docs/REVIEW_V1_2.md"):
+              assert Path(filename).is_file(), f"Missing stable release file: {filename}"
+          print("PASS: exact, installed stable version = 1.2.0")
+          PY
+          if gh release view v1.2.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Refusing to overwrite existing v1.2.0 release"; exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v1.2.0" >/dev/null 2>&1; then
+            echo "Refusing to move an existing v1.2.0 tag"; exit 1
+          fi
+
+      - name: Full offline authorized research acceptance and v1.2 release checks
+        run: bash tools/verify_agent_1_2.sh
+
+      - name: Real Chromium owned-loopback login and redirect isolation
+        env:
+          HUNTERQA_REAL_BROWSER_CI: "1"
+        run: python -m pytest -q tests/test_browser_lab_playwright_v12.py
+
+      - name: Build, audit and checksum exact immutable release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/build_release.py \
+            --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.2.0-source.zip"
+          python tools/verify_release_archive.py \
+            "$RUNNER_TEMP/HunterQA-AI-1.2.0-source.zip"
+          python - "$RUNNER_TEMP/HunterQA-AI-1.2.0-source.zip" <<'PY'
+          import json
+          import sys
+          import zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              members = set(archive.namelist())
+              manifest = json.loads(archive.read("HunterQA-AI/RELEASE_MANIFEST.json"))
+              required = {
+                  "HunterQA-AI/LICENSE", "HunterQA-AI/SECURITY.md",
+                  "HunterQA-AI/pyproject.toml", "HunterQA-AI/README.md",
+                  "HunterQA-AI/RELEASE_NOTES.md",
+                  "HunterQA-AI/docs/RELEASE_1_2_0.md",
+                  "HunterQA-AI/docs/VERSIONING.md",
+                  "HunterQA-AI/docs/BENCHMARK_V1_2.md",
+                  "HunterQA-AI/docs/REVIEW_V1_2.md",
+                  "HunterQA-AI/docs/BROWSER_LAB_V1_2.md",
+                  "HunterQA-AI/hunterqa/api_surface_v12.py",
+                  "HunterQA-AI/hunterqa/agent_workflow_v12.py",
+                  "HunterQA-AI/hunterqa/agent_ai_v12.py",
+                  "HunterQA-AI/hunterqa/browser_lab_v12.py",
+                  "HunterQA-AI/hunterqa/replay_v12.py",
+                  "HunterQA-AI/hunterqa/repeatability_v12.py",
+                  "HunterQA-AI/hunterqa/verification_v12.py",
+                  "HunterQA-AI/hunterqa/benchmark_v12.py",
+                  "HunterQA-AI/hunterqa/templates/agent_lab.html",
+                  "HunterQA-AI/tools/verify_agent_1_2.sh",
+                  "HunterQA-AI/examples/benchmarks/v12_openapi_golden.json",
+              }
+              if manifest.get("release") != "1.2.0" or not required.issubset(members):
+                  raise SystemExit("Stable archive has missing source or wrong version")
+              forbidden = (
+                  "/.git/", "/.venv/", "/instance/", "/__pycache__/",
+              )
+              if any(any(piece in path for piece in forbidden) for path in members):
+                  raise SystemExit("Runtime/private paths incorrectly included in archive")
+              print("PASS: v1.2.0 public source ZIP and manifest verified")
+          PY
+          (cd "$RUNNER_TEMP" && \
+            sha256sum HunterQA-AI-1.2.0-source.zip > HunterQA-AI-1.2.0-source.zip.sha256)
+
+      - name: Publish permanent v1.2.0 GitHub release from this verified main SHA
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # TOCTOU guard: preserve any version already published by another run.
+          if gh release view v1.2.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Existing release detected; never overwrite"; exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v1.2.0" >/dev/null 2>&1; then
+            echo "Existing tag detected; never move"; exit 1
+          fi
+          gh release create v1.2.0 \
+            "$RUNNER_TEMP/HunterQA-AI-1.2.0-source.zip" \
+            "$RUNNER_TEMP/HunterQA-AI-1.2.0-source.zip.sha256" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "HunterQA AI v1.2.0 — Local AI Research & Verification (Stable)" \
+            --notes-file docs/RELEASE_1_2_0.md \
+            --latest
