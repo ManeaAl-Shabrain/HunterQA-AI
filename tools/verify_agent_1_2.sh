@@ -141,6 +141,27 @@ assert "automatically submitted" in draft
 print("PASS: offline human-review chain, mandatory proof and HEAD repeatability")
 PY
 
+echo "[4C/6] Labeled offline OpenAPI review-cue regression gate"
+HUNTERQA_APPROVED_ROOTS="$tmp:$(pwd)" python -m hunterqa bounty-benchmark \
+  --profile "$tmp/policy.json" \
+  --pack "$(pwd)/examples/benchmarks/v12_openapi_golden.json" \
+  --out "$tmp/openapi-benchmark.json" --strict --authorized
+TMP_V12="$tmp" python - <<'PY'
+import json
+import os
+from pathlib import Path
+root = Path(os.environ["TMP_V12"])
+report = json.loads((root / "openapi-benchmark.json").read_text())
+assert report["golden_review_expectations_met"] is True
+assert report["metrics"]["true_positive_review_suggestions"] == 10
+assert report["metrics"]["true_negative_review_checks"] == 21
+assert report["metrics"]["false_positive_review_suggestions"] == 0
+assert report["metrics"]["missed_review_suggestions"] == 0
+assert report["claims"]["confirmed_vulnerabilities"] == 0
+assert report["claims"]["real_world_detection_accuracy"] is None
+print("PASS: offline labeled synthetic review cue selection; no security accuracy claimed")
+PY
+
 echo "[5/6] Read-only Agent Lab UI with disposable SQLite"
 TMP_V12="$tmp" HUNTERQA_APPROVED_ROOTS="$tmp" python - <<'PY'
 import os
@@ -159,6 +180,7 @@ app = create_app({
     "API_SURFACE_REPORT_PATH": str(root / "api.json"),
     "AGENT_CORRELATION_REPORT_PATH": str(root / "correlation.json"),
     "REVIEW_DOSSIER_PATH": str(root / "dossier-002.json"),
+    "BENCHMARK_REPORT_PATH": str(root / "openapi-benchmark.json"),
     "CAMPAIGN_HISTORY_ROOT": str(root),
     "TRIAGE_REPORT_PATH": str(root / "none-triage.json"),
     "RESEARCH_REPORT_PATH": str(root / "none-research.json"),
@@ -177,6 +199,7 @@ with app.test_client() as client:
     assert b"Owned HunterQA 1.2 fixture" in html
     assert b"scope-guard" in html
     assert b"Analyst-validated: 1" in html
+    assert b"OpenAPI review benchmark: ready" in html
 print("PASS: all 11 routes and local no-execution agent dashboard")
 PY
 
@@ -198,6 +221,10 @@ required = {
     "HunterQA-AI/hunterqa/browser_lab_v12.py",
     "HunterQA-AI/hunterqa/replay_v12.py",
     "HunterQA-AI/hunterqa/verification_v12.py",
+    "HunterQA-AI/hunterqa/benchmark_v12.py",
+    "HunterQA-AI/examples/benchmarks/v12_openapi_golden.json",
+    "HunterQA-AI/examples/benchmarks/v12_scoped_auth.json",
+    "HunterQA-AI/examples/benchmarks/v12_missing_auth.json",
     "HunterQA-AI/hunterqa/repeatability_v12.py",
     "HunterQA-AI/docs/REVIEW_V1_2.md",
     "HunterQA-AI/docs/BROWSER_LAB_V1_2.md",
