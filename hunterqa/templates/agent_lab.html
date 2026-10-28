@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}AI Agent Lab · HunterQA AI{% endblock %}
+{% block section %}AI Agent Lab{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">HUNTERQA AI 1.2 · PRIVATE RESEARCH</p>
+<h1>AI Agent <em>Lab.</em></h1>
+<p class="lede">Specialized research roles, offline API coverage, and evidence corroboration. Every stage is scope-bound and human-reviewed. Opening this page never executes an agent or scans a target.</p></div></section>
+<section class="stats-grid">
+<article class="stat"><span>Saved plan</span><strong style="font-size:1rem">{{ summary.status }}</strong><small>Local artifacts only</small></article>
+<article class="stat"><span>API operations</span><strong>{{ summary.operations }}</strong><small>Offline OpenAPI review</small></article>
+<article class="stat"><span>Review candidates</span><strong>{{ summary.review_candidates + summary.api_candidates }}</strong><small>Unconfirmed observations</small></article>
+<article class="stat"><span>Network requests</span><strong>0</strong><small>Dashboard and offline plans</small></article>
+</section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">AGENT WORKFLOW</p>
+<h2>{{ summary.program or "No authorized campaign selected" }}</h2></div></div>
+{% if summary.status != "ready" %}
+<div class="empty"><h3>No local v1.2 research artifacts loaded</h3><p>Run bounty-api-inventory, bounty-agent-plan and bounty-correlate in an authorized Kali directory. Set HUNTERQA_AGENT_PLAN and optional API/correlation report environment paths before starting the dashboard.</p></div>
+{% else %}
+{% for item in summary.steps %}
+<article style="padding:15px;border-bottom:1px solid #303838">
+<strong>{{ item.agent_id }}</strong> — {{ "Enabled" if item.enabled else "Not scheduled" }}
+<p>{{ item.mission }}</p></article>
+{% endfor %}
+<p>Evidence requiring corroboration review: {{ summary.corroboration_review }}</p>
+{% endif %}
+</section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">LOCAL SPECIALISTS</p>
+<h2>Constrained research skills</h2></div></div>
+{% for skill in skills %}
+<article style="padding:15px;border-bottom:1px solid #303838">
+<strong>{{ skill.id }}</strong><p>{{ skill.mission }}</p>
+<small>Mode: {{ skill.execution }} · Tool: {{ skill.tool }} · Permission: {{ skill.risk }}</small></article>
+{% endfor %}
+</section>
+<p class="callout warn">No stealth or detection evasion. Model output cannot launch tools, bypass scope, assign CVEs or confirm zero-days. Validate every hypothesis and follow each bug bounty program's traffic rules before any active testing.</p>
+{% endblock %}
