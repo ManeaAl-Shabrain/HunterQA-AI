@@ -72,6 +72,11 @@ def build(repo: Path, output: Path) -> dict:
     with zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED) as archive:
         for rel, file in sorted(tracked_files(repo), key=lambda r: r[0].as_posix()):
             content = file.read_bytes()
+            # Windows checkouts may convert tracked shell scripts to CRLF.
+            # Hash the packaged LF bytes so Linux receives runnable scripts
+            # without modifying the operator's checkout or immutable releases.
+            if rel.suffix == ".sh":
+                content = content.replace(b"\r\n", b"\n")
             name = "HunterQA-AI/" + rel.as_posix()
             archive.writestr(name, content)
             manifest["files"].append({

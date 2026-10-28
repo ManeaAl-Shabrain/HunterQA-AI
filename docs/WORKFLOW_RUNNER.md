@@ -85,6 +85,8 @@ ZAP input formats/limits remain as documented in `RESEARCH_WORKFLOWS.md`.
 Install current development source normally. Use an existing authorized scope
 profile and an approved parent directory with a narrow `source` subdirectory.
 Keep configuration and run directories outside the reviewed source tree.
+The source archive builder normalizes shell-script CRLF to LF for Linux and
+hashes the actual packaged bytes; it does not alter working files or old releases.
 
 ```bash
 export HUNTERQA_APPROVED_ROOTS="/srv/assessments/customer"
