@@ -48,7 +48,7 @@ def test_openapi_discovery_is_offline_and_reports_unverified_candidates(root):
     assert "api.auth-declaration-review" in ids
     assert "api.public-write-review" in ids
     assert "api.business-logic-review" in ids
-    assert result["servers"][0]["scope_status"] == "unverified_in_contract"
+    assert result["servers"][0]["scope_status"] == "unverified_or_out_of_scope"
     assert all(x["confirmed"] is False for x in result["review_candidates"])
 
 
@@ -137,4 +137,5 @@ def test_no_sensitive_server_secret_in_inventory(root):
     ]})
     result = inspect_openapi(p, root[1], authorized=True)
     assert result["summary"]["operations"] == 0
+    assert "do-not-store-in-full" not in json.dumps(result)
     assert result["claims"]["confirmed_vulnerabilities"] == 0
