@@ -23,9 +23,9 @@ EXCLUDED_EXTS = {
     ".pem", ".key", ".p12", ".pfx", ".bin", ".gz", ".zip", ".tar",
 }
 EXCLUDED_FILES = {".env", ".env.local", ".env.production", "id_rsa", "id_ed25519"}
-ALLOW_ROOTS = {"hunterqa", "zeroscope", "tests", "docs", "examples", "tools"}
+ALLOW_ROOTS = {".github", "hunterqa", "zeroscope", "tests", "docs", "examples", "tools"}
 ALLOW_FILES = {
-    ".gitignore", "README.md", "RELEASE_NOTES.md", "pyproject.toml",
+    ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml",
     "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh",
 }
 
@@ -61,7 +61,7 @@ def build(repo: Path, output: Path) -> dict:
     if output.exists():
         raise FileExistsError("Use a new output ZIP filename")
     output.parent.mkdir(parents=True, exist_ok=True)
-    manifest = {"project": "HunterQA AI", "release": "1.0.0 review candidate", "files": []}
+    manifest = {"project": "HunterQA AI", "release": "1.0.0", "files": []}
     with zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED) as archive:
         for rel, file in sorted(tracked_files(repo), key=lambda r: r[0].as_posix()):
             content = file.read_bytes()
