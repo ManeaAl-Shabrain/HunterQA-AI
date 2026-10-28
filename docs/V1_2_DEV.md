@@ -1,7 +1,6 @@
 # HunterQA AI 1.2 — Scoped AI Research Orchestration
 
-**Status:** Development milestone on `feature/v1-2-ai-research-orchestration`.
-The published `v1.1.0` remains the stable release.
+**Status:** Stable release `v1.2.0` on `main`. The previous `v1.1.0` remains available.
 
 ## What v1.2 already does
 
@@ -35,14 +34,14 @@ reports are preserved.
 cd ~/Desktop/HunterQA-AI
 git status --short
 git fetch origin
-git switch --track origin/feature/v1-2-ai-research-orchestration
+git switch main
+git pull --ff-only origin main
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 python -m pytest -q
 ```
 
-If this feature branch already exists locally, use
-`git switch feature/v1-2-ai-research-orchestration && git pull --ff-only`.
+Inspect and preserve your local uncommitted work before switching branches. Versions are documented in `docs/VERSIONING.md`.
 
 ## First offline research session
 
@@ -186,5 +185,4 @@ See `docs/BENCHMARK_V1_2.md` for complete Kali commands and label caveats.
 - Program profile import validation and richer reporting templates.
 - Benchmarks using OWASP Juice Shop, WebGoat and crAPI in isolated labs.
 
-Do not merge or tag a v1.2 stable release until all CI and Kali tests and
-manual dashboard acceptance pass.
+Use `bash tools/verify_agent_1_2.sh` for the integrated offline acceptance and run the optional real Chromium local-loopback fixture tests as detailed in `docs/BROWSER_LAB_V1_2.md`. Stable release does not imply independently verified real-world vulnerabilities.
