@@ -238,4 +238,4 @@ assert required.issubset(names), required - names
 print("PASS: all v1.2 modules and attribution included in ZIP")
 PY
 echo "PASS: HunterQA AI 1.2 private/offline QA passed."
-echo "Manual Kali dashboard acceptance still required before merge or stable release."
+echo "CI acceptance passed; independently verify the dashboard and local browser on your Kali VM."
