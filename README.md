@@ -8,19 +8,36 @@ Plan controlled assessments, inspect source and API evidence, run fixed approved
 
 **Version:** v1.3.0 · **Python:** 3.11+ · **Primary platform:** Kali/Linux · **Deployment:** local, single operator
 
-[Start on Kali](<zero to start.md>) · [Release notes](docs/RELEASE_1_3_0.md) · [Workflow guide](docs/WORKFLOW_RUNNER.md) · [Security policy](SECURITY.md) · [Published releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases)
+[Zero to Start](<zero to start.md>) · [Authorized Assessment — Beginner’s Guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) · [Templates folder](templates/README.md)
 
-> **Release status:** this source prepares v1.3.0. A package version or successful PR is not a published GitHub release. Use the releases page to confirm the available tag and assets. Historical v1.2.0 assets remain immutable.
+[Release notes](docs/RELEASE_1_3_0.md) · [Workflow guide](docs/WORKFLOW_RUNNER.md) · [Security policy](SECURITY.md) · [Published releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases)
+
+> **Published release:** [v1.3.0](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.3.0). Historical tags and assets remain immutable. The additional beginner assessment guide and templates are post-release documentation available on current `main`; they are not included in the original v1.3.0 archive.
+
+## Start here
+
+| Order | Important resource | What to do |
+| --- | --- | --- |
+| 1 · Install | [zero to start.md](<zero to start.md>) | Set up Kali/Linux, verify HunterQA and complete the owned offline lesson. |
+| 2 · Understand | [Authorized Assessment — Beginner’s Guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) | Follow the first organization-approved assessment: permission, scope, plan review, observation and evidence. |
+| 3 · Prepare | [templates folder](templates/README.md) | Copy the scope/target templates and approval, run, report and retest worksheets to a private case directory; follow the folder README. |
+
+The templates include the same [scope JSON](templates/HunterQA-scope-template.json),
+[target TXT](templates/HunterQA-targets-template.txt) and
+[configuration-review instructions](templates/HunterQA-first-configuration-review.md)
+provided in the beginner walkthrough. Fill private copies outside this public
+repository; do not upload organization approvals, contacts or assessment evidence.
 
 ## Navigate
 
-1. [What is included](#what-is-included)
-2. [Install and verify](#install-and-verify)
-3. [Choose a workflow](#choose-a-workflow)
-4. [Dashboard and reporting](#dashboard-and-reporting)
-5. [Command reference](#command-reference)
-6. [Controls and limits](#controls-and-limits)
-7. [Updates and releases](#updates-and-releases)
+1. [Start here](#start-here)
+2. [What is included](#what-is-included)
+3. [Install and verify](#install-and-verify)
+4. [Choose a workflow](#choose-a-workflow)
+5. [Dashboard and reporting](#dashboard-and-reporting)
+6. [Command reference](#command-reference)
+7. [Controls and limits](#controls-and-limits)
+8. [Updates and releases](#updates-and-releases)
 
 ## What is included
 
@@ -57,7 +74,7 @@ python -m pytest -q
 python tools/verify_release_1_3.py
 ```
 
-Expected version for this source: **HunterQA AI 1.3.0**. Before the release PR is merged, select its reviewed branch or review archive; cloning `main` alone may still retrieve an earlier version.
+Expected version for this source: **HunterQA AI 1.3.0**. Current `main` includes the latest documentation. The immutable `v1.3.0` tag preserves the published release snapshot; later documentation additions require current `main` or their separate downloads.
 
 | Optional component | Needed for |
 | --- | --- |
