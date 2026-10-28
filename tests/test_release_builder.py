@@ -11,6 +11,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
     subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
     for name, text in [
         ("hunterqa/core.py", "answer = 42\n"),
+        ("zeroscope/__init__.py", "from hunterqa import create_app\n"),
         ("tests/test_basic.py", "def test_ok(): assert True\n"),
         ("hunterqa/.env", "TOKEN=SECRET\n"),
         ("instance/cache.sqlite3", "sensitive"),
@@ -25,6 +26,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
     with zipfile.ZipFile(output) as archive:
         names = archive.namelist()
         assert "HunterQA-AI/hunterqa/core.py" in names
+        assert "HunterQA-AI/zeroscope/__init__.py" in names
         assert "HunterQA-AI/tests/test_basic.py" in names
         assert "HunterQA-AI/hunterqa/.env" not in names
         assert "HunterQA-AI/instance/cache.sqlite3" not in names
