@@ -1,0 +1,17 @@
+{
+  "program": "Replace with your authorized program name",
+  "platform": "local-lab",
+  "authorization_reference": "Your written approval or program policy URL",
+  "acknowledged_authorization": true,
+  "allowed_hosts": ["app.example.test"],
+  "excluded_hosts": [],
+  "allowed_paths": ["/"],
+  "excluded_paths": ["/admin", "/logout"],
+  "methods": ["HEAD"],
+  "allowed_ports": [443],
+  "max_requests": 3,
+  "interval_seconds": 2.0,
+  "lab_mode": false,
+  "allow_private_network": false,
+  "allow_http": false
+}

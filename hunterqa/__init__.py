@@ -29,6 +29,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         RESEARCH_REPORT_PATH=os.environ.get("HUNTERQA_RESEARCH_REPORT", ""),
         TRIAGE_REPORT_PATH=os.environ.get("HUNTERQA_TRIAGE_REPORT", ""),
         CVE_REPORT_PATH=os.environ.get("HUNTERQA_CVE_REPORT", ""),
+        BOUNTY_REPORT_PATH=os.environ.get("HUNTERQA_BOUNTY_REPORT", ""),
         CAMPAIGN_HISTORY_ROOT=os.environ.get("HUNTERQA_CAMPAIGN_HISTORY_ROOT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),

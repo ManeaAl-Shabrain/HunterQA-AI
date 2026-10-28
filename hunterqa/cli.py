@@ -35,6 +35,19 @@ def _approved_root(path: str) -> Path:
     return target
 
 
+def _write_bounty_output(path: str, content: str) -> None:
+    """Create-only private output under explicitly approved roots."""
+    output = Path(path).expanduser()
+    _approved_root(str(output.parent.resolve(strict=True)))
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(output, flags, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as stream:
+        stream.write(content)
+    print("Saved:", output)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -63,6 +76,35 @@ def main(argv=None):
     cve.add_argument("--snapshot", required=True)
     cve.add_argument("--out", required=True)
     cve.add_argument("--authorized", action="store_true")
+    bounty_check = sub.add_parser("bounty-preflight", help="Offline scope preflight; makes no network requests")
+    bounty_check.add_argument("--profile", required=True)
+    bounty_check.add_argument("--targets", required=True)
+    bounty_check.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    bounty = sub.add_parser("bounty-assess", help="Bounded authorized HEAD/GET web observations")
+    bounty.add_argument("--profile", required=True)
+    bounty.add_argument("--targets", required=True)
+    bounty.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    bounty.add_argument("--out", required=True)
+    bounty.add_argument("--authorized", action="store_true")
+    har = sub.add_parser("bounty-import-har", help="Offline read-only HAR evidence analysis")
+    har.add_argument("--profile", required=True)
+    har.add_argument("--har", required=True)
+    har.add_argument("--out", required=True)
+    har.add_argument("--authorized", action="store_true")
+    bounty_export = sub.add_parser("bounty-report", help="Draft a human-reviewed Markdown bug bounty report")
+    bounty_export.add_argument("--file", required=True)
+    bounty_export.add_argument("--out", required=True)
+    engagement = sub.add_parser("bounty-campaign", help="Unify local SAST/AI, optional OSV/HAR and approved HTTP research")
+    engagement.add_argument("--project", required=True)
+    engagement.add_argument("--out-dir", required=True)
+    engagement.add_argument("--profile", required=True)
+    engagement.add_argument("--snapshot")
+    engagement.add_argument("--har")
+    engagement.add_argument("--with-ai", action="store_true")
+    engagement.add_argument("--with-web", action="store_true")
+    engagement.add_argument("--targets")
+    engagement.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    engagement.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -135,6 +177,53 @@ def main(argv=None):
         if output.is_symlink() or output.exists():
             raise ValueError("Use a new output path without symlinks")
         _write_json(str(output), report)
+    elif args.command == "bounty-preflight":
+        from .bounty import BountyPolicy, _approved_file, MAX_TARGET_LIST
+        profile = BountyPolicy.load(args.profile)
+        file = _approved_file(args.targets)
+        if file.stat().st_size > MAX_TARGET_LIST:
+            raise ValueError("Target list exceeds size limit")
+        targets = [x.strip() for x in file.read_text(encoding="utf-8").splitlines()
+                   if x.strip() and not x.lstrip().startswith("#")]
+        if not targets or len(targets) > profile.max_requests:
+            raise ValueError("Target list exceeds explicit request budget")
+        for url in targets:
+            profile.authorize_url(url, args.method)
+        print("PASS: all", len(targets), "targets are inside the declared program scope")
+        print("No network requests were made; preflight does not prove program permission.")
+    elif args.command == "bounty-assess":
+        from .bounty import assess
+        if not args.authorized:
+            raise PermissionError("Explicit --authorized flag required for network requests")
+        output = Path(args.out).expanduser()
+        _approved_root(str(output.parent.resolve(strict=True)))
+        if output.exists() or output.is_symlink():
+            raise ValueError("Use a new output file; do not overwrite previous evidence")
+        report = assess(args.profile, args.targets, authorized=True, method=args.method)
+        _write_bounty_output(str(output), json.dumps(report, indent=2) + "\n")
+    elif args.command == "bounty-import-har":
+        from .bounty import import_har
+        if not args.authorized:
+            raise PermissionError("Importing program evidence requires --authorized")
+        result = import_har(args.profile, args.har, authorized=True)
+        _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+    elif args.command == "bounty-report":
+        from .bounty import bounty_markdown, _read_json
+        evidence = _read_json(args.file, 1_000_000)
+        _write_bounty_output(args.out, bounty_markdown(evidence))
+    elif args.command == "bounty-campaign":
+        from .bounty_campaign import run_bounty_campaign
+        result = run_bounty_campaign(
+            args.project, args.out_dir, args.profile, authorized=args.authorized,
+            with_ai=args.with_ai, with_web=args.with_web,
+            targets_path=args.targets, method=args.method,
+            snapshot_path=args.snapshot, har_path=args.har,
+        )
+        print("Engagement saved:", result["output_directory"])
+        print("Source candidates:", result["summary"]["source_candidates"])
+        print("Advisory records:", result["summary"]["advisory_records"])
+        print("Web observations:", result["summary"]["http_observations"])
+        print("Findings require human verification before submission.")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")

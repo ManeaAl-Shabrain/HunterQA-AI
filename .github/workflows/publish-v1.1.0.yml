@@ -1,0 +1,110 @@
+name: Publish HunterQA AI v1.1.0 Stable
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-v1.1.0.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hunterqa-v1-1-0-stable-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'ManeaAl-Shabrain/HunterQA-AI' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out exact merged release commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install tested HunterQA distribution
+        run: python -m pip install -e '.[dev]'
+
+      - name: Verify stable version markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          from tools.build_release import build
+          project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          assert project["project"]["version"] == "1.1.0", "Not a stable 1.1.0 package"
+          print("PASS: package version = 1.1.0")
+          PY
+
+      - name: Full offline Kali acceptance (no external target scanning)
+        run: bash tools/verify_bounty_1_1.sh
+
+      - name: Package exact tagged stable source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/build_release.py \
+            --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.1.0-source.zip"
+          python tools/verify_release_archive.py \
+            "$RUNNER_TEMP/HunterQA-AI-1.1.0-source.zip"
+          python - "$RUNNER_TEMP/HunterQA-AI-1.1.0-source.zip" <<'PY'
+          import json
+          import sys
+          import zipfile
+          from pathlib import Path
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              names = set(archive.namelist())
+              manifest = json.loads(archive.read("HunterQA-AI/RELEASE_MANIFEST.json"))
+          if manifest.get("release") != "1.1.0":
+              raise SystemExit("Incorrect stable archive manifest version")
+          required = {
+              "HunterQA-AI/LICENSE",
+              "HunterQA-AI/SECURITY.md",
+              "HunterQA-AI/hunterqa/bounty.py",
+              "HunterQA-AI/hunterqa/bounty_campaign.py",
+              "HunterQA-AI/hunterqa/cli.py",
+              "HunterQA-AI/hunterqa/templates/bounty.html",
+              "HunterQA-AI/docs/BUG_BOUNTY_V1_1.md",
+              "HunterQA-AI/docs/RELEASE_1_1_0.md",
+              "HunterQA-AI/tools/verify_bounty_1_1.sh",
+              "HunterQA-AI/labs/research-lab/verification/sanitizer_parser.py",
+          }
+          if not required.issubset(names):
+              raise SystemExit("Stable archive is missing required source files")
+          print("PASS: stable source package and versioned manifest are complete")
+          PY
+          (cd "$RUNNER_TEMP" && \
+            sha256sum HunterQA-AI-1.1.0-source.zip > HunterQA-AI-1.1.0-source.zip.sha256)
+
+      - name: Create v1.1.0 release and upload verified ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v1.1.0 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Refusing to overwrite existing v1.1.0 release"
+            exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v1.1.0" >/dev/null 2>&1; then
+            echo "Refusing to move existing v1.1.0 tag"
+            exit 1
+          fi
+          gh release create v1.1.0 \
+            "$RUNNER_TEMP/HunterQA-AI-1.1.0-source.zip" \
+            "$RUNNER_TEMP/HunterQA-AI-1.1.0-source.zip.sha256" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "HunterQA AI v1.1.0 — Authorized Bug Bounty Edition (Stable)" \
+            --notes-file docs/RELEASE_1_1_0.md \
+            --latest

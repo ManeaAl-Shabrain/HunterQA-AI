@@ -1,41 +1,61 @@
-# HunterQA AI 1.0.0 — Stable Local Research Release
+# HunterQA AI v1.1.0 — Authorized Bug Bounty Edition
 
-**Release:** HunterQA AI 1.0.0 for local explicitly authorized Kali Linux security research.
-Built as one cumulative source tree from the former ZeroScope dashboard, retaining the existing local-only workflow and analyst database.
+**Status:** Stable release for tested, explicitly authorized local/Kali research workflows.
 
-## Consolidated capabilities
+**Repository:** https://github.com/ManeaAl-Shabrain/HunterQA-AI
 
-- Authorized source scans: Semgrep local rules, selected configuration and OpenAPI checks, dependency inventory and source trust graphs.
-- Local optional Qwen/Ollama hypotheses, bounded batch research, evidence-linked triage, analyst review decisions and remediation proposal safety gates.
-- AFL++/ASan/UBSan research evidence, bounded local replay in isolated VMs, source location and hash-based correlation.
-- Offline OSV CVE intelligence with exact pinned requirements plus supported npm/Composer/Poetry/uv lockfiles, selected version intervals, conservative unknown states and alias-preserving CVE grouping.
-- Research Analytics, Campaign History, Research Trends, CVE Intelligence and Audit History dashboards.
-- Persisted Flask session key support, local Release Doctor, disposable-database route tests, full source archive SHA-256 validation, pull-request CI.
+## New capabilities in 1.1.0
 
-## Previously observed local acceptance (8.7 ancestor)
+- Exact-host, port, path and method authorization profiles for local labs, approved private engagements and HackerOne/Bugcrowd programs.
+- Offline `bounty-preflight` command to reject an out-of-scope target list before any network request.
+- Explicitly opt-in, bounded HEAD/GET HTTP assessment with validated and pinned IP destinations, host-based HTTPS certificate verification, no redirect following, request budgets, interval controls, short timeouts and stop-on-429 behavior.
+- Offline `bounty-import-har` review for already captured proxy/browser traffic. Scrubs query strings, credentials, cookie values and response bodies from derived results; skips out-of-scope entries.
+- Human-review-only `bounty-report` Markdown drafts that do not claim exploitability, bounty eligibility or CVE assignment.
+- Unified `bounty-campaign` orchestration over existing source scanning, trust graphs, optional local Qwen hypotheses, optional offline OSV/CVE analysis, optional HAR evidence and explicitly permitted HTTP observations.
+- New read-only `/bounty` Flask page; simply visiting the page never launches a scan.
+- Hardened CLI create-only outputs for bounty evidence, bounded JSON inputs, saved reports and opt-in acknowledgment.
 
-The operator confirmed **119 passing pytest tests**, **9 passing Flask routes**, **Release Doctor ready without warnings**, and **132 source files verified** after the 1.0 compatibility packaging fix, together with manual browser acceptance. Subsequent license/archive packaging changes were checked via the GitHub PR CI workflow before merge. These results indicate tested local behavior, not a security certification.
+## Retained from v1.0.1
 
-## Release readiness requirements
+- Local source/Semgrep/configuration/OpenAPI analysis and dependency inventory.
+- AFL++ fuzzing and sanitizer research tools, requiring an isolated authorized VM for executable replay.
+- Offline OSV/CVE intelligence, evidence provenance, analyst review and unified dashboard.
+- Historical Kali research sources in `labs/research-lab/`.
+- MIT license, responsible-disclosure policy and previous tagged GitHub releases.
 
-1. Run `bash tools/verify_release_8_6.sh` on the final branch and check the exit code.
-2. Confirm all relevant GitHub pull-request CI checks pass.
-3. Review the full PR against `main`, including filesystem authorization, local JSON parsers, dependency intelligence and archive scripts.
-4. Back up existing local SQLite analyst history; confirm UI and single-user loopback binding.
-5. Build and verify `HunterQA-AI-1.0.0-source.zip` and inspect it for sensitive files.
-6. Review the MIT root license, separate third-party license obligations and `SECURITY.md` responsible-disclosure practices.
-7. Tag only the reviewed `main` commit and attach the archive matching that exact commit.
+## Verification
 
-## Not claimed
+- On Kali, the operator reported **154 passing Python tests**, **10 successful Flask routes**, approved-target preflight acceptance, out-of-scope rejection, HAR redaction, and **160 verified source files** in the development-candidate ZIP.
+- The operator also confirmed that the `/bounty` dashboard opened successfully in Kali.
+- After stable version stamping, GitHub Actions reruns the regression tests, isolated acceptance, source archive generation and per-file SHA-256 manifest verification on the merged release commit. Official ZIP and checksum are attached to this release.
 
-- 100% detection of vulnerabilities, guaranteed zero false positives, or an official CVE assignment.
-- Independently proven exploitable defects from every matched advisory, sanitizer diagnostic or AI hypothesis.
-- Automatic safe execution of code, secure isolation of untrusted native binaries or production multi-user readiness.
-- Cryptographically authenticated advisory snapshots from user-entered acquisition timestamps.
-- Installed-package attestation from a lockfile alone.
+The exact number of source files in the final official ZIP may differ from the development candidate because stable release documentation and workflows were added.
 
-See `docs/RELEASE_1_0_CHECKLIST.md` for review, rollback and merge plan.
+## Supported research vs. limits
 
-## Licensing
+**Ready for controlled use:** offline source and vulnerability assessment, bounded HTTP security-header observations, offline proxy evidence triage, local AI hypotheses and local fuzz/sanitizer evidence.
 
-HunterQA-owned source is licensed under MIT (`LICENSE`). Third-party tools, models, dependencies and vulnerability datasets retain their original licensing conditions and usage restrictions.
+**Not provided:** unrestricted autonomous pentesting; authenticated browser attacks; exploitation payloads; unrestricted crawling; stealth or evasion; live brute force; automatic HackerOne/Bugcrowd submissions; guaranteed zero-day detection; official CVE allocation; zero false positives; production multi-user security guarantees.
+
+A reported CVE alias describes published advisory data; an AI hypothesis, sanitizer failure, or missing HTTP header does not by itself confirm a new vulnerability or exploitable zero-day. Research must be reproduced, assessed for impact, and disclosed according to the authorized program's terms.
+
+## Install / upgrade on Kali
+
+```bash
+cd ~/Desktop/HunterQA-AI
+git status --short
+git fetch origin --tags
+git switch main
+git pull --ff-only origin main
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+bash tools/verify_bounty_1_1.sh
+```
+
+For scope files and command examples, read `docs/BUG_BOUNTY_V1_1.md`. Back up your existing `instance/hunterqa.sqlite3` and keep all private engagement profiles, HAR files, local crash evidence and credentials outside public Git.
+
+## Archive and provenance
+
+The release is built from the merged `main` commit that receives the `v1.1.0` tag. `HunterQA-AI-1.1.0-source.zip` contains tracked project source, tests, tools and documentation but intentionally excludes personal evidence, most runtime outputs, binaries, databases and secrets. The accompanying `.sha256` file verifies the release archive's download integrity. Check the workflow and included files before trusting the archive; a SHA-256 manifest is not a third-party authenticity signature.
+
+**License:** MIT applies to HunterQA-owned code; third-party models, tools and advisories retain their own terms.
