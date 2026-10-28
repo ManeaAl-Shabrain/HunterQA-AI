@@ -430,4 +430,9 @@ def agent_lab_dashboard():
         current_app.config.get("API_SURFACE_REPORT_PATH"),
         current_app.config.get("AGENT_CORRELATION_REPORT_PATH"),
     )
-    return render_template("agent_lab.html", summary=summary, skills=SKILLS)
+    from .browser_lab_v12 import read_browser_summary
+    from .replay_v12 import read_replay_summary
+    browser = read_browser_summary(current_app.config.get("BROWSER_LAB_REPORT_PATH"))
+    replay = read_replay_summary(current_app.config.get("HEAD_REPLAY_REPORT_PATH"))
+    return render_template("agent_lab.html", summary=summary, skills=SKILLS,
+                           browser=browser, replay=replay)
