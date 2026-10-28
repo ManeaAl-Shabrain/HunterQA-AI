@@ -1,0 +1,2 @@
+# Replace this example with exact targets explicitly permitted by your program.
+https://app.example.test/
