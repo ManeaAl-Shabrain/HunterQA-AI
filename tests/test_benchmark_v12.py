@@ -241,3 +241,33 @@ def test_agent_lab_does_not_read_nonapproved_benchmark_file(synthetic, app, clie
     response = client.get("/agent-lab")
     assert response.status_code == 200
     assert b"OpenAPI review benchmark: not_configured" in response.data
+
+
+
+def test_inventory_candidate_ids_must_match_operation_and_rule(synthetic):
+    root, profile, pack = synthetic
+    def forged(spec_path, profile_path, *, authorized):
+        result = inspect_openapi(spec_path, profile_path, authorized=authorized)
+        if result["review_candidates"]:
+            result["review_candidates"][0]["id"] = "0" * 20
+        return result
+    with pytest.raises(ValueError, match="deterministic API operation identity"):
+        evaluate_pack(profile, pack, authorized=True, inventory=forged)
+
+
+def test_malformed_label_rule_rejected_without_typeerror(synthetic):
+    root, profile, pack = synthetic
+    doc = json.loads(pack.read_text())
+    doc["cases"][0]["labels"][0]["rule_id"] = {"unexpected": "object"}
+    pack.write_text(json.dumps(doc))
+    with pytest.raises(ValueError, match="label does not match"):
+        evaluate_pack(profile, pack, authorized=True)
+
+
+def test_malformed_method_rejected_without_typeerror(synthetic):
+    root, profile, pack = synthetic
+    doc = json.loads(pack.read_text())
+    doc["cases"][0]["labels"][0]["method"] = ["PATCH"]
+    pack.write_text(json.dumps(doc))
+    with pytest.raises(ValueError, match="label does not match"):
+        evaluate_pack(profile, pack, authorized=True)
