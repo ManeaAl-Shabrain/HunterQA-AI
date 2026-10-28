@@ -27,6 +27,17 @@ bash tools/verify_agent_1_2.sh
 
 No third-party-target network scanning is part of the v1.2 offline acceptance.
 
+**New owned-browser milestone:** `bounty-browser-lab` optionally performs a
+single approved login on a locally owned `127.0.0.1` test application using
+ephemeral Playwright Chromium. `bounty-replay-head` rechecks only exact,
+previously sanitized HAR endpoints with a credential-free HEAD request.
+Neither mode provides WAF evasion, remote authenticated exploitation, brute
+force, or live browser access to third-party bounty programs. Both modes keep
+private user data and credentials out of the public repository and report.
+See [the browser lab and safe replay guide](docs/BROWSER_LAB_V1_2.md).
+Install optional browser support with `python -m pip install -e '.[dev,browser]'`.
+
+
 ## Bug Bounty Edition v1.1 — stable local release
 
 See `docs/BUG_BOUNTY_V1_1.md` for the exact scope profile, `bounty-preflight`, `bounty-assess`, `bounty-import-har`, `bounty-report` and read-only dashboard workflow. This is bounded authorization-gated reconnaissance, offline proxy evidence review, and local source/vulnerability research—not unrestricted penetration-test automation or proof of a zero-day.
