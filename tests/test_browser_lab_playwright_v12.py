@@ -3,6 +3,7 @@
 Run only with HUNTERQA_REAL_BROWSER_CI=1 and installed Playwright Chromium.
 Never connects to public or third-party targets.
 """
+import hashlib
 import json
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -19,6 +20,7 @@ pytestmark = pytest.mark.skipif(
 
 
 class OwnedHandler(BaseHTTPRequestHandler):
+    saw_session_cookie = False
     def log_message(self, *args):
         pass
 
@@ -33,6 +35,13 @@ class OwnedHandler(BaseHTTPRequestHandler):
                 "</form></body></html>"
             ).encode()
         elif self.path == "/account":
+            type(self).saw_session_cookie = (
+                "lab_session=not-for-publication" in self.headers.get("Cookie", "")
+            )
+            if not type(self).saw_session_cookie:
+                self.send_response(401)
+                self.end_headers()
+                return
             html = b"<html><head><title>Private fixture content</title></head><body>Owned lab account</body></html>"
         elif self.path == "/redirect":
             self.send_response(302)
@@ -79,6 +88,7 @@ def owned_http_server(tmp_path, monkeypatch):
     guarded_thread = Thread(target=guarded.serve_forever, daemon=True)
     guarded_thread.start()
     DisallowedHandler.hits = 0
+    OwnedHandler.saw_session_cookie = False
     OwnedHandler.redirect_target = (
         f"http://127.0.0.1:{guarded.server_address[1]}/private"
     )
@@ -116,6 +126,8 @@ def test_real_chromium_owned_authenticated_flow(owned_http_server, monkeypatch):
         login_post_path="/login", authorized=True,
     )
     assert report["authentication"] == "attempted_unverified"
+    assert OwnedHandler.saw_session_cookie, "Owned lab login session cookie was not retained"
+    assert report["final_path_sha256"] == hashlib.sha256(b"/account").hexdigest()
     assert report["traffic"]["methods"].get("POST") == 1
     assert report["traffic"]["approved_requests"] >= 3
     assert report["traffic"]["websockets_allowed"] == 0
