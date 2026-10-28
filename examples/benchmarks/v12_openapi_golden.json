@@ -1,0 +1,206 @@
+{
+  "engine": "hunterqa_v12_openapi_review_benchmark_pack",
+  "schema_version": 1,
+  "name": "synthetic-openapi-review-cues",
+  "description": "Independently curated expectations for offline OpenAPI review cue rules. No deployed vulnerability assertions; positive labels mark useful review prompts, not confirmed security flaws.",
+  "cases": [
+    {
+      "id": "scoped-auth-boundaries",
+      "spec": "v12_scoped_auth.json",
+      "labels": [
+        {
+          "method": "GET",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.object-access-review",
+          "expected": true
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.object-access-review",
+          "expected": true
+        },
+        {
+          "method": "POST",
+          "path": "/v1/admin/permissions",
+          "rule_id": "api.business-logic-review",
+          "expected": true
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/transfer",
+          "rule_id": "api.public-write-review",
+          "expected": true
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/transfer",
+          "rule_id": "api.business-logic-review",
+          "expected": true
+        },
+        {
+          "method": "GET",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.public-write-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/accounts/{accountId}",
+          "rule_id": "api.public-write-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/admin/permissions",
+          "rule_id": "api.business-logic-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/admin/permissions",
+          "rule_id": "api.object-access-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/admin/permissions",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/admin/permissions",
+          "rule_id": "api.public-write-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/transfer",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/payments/transfer",
+          "rule_id": "api.object-access-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/health",
+          "rule_id": "api.object-access-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/health",
+          "rule_id": "api.deprecated-operation-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/health",
+          "rule_id": "api.business-logic-review",
+          "expected": false
+        }
+      ]
+    },
+    {
+      "id": "declaration-and-deprecation",
+      "spec": "v12_missing_auth.json",
+      "labels": [
+        {
+          "method": "PATCH",
+          "path": "/v1/admin/accounts/{userId}",
+          "rule_id": "api.auth-declaration-review",
+          "expected": true
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/admin/accounts/{userId}",
+          "rule_id": "api.object-access-review",
+          "expected": true
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/admin/accounts/{userId}",
+          "rule_id": "api.business-logic-review",
+          "expected": true
+        },
+        {
+          "method": "GET",
+          "path": "/v1/legacy/records",
+          "rule_id": "api.deprecated-operation-review",
+          "expected": true
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages",
+          "rule_id": "api.public-write-review",
+          "expected": true
+        },
+        {
+          "method": "PATCH",
+          "path": "/v1/admin/accounts/{userId}",
+          "rule_id": "api.public-write-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/catalog/items",
+          "rule_id": "api.object-access-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/catalog/items",
+          "rule_id": "api.deprecated-operation-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/legacy/records",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "GET",
+          "path": "/v1/legacy/records",
+          "rule_id": "api.business-logic-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages",
+          "rule_id": "api.auth-declaration-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages",
+          "rule_id": "api.business-logic-review",
+          "expected": false
+        },
+        {
+          "method": "POST",
+          "path": "/v1/messages",
+          "rule_id": "api.object-access-review",
+          "expected": false
+        }
+      ]
+    }
+  ]
+}
