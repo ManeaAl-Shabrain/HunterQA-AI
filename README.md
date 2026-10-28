@@ -17,7 +17,7 @@ HunterQA AI unifies **local source assessment, offline API review, vulnerability
 
 ## Start here — from a new Kali VM
 
-- **[Zero to Start — full Kali + HunterQA setup guide](https://github.com/ManeaAl-Shabrain/HunterQA-AI/blob/main/zero%20to%20start.md)**: A beginner-friendly bullet-point walkthrough from VM installation and Python setup to verified offline workflow, authorized assessment methodology, optional AI/browser testing, finding validation, reports, and troubleshooting.
+- **[Zero to Start — full Kali + HunterQA setup guide](https://github.com/ManeaAl-Shabrain/HunterQA-AI/blob/main/zero%20to%20start.md)**: A beginner-friendly walkthrough from VM installation and Python setup to verified offline workflow, authorized assessment methodology, optional AI/browser testing, finding validation, reports, and troubleshooting.
 - **Quick verification:** `hunterqa --version` → `hunterqa doctor` → `bash tools/verify_agent_1_2.sh`.
 - **Safety:** Live testing requires written permission, exact target scope and explicit method/rate limits. The guide uses fictional sample assets for offline exercises.
 
