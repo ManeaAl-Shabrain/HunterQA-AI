@@ -2,9 +2,13 @@
 
 **One local, authorization-gated AI-assisted vulnerability research platform for Kali Linux.**
 
-HunterQA combines offline static/code analysis, local Qwen hypotheses, trust graphs, bounded lab crash replay, sanitizer evidence, advisory/CVE intelligence and analyst review in one Python/Flask repository.
+HunterQA combines offline static/code analysis, local Qwen hypotheses, trust graphs, bounded lab crash replay, sanitizer evidence, advisory/CVE intelligence and analyst review in one Python/Flask repository. The v1.1 branch additionally introduces strictly scoped, explicitly authorized HEAD/GET observations and offline HAR review, while retaining all existing research engines.
 
-**HunterQA AI 1.0.0 is the tested local research release for single-user Kali labs, not a public multi-user security service.** Human review of research findings remains required. No tool can guarantee finding every vulnerability, zero false positives, or independent CVE issuance. A research record, advisory match or ASan diagnostic is not automatically a confirmed exploitable vulnerability.
+**HunterQA v1.1 is an unmerged development branch; v1.0.1 remains the published stable local release.** Human review of research findings remains required. No tool can guarantee finding every vulnerability, zero false positives, or independent CVE issuance. A research record, advisory match or ASan diagnostic is not automatically a confirmed exploitable vulnerability.
+
+## Bug Bounty Edition v1.1 (feature branch)
+
+See `docs/BUG_BOUNTY_V1_1.md` for the exact scope profile, `bounty-preflight`, `bounty-assess`, `bounty-import-har`, `bounty-report` and read-only dashboard workflow. This is bounded reconnaissance, not full penetration-test automation or proof of a zero-day.
 
 ## Current local install / update (existing Kali checkout)
 
