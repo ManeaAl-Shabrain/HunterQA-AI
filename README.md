@@ -1,4 +1,4 @@
-# HunterQA
+# HunterQA AI
 
 ![HunterQA cybersecurity infographic: scope, review, assess, evidence, verify, report](docs/assets/hunterqa-cybersecurity-infographic.png)
 
