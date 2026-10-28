@@ -9,7 +9,7 @@ import hashlib
 import json
 import re
 from datetime import datetime, timezone
-from pathlib import Path
+from urllib.parse import urlsplit
 
 from .bounty import BountyPolicy, _approved_file, _read_json
 
@@ -71,8 +71,22 @@ def inspect_openapi(spec_path, profile_path, *, authorized=False):
             continue
         url = server.get("url")
         if isinstance(url, str):
-            server_notes.append({"declared_server": _short(url, 200),
-                                 "scope_status": "unverified_in_contract"})
+            try:
+                parts = urlsplit(url)
+                host = parts.hostname.lower().rstrip(".") if parts.hostname else ""
+                matched = bool(host and host in policy.allowed_hosts and
+                               host not in policy.excluded_hosts and
+                               parts.scheme in ("http", "https") and
+                               parts.username is None and parts.password is None)
+            except ValueError:
+                matched = False
+            # No server URLs, queries, credentials or tokens are persisted.
+            server_notes.append({
+                "contract_server_hash": hashlib.sha256(url.encode()).hexdigest()[:20],
+                "scope_status": "hostname_declared_in_scope" if matched
+                                else "unverified_or_out_of_scope",
+                "testing_authorized": False,
+            })
     global_security = doc.get("security")
     operations, candidates = [], []
     allowed_parameters = {"path", "query", "header", "cookie"}
