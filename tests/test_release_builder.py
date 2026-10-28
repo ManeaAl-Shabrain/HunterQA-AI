@@ -13,6 +13,9 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         ("hunterqa/core.py", "answer = 42\n"),
         ("zeroscope/__init__.py", "from hunterqa import create_app\n"),
         ("tests/test_basic.py", "def test_ok(): assert True\n"),
+        ("LICENSE", "MIT License\n"),
+        ("SECURITY.md", "Security policy\n"),
+        (".github/workflows/release-qa.yml", "name: Test CI\n"),
         ("hunterqa/.env", "TOKEN=SECRET\n"),
         ("instance/cache.sqlite3", "sensitive"),
         ("reports/findings.json", "local results"),
@@ -28,6 +31,9 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         assert "HunterQA-AI/hunterqa/core.py" in names
         assert "HunterQA-AI/zeroscope/__init__.py" in names
         assert "HunterQA-AI/tests/test_basic.py" in names
+        assert "HunterQA-AI/LICENSE" in names
+        assert "HunterQA-AI/SECURITY.md" in names
+        assert "HunterQA-AI/.github/workflows/release-qa.yml" in names
         assert "HunterQA-AI/hunterqa/.env" not in names
         assert "HunterQA-AI/instance/cache.sqlite3" not in names
         assert "HunterQA-AI/reports/findings.json" not in names
