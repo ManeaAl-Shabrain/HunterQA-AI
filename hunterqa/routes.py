@@ -419,3 +419,15 @@ def bounty_dashboard():
     from .bounty import read_bounty_report, METHOD_CATALOG
     report = read_bounty_report(current_app.config.get("BOUNTY_REPORT_PATH"))
     return render_template("bounty.html", report=report, methods=METHOD_CATALOG)
+
+
+@bp.get("/agent-lab")
+def agent_lab_dashboard():
+    """Administrator-selected local evidence only; no remote agent runs on GET."""
+    from .agent_workflow_v12 import dashboard_summary, SKILLS
+    summary = dashboard_summary(
+        current_app.config.get("AGENT_PLAN_PATH"),
+        current_app.config.get("API_SURFACE_REPORT_PATH"),
+        current_app.config.get("AGENT_CORRELATION_REPORT_PATH"),
+    )
+    return render_template("agent_lab.html", summary=summary, skills=SKILLS)
