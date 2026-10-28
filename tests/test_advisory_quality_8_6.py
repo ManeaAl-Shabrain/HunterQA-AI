@@ -30,6 +30,22 @@ def test_conflicting_unversioned_duplicate_excluded():
     assert report["ambiguous_ids_excluded"] == 1
 
 
+def test_newer_withdrawal_suppresses_older_active_duplicate_in_both_orders():
+    active = {"id": "GHSA-withdrawn", "modified": "2026-01-01T00:00:00Z", "affected": []}
+    withdrawn = {**active, "modified": "2026-02-01T00:00:00Z", "withdrawn": "2026-02-01T00:00:00Z"}
+    for records in ([active, withdrawn], [withdrawn, active]):
+        accepted, metadata = audit_snapshot({"vulns": records})
+        assert accepted == []
+        assert metadata["withdrawn_records"] == 1
+
+
+def test_undated_conflicting_withdrawal_cannot_resurrect_active_record():
+    active = {"id": "GHSA-ambiguous", "affected": []}
+    accepted, metadata = audit_snapshot({"vulns": [active, {**active, "withdrawn": "2026-01-01T00:00:00Z"}]})
+    assert accepted == []
+    assert metadata["ambiguous_ids_excluded"] == 1
+
+
 def test_scoped_npm_and_packagist_supported():
     dependencies = [
         {"ecosystem":"npm","name":"@scope/demo","version":"1.2.3",

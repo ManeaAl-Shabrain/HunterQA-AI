@@ -88,7 +88,7 @@ def start_scan(project_id: int):
         abort(404)
     try:
         validate_project_path(project["path"])
-    except ValueError as exc:
+    except (ValueError, OSError) as exc:
         flash(f"Project authorization boundary changed: {exc}", "error")
         return redirect(url_for("main.projects"))
     confirmed = request.form.get("authorized") == "yes"
@@ -238,6 +238,15 @@ def capabilities():
     return render_template("capabilities.html", categories=checklist())
 
 
+@bp.get("/assessments")
+def assessments_dashboard():
+    """Administrator-selected, read-only evidence; visiting never executes a plan."""
+    from .assessment_evidence import dashboard_evidence
+    evidence = dashboard_evidence(current_app.config.get("ENGAGEMENT_REPORT_PATH"),
+                                  current_app.config.get("ENGAGEMENT_BASELINE_PATH"))
+    return render_template("assessments.html", evidence=evidence)
+
+
 @bp.get("/audit")
 def audit_history():
     rows = get_db().execute("SELECT * FROM audit_events ORDER BY id DESC LIMIT 100").fetchall()
@@ -350,8 +359,6 @@ def campaign_history():
     )
 
     roots = current_app.config.get("APPROVED_ROOTS") or []
-    if isinstance(roots, str):
-        roots = roots.split(":")
     selected_root = current_app.config.get("CAMPAIGN_HISTORY_ROOT") or (
         Path.home() / "ZeroScope-AI" / "research-lab"
     )

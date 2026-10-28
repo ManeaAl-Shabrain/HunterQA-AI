@@ -82,7 +82,8 @@ def audit_snapshot(payload, *, now=None, max_age_days=30) -> tuple[list[dict], d
             continue
         if record.get("withdrawn"):
             counts["withdrawn_records"] += 1
-            continue
+            # Keep withdrawal records during de-duplication. Otherwise an older
+            # active duplicate would incorrectly survive a newer withdrawal.
         fingerprint = _fingerprint(record)
         if key not in seen:
             seen[key] = (record, modified, fingerprint)
@@ -102,7 +103,7 @@ def audit_snapshot(payload, *, now=None, max_age_days=30) -> tuple[list[dict], d
     for key in ambiguous:
         seen.pop(key, None)
     counts["ambiguous_ids_excluded"] = len(ambiguous)
-    sanitized = [record for record, _, _ in seen.values()]
+    sanitized = [record for record, _, _ in seen.values() if not record.get("withdrawn")]
     return sanitized, {
         "freshness": freshness,
         "fetched_at": fetched.isoformat() if fetched else None,

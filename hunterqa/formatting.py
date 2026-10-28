@@ -31,7 +31,8 @@ def safe_report_markdown(source: str) -> Markup:
             result.append(f"<p>{_inline(line)}</p>")
     if in_list:
         result.append("</ul>")
-    return Markup("\n".join(result))
+    # _inline escapes all imported text before the fixed renderer adds HTML tags.
+    return Markup("\n".join(result))  # nosec B704
 
 
 def _inline(text: str) -> str:

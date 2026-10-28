@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 from pathlib import Path
+from ..source_files import read_bounded
 
 
 def audit_openapi(root: Path) -> list[dict]:
@@ -12,7 +13,7 @@ def audit_openapi(root: Path) -> list[dict]:
         if p.is_symlink() or not p.is_file() or p.stat().st_size > 512_000:
             continue
         try:
-            doc = json.loads(p.read_text(encoding="utf-8"))
+            doc = json.loads(read_bounded(p, 512_000).decode("utf-8"))
         except (ValueError, OSError, UnicodeError):
             continue
         if not isinstance(doc, dict) or not isinstance(doc.get("paths"), dict):

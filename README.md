@@ -25,6 +25,10 @@ disabled. Expiring plans, profile binding, request budgets, DNS-pinned transport
 and a stop-file control constrain each invocation. The existing loopback browser
 lab keeps its original scope.
 
+`engagement-compare` compares saved results from the same exact plan and policy
+offline. The read-only `/assessments` dashboard displays saved observations and
+optional baseline differences without starting traffic.
+
 `engagement-package` prepares reviewed disclosure/CVE request packages from
 analyst-validated dossiers; it sends nothing and assigns no CVE IDs. Status
 observations remain unverified. There is no credential guessing, WAF evasion,
@@ -83,6 +87,7 @@ Use HunterQA to:
 | Human verification | Private review dossiers, linked decision history, reproduction-note attestations, disclosure drafts | Human attestations are not independently authenticated or exploit proofs |
 | Synthetic benchmark | 10 expected review cues and 21 negative labels across two original synthetic contracts | Accuracy applies **only to these review rules/fixtures** |
 | Flask dashboard | Read-only research cards and local scan interface on loopback | Not for internet-facing or shared production deployment |
+| Assessment history | Read-only saved run metadata and offline same-plan status/body comparison | Missing evidence is unknown; changes require human review |
 
 ## How HunterQA works
 
@@ -324,6 +329,24 @@ python run.py
 
 ## Tests and release integrity
 
+Development quality checks also cover undefined names/unused imports, reviewed
+static security warnings, installed dependency advisories, and real Semgrep
+positive/negative fixtures. Ubuntu CI exercises Python 3.11 and 3.13.
+See the [repository review and verification scope](docs/REPOSITORY_REVIEW_2026_10.md).
+
+```bash
+python -m pip install --upgrade pip setuptools
+python -m pip install -e '.[dev,quality]'
+python -m ruff check hunterqa zeroscope tools --select F
+python -m bandit -r hunterqa zeroscope tools -ll
+python -m pip_audit --skip-editable --progress-spinner off
+# With the separately installed Semgrep executable:
+python tools/verify_semgrep_rules.py
+```
+
+Dependency advisory checks require internet access and do not audit HunterQA's
+own source or establish that an installation is vulnerability-free.
+
 ### Full offline regression and local browser integration
 
 ```bash
@@ -342,7 +365,7 @@ HUNTERQA_REAL_BROWSER_CI=1 \
 ```
 
 - The original **v1.2.0 stable publishing workflow passed on GitHub**. See [v1.2.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.2.0).
-- Release QA uses disposable fixtures, tests authorization failures and redaction, verifies all **11** Flask dashboard routes, and checks the source archive and per-file SHA-256 manifest.
+- Release QA uses disposable fixtures, tests authorization failures and redaction, verifies dashboard routes including saved assessments, and checks the source archive and per-file SHA-256 manifest.
 - The synthetic benchmark's **10 expected / 21 negative review labels** do not measure real-world bug-detection precision.
 - GitHub Actions tests run on Ubuntu; re-check browser dependencies and local permissions on Kali.
 

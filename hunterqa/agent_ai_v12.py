@@ -9,11 +9,11 @@ from __future__ import annotations
 import json
 import re
 import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 
 from .agent_workflow_v12 import SKILL_BY_ID
 from .bounty import _read_json
+from .local_ai import generate
 
 LOCAL_OLLAMA = "http://127.0.0.1:11434/api/generate"
 ALLOWED_MODELS = ("qwen2.5-coder:3b", "qwen2.5-coder:7b")
@@ -23,20 +23,11 @@ MAX_SUGGESTIONS = 5
 
 
 def _ask_ollama(prompt, model):
-    body = json.dumps({
+    container = generate({
         "model": model, "prompt": prompt, "stream": False, "format": "json",
         "options": {"temperature": 0.1, "num_predict": 512},
-    }).encode("utf-8")
-    request = urllib.request.Request(
-        LOCAL_OLLAMA, data=body, method="POST",
-        headers={"Content-Type": "application/json", "User-Agent": "HunterQA-AI/1.2-local"},
-    )
-    with urllib.request.urlopen(request, timeout=25) as response:
-        data = response.read(MAX_RESPONSE + 1)
-    if len(data) > MAX_RESPONSE:
-        raise ValueError("Ollama response exceeds 20 KB limit")
-    container = json.loads(data)
-    return container.get("response", "") if isinstance(container, dict) else ""
+    }, endpoint=LOCAL_OLLAMA, timeout=25, max_response=MAX_RESPONSE)
+    return container.get("response", "")
 
 
 def suggest_reviews(plan_path, *, authorized=False, model="qwen2.5-coder:3b",
@@ -71,7 +62,8 @@ def suggest_reviews(plan_path, *, authorized=False, model="qwen2.5-coder:3b",
         "The local OpenAPI inventory contains " + str(ops) + " operations. "
         "Give concise human-review priorities and no other fields."
     )
-    assert len(prompt) < MAX_CONTEXT
+    if len(prompt) >= MAX_CONTEXT:
+        raise ValueError("Local AI context exceeds size limit")
     output = {
         "schema_version": 1, "engine": "hunterqa_v12_local_ai_review",
         "generated_at": datetime.now(timezone.utc).isoformat(),

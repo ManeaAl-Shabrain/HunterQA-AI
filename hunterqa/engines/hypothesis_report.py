@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 from pathlib import Path
+from ..source_files import read_bounded
 
 
 def read_hypotheses(path: Path) -> dict:
@@ -11,7 +12,7 @@ def read_hypotheses(path: Path) -> dict:
     try:
         if path.stat().st_size > 300_000:
             raise ValueError()
-        obj=json.loads(path.read_text(encoding="utf-8"))
+        obj=json.loads(read_bounded(path, 300_000).decode("utf-8"))
         if not isinstance(obj, dict) or not isinstance(obj.get("hypotheses"), list):
             raise ValueError()
         rows=[]

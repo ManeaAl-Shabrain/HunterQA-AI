@@ -112,6 +112,32 @@ DOM, screenshots or credentials are exported.
 
 ## Evidence and reviewed handoff
 
+### Offline comparisons and dashboard
+
+```bash
+hunterqa engagement-compare --first "$folder/result-001.json" \
+  --second "$folder/result-002.json" --out "$folder/comparison-001.json"
+
+export HUNTERQA_ENGAGEMENT_REPORT="$folder/result-002.json"
+export HUNTERQA_ENGAGEMENT_BASELINE="$folder/result-001.json"
+python run.py
+# Open http://127.0.0.1:5000/assessments
+```
+
+The comparison and dashboard do not send assessment traffic. Reports must be
+within approved roots and reference the same exact plan/profile fingerprints
+and step identities/order. Different expiry values create different plans and
+are deliberately incompatible. Stopped runs may have unequal coverage; missing
+status/body observations remain unknown rather than being called unchanged.
+Comparisons describe response status and bounded body fingerprints, not a
+vulnerability verdict, remediation proof, or authentication result. Canonical
+report content fingerprints check consistency, not signatures or author identity.
+Only allowlisted metadata reaches the dashboard; arbitrary report text and raw
+request/response material are not forwarded. Expired historical reports remain
+readable offline; viewing them does not renew approval or rerun their plans.
+
+### Validation and handoff
+
 Assessment reports contain plan/profile fingerprints, hashed target references,
 request counts, status observations, optional expected-status comparisons, and
 browser structure counts. They export no response bodies or cookie values.

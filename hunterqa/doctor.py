@@ -87,7 +87,8 @@ def run_diagnostics(
     checks = []
 
     def add(name: str, status: str, detail: str) -> None:
-        assert status in STATUS_VALUES
+        if status not in STATUS_VALUES:
+            raise ValueError("Unsupported diagnostic status")
         checks.append({"name": name, "status": status, "detail": detail})
 
     add(

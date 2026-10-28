@@ -1,7 +1,7 @@
 """Conservative offline CVE intelligence from OSV-format advisory snapshots.
 
 No network calls, vulnerability exploitation, AI claims, or automatic CVE assignment.
-Exact affected versions only; ecosystem/GIT/SEMVER ranges are NOT guessed.
+Exact enumerations and supported version intervals; unsupported ranges remain unknown.
 An exact match is an advisory correlation, NOT a confirmed vulnerable installation.
 """
 from __future__ import annotations

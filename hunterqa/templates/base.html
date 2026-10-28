@@ -25,6 +25,7 @@
         <a class="nav-link {{ 'active' if request.endpoint == 'main.research_analytics_dashboard' }}" href="{{ url_for('main.research_analytics_dashboard') }}"><span>◷</span> Research Analytics</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.agent_lab_dashboard' }}" href="{{ url_for('main.agent_lab_dashboard') }}"><span>✦</span> AI Agent Lab</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.bounty_dashboard' }}" href="{{ url_for('main.bounty_dashboard') }}"><span>◎</span> Bug Bounty Lab</a>
+        <a class="nav-link {{ 'active' if request.endpoint == 'main.assessments_dashboard' }}" href="{{ url_for('main.assessments_dashboard') }}"><span>▤</span> Assessments</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.cve_intelligence' }}" href="{{ url_for('main.cve_intelligence') }}"><span>◇</span> CVE Intelligence</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.capabilities' }}" href="{{ url_for('main.capabilities') }}"><span>◈</span> Coverage & Engines</a>
         <a class="nav-link {{ 'active' if request.endpoint == 'main.campaign_history' }}" href="{{ url_for('main.campaign_history') }}"><span>▤</span> Campaign History</a>
@@ -33,7 +34,7 @@
       </nav>
       <div class="local-guard">
         <span class="pulse"></span>
-        <div><strong>Local guard active</strong><small>127.0.0.1 only</small></div>
+        <div><strong>Loopback access enforced</strong><small>Local workstation only</small></div>
       </div>
       <div class="sidebar-foot">
         <span class="eyebrow">ENGINE</span>
@@ -44,7 +45,7 @@
     <main>
       <header class="topbar">
         <div><span class="crumb">WORKSPACE /</span> <strong>{% block section %}Overview{% endblock %}</strong></div>
-        <div class="status-chip"><span></span> System ready</div>
+        <div class="status-chip"><span></span> Local workspace</div>
       </header>
       <div class="content">
         {% for category, message in get_flashed_messages(with_categories=true) %}

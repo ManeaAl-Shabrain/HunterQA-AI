@@ -21,6 +21,7 @@ from .bounty import (BountyPolicy, MAX_PROFILE, _approved_file, _read_json, _Pin
 ENGINE = "hunterqa_approved_assessment"
 MODES = {"observe", "waf-canary", "auth-check", "browser"}
 FIELDS = {"mode", "url", "method", "expected_status", "login_url"}
+MAX_PLAN_BYTES = 32_768
 
 
 def digest(value):
@@ -63,12 +64,14 @@ def _expiry(value):
 
 def load_plan(profile_path, plan_path, *, now=None):
     policy, profile_hash = _policy_snapshot(profile_path)
-    plan = _read_json(plan_path, 32_768)
+    plan = _read_json(plan_path, MAX_PLAN_BYTES)
     validate_plan(policy, plan, profile_hash, now=now)
     return policy, plan
 
 
 def validate_plan(policy, plan, profile_hash, *, now=None):
+    if len((json.dumps(plan, indent=2) + "\n").encode("utf-8")) > MAX_PLAN_BYTES:
+        raise ValueError("Assessment plan exceeds size limit")
     if not isinstance(plan, dict) or set(plan) != {
         "schema_version", "policy_sha256", "expires_at", "authorization_reference",
         "dedicated_test_account", "browser_isolated", "steps",

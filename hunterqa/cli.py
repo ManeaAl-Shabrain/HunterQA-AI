@@ -8,7 +8,6 @@ from pathlib import Path
 from .engines.config_audit import audit_project
 from .engines.dependencies import inventory, match_local_advisories
 from .engines.openapi import audit_openapi
-from .engines.hypotheses import checklist
 from .engines.sanitizers import parse_sanitizer_log
 from .engines.sarif import import_sarif
 from .research import load_research_report
@@ -248,7 +247,16 @@ def main(argv=None):
     package.add_argument("--reviewed", action="store_true")
     package.add_argument("--authorized", action="store_true")
     package.add_argument("--out", required=True)
+    comparison = sub.add_parser("engagement-compare", help="Offline comparison of two saved same-plan assessment reports")
+    comparison.add_argument("--first", required=True)
+    comparison.add_argument("--second", required=True)
+    comparison.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    if args.command == "engagement-compare":
+        from .assessment_evidence import compare_assessments
+        report = compare_assessments(args.first, args.second)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        return
     if args.command == "engagement-plan":
         from .engagement import create_plan
         plan = create_plan(args.profile, args.url, mode=args.mode, method=args.method,
