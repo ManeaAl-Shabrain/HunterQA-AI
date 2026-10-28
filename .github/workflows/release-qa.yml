@@ -32,5 +32,5 @@ jobs:
       - name: Build and verify complete source package
         shell: bash
         run: |
-          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.0.0-source.zip"
-          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.0.0-source.zip"
+          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.1.0-development-source.zip"
+          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.1.0-development-source.zip"
