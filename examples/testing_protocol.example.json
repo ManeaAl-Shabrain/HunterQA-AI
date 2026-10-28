@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "policy_sha256": "REPLACE_WITH_EXACT_PROFILE_SHA256",
+  "authorization_reference": "REPLACE_WITH_EXACT_PROFILE_AUTHORIZATION_REFERENCE",
+  "starts_at": "REPLACE_WITH_CURRENT_TIMEZONE_AWARE_START",
+  "expires_at": "REPLACE_WITH_TIMEZONE_AWARE_EXPIRY_WITHIN_24_HOURS",
+  "targets": ["https://app.example.test/"],
+  "limits": {
+    "max_requests": 1,
+    "interval_seconds": 2,
+    "concurrency": 1,
+    "timeout_seconds": 120
+  },
+  "stop_file": "emergency-stop",
+  "steps": [
+    {"id": "assets", "tool": "declared-assets", "depends_on": [], "targets": ["https://app.example.test/"], "requests": 0, "timeout_seconds": 10, "approval_required": false},
+    {"id": "services", "tool": "service-evidence", "depends_on": ["assets"], "targets": ["https://app.example.test/"], "requests": 0, "timeout_seconds": 10, "approval_required": false},
+    {"id": "identify", "tool": "source-review", "depends_on": ["services"], "targets": ["https://app.example.test/"], "requests": 0, "timeout_seconds": 10, "approval_required": false},
+    {"id": "validate", "tool": "approved-observation", "depends_on": ["identify"], "targets": ["https://app.example.test/"], "requests": 1, "timeout_seconds": 10, "approval_required": true},
+    {"id": "evidence", "tool": "evidence-index", "depends_on": ["validate"], "targets": ["https://app.example.test/"], "requests": 0, "timeout_seconds": 10, "approval_required": false},
+    {"id": "report", "tool": "report-draft", "depends_on": ["evidence"], "targets": ["https://app.example.test/"], "requests": 0, "timeout_seconds": 10, "approval_required": false}
+  ]
+}

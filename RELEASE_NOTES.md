@@ -1,5 +1,11 @@
 # Development maintenance and assessment evidence improvements
 
+The testing-protocol foundation adds `workflow-tools` and `workflow-preflight`:
+offline exact-scope checks, six-stage DAG planning, aggregate resource
+reservations, and fingerprint-bound local review checkpoints. This increment
+does not execute workflows or enforce runtime limits. See the
+[platform architecture and rollout plan](docs/TESTING_PROTOCOL.md).
+
 Further development additions include ten original non-executing review playbooks,
 a private policy-bound research journal/context resume, offline Nuclei HTTP JSONL
 and ZAP traditional JSON evidence adapters, conservative SARIF export, and a reusable
