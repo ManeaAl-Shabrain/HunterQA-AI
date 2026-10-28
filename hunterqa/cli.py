@@ -275,7 +275,27 @@ def main(argv=None):
     sarif_out = sub.add_parser("report-sarif", help="Export normalized candidates as SARIF 2.1.0 without source snippets or uploading")
     sarif_out.add_argument("--file", required=True)
     sarif_out.add_argument("--out", required=True)
+    sub.add_parser("workflow-tools", help="List planning adapter declarations; launches no tools")
+    workflow = sub.add_parser("workflow-preflight", help="Offline testing-protocol and dependency review; no execution")
+    workflow.add_argument("--profile", required=True)
+    workflow.add_argument("--protocol", required=True)
+    workflow.add_argument("--approve-step", action="append", default=[])
+    workflow.add_argument("--approve-protocol")
+    workflow.add_argument("--authorized", action="store_true")
+    workflow.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    if args.command == "workflow-tools":
+        from .workflow_protocol import tool_catalog
+        print(json.dumps({"tools": tool_catalog(), "execution_enabled": False}, indent=2))
+        return
+    if args.command == "workflow-preflight":
+        from .workflow_protocol import compile_protocol
+        result = compile_protocol(args.profile, args.protocol,
+                                  approved_steps=args.approve_step,
+                                  approved_fingerprint=args.approve_protocol,
+                                  authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(result, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "research-playbooks":
         from .research_workspace import PLAYBOOKS
         print(json.dumps({"playbooks": PLAYBOOKS, "execution": "none"}, indent=2))

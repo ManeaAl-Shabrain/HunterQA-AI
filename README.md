@@ -48,6 +48,12 @@ the immutable v1.2.0 release archive. See [setup, limits and examples](docs/APPR
 See the [seven-reference capability comparison](docs/FRAMEWORK_COMPARISON_2026_10.md)
 and [usage, formats and limitations](docs/RESEARCH_WORKFLOWS.md).
 
+The development CLI also includes `workflow-tools` and `workflow-preflight` for
+offline testing-protocol design: exact allowlists, six assessment stages,
+dependency batches, aggregate budget reservations, and fingerprint-bound local
+review checkpoints. **This first increment does not execute workflows.** See the
+[architecture, schema and implementation roadmap](docs/TESTING_PROTOCOL.md).
+
 ## Start here — from a new Kali VM
 
 - **[Zero to Start — full Kali + HunterQA setup guide](https://github.com/ManeaAl-Shabrain/HunterQA-AI/blob/main/zero%20to%20start.md)**: A beginner-friendly walkthrough from VM installation and Python setup to verified offline workflow, authorized assessment methodology, optional AI/browser testing, finding validation, reports, and troubleshooting.
