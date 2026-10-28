@@ -170,6 +170,16 @@ def main(argv=None):
     repeat.add_argument("--second", required=True)
     repeat.add_argument("--out", required=True)
     repeat.add_argument("--authorized", action="store_true")
+    manual_proof = sub.add_parser("bounty-reproduction-note", help="Create a private analyst-attested local reproduction note")
+    manual_proof.add_argument("--profile", required=True)
+    manual_proof.add_argument("--case", required=True)
+    manual_proof.add_argument("--reviewer", required=True)
+    manual_proof.add_argument("--context", choices=("owned_local_lab", "approved_test_accounts"), required=True)
+    manual_proof.add_argument("--expected", required=True)
+    manual_proof.add_argument("--observed", required=True)
+    manual_proof.add_argument("--out", required=True)
+    manual_proof.add_argument("--attest", action="store_true", help="I personally reproduced the behavior on authorized assets")
+    manual_proof.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -343,6 +353,14 @@ def main(argv=None):
         report = compare_head_replays(args.profile, args.first, args.second,
                                       authorized=args.authorized)
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-reproduction-note":
+        from .verification_v12 import create_reproduction_note
+        note = create_reproduction_note(
+            args.profile, args.case, args.reviewer,
+            args.expected, args.observed, args.context,
+            attest=args.attest, authorized=args.authorized,
+        )
+        _write_bounty_output(args.out, json.dumps(note, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
