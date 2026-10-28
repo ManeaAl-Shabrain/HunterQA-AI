@@ -48,11 +48,19 @@ the immutable v1.2.0 release archive. See [setup, limits and examples](docs/APPR
 See the [seven-reference capability comparison](docs/FRAMEWORK_COMPARISON_2026_10.md)
 and [usage, formats and limitations](docs/RESEARCH_WORKFLOWS.md).
 
-The development CLI also includes `workflow-tools` and `workflow-preflight` for
-offline testing-protocol design: exact allowlists, six assessment stages,
-dependency batches, aggregate budget reservations, and fingerprint-bound local
-review checkpoints. **This first increment does not execute workflows.** See the
-[architecture, schema and implementation roadmap](docs/TESTING_PROTOCOL.md).
+The development CLI includes `workflow-tools` and `workflow-preflight` for offline
+protocol design, plus `workflow-setup`, `workflow-run-plan`, and `workflow-run` for
+independently approved fixed-adapter execution. The runner adds durable state,
+supervised workers, per-run quotas, stop/deadline controls, evidence-linked review,
+retesting and JSON/HTML/SARIF reports. `/workflows` is a read-only run dashboard.
+See the [operational baseline, adapter limits and Linux examples](docs/WORKFLOW_RUNNER.md)
+and [protocol schema](docs/TESTING_PROTOCOL.md). Local attestations do not verify
+company authorization; workers are separate processes, not an OS sandbox.
+
+Run management uses `workflow-status`, `workflow-stop`, and `workflow-abandon`.
+Use `workflow-review` for evidence-linked analyst decisions, `workflow-compare`
+for independent retests, `workflow-export` for reports, and `workflow-benchmark`
+for the original offline regression fixtures.
 
 ## Start here — from a new Kali VM
 

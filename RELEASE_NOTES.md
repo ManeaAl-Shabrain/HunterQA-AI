@@ -1,5 +1,13 @@
 # Development maintenance and assessment evidence improvements
 
+The subsequent [controlled workflow runner](docs/WORKFLOW_RUNNER.md) adds durable
+run/step state, fixed supervised workers, per-run request reservations and rate
+controls, cancellation/watchdogs, local review checkpoints, evidence-linked
+triage, retest comparison, automatic JSON/HTML/SARIF reports, a read-only run
+dashboard and original fixture benchmarks. This is a local single-operator
+baseline, not a multi-user authorization service or OS sandbox. Existing account,
+browser, Semgrep and crash/fuzz commands keep their independent controls.
+
 The testing-protocol foundation adds `workflow-tools` and `workflow-preflight`:
 offline exact-scope checks, six-stage DAG planning, aggregate resource
 reservations, and fingerprint-bound local review checkpoints. This increment

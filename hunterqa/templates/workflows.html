@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Workflow Runs · HunterQA AI{% endblock %}
+{% block section %}Workflow Runs{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">CONTROLLED ASSESSMENT WORKFLOWS</p><h1>Workflow run</h1><p>Saved execution state, selected coverage and evidence-linked triage. Refresh to inspect current records. This page is read-only.</p></div></section>
+{% if not report %}
+<section class="panel"><div class="research-details"><h2>No run available</h2><p>{{ error or 'Choose a workflow run in the local application configuration.' }}</p><p>Set HUNTERQA_WORKFLOW_RUN to its private run directory. Start, stop and review operations remain in the local CLI.</p></div></section>
+{% else %}
+<section class="stats-grid">
+<article class="stat"><span>Recorded state</span><strong>{{ report.status }}</strong><small>Run {{ report.run_id }}</small></article>
+<article class="stat"><span>Request reservations charged</span><strong>{{ report.charged_requests }} / {{ report.limits.max_requests }}</strong><small>Reservations include interrupted work</small></article>
+<article class="stat"><span>Candidates</span><strong>{{ report.findings|length }}</strong><small>Source severity is not verified impact</small></article>
+<article class="stat"><span>Audit events</span><strong>{{ report.audit_events }}</strong><small>Local consistency checks passed</small></article>
+</section>
+<section class="panel"><div class="panel-head"><h2>Execution steps</h2></div><div class="table-wrap"><table><thead><tr><th>Step</th><th>Adapter</th><th>State</th><th>Outcome</th></tr></thead><tbody>
+{% for step in report.steps %}<tr><td>{{ step.id }}</td><td>{{ step.tool }}</td><td>{{ step.state }}</td><td>{{ step.error_type or '—' }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="panel"><div class="panel-head"><h2>Selected coverage</h2></div><div class="table-wrap"><table><thead><tr><th>Stage</th><th>Completed / selected</th></tr></thead><tbody>
+{% for stage in report.coverage %}<tr><td>{{ stage.stage }}</td><td>{{ stage.completed }} / {{ stage.selected }}</td></tr>{% endfor %}
+</tbody></table></div><p class="research-details">Unselected stages are untested. Counts do not establish complete security coverage or standards compliance.</p></section>
+<section class="panel"><div class="panel-head"><h2>Findings and next actions</h2></div><div class="table-wrap"><table><thead><tr><th>Rule</th><th>Source severity</th><th>Review</th><th>Remediation</th></tr></thead><tbody>
+{% for finding in report.findings %}<tr><td>{{ finding.rule_id }}<br>{{ finding.file_path }}:{{ finding.line_start }}</td><td>{{ finding.source_severity }}</td><td>{{ finding.verification_status }}</td><td>{{ finding.remediation }}</td></tr>{% else %}<tr><td colspan="4">No candidates recorded. Review coverage and execution state before drawing conclusions.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="panel"><div class="research-details workflow-evidence"><h2>Trust and scope</h2><p>Evidence chain: <code>{{ report.audit_head_sha256 }}</code></p><ul>{% for item in report.limitations %}<li>{{ item }}</li>{% endfor %}</ul></div></section>
+{% endif %}
+{% endblock %}

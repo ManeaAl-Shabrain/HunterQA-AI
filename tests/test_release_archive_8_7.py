@@ -31,6 +31,27 @@ def test_valid_release_manifest(tmp_path):
     assert verify_archive(path) == 1
 
 
+def test_windows_shell_scripts_are_packaged_with_linux_line_endings(tmp_path):
+    repo = _repo(tmp_path)
+    scripts = repo / "tools"
+    scripts.mkdir()
+    script = scripts / "fixture.sh"
+    original = b"#!/bin/sh\r\necho fixture\r\n"
+    expected = b"#!/bin/sh\necho fixture\n"
+    script.write_bytes(original)
+    subprocess.run(["git", "add", "tools/fixture.sh"], cwd=repo, check=True)
+    path = tmp_path / "portable.zip"
+    build(repo, path)
+    assert script.read_bytes() == original
+    with zipfile.ZipFile(path) as archive:
+        assert archive.read("HunterQA-AI/tools/fixture.sh") == expected
+        manifest = json.loads(archive.read("HunterQA-AI/RELEASE_MANIFEST.json"))
+        row = next(row for row in manifest["files"] if row["path"] == "tools/fixture.sh")
+        assert row["sha256"] == hashlib.sha256(expected).hexdigest()
+        assert row["bytes"] == len(expected)
+    assert verify_archive(path) == 2
+
+
 def test_tampered_release_rejected(tmp_path):
     repo = _repo(tmp_path)
     good = tmp_path / "good.zip"

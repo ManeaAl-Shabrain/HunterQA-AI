@@ -188,6 +188,9 @@ def main(argv=None):
     benchmark.add_argument("--profile", required=True)
     benchmark.add_argument("--pack", required=True)
     benchmark.add_argument("--out", required=True)
+    abandon = sub.add_parser("workflow-abandon", help="Reconcile a crashed coordinator without replaying work")
+    abandon.add_argument("--run", required=True)
+    abandon.add_argument("--authorized", action="store_true")
     benchmark.add_argument("--strict", action="store_true", help="Exit nonzero if a labeled review cue is missed or a false-positive suggestion appears")
     benchmark.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
@@ -283,7 +286,94 @@ def main(argv=None):
     workflow.add_argument("--approve-protocol")
     workflow.add_argument("--authorized", action="store_true")
     workflow.add_argument("--out", required=True)
+    setup = sub.add_parser("workflow-setup", help="Create a private starter protocol and bindings; executes nothing")
+    setup.add_argument("--profile", required=True)
+    setup.add_argument("--project", required=True)
+    setup.add_argument("--target", action="append", required=True)
+    setup.add_argument("--out-dir", required=True)
+    setup.add_argument("--observe", action="store_true")
+    setup.add_argument("--authorized", action="store_true")
+    for name in ("workflow-run-plan", "workflow-run"):
+        command = sub.add_parser(name, help="Review or execute a fixed-adapter assessment workflow")
+        command.add_argument("--profile", required=True)
+        command.add_argument("--protocol", required=True)
+        command.add_argument("--bindings", required=True)
+        if name == "workflow-run-plan":
+            command.add_argument("--out", required=True)
+        else:
+            command.add_argument("--out-dir", required=True)
+            command.add_argument("--approve-execution", required=True)
+            command.add_argument("--approve-protocol")
+            command.add_argument("--approve-step", action="append", default=[])
+            command.add_argument("--authorized", action="store_true")
+            command.add_argument("--operator", required=True)
+    for name in ("workflow-status", "workflow-stop"):
+        command = sub.add_parser(name, help="Inspect a durable run or request emergency stop")
+        command.add_argument("--run", required=True)
+    export = sub.add_parser("workflow-export", help="Create a private JSON, printable HTML or SARIF report")
+    export.add_argument("--run", required=True)
+    export.add_argument("--out", required=True)
+    export.add_argument("--format", choices=("json", "html", "sarif"), required=True)
+    review = sub.add_parser("workflow-review", help="Record an evidence-linked local analyst decision")
+    review.add_argument("--run", required=True)
+    review.add_argument("--finding", required=True)
+    review.add_argument("--decision", choices=("confirmed", "false-positive", "needs-review"), required=True)
+    review.add_argument("--reviewer", required=True)
+    review.add_argument("--note", required=True)
+    review.add_argument("--evidence", required=True)
+    review.add_argument("--authorized", action="store_true")
+    retest = sub.add_parser("workflow-compare", help="Compare evidence from two independently approved runs")
+    retest.add_argument("--first", required=True)
+    retest.add_argument("--second", required=True)
+    retest.add_argument("--out", required=True)
+    benchmark = sub.add_parser("workflow-benchmark", help="Exercise original offline positive/negative configuration fixtures")
+    benchmark.add_argument("--out", required=True)
     args = parser.parse_args(argv)
+    if args.command == "workflow-abandon":
+        from .workflow_runner import abandon_run
+        print(json.dumps(abandon_run(args.run, authorized=args.authorized), indent=2))
+        return
+    if args.command == "workflow-setup":
+        from .workflow_runner import setup_workflow
+        result = setup_workflow(args.profile, args.project, args.target, args.out_dir,
+                                observe=args.observe, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command == "workflow-run-plan":
+        from .workflow_runner import execution_plan
+        _write_bounty_output(args.out, json.dumps(execution_plan(args.profile, args.protocol, args.bindings), indent=2) + "\n")
+        return
+    if args.command == "workflow-run":
+        from .workflow_runner import run_workflow
+        result = run_workflow(args.profile, args.protocol, args.bindings, args.out_dir,
+                              execution_approval=args.approve_execution,
+                              protocol_approval=args.approve_protocol, approved_steps=args.approve_step,
+                              authorized=args.authorized, operator=args.operator)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command in ("workflow-status", "workflow-stop"):
+        from .workflow_runner import stop_run
+        from .workflow_results import summarize_run
+        result = stop_run(args.run) if args.command == "workflow-stop" else summarize_run(args.run)
+        print(json.dumps(result, indent=2))
+        return
+    if args.command == "workflow-export":
+        from .workflow_results import export_report
+        print(json.dumps(export_report(args.run, args.out, args.format), indent=2))
+        return
+    if args.command == "workflow-review":
+        from .workflow_results import review_finding
+        print(json.dumps(review_finding(args.run, args.finding, args.decision, args.reviewer,
+                                        args.note, args.evidence, authorized=args.authorized), indent=2))
+        return
+    if args.command == "workflow-compare":
+        from .workflow_results import compare_runs
+        _write_bounty_output(args.out, json.dumps(compare_runs(args.first, args.second), indent=2) + "\n")
+        return
+    if args.command == "workflow-benchmark":
+        from .workflow_benchmark import benchmark_adapters
+        _write_bounty_output(args.out, json.dumps(benchmark_adapters(Path(args.out).parent), indent=2) + "\n")
+        return
     if args.command == "workflow-tools":
         from .workflow_protocol import tool_catalog
         print(json.dumps({"tools": tool_catalog(), "execution_enabled": False}, indent=2))

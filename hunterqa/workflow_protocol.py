@@ -1,7 +1,8 @@
 """Offline protocol compiler. This module never launches tools or sends traffic.
 
-Resource ceilings are validated reservations for a future runner, not runtime
-enforcement. Operator review is an attestation, not authenticated owner consent.
+Resource ceilings are validated reservations for the independently approved
+runner, not runtime enforcement by preflight. Operator review is an attestation,
+not authenticated owner consent.
 """
 from __future__ import annotations
 
@@ -34,7 +35,7 @@ MAX_PROTOCOL = 65_536
 
 def tool_catalog():
     return [{"id": key, "stage": stage, "active": active, "description": description,
-             "workflow_execution_available": False}
+             "workflow_execution_available": key != "approved-account-check"}
             for key, (stage, active, description) in CATALOG.items()]
 
 
@@ -195,7 +196,7 @@ def compile_protocol(profile_path, protocol_path, *, approved_steps=(),
                                    "reviewed" if key in checkpoints else "not-required"}
                   for key, step in sorted(by_id.items())],
         "execution_enabled": False, "tools_launched": 0, "network_requests": 0,
-        "limitations": ["Planning only: no workflow runner is implemented",
+        "limitations": ["Preflight only: supported adapters require separate workflow-run execution approval",
                         "Limits are validated reservations, not runtime enforcement",
                         "Local attestations do not verify target-owner authorization",
                         "Step reviews do not authorize existing commands or confirm findings"],

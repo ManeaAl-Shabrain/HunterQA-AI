@@ -1,5 +1,10 @@
 # Configurable assessment platform: architecture and first increment
 
+**Historical first-increment specification:** the compiler described here remains
+offline. The subsequent [workflow runner](WORKFLOW_RUNNER.md) now implements a
+bounded local execution baseline. Its capability table supersedes the future
+implementation status in this original architecture/roadmap.
+
 ## Delivered now
 
 `workflow-tools` lists a closed catalog of planning adapters.
