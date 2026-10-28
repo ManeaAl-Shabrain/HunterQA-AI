@@ -195,3 +195,52 @@ def correlate(profile_path, report_paths, *, authorized=False):
                        "establish exploitability, impact, independence or zero-day status. "
                        "Targets are hashed; bodies, credentials and raw URLs are omitted.",
     }
+
+
+
+def dashboard_summary(plan_path=None, api_path=None, correlation_path=None):
+    """Read administrator-selected local outputs only. Never launch an agent."""
+    result = {"status": "not_configured", "program": "",
+              "steps": [], "operations": 0, "api_candidates": 0,
+              "review_candidates": 0, "corroboration_review": 0,
+              "network_requests_executed": 0}
+    checked = False
+    try:
+        if plan_path:
+            d = _read_json(plan_path, 256_000)
+            if (not isinstance(d, dict) or
+                    d.get("engine") != "hunterqa_v12_approved_agent_plan" or
+                    not isinstance(d.get("steps"), list) or len(d["steps"]) > 12):
+                raise ValueError("Not a recognized agent plan")
+            checked = True
+            result["program"] = str(d.get("program") or "")[:100]
+            result["steps"] = [{"agent_id": str(t.get("agent_id") or "")[:40],
+                                "mission": SKILL_BY_ID[t["agent_id"]]["mission"],
+                                "enabled": t.get("enabled") is True}
+                               for t in d["steps"] if isinstance(t, dict)
+                               and t.get("agent_id") in SKILL_BY_ID]
+        if api_path:
+            d = _read_json(api_path, 1_000_000)
+            if not isinstance(d, dict) or d.get("engine") != "hunterqa_v12_offline_api_surface":
+                raise ValueError("Not a recognized API inventory")
+            checked = True
+            meta = d.get("summary") if isinstance(d.get("summary"), dict) else {}
+            result["operations"] = min(int(meta.get("operations", 0)), 500)
+            result["api_candidates"] = min(int(meta.get("review_candidates", 0)), 250)
+        if correlation_path:
+            d = _read_json(correlation_path, 1_000_000)
+            if (not isinstance(d, dict) or
+                    d.get("engine") != "hunterqa_v12_evidence_correlation" or
+                    not isinstance(d.get("review_queue"), list) or
+                    len(d["review_queue"]) > 200):
+                raise ValueError("Not a recognized evidence review queue")
+            checked = True
+            result["review_candidates"] = len(d["review_queue"])
+            result["corroboration_review"] = sum(
+                item.get("review_priority") == "corroboration_review"
+                for item in d["review_queue"] if isinstance(item, dict))
+        result["status"] = "ready" if checked else "not_configured"
+    except (OSError, ValueError, UnicodeError, TypeError, KeyError):
+        result["status"] = "unavailable"
+        result["steps"] = []
+    return result
