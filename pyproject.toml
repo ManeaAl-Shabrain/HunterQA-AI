@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hunterqa-ai"
-version = "1.1.0"
-description = "HunterQA AI: authorized local and bounded bug bounty security research"
+version = "1.2.0.dev0"
+description = "HunterQA AI: scoped local vulnerability research, offline API review, bounded AI analyst planning"
 requires-python = ">=3.11"
 dependencies = ["Flask>=3.0,<4", "packaging>=23,<27"]
 
