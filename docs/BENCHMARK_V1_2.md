@@ -1,6 +1,6 @@
 # HunterQA AI 1.2 — Offline Review-Cue Benchmark
 
-**Status:** v1.2 development on draft PR #19. v1.1.0 Stable is unchanged.
+**Status:** Stable v1.2.0 on `main`; previous v1.1.0 release remains available.
 
 ## Why this benchmark exists
 
