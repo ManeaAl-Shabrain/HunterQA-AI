@@ -363,3 +363,43 @@ def assess(profile_path, targets_path, *, authorized=False, method="HEAD",
         "limitations": "Header findings are informational candidates. No payload exploitation, "
                        "authenticated testing, fuzzing, crawling, or automatic CVE assignment.",
     }
+
+
+
+def read_bounty_report(path: str | Path | None) -> dict:
+    """Read-only, local administrator-selected report; never user URL input."""
+    empty = {"status": "unavailable", "program": None,
+             "observations": [], "findings": [], "scope": {}}
+    if not path:
+        return empty
+    try:
+        data = _read_json(path, 1_000_000)
+        if (not isinstance(data, dict) or
+                data.get("engine") != "hunterqa_authorized_bounty_observation" or
+                not isinstance(data.get("observations"), list) or
+                not isinstance(data.get("findings"), list) or
+                len(data["observations"]) > MAX_REPORT_ITEMS or
+                len(data["findings"]) > 100):
+            return empty
+        observations = []
+        for item in data["observations"]:
+            if isinstance(item, dict):
+                observations.append({
+                    "url": str(item.get("url") or "")[:350],
+                    "status": str(item.get("status") or "")[:40],
+                    "method": str(item.get("method") or "")[:8],
+                })
+        findings = []
+        for item in data["findings"]:
+            if isinstance(item, dict):
+                findings.append({
+                    "id": str(item.get("id") or "")[:100],
+                    "title": str(item.get("title") or "")[:300],
+                    "source_url": str(item.get("source_url") or "")[:350],
+                    "verification": "manual_review_required",
+                })
+        return {"status": "ready", "program": str(data.get("program") or "")[:100],
+                "scope": {"request_budget": len(observations)},
+                "observations": observations, "findings": findings}
+    except (OSError, ValueError, UnicodeError, TypeError, KeyError, json.JSONDecodeError):
+        return empty
