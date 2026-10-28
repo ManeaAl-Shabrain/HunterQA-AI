@@ -231,7 +231,7 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                         phase = "password_field"
                         page.locator(password_selector).fill(secret, timeout=5_000)
                         phase = "login_submit"
-                        page.locator(submit_selector).click(timeout=8_000)
+                        page.locator(submit_selector).click(timeout=8_000, no_wait_after=True)
                         # Follow only the verified, single approved location
                         # as a NEW navigation; no native HTTP redirects.
                         if gate.approved_login_redirect:
