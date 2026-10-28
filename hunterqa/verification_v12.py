@@ -234,6 +234,15 @@ def _load_dossier(path, policy, digest):
                 or case.get("confirmed_zero_day") is not False
                 or case.get("assigned_cve") is not None):
             raise ValueError("Malformed dossier case")
+        sources = case.get("source_evidence")
+        if not isinstance(sources, list) or not 1 <= len(sources) <= 8:
+            raise ValueError("Dossier source provenance is missing")
+        for source in sources:
+            if (not isinstance(source, dict) or
+                    source.get("source_engine") not in KNOWN_ENGINES or
+                    not isinstance(source.get("document_sha256"), str) or
+                    not HEX64.fullmatch(source["document_sha256"])):
+                raise ValueError("Dossier source provenance was modified")
         seen.add(case["id"])
         _check_case_history(case)
     count = sum(case["status"] == VALIDATED for case in cases)
@@ -374,7 +383,17 @@ def read_review_summary(path):
         statuses = [item.get("status") if isinstance(item, dict) else None for item in cases]
         if any(value not in DECISIONS | {"needs_review"} for value in statuses):
             return empty
+        for case in cases:
+            if not isinstance(case, dict) or not isinstance(case.get("id"), str):
+                return empty
+            _check_case_history(case)
         count = statuses.count(VALIDATED)
+        summary = data.get("summary")
+        if (not isinstance(summary, dict) or summary.get("total") != len(cases)
+                or summary.get("analyst_validated") != count
+                or summary.get("unvalidated") != len(cases) - count
+                or summary.get("confirmed_zero_days") != 0):
+            return empty
         return {"status": "ready", "total": len(cases),
                 "analyst_validated": count, "unvalidated": len(cases) - count}
     except (OSError, ValueError, TypeError, UnicodeError, KeyError, AttributeError):
