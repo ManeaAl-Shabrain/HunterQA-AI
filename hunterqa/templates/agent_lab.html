@@ -44,6 +44,19 @@
 <p>Review decisions and private reproduction evidence remain only in approved local files. Human validation is not independently confirmed exploitability or a confirmed zero-day.</p>
 </article>
 </section>
+<section class="panel"><div class="panel-head"><div>
+<p class="eyebrow">OFFLINE SYNTHETIC BENCHMARK</p>
+<h2>Review Cue Calibration</h2></div></div>
+<article style="padding:18px">
+<strong>OpenAPI review benchmark: {{ benchmark.status }}</strong>
+<p>Synthetic test cases: {{ benchmark.cases }} · Labeled-review precision:
+{% if benchmark.precision is not none %}{{ (benchmark.precision * 100)|round(1) }}%{% else %}N/A{% endif %}
+· Labeled-review recall:
+{% if benchmark.recall is not none %}{{ (benchmark.recall * 100)|round(1) }}%{% else %}N/A{% endif %}
+· Unexpected review cues: {{ benchmark.unexpected_reviews }}</p>
+<p>Numbers describe review-cue selection on synthetic OpenAPI contracts, NOT real vulnerability accuracy, live exploitation, CVE coverage, or zero-day detection.</p>
+</article>
+</section>
 <section class="panel"><div class="panel-head"><div><p class="eyebrow">LOCAL SPECIALISTS</p>
 <h2>Constrained research skills</h2></div></div>
 {% for skill in skills %}
