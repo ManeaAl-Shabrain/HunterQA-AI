@@ -24,6 +24,18 @@
 <p>Evidence requiring corroboration review: {{ summary.corroboration_review }}</p>
 {% endif %}
 </section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">OWNED BROWSER & SAFE REPLAY</p>
+<h2>Authorized lab evidence</h2></div></div>
+<article style="padding:18px;border-bottom:1px solid #303838">
+<strong>Playwright owned-browser lab: {{ browser.status }}</strong>
+<p>Approved requests: {{ browser.approved_requests }} · Blocked requests: {{ browser.blocked_requests }} · Login: {{ browser.login }}</p>
+</article>
+<article style="padding:18px">
+<strong>HEAD-only sanitized HAR replay: {{ replay.status }}</strong>
+<p>Requests attempted: {{ replay.requests_attempted }} · Status differences: {{ replay.status_differences }}</p>
+</article>
+<p>Reports are administrator-selected local files; this page never starts a browser or replays traffic.</p>
+</section>
 <section class="panel"><div class="panel-head"><div><p class="eyebrow">LOCAL SPECIALISTS</p>
 <h2>Constrained research skills</h2></div></div>
 {% for skill in skills %}
