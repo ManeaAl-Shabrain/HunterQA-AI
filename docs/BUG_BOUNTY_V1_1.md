@@ -86,6 +86,34 @@ techniques, asset exclusions and disclosure rules before sending any request.
 
 
 
+
+## Single integrated research campaign
+
+The new `bounty-campaign` command composes the existing local Semgrep,
+trust-graph, and optional Qwen engines with offline OSV/CVE advisory matching,
+offline HAR evidence, and separately opted-in HTTP observations.
+
+```bash
+python -m hunterqa bounty-campaign \
+  --project "$HOME/ZeroScope-AI/targets" \
+  --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \
+  --out-dir "$HOME/ZeroScope-AI/research-lab/engagement-001" \
+  --snapshot "$HOME/ZeroScope-AI/research-lab/osv_snapshot.json" \
+  --with-ai --authorized
+```
+
+The example above performs **no outbound web requests**. All local tool stages
+must stay inside approved roots. To add already-captured proxy evidence, use
+`--har /approved/path/capture.har`. To run bounded HEAD checks, explicitly
+add `--with-web --targets /approved/path/targets.txt --method HEAD` after
+verifying the program allows this exact automation.
+
+Results are written to a new, private engagement directory, including
+`manifest.json` from local research, optional `bounty_cve.json`,
+`bounty_har.json`, `bounty_http.json`, and an `engagement.json` overview.
+An advisory match is not a verified installed vulnerability, and a crash,
+model hypothesis or header observation cannot establish a zero-day.
+
 ## Offline penetration-testing proxy evidence (Burp / ZAP / browser HAR)
 
 Export a HAR after manually testing an authorized app. Place the HAR in the
