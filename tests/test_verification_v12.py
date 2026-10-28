@@ -7,7 +7,7 @@ import pytest
 from hunterqa.agent_workflow_v12 import correlate
 from hunterqa.api_surface_v12 import inspect_openapi
 from hunterqa.verification_v12 import (
-    ENGINE, disclosure_draft, prepare_dossier, read_review_summary, record_review,
+    ENGINE, create_reproduction_note, disclosure_draft, prepare_dossier, read_review_summary, record_review,
 )
 
 
@@ -39,11 +39,13 @@ def sample(tmp_path, monkeypatch):
     dossier_file = tmp_path / "dossier-v1.json"
     dossier_file.write_text(json.dumps(dossier))
     proof = tmp_path / "reviewer-reproduction.json"
-    proof.write_text(json.dumps({
-        "authorized_fixture": True,
-        "procedure": "Owned accounts only; separate manual reproduction required.",
-        "sensitive_payloads_exported": False,
-    }))
+    note = create_reproduction_note(
+        profile, dossier["cases"][0]["id"], "analyst01",
+        "The owned test account must be restricted to its own local resource.",
+        "The owned lab fixture exposed a second account in the controlled test.",
+        "owned_local_lab", authorized=True, attest=True,
+    )
+    proof.write_text(json.dumps(note))
     return tmp_path, profile, correlated, dossier, dossier_file, proof
 
 
@@ -188,7 +190,7 @@ def test_decisions_never_confirm_zero_day(sample, decision):
         kwargs = {"impact": "Observed impact restricted to a locally owned test account.",
                   "reproduction": "Independently repeat the observation with another permitted local account.",
                   "evidence_path": proof}
-    result = record_review(profile, file, case, decision, "researcher01",
+    result = record_review(profile, file, case, decision, "analyst01",
                            authorized=True, **kwargs)
     assert result["summary"]["confirmed_zero_days"] == 0
     assert result["cases"][0]["confirmed_zero_day"] is False
@@ -226,3 +228,48 @@ def test_review_dossier_does_not_execute_network_requests(sample, monkeypatch):
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("network contacted")))
     root, profile, correlated, dossier, file, proof = sample
     assert prepare_dossier(profile, correlated, authorized=True)["summary"]["total"] > 0
+
+
+
+def test_reproduction_note_requires_explicit_human_attestation(sample):
+    root, profile, correlated, dossier, file, proof = sample
+    case = dossier["cases"][0]["id"]
+    with pytest.raises(PermissionError):
+        create_reproduction_note(
+            profile, case, "analyst01",
+            "The expected outcome for this authorized local fixture.",
+            "The actual observed result on our owned local fixture.",
+            "owned_local_lab", authorized=True, attest=False,
+        )
+    with pytest.raises(ValueError, match="case ID"):
+        create_reproduction_note(
+            profile, "arbitrary-case", "analyst01",
+            "The expected outcome for this authorized local fixture.",
+            "The actual observed result on our owned local fixture.",
+            "owned_local_lab", authorized=True, attest=True,
+        )
+
+
+def test_arbitrary_local_json_cannot_count_as_reproduction_evidence(sample):
+    root, profile, correlated, dossier, file, proof = sample
+    case = dossier["cases"][0]["id"]
+    invalid = root / "not-real-proof.json"
+    invalid.write_text('{"file":"arbitrary research notes"}')
+    with pytest.raises(ValueError, match="manual reproduction note"):
+        record_review(profile, file, case, "analyst_validated", "analyst01",
+                      impact="A" * 40, reproduction="B" * 40,
+                      evidence_path=invalid, authorized=True)
+
+
+def test_different_case_or_reviewer_proof_cannot_be_reused(sample):
+    root, profile, correlated, dossier, file, proof = sample
+    case = dossier["cases"][1]["id"]
+    with pytest.raises(ValueError, match="manual reproduction note"):
+        record_review(profile, file, case, "analyst_validated", "analyst01",
+                      impact="A" * 40, reproduction="B" * 40,
+                      evidence_path=proof, authorized=True)
+    with pytest.raises(ValueError, match="manual reproduction note"):
+        record_review(profile, file, dossier["cases"][0]["id"],
+                      "analyst_validated", "other_reviewer",
+                      impact="A" * 40, reproduction="B" * 40,
+                      evidence_path=proof, authorized=True)
