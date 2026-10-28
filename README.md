@@ -35,6 +35,17 @@ Neither mode provides WAF evasion, remote authenticated exploitation, brute
 force, or live browser access to third-party bounty programs. Both modes keep
 private user data and credentials out of the public repository and report.
 See [the browser lab and safe replay guide](docs/BROWSER_LAB_V1_2.md).
+
+**New analyst verification milestone:** `bounty-review-init` builds a
+scope-bound finding dossier from existing correlation evidence.
+`bounty-reproduction-note` requires an explicit human attestation tied
+to the exact finding, `bounty-review-decide` creates a new hash-linked
+dossier revision, and `bounty-review-export` creates a private Markdown
+draft only for analyst-validated cases. `bounty-repeatability` compares
+two approved HEAD reports **offline** without new network requests.
+No automated CVE or zero-day confirmation is provided. See
+[the private analyst review guide](docs/REVIEW_V1_2.md).
+
 Install optional browser support with `python -m pip install -e '.[dev,browser]'`.
 
 
