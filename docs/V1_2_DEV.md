@@ -148,12 +148,30 @@ policy examples, optional Chromium acceptance, and important network-isolation
 limits. Playwright routes are not an OS firewall; use a disposable lab VM.
 No browser automation against public HackerOne/Bugcrowd assets is available.
 
+## Human verification dossiers and offline reproducibility
+
+This v1.2 branch also includes a new create-only local analyst review
+workflow. Correlation suggestions are always unverified. A reviewer may
+record a `not_reproducible`, `false_positive`, `out_of_scope`,
+`needs_more_evidence`, or `analyst_validated` decision. Validated
+decisions require a separate, matching manual reproduction note and
+sanitized impact/reproduction statements. All decisions are SHA-256
+linked, but not cryptographically signed.
+
+`bounty-repeatability` compares two HEAD replay reports from the same
+program and sanitized HAR source **without sending network requests**.
+Stable HTTP response codes are not proof of vulnerability.
+
+See `docs/REVIEW_V1_2.md` for exact CLI examples, report export,
+approved-root restrictions, privacy limitations and disclosure rules.
+
 ## Next v1.2 milestones (not yet implemented)
 
 - Independent host-level browser network isolation for trusted future
   expansions beyond the currently owned-loopback-only browser lab.
 - Fine-grained HTTP interception and safe replay approvals with strict limits.
-- Enhanced proof reproduction and independent reviewer workflow.
+- Independent verification against owned benchmarks, without mistaking
+  human attestations for automatically proven exploitability.
 - Program profile import validation and richer reporting templates.
 - Benchmarks using OWASP Juice Shop, WebGoat and crAPI in isolated labs.
 
