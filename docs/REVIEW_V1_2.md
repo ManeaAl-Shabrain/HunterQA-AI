@@ -1,7 +1,6 @@
 # HunterQA AI v1.2 — Analyst Verification and Disclosure Workflow
 
-**Status:** development milestone in draft PR #19. The public `v1.1.0`
-release remains unchanged. This tool operates entirely offline and saves
+**Status:** Stable v1.2.0 on `main`. Earlier v1.1.0 remains available. This tool operates entirely offline and saves
 its outputs only in approved private local directories.
 
 ## Research evidence pipeline
