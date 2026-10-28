@@ -70,6 +70,7 @@ class BrowserRequestGate:
         self.last_request_at = None
         self.stop = False
         self.approved_login_redirect = None
+        self.route_failure_type = None
         self.max_requests = min(20, policy.max_requests)
 
     def admit(self, method: str, url: str) -> bool:
@@ -151,6 +152,7 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
 
     # Credentials enter the browser only after route guards have been registered.
     # New non-persistent context: no cookie jar, download or HAR is saved.
+    phase = "start"
     try:
         with provider() as driver:
             browser = driver.chromium.launch(
@@ -206,7 +208,8 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                             if gate.stop:
                                 raise ValueError("Rate limit or denial blocked browser run")
                             route.fulfill(response=response)
-                        except Exception:
+                        except Exception as exc:
+                            gate.route_failure_type = type(exc).__name__
                             gate.stop = True
                             route.abort("blockedbyclient")
 
@@ -216,24 +219,31 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                     context.route_web_socket("**/*", lambda websocket: websocket.close())
                     page = context.new_page()
                     page.on("response", lambda response: gate.on_response(response.status))
+                    phase = "initial_navigation"
                     response = page.goto(
                         start_url, wait_until="domcontentloaded", timeout=12_000
                     )
                     if response is None or gate.stop:
                         raise RuntimeError("Initial lab navigation was denied or blocked")
                     if login:
+                        phase = "username_field"
                         page.locator(username_selector).fill(user, timeout=5_000)
+                        phase = "password_field"
                         page.locator(password_selector).fill(secret, timeout=5_000)
+                        phase = "login_submit"
                         page.locator(submit_selector).click(timeout=8_000)
                         # Follow only the verified, single approved location
                         # as a NEW navigation; no native HTTP redirects.
                         if gate.approved_login_redirect:
+                            phase = "approved_login_destination"
                             page.goto(gate.approved_login_redirect,
                                       wait_until="domcontentloaded", timeout=12_000)
                         else:
+                            phase = "login_page_state"
                             page.wait_for_load_state("domcontentloaded", timeout=8_000)
                     if gate.stop:
                         raise RuntimeError("Browser session stopped after rejection or rate limit")
+                    phase = "final_lab_validation"
                     # Final URL must remain within the same exact origin + allowed paths.
                     gate.policy.authorize_url(page.url, "GET")
                     final_parts = urlsplit(page.url)
@@ -275,10 +285,12 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                 browser.close()
     except RuntimeError:
         raise
-    except Exception:
+    except Exception as exc:
         raise RuntimeError(
-            "Browser lab failed or a navigation was rejected; no private page "
-            "contents were exported. Check local server, selectors and allowlist."
+            "Browser lab stopped at " + phase + "; failure type: " +
+            type(exc).__name__ + "; request guard: " +
+            str(gate.route_failure_type or "not-triggered") +
+            ". No private page contents were exported."
         ) from None
     return result
 
