@@ -1,4 +1,13 @@
-# Development maintenance and assessment evidence improvements
+# HunterQA v1.3.0 · Release preparation
+
+Version 1.3.0 consolidates the supervised workflow runner, controlled engagements,
+research interoperability, evidence review, reporting and maintenance work below.
+README and Zero to Start are rewritten for the current CLI and include original
+HunterQA release artwork. See [the complete release inventory](docs/RELEASE_1_3_0.md)
+and [publication policy](docs/VERSIONING.md). A manual exact-SHA publisher is ready;
+no new tag or GitHub release is implied until it is run successfully after merge.
+
+## Changes consolidated from the development line
 
 The subsequent [controlled workflow runner](docs/WORKFLOW_RUNNER.md) adds durable
 run/step state, fixed supervised workers, per-run request reservations and rate

@@ -1,4 +1,10 @@
-# HunterQA AI v1.2.0 — Security Limitations
+# HunterQA 1.3.0 — Security Limitations
+
+Current runtime/engagement contracts are detailed in [workflow limits](WORKFLOW_RUNNER.md)
+and [approved assessments](APPROVED_ASSESSMENTS.md). The workflow runner uses
+fixed supervised processes, not an OS sandbox; budgets are per run and local
+attestations are not independently verified company grants. Older feature-specific
+limits below remain applicable where not explicitly extended by those contracts.
 
 Development source additionally includes [approved assessment plans](APPROVED_ASSESSMENTS.md):
 bounded fixed observations, benign WAF canaries, one designated-account HTTPS

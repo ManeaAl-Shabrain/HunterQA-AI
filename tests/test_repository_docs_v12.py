@@ -1,4 +1,4 @@
-"""Repository documentation checks for current v1.2.0 source.
+"""Repository documentation checks for current release source.
 
 These checks use local files only and are safe in PR CI. A README edit must
 not accidentally describe a nonexistent path or a stale archive version.
@@ -6,6 +6,7 @@ not accidentally describe a nonexistent path or a stale archive version.
 from pathlib import Path
 import re
 import tomllib
+from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 README = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -17,12 +18,13 @@ def test_readme_local_links_resolve_in_repository():
     for link in matches:
         if link.startswith(("http://", "https://", "#", "mailto:")):
             continue
-        assert (ROOT / link.rstrip("/")).exists(), f"Broken local README link: {link}"
+        target = unquote(link.strip("<>").rstrip("/"))
+        assert (ROOT / target).exists(), f"Broken local README link: {link}"
 
 
 def test_readme_describes_stable_package_and_compatible_archive_commands():
     version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
-    assert version == "1.2.0"
+    assert version == "1.3.0"
     assert f"v{version}" in README
     assert f"HunterQA-AI-{version}-source.zip" in README
     assert "HunterQA-AI-1.1.0-source.zip" not in README

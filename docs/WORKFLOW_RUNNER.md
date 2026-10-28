@@ -1,6 +1,6 @@
 # Controlled workflow runner: local platform baseline
 
-This development release turns the protocol compiler into an operational local
+The 1.3.0 source turns the protocol compiler into an operational local
 workflow system. It provides a baseline for all ten platform priorities below.
 It is not a distributed service, an independently authenticated authorization
 system, a general exploit executor, or an operating-system sandbox.
@@ -64,7 +64,7 @@ Every step must have exactly one binding object with the expected fields. Input
 files must be in approved local roots and are capped at 2 MB each, 16 MB total.
 Their exact bytes are fingerprinted at review and copied into the private run
 directory before execution. A changed file requires another execution review.
-The execution fingerprint also binds the Python runtime identifier and trusted
+The execution fingerprint also binds the installed distribution version, Python runtime identifier and trusted
 package Python-source fingerprints; changes are checked before dispatch. This
 is provenance checking, not code signing or independent software attestation.
 Project bindings approve a **mutable local directory**, not an immutable source
@@ -82,7 +82,7 @@ ZAP input formats/limits remain as documented in `RESEARCH_WORKFLOWS.md`.
 
 ## Linux quick start
 
-Install current development source normally. Use an existing authorized scope
+Install the reviewed 1.3.0 source normally. Use an existing authorized scope
 profile and an approved parent directory with a narrow `source` subdirectory.
 Keep configuration and run directories outside the reviewed source tree.
 The source archive builder normalizes shell-script CRLF to LF for Linux and

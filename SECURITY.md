@@ -2,9 +2,9 @@
 
 ## Supported versions
 
-- **Current maintained line:** the current `main` branch (v1.2.0 code line).
+- **Current maintained source:** the 1.3.0 code line; check GitHub Releases for publication status.
 - **Historical release tags:** `v1.0.0`, `v1.0.1`, and `v1.1.0` remain available for reproducibility but do not necessarily receive security backports.
-- **Latest published stable:** `v1.2.0`; updates to `main` after tagging do not change the immutable `v1.2.0` archive.
+- **Published stable:** use the repository's Releases page; a prepared version does not imply a published tag. Historical tags and assets, including `v1.2.0`, remain immutable.
 
 ## Responsible reporting
 
@@ -21,7 +21,7 @@ before publicly claiming vulnerability severity or a CVE identifier.
 
 ## Authorized research boundaries
 
-The development workflow runner uses a closed set of trusted adapters, explicit
+The 1.3 workflow runner uses a closed set of trusted adapters, explicit
 execution/checkpoint fingerprints, per-run quotas, isolated Python worker
 processes and stop/deadline supervision. Local authorization/reviewer references
 are attestations, not verified company identities. Process isolation is not an

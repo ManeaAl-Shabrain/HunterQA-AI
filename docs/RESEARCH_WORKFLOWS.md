@@ -1,6 +1,6 @@
 # Review playbooks, private research context, scanner imports and SARIF
 
-These additions are development-source capabilities. They are not a replacement
+These capabilities are included in 1.3.0 source. They are not a replacement
 for historical release archives or an autonomous pentesting system. Their scope
 comes from the [seven-reference comparison](FRAMEWORK_COMPARISON_2026_10.md).
 

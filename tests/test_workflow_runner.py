@@ -87,6 +87,14 @@ def test_runtime_changes_invalidate_execution_review(prepared, monkeypatch):
     assert not (prepared[0] / "run").exists()
 
 
+def test_distribution_upgrade_invalidates_existing_execution_review(prepared, monkeypatch):
+    import hunterqa.workflow_runner as runner
+    monkeypatch.setattr(runner, "distribution_version", lambda name: "1.3.1")
+    with pytest.raises(PermissionError, match="fingerprint"):
+        launch(prepared)
+    assert not (prepared[0] / "run").exists()
+
+
 def test_multiple_source_projects_keep_distinct_candidates(prepared):
     root, profile, source, config, _ = prepared
     other = root / "other-source"
