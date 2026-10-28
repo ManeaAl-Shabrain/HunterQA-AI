@@ -12,3 +12,6 @@ core.*
 **/crashes/
 *.bin
 *.o
+
+# Python packaging metadata
+*.egg-info/
