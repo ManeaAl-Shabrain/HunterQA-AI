@@ -11,6 +11,7 @@ dependencies = ["Flask>=3.0,<4", "packaging>=23,<27"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
+browser = ["playwright>=1.48,<2"]
 
 [project.scripts]
 hunterqa = "hunterqa.cli:main"
