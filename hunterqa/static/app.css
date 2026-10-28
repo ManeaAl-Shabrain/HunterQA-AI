@@ -15,3 +15,4 @@
 .report-body .research-details p {margin: .65rem 0; line-height:1.75;}
 .report-body .research-details h2, .report-body .research-details h3 {margin:1.3rem 0 .6rem;}
 .report-body .research-details code {background: #192325; padding: 1px 5px; border-radius:3px; overflow-wrap:anywhere;}
+.workflow-evidence code{overflow-wrap:anywhere}

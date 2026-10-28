@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from datetime import datetime, timezone
 
 from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
@@ -252,6 +253,20 @@ def research_playbooks_dashboard():
     """Original static review data only; no third-party prompts or tool execution."""
     from .research_workspace import PLAYBOOKS
     return render_template("playbooks.html", playbooks=PLAYBOOKS)
+
+
+@bp.get("/workflows")
+def workflow_dashboard():
+    """Administrator-selected run only; no URL-supplied filesystem paths/actions."""
+    from .workflow_results import summarize_run
+    configured = current_app.config.get("WORKFLOW_RUN_PATH")
+    report, error = None, None
+    if configured:
+        try:
+            report = summarize_run(configured)
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error):
+            error = "Run evidence is unavailable or failed integrity checks."
+    return render_template("workflows.html", report=report, error=error)
 
 
 @bp.get("/audit")

@@ -21,6 +21,14 @@ before publicly claiming vulnerability severity or a CVE identifier.
 
 ## Authorized research boundaries
 
+The development workflow runner uses a closed set of trusted adapters, explicit
+execution/checkpoint fingerprints, per-run quotas, isolated Python worker
+processes and stop/deadline supervision. Local authorization/reviewer references
+are attestations, not verified company identities. Process isolation is not an
+OS sandbox. Separate run directories have independent quotas. Raw imported
+evidence snapshots can contain sensitive data; keep run directories private and
+apply retention controls. See [runtime contracts and limitations](docs/WORKFLOW_RUNNER.md).
+
 HunterQA is designed for local, explicitly authorized projects and isolated
 laboratory binaries. Do not use it for unauthorized scanning. "Low-noise" means
 local-first, bounded analysis, not evasion of detection or monitoring.
