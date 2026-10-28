@@ -436,5 +436,8 @@ def agent_lab_dashboard():
     replay = read_replay_summary(current_app.config.get("HEAD_REPLAY_REPORT_PATH"))
     from .verification_v12 import read_review_summary
     review = read_review_summary(current_app.config.get("REVIEW_DOSSIER_PATH"))
+    from .benchmark_v12 import read_benchmark_summary
+    benchmark = read_benchmark_summary(current_app.config.get("BENCHMARK_REPORT_PATH"))
     return render_template("agent_lab.html", summary=summary, skills=SKILLS,
-                           browser=browser, replay=replay, review=review)
+                           browser=browser, replay=replay, review=review,
+                           benchmark=benchmark)
