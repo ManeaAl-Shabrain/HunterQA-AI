@@ -11,7 +11,6 @@ from __future__ import annotations
 import hashlib
 import re
 from datetime import datetime, timezone
-from pathlib import Path
 
 from .api_surface_v12 import METHODS, inspect_openapi
 from .bounty import BountyPolicy, _approved_file, _read_json
@@ -113,7 +112,7 @@ def evaluate_pack(profile_path, pack_path, *, authorized=False, inventory=inspec
             if not isinstance(op, dict):
                 raise ValueError("Malformed API operation")
             method, path = op.get("method"), op.get("path_template")
-            if method not in VALID_METHODS or not isinstance(path, str):
+            if not isinstance(method, str) or method not in VALID_METHODS or not isinstance(path, str):
                 raise ValueError("Invalid operation method/path")
             known_operations.add((method, path))
         labeled = {}
@@ -122,9 +121,9 @@ def evaluate_pack(profile_path, pack_path, *, authorized=False, inventory=inspec
                 raise ValueError("Benchmark labels require explicit method/path/rule/expected")
             method, path, rule = label["method"], label["path"], label["rule_id"]
             expected = label["expected"]
-            if (method not in VALID_METHODS or not isinstance(path, str)
+            if (not isinstance(method, str) or method not in VALID_METHODS or not isinstance(path, str)
                     or len(path) > 240 or (method, path) not in known_operations
-                    or rule not in VALID_RULES or type(expected) is not bool):
+                    or not isinstance(rule, str) or rule not in VALID_RULES or type(expected) is not bool):
                 raise ValueError("Benchmark label does not match a bounded spec operation")
             key = (method, path, rule)
             if key in labeled:
@@ -137,12 +136,16 @@ def evaluate_pack(profile_path, pack_path, *, authorized=False, inventory=inspec
             method, path, rule = item.get("method"), item.get("path_template"), item.get("rule_id")
             key = (method, path, rule)
             if (not isinstance(method, str) or not isinstance(path, str)
-                    or method not in VALID_METHODS or rule not in VALID_RULES
+                    or method not in VALID_METHODS or not isinstance(rule, str) or rule not in VALID_RULES
                     or (method, path) not in known_operations
                     or item.get("confirmed") is not False
                     or item.get("zero_day_confirmed") is not False
                     or item.get("cve_id") is not None):
                 raise ValueError("Untrusted or automatically confirmed review result")
+            operation_id = hashlib.sha256((method + " " + path).encode("utf-8")).hexdigest()[:16]
+            candidate_id = hashlib.sha256((rule + ":" + operation_id).encode("utf-8")).hexdigest()[:20]
+            if item.get("operation_id") != operation_id or item.get("id") != candidate_id:
+                raise ValueError("Review prediction ID conflicts with deterministic API operation identity")
             if key in emitted:
                 raise ValueError("Duplicate candidate prediction")
             emitted.add(key)
