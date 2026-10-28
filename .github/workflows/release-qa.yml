@@ -10,7 +10,7 @@ permissions:
 jobs:
   source-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Check out untrusted source without write credentials
         uses: actions/checkout@v4
@@ -31,6 +31,14 @@ jobs:
         run: bash tools/verify_bounty_1_1.sh
       - name: HunterQA AI 1.2 offline agent and API acceptance
         run: bash tools/verify_agent_1_2.sh
+      - name: Install owned-lab Chromium test dependency
+        run: |
+          python -m pip install -e '.[browser]'
+          python -m playwright install --with-deps chromium
+      - name: Real Chromium authentication and cross-origin isolation on owned loopback
+        env:
+          HUNTERQA_REAL_BROWSER_CI: "1"
+        run: python -m pytest -q tests/test_browser_lab_playwright_v12.py
       - name: Build and verify complete source package
         shell: bash
         run: |
