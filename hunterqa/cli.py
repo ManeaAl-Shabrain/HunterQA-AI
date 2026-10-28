@@ -35,6 +35,19 @@ def _approved_root(path: str) -> Path:
     return target
 
 
+def _write_bounty_output(path: str, content: str) -> None:
+    """Create-only private output under explicitly approved roots."""
+    output = Path(path).expanduser()
+    _approved_root(str(output.parent.resolve(strict=True)))
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = os.open(output, flags, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as stream:
+        stream.write(content)
+    print("Saved:", output)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -73,6 +86,14 @@ def main(argv=None):
     bounty.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
     bounty.add_argument("--out", required=True)
     bounty.add_argument("--authorized", action="store_true")
+    har = sub.add_parser("bounty-import-har", help="Offline read-only HAR evidence analysis")
+    har.add_argument("--profile", required=True)
+    har.add_argument("--har", required=True)
+    har.add_argument("--out", required=True)
+    har.add_argument("--authorized", action="store_true")
+    bounty_export = sub.add_parser("bounty-report", help="Draft a human-reviewed Markdown bug bounty report")
+    bounty_export.add_argument("--file", required=True)
+    bounty_export.add_argument("--out", required=True)
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -168,7 +189,17 @@ def main(argv=None):
         if output.exists() or output.is_symlink():
             raise ValueError("Use a new output file; do not overwrite previous evidence")
         report = assess(args.profile, args.targets, authorized=True, method=args.method)
-        _write_json(str(output), report)
+        _write_bounty_output(str(output), json.dumps(report, indent=2) + "\n")
+    elif args.command == "bounty-import-har":
+        from .bounty import import_har
+        if not args.authorized:
+            raise PermissionError("Importing program evidence requires --authorized")
+        result = import_har(args.profile, args.har, authorized=True)
+        _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+    elif args.command == "bounty-report":
+        from .bounty import bounty_markdown, _read_json
+        evidence = _read_json(args.file, 1_000_000)
+        _write_bounty_output(args.out, bounty_markdown(evidence))
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
