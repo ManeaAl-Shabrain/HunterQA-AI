@@ -225,6 +225,7 @@ required = {
     "HunterQA-AI/examples/benchmarks/v12_openapi_golden.json",
     "HunterQA-AI/examples/benchmarks/v12_scoped_auth.json",
     "HunterQA-AI/examples/benchmarks/v12_missing_auth.json",
+    "HunterQA-AI/docs/BENCHMARK_V1_2.md",
     "HunterQA-AI/hunterqa/repeatability_v12.py",
     "HunterQA-AI/docs/REVIEW_V1_2.md",
     "HunterQA-AI/docs/BROWSER_LAB_V1_2.md",
