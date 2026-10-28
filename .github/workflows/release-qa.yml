@@ -29,8 +29,10 @@ jobs:
         run: python -m pytest -q
       - name: HunterQA AI 1.1 offline bounty acceptance
         run: bash tools/verify_bounty_1_1.sh
+      - name: HunterQA AI 1.2 offline agent and API acceptance
+        run: bash tools/verify_agent_1_2.sh
       - name: Build and verify complete source package
         shell: bash
         run: |
-          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.1.0-development-source.zip"
-          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.1.0-development-source.zip"
+          python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.2.0-development-source.zip"
+          python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.2.0-development-source.zip"
