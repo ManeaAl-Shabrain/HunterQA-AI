@@ -1,0 +1,48 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Synthetic Incomplete Authorization API",
+    "version": "1",
+    "description": "Offline-only deliberately incomplete schema declarations."
+  },
+  "paths": {
+    "/v1/admin/accounts/{userId}": {
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "Fixture-only modification"
+          }
+        }
+      }
+    },
+    "/v1/catalog/items": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Public catalog"
+          }
+        }
+      }
+    },
+    "/v1/legacy/records": {
+      "get": {
+        "deprecated": true,
+        "responses": {
+          "200": {
+            "description": "Legacy fixture"
+          }
+        }
+      }
+    },
+    "/v1/messages": {
+      "post": {
+        "security": [],
+        "responses": {
+          "202": {
+            "description": "Synthetic public message intake"
+          }
+        }
+      }
+    }
+  }
+}

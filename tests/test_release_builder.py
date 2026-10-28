@@ -26,6 +26,11 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text)
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    # Require the project version without including fake package metadata in
+    # the expected public archive fixtures.
+    (repo / "pyproject.toml").write_text(
+        '[project]\\nname = "hunterqa-ai"\\nversion = "1.2.0"\\n'.replace('\\n', '\n')
+    )
     output = tmp_path / "release.zip"
     manifest = build(repo, output)
     with zipfile.ZipFile(output) as archive:

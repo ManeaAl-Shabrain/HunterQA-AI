@@ -1,6 +1,7 @@
 """HunterQA AI local research command line. No remote scan endpoints."""
 from __future__ import annotations
 import argparse
+from importlib.metadata import PackageNotFoundError, version as package_version
 import json
 import os
 from pathlib import Path
@@ -50,6 +51,11 @@ def _write_bounty_output(path: str, content: str) -> None:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
+    try:
+        installed_version = package_version("hunterqa-ai")
+    except PackageNotFoundError:
+        installed_version = "development (not installed)"
+    parser.add_argument("--version", action="version", version="HunterQA AI " + installed_version)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
     doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
@@ -105,6 +111,87 @@ def main(argv=None):
     engagement.add_argument("--targets")
     engagement.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
     engagement.add_argument("--authorized", action="store_true")
+    api12 = sub.add_parser("bounty-api-inventory", help="Offline OpenAPI 3.x authorization and object-access review")
+    api12.add_argument("--profile", required=True)
+    api12.add_argument("--spec", required=True)
+    api12.add_argument("--out", required=True)
+    api12.add_argument("--authorized", action="store_true")
+    agent12 = sub.add_parser("bounty-agent-plan", help="Build a safe, non-executing specialist-agent plan")
+    agent12.add_argument("--profile", required=True)
+    agent12.add_argument("--spec")
+    agent12.add_argument("--targets")
+    agent12.add_argument("--out", required=True)
+    agent12.add_argument("--authorized", action="store_true")
+    correlation12 = sub.add_parser("bounty-correlate", help="Deduplicate policy-matched local evidence with manual review")
+    correlation12.add_argument("--profile", required=True)
+    correlation12.add_argument("--file", action="append", required=True, help="Repeat for 1..8 verified local reports")
+    correlation12.add_argument("--out", required=True)
+    correlation12.add_argument("--authorized", action="store_true")
+    ai12 = sub.add_parser("bounty-ai-review", help="Local Ollama agent-role recommendations without tool execution")
+    ai12.add_argument("--plan", required=True)
+    ai12.add_argument("--model", choices=("qwen2.5-coder:3b", "qwen2.5-coder:7b"), default="qwen2.5-coder:3b")
+    ai12.add_argument("--out", required=True)
+    ai12.add_argument("--authorized", action="store_true")
+    browser_lab = sub.add_parser("bounty-browser-lab", help="Owned 127.0.0.1 Playwright lab review with optional scoped login")
+    browser_lab.add_argument("--profile", required=True)
+    browser_lab.add_argument("--url", required=True, help="Owned 127.0.0.1 lab URL, no queries")
+    browser_lab.add_argument("--login", action="store_true")
+    browser_lab.add_argument("--login-post-path", help="One approved local login endpoint, e.g. /login")
+    browser_lab.add_argument("--username-selector", default="#username")
+    browser_lab.add_argument("--password-selector", default="#password")
+    browser_lab.add_argument("--submit-selector", default="button[type=submit]")
+    browser_lab.add_argument("--out", required=True)
+    browser_lab.add_argument("--authorized", action="store_true")
+    replay12 = sub.add_parser("bounty-replay-head", help="Safe HEAD-only replay of approved sanitized HAR evidence")
+    replay12.add_argument("--profile", required=True)
+    replay12.add_argument("--har-report", required=True)
+    replay12.add_argument("--out", required=True)
+    replay12.add_argument("--authorized", action="store_true")
+    review_init = sub.add_parser("bounty-review-init", help="Create an offline, scope-matched review dossier from correlated findings")
+    review_init.add_argument("--profile", required=True)
+    review_init.add_argument("--correlation", required=True)
+    review_init.add_argument("--out", required=True)
+    review_init.add_argument("--authorized", action="store_true")
+    review_decide = sub.add_parser("bounty-review-decide", help="Record one human decision to a NEW private dossier version")
+    review_decide.add_argument("--profile", required=True)
+    review_decide.add_argument("--dossier", required=True)
+    review_decide.add_argument("--case", required=True)
+    review_decide.add_argument("--decision", required=True, choices=(
+        "needs_more_evidence", "not_reproducible", "false_positive", "out_of_scope",
+        "analyst_validated"))
+    review_decide.add_argument("--reviewer", required=True, help="3..40 character local analyst alias")
+    review_decide.add_argument("--impact", default="", help="Human-authored one-line impact summary (validated only)")
+    review_decide.add_argument("--reproduction", default="", help="Human-authored safe reproduction summary (validated only)")
+    review_decide.add_argument("--evidence", help="Path to already saved local reproduction artifact (validated only)")
+    review_decide.add_argument("--out", required=True, help="New file; prior dossier never overwritten")
+    review_decide.add_argument("--authorized", action="store_true")
+    review_export = sub.add_parser("bounty-review-export", help="Create a private disclosure draft for human-validated cases only")
+    review_export.add_argument("--profile", required=True)
+    review_export.add_argument("--dossier", required=True)
+    review_export.add_argument("--out", required=True)
+    review_export.add_argument("--authorized", action="store_true")
+    repeat = sub.add_parser("bounty-repeatability", help="Compare two same-scope HEAD replay reports offline")
+    repeat.add_argument("--profile", required=True)
+    repeat.add_argument("--first", required=True)
+    repeat.add_argument("--second", required=True)
+    repeat.add_argument("--out", required=True)
+    repeat.add_argument("--authorized", action="store_true")
+    manual_proof = sub.add_parser("bounty-reproduction-note", help="Create a private analyst-attested local reproduction note")
+    manual_proof.add_argument("--profile", required=True)
+    manual_proof.add_argument("--case", required=True)
+    manual_proof.add_argument("--reviewer", required=True)
+    manual_proof.add_argument("--context", choices=("owned_local_lab", "approved_test_accounts"), required=True)
+    manual_proof.add_argument("--expected", required=True)
+    manual_proof.add_argument("--observed", required=True)
+    manual_proof.add_argument("--out", required=True)
+    manual_proof.add_argument("--attest", action="store_true", help="I personally reproduced the behavior on authorized assets")
+    manual_proof.add_argument("--authorized", action="store_true")
+    benchmark = sub.add_parser("bounty-benchmark", help="Score offline synthetic OpenAPI review cues against independent positive/negative labels")
+    benchmark.add_argument("--profile", required=True)
+    benchmark.add_argument("--pack", required=True)
+    benchmark.add_argument("--out", required=True)
+    benchmark.add_argument("--strict", action="store_true", help="Exit nonzero if a labeled review cue is missed or a false-positive suggestion appears")
+    benchmark.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -224,6 +311,75 @@ def main(argv=None):
         print("Advisory records:", result["summary"]["advisory_records"])
         print("Web observations:", result["summary"]["http_observations"])
         print("Findings require human verification before submission.")
+    elif args.command == "bounty-api-inventory":
+        from .api_surface_v12 import inspect_openapi
+        report = inspect_openapi(args.spec, args.profile, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-agent-plan":
+        from .agent_workflow_v12 import plan
+        report = plan(args.profile, api_spec=args.spec, targets_path=args.targets,
+                      authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-correlate":
+        from .agent_workflow_v12 import correlate
+        report = correlate(args.profile, args.file, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-ai-review":
+        from .agent_ai_v12 import suggest_reviews
+        report = suggest_reviews(args.plan, model=args.model, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-browser-lab":
+        from .browser_lab_v12 import inspect_owned_browser
+        report = inspect_owned_browser(
+            args.profile, args.url, authorized=args.authorized,
+            login=args.login, login_post_path=args.login_post_path,
+            username_selector=args.username_selector,
+            password_selector=args.password_selector,
+            submit_selector=args.submit_selector,
+        )
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-replay-head":
+        from .replay_v12 import replay_har_head
+        report = replay_har_head(
+            args.profile, args.har_report, authorized=args.authorized
+        )
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-init":
+        from .verification_v12 import prepare_dossier
+        report = prepare_dossier(args.profile, args.correlation, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-decide":
+        from .verification_v12 import record_review
+        report = record_review(
+            args.profile, args.dossier, args.case, args.decision, args.reviewer,
+            impact=args.impact, reproduction=args.reproduction,
+            evidence_path=args.evidence, authorized=args.authorized,
+        )
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-review-export":
+        from .verification_v12 import disclosure_draft
+        content = disclosure_draft(args.profile, args.dossier, authorized=args.authorized)
+        _write_bounty_output(args.out, content)
+    elif args.command == "bounty-repeatability":
+        from .repeatability_v12 import compare_head_replays
+        report = compare_head_replays(args.profile, args.first, args.second,
+                                      authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-reproduction-note":
+        from .verification_v12 import create_reproduction_note
+        note = create_reproduction_note(
+            args.profile, args.case, args.reviewer,
+            args.expected, args.observed, args.context,
+            attest=args.attest, authorized=args.authorized,
+        )
+        _write_bounty_output(args.out, json.dumps(note, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-benchmark":
+        from .benchmark_v12 import benchmark_gate, evaluate_pack
+        report = evaluate_pack(args.profile, args.pack, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        print("Synthetic review cue metrics:", json.dumps(report["metrics"], indent=2))
+        benchmark_gate(report, fail_on_review_regression=args.strict)
+        print("Review expectation gate:", "PASS" if report["golden_review_expectations_met"] else "REVIEW NEEDED")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")

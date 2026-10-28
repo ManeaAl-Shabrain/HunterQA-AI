@@ -16,6 +16,11 @@ def _repo(tmp_path):
     item.parent.mkdir()
     item.write_text("SAFE = True\n")
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    # Metadata is present for the version-locked builder but untracked in this
+    # intentionally single-file test archive.
+    (repo / "pyproject.toml").write_text(
+        '[project]\\nname = "hunterqa-ai"\\nversion = "1.2.0"\\n'.replace('\\n', '\n')
+    )
     return repo
 
 

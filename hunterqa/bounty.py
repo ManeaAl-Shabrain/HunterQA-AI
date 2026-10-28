@@ -354,8 +354,8 @@ def assess(profile_path, targets_path, *, authorized=False, method="HEAD",
                 "cookie_count": sum(str(k).lower() == "set-cookie" for k, _ in result.get("headers", [])),
             })
             findings.extend(inspect_headers(result))
-            if result["status"] == 429:
-                break  # Do not continue sending traffic against rate-limited endpoints.
+            if result["status"] in (401, 403, 429) or result["status"] >= 500:
+                break  # Fail closed on denial, rate limits or server instability; never rotate or retry.
         except (OSError, ValueError, ssl.SSLError, http.client.HTTPException) as error:
             observations.append({"url": url, "status": "request_failed",
                                  "reason": type(error).__name__})

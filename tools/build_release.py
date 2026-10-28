@@ -11,6 +11,7 @@ import json
 import os
 import subprocess
 import zipfile
+import tomllib
 from pathlib import Path
 
 EXCLUDED_DIRS = {
@@ -63,7 +64,11 @@ def build(repo: Path, output: Path) -> dict:
     if output.exists():
         raise FileExistsError("Use a new output ZIP filename")
     output.parent.mkdir(parents=True, exist_ok=True)
-    manifest = {"project": "HunterQA AI", "release": "1.1.0", "files": []}
+    metadata = tomllib.loads((repo / "pyproject.toml").read_text(encoding="utf-8"))
+    version = metadata["project"]["version"]
+    if not isinstance(version, str) or not version or any(c in version for c in " /\\"):
+        raise ValueError("Invalid package version in pyproject.toml")
+    manifest = {"project": "HunterQA AI", "release": version, "files": []}
     with zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED) as archive:
         for rel, file in sorted(tracked_files(repo), key=lambda r: r[0].as_posix()):
             content = file.read_bytes()
