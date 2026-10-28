@@ -13,6 +13,8 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         ("hunterqa/core.py", "answer = 42\n"),
         ("zeroscope/__init__.py", "from hunterqa import create_app\n"),
         ("tests/test_basic.py", "def test_ok(): assert True\n"),
+        ("labs/research-lab/verification/sanitizer_parser.py", "def parse_sanitizer_log(s): return {}\n"),
+        ("labs/research-lab/verification/local_evidence.json", '{"secret":"private"}'),
         ("LICENSE", "MIT License\n"),
         ("SECURITY.md", "Security policy\n"),
         (".github/workflows/release-qa.yml", "name: Test CI\n"),
@@ -31,6 +33,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         assert "HunterQA-AI/hunterqa/core.py" in names
         assert "HunterQA-AI/zeroscope/__init__.py" in names
         assert "HunterQA-AI/tests/test_basic.py" in names
+        assert "HunterQA-AI/labs/research-lab/verification/sanitizer_parser.py" in names
         assert "HunterQA-AI/LICENSE" in names
         assert "HunterQA-AI/SECURITY.md" in names
         assert "HunterQA-AI/.github/workflows/release-qa.yml" in names
