@@ -434,5 +434,7 @@ def agent_lab_dashboard():
     from .replay_v12 import read_replay_summary
     browser = read_browser_summary(current_app.config.get("BROWSER_LAB_REPORT_PATH"))
     replay = read_replay_summary(current_app.config.get("HEAD_REPLAY_REPORT_PATH"))
+    from .verification_v12 import read_review_summary
+    review = read_review_summary(current_app.config.get("REVIEW_DOSSIER_PATH"))
     return render_template("agent_lab.html", summary=summary, skills=SKILLS,
-                           browser=browser, replay=replay)
+                           browser=browser, replay=replay, review=review)
