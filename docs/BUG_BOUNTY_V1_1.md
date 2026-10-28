@@ -1,6 +1,6 @@
 # HunterQA AI 1.1 — Authorized Bug Bounty Edition (Development Branch)
 
-**Branch:** \`feature/v1-1-authorized-bug-bounty\`  
+**Branch:** `feature/v1-1-authorized-bug-bounty`  
 **Status:** feature integration / regression testing; v1.0.1 remains the published stable release.
 
 This increment introduces real, bounded remote HTTP observations under explicit
@@ -12,7 +12,7 @@ framework.
 
 ## Initial Kali setup
 
-\`\`\`bash
+```bash
 cd ~/Desktop/HunterQA-AI
 git status --short
 git fetch origin
@@ -20,14 +20,14 @@ git switch --track origin/feature/v1-1-authorized-bug-bounty
 source .venv/bin/activate
 python -m pip install -e '.[dev]'
 python -m pytest -q
-\`\`\`
+```
 
-Copy \`examples/bounty_profile.example.json\` and
-\`examples/bounty_targets.example.txt\` to an approved private research folder,
+Copy `examples/bounty_profile.example.json` and
+`examples/bounty_targets.example.txt` to an approved private research folder,
 then edit for an explicitly authorized asset and exact program limits. The
 example domain is fictitious; it cannot be scanned as written.
 
-\`\`\`bash
+```bash
 mkdir -p "$HOME/ZeroScope-AI/research-lab/bounty"
 cp examples/bounty_profile.example.json "$HOME/ZeroScope-AI/research-lab/bounty/profile.json"
 cp examples/bounty_targets.example.txt "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt"
@@ -37,28 +37,28 @@ export HUNTERQA_APPROVED_ROOTS="$HOME/ZeroScope-AI/targets:$HOME/ZeroScope-AI/re
 python -m hunterqa bounty-preflight \\
   --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \\
   --targets "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt"
-\`\`\`
+```
 
 Once the program's rules allow HEAD requests, change the example to real
 approved assets and run:
 
-\`\`\`bash
+```bash
 python -m hunterqa bounty-assess \\
   --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \\
   --targets "$HOME/ZeroScope-AI/research-lab/bounty/targets.txt" \\
   --method HEAD --authorized \\
   --out "$HOME/ZeroScope-AI/research-lab/bounty/assessment-001.json"
-\`\`\`
+```
 
 To view the report:
 
-\`\`\`bash
+```bash
 export HUNTERQA_BOUNTY_REPORT="$HOME/ZeroScope-AI/research-lab/bounty/assessment-001.json"
 export HUNTERQA_SECRET_KEY="$(cat "$HOME/.config/hunterqa/session-key")"
 python run.py
-\`\`\`
+```
 
-Open \`http://127.0.0.1:5000/bounty\` in Kali Firefox. No HTTP test
+Open `http://127.0.0.1:5000/bounty` in Kali Firefox. No HTTP test
 runs simply by viewing the dashboard.
 
 ## Security controls
@@ -79,7 +79,7 @@ runs simply by viewing the dashboard.
 - Reports are kept locally inside approved project roots; no automatic
   HackerOne/Bugcrowd submissions or external CVE requests.
 
-A profile with \`acknowledged_authorization: true\` is the operator's declaration,
+A profile with `acknowledged_authorization: true` is the operator's declaration,
 not independent proof that the program permits the scan. Always check the
 current Bounty Brief / Security Page and program policy, rate limits, forbidden
 techniques, asset exclusions and disclosure rules before sending any request.
@@ -92,7 +92,7 @@ Export a HAR after manually testing an authorized app. Place the HAR in the
 approved private research folder and **never commit** its raw contents: it may
 contain authentication headers, personal data or response bodies.
 
-\`\`\`bash
+```bash
 python -m hunterqa bounty-import-har \
   --profile "$HOME/ZeroScope-AI/research-lab/bounty/profile.json" \
   --har "$HOME/ZeroScope-AI/research-lab/bounty/capture.har" \
@@ -102,7 +102,7 @@ python -m hunterqa bounty-import-har \
 python -m hunterqa bounty-report \
   --file "$HOME/ZeroScope-AI/research-lab/bounty/har-reviewed.json" \
   --out "$HOME/ZeroScope-AI/research-lab/bounty/report-draft.md"
-\`\`\`
+```
 
 HAR input is never replayed. Out-of-scope entries are skipped. Query strings,
 cookies, authorization headers, response bodies and any request bodies are
@@ -119,16 +119,16 @@ policy, severity matrix, known issues and exclusions.
 
 Use the existing local source tools for authorized repositories:
 
-\`\`\`bash
+```bash
 python -m hunterqa scan --project "$HOME/ZeroScope-AI/targets" \\
   --out "$HOME/ZeroScope-AI/research-lab/local-sast.json" --authorized
 
 python -m hunterqa campaign --project "$HOME/ZeroScope-AI/targets" \\
   --out-dir "$HOME/ZeroScope-AI/research-lab/bounty-local-campaign" \\
   --with-ai --ai-chunks 4 --authorized
-\`\`\`
+```
 
-Run the existing \`cve-check\` with a real offline OSV snapshot for published
+Run the existing `cve-check` with a real offline OSV snapshot for published
 CVE aliases. The AFL++ and sanitizer engines can help investigate potentially
 unknown defects on isolated binaries. An AI hypothesis, missing header or
 crash is not proof of a new vulnerability, let alone a confirmed zero-day.
