@@ -142,7 +142,8 @@ class FakeLocator:
     def fill(self, value, timeout=None):
         self.page.values[self.selector] = value
 
-    def click(self, timeout=None):
+    def click(self, timeout=None, no_wait_after=None):
+        assert no_wait_after is True
         assert self.page.perform_request("POST", "http://127.0.0.1:49151/login")
 
     def count(self):
