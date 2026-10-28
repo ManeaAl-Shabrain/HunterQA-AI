@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Bug Bounty Lab · HunterQA AI{% endblock %}
+{% block section %}Bug Bounty Lab{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">HUNTERQA AI 1.1 · CONTROLLED RESEARCH</p>
+<h1>Bug Bounty <em>Lab.</em></h1>
+<p class="lede">Approved program scope, low-impact HTTP observations, evidence review and local research methods. No scan starts from this page.</p></div></section>
+<section class="stats-grid">
+<article class="stat"><span>Report status</span><strong style="font-size:1rem">{{ report.status }}</strong><small>Local saved assessment</small></article>
+<article class="stat"><span>HTTP observations</span><strong>{{ report.observations|length }}</strong><small>Bounded and scope-checked</small></article>
+<article class="stat"><span>Review candidates</span><strong>{{ report.findings|length }}</strong><small>Not confirmed exploits</small></article>
+<article class="stat"><span>Confirmed zero-days</span><strong>0</strong><small>No automatic claims</small></article>
+</section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">RESEARCH RESULTS</p>
+<h2>{{ report.program or "No campaign selected" }}</h2></div></div>
+{% if report.status != "ready" %}
+<div class="empty"><h3>No approved bounty report loaded</h3><p>Run bounty-preflight and an authorized assessment, then configure HUNTERQA_BOUNTY_REPORT on the dashboard server.</p></div>
+{% else %}
+{% for item in report.observations %}
+<article style="padding:16px;border-bottom:1px solid #303838">
+<strong>{{ item.status }}</strong> — {{ item.method }} {{ item.url }}</article>
+{% endfor %}
+{% for item in report.findings %}
+<article style="padding:18px;border-bottom:1px solid #303838">
+<h3>{{ item.title }}</h3><p>{{ item.source_url }}</p>
+<p><strong>Validation:</strong> {{ item.verification }}</p>
+</article>
+{% else %}<p>No informational candidates observed. This is not a clean bill of security.</p>{% endfor %}
+{% endif %}
+</section>
+<section class="panel"><div class="panel-head"><div><p class="eyebrow">RESEARCH COVERAGE</p><h2>Method and tool capabilities</h2></div></div>
+{% for method in methods %}
+<article style="padding:14px;border-bottom:1px solid #303838">
+<strong>{{ method.domain }}</strong><p>{{ method.mode }}</p></article>
+{% endfor %}
+</section>
+<p class="callout warn">A program policy and explicit authorization are required before remote requests. This release does not launch exploit payloads or assign CVEs, and a missing header alone does not prove a bounty-eligible vulnerability.</p>
+{% endblock %}
