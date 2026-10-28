@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
@@ -41,7 +42,7 @@ def _root(path: str | Path, approved_roots) -> Path | None:
     if requested.is_symlink() or not requested.is_dir():
         return None
     resolved = requested.resolve(strict=True)
-    allowed = approved_roots.split(":") if isinstance(approved_roots, str) else approved_roots
+    allowed = approved_roots.split(os.pathsep) if isinstance(approved_roots, str) else approved_roots
     for candidate in allowed or ():
         try:
             permitted = Path(candidate).expanduser()

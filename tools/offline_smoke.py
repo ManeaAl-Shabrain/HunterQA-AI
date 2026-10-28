@@ -4,7 +4,6 @@ It tests local parsers and orchestrator with a mocked Semgrep result.
 Run full pytest with Flask/Semgrep on the Kali VM.
 """
 import json
-import subprocess
 import sys
 import tempfile
 import types
@@ -15,7 +14,7 @@ pkg=types.ModuleType('hunterqa')
 pkg.__path__=[str(ROOT/'hunterqa')]
 sys.modules['hunterqa']=pkg
 sys.path.insert(0,str(ROOT))
-from hunterqa.research import normalize_research_report, get_crash_signal
+from hunterqa.research import normalize_research_report
 from hunterqa.evidence import correlate_evidence
 from hunterqa.engines.config_audit import audit_project
 from hunterqa.engines.openapi import audit_openapi
@@ -76,7 +75,7 @@ import yaml
 r=yaml.safe_load((ROOT/'hunterqa'/'rules'/'semgrep.yml').read_text())
 check(isinstance(r.get('rules'),list) and len(r['rules'])>=10,'offline Semgrep rule file parses')
 from jinja2 import Environment
-engine=Environment()
+engine=Environment(autoescape=True)
 for f in (ROOT/'hunterqa'/'templates').glob('*.html'):
     engine.parse(f.read_text())
 check(True,'Jinja templates parse')

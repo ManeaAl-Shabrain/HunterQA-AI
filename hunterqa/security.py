@@ -40,5 +40,7 @@ def csrf_token() -> str:
 
 def valid_csrf(value: str | None) -> bool:
     expected = session.get("csrf_token", "")
-    return bool(value and expected and hmac.compare_digest(value, expected))
+    return bool(isinstance(value, str) and isinstance(expected, str) and value and expected
+                and len(value) <= 256
+                and hmac.compare_digest(value.encode("utf-8"), expected.encode("utf-8")))
 

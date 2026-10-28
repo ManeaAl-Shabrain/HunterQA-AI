@@ -1,3 +1,14 @@
+# Development maintenance and assessment evidence improvements
+
+Current source adds a read-only assessment dashboard, offline same-plan
+comparison, stricter loopback-only AI transport, dashboard peer/Host and CSP
+controls, resilient analyzer import, conservative advisory withdrawal handling,
+OpenAPI anonymous-authentication interpretation, bounded local file reads,
+private create-only crash output, stricter archive verification, and additional
+quality/rule acceptance checks. See [review scope and limits](docs/REPOSITORY_REVIEW_2026_10.md).
+These changes do not replace the immutable v1.2.0 release archive or constitute
+a new stable release or security certification.
+
 # HunterQA AI v1.2.0 — Stable Authorized AI Research & Verification
 
 **Version:** 1.2.0

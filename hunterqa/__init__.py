@@ -3,8 +3,10 @@ from __future__ import annotations
 import os
 import secrets
 import shutil
+import ipaddress
 from pathlib import Path
-from flask import Flask
+from urllib.parse import urlsplit
+from flask import Flask, abort, g, request
 from .db import init_app as init_db
 from .routes import bp
 from .scanner import ScanService
@@ -37,6 +39,8 @@ def create_app(test_config: dict | None = None) -> Flask:
         HEAD_REPLAY_REPORT_PATH=os.environ.get("HUNTERQA_HEAD_REPLAY_REPORT", ""),
         REVIEW_DOSSIER_PATH=os.environ.get("HUNTERQA_REVIEW_DOSSIER", ""),
         BENCHMARK_REPORT_PATH=os.environ.get("HUNTERQA_BENCHMARK_REPORT", ""),
+        ENGAGEMENT_REPORT_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_REPORT", ""),
+        ENGAGEMENT_BASELINE_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_BASELINE", ""),
         CAMPAIGN_HISTORY_ROOT=os.environ.get("HUNTERQA_CAMPAIGN_HISTORY_ROOT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),
@@ -57,11 +61,40 @@ def create_app(test_config: dict | None = None) -> Flask:
     app.register_blueprint(bp)
     app.jinja_env.globals["safe_report_markdown"] = safe_report_markdown
     app.extensions["scan_service"] = app.config.get("SCAN_SERVICE") or ScanService(app)
+    @app.before_request
+    def enforce_local_dashboard():
+        # Do not trust Forwarded/X-Forwarded-For; hosted/proxied deployment is unsupported.
+        try:
+            peer = ipaddress.ip_address(request.remote_addr or "")
+            authority = urlsplit("//" + request.host)
+            valid_host = (authority.hostname in {"localhost", "127.0.0.1", "::1"}
+                          and authority.username is None and authority.password is None
+                          and not authority.path and not authority.query and not authority.fragment)
+            port = authority.port
+            valid_host = valid_host and (port is None or 1 <= port <= 65535)
+        except ValueError:
+            abort(400)
+        if not peer.is_loopback:
+            abort(403)
+        if not valid_host:
+            abort(400)
+        g.csp_nonce = secrets.token_urlsafe(18)
+
+    @app.context_processor
+    def browser_policy_context():
+        return {"csp_nonce": getattr(g, "csp_nonce", "")}
+
     @app.after_request
     def secure_headers(response):
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "DENY")
         response.headers.setdefault("Referrer-Policy", "no-referrer")
         response.headers.setdefault("Cache-Control", "no-store")
+        nonce = getattr(g, "csp_nonce", "")
+        response.headers.setdefault("Content-Security-Policy",
+            "default-src 'self'; script-src 'self' 'nonce-" + nonce + "'; "
+            "style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+            "connect-src 'self'; object-src 'none'; base-uri 'none'; "
+            "form-action 'self'; frame-ancestors 'none'")
         return response
     return app

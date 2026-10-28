@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import threading
 import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -12,9 +10,7 @@ from typing import Any
 from flask import Flask
 
 from .db import connect
-from .engines.config_audit import audit_project
-from .engines.openapi import audit_openapi
-from .engines.dependencies import inventory
+from .local_ai import generate
 from .orchestrator import scan_local_source, normalize_semgrep, deduplicate
 
 
@@ -52,7 +48,8 @@ class ScanService:
         safe = {key: value for key, value in values.items() if key in allowed}
         assignments = ", ".join(f"{key} = ?" for key in safe)
         with connect(self.app.config["DATABASE"]) as db:
-            db.execute(f"UPDATE scans SET {assignments} WHERE id = ?", (*safe.values(), scan_id))
+            # Column names come exclusively from the fixed allowlist above; values are bound.
+            db.execute(f"UPDATE scans SET {assignments} WHERE id = ?", (*safe.values(), scan_id))  # nosec B608
 
     def run(self, scan_id: int) -> None:
         with connect(self.app.config["DATABASE"]) as db:
@@ -112,25 +109,19 @@ class ScanService:
             "summary, prioritized remediation, false-positive review guidance, and verification steps.\n\nFindings:\n"
             + json.dumps(summary, ensure_ascii=False)
         )
-        body = json.dumps({
+        payload = {
             "model": self.app.config["OLLAMA_MODEL"],
             "prompt": prompt,
             "stream": False,
             "options": {"temperature": 0.1, "num_predict": 1200},
-        }).encode("utf-8")
-        request = urllib.request.Request(
-            self.app.config["OLLAMA_URL"].rstrip("/") + "/api/generate",
-            data=body,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+        }
         try:
-            with urllib.request.urlopen(request, timeout=120) as response:
-                result = json.loads(response.read().decode("utf-8"))
-                text = str(result.get("response") or "").strip()
-                if text:
-                    return text
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+            result = generate(payload, endpoint=self.app.config["OLLAMA_URL"].rstrip("/") + "/api/generate",
+                              timeout=120, max_response=512_000)
+            text = result.get("response")
+            if isinstance(text, str) and text.strip():
+                return text.strip()
+        except (OSError, urllib.error.URLError, TimeoutError, ValueError, UnicodeError):
             pass
         counts: dict[str, int] = {}
         for finding in findings:
@@ -138,8 +129,9 @@ class ScanService:
         count_text = ", ".join(f"{key}: {value}" for key, value in sorted(counts.items())) or "No findings"
         return (
             "# Local analysis summary\n\n"
-            f"Semgrep completed with **{len(findings)} findings** ({count_text}).\n\n"
+            f"Local analysis produced **{len(findings)} unverified findings** ({count_text}).\n\n"
             "The local Ollama model was unavailable, so this deterministic summary was generated instead. "
-            "Review each finding in source context, prioritize ERROR findings, apply the smallest safe fix, and rerun the scan."
+            "Review each finding in source context. Scanner severity is a triage cue, not a verified impact rating. "
+            "Apply the smallest appropriate fix and rerun the scan."
         )
 

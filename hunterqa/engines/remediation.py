@@ -10,9 +10,9 @@ import hashlib
 import json
 import os
 import re
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from ..local_ai import generate
 
 MAX_REPORT_BYTES = 2_000_000
 MAX_SOURCE_BYTES = 100_000
@@ -94,23 +94,13 @@ def _source_at_line(project: Path, filename: str, line: int):
 
 
 def _ollama_request(prompt: str, model: str) -> dict:
-    data = json.dumps({
+    outer = generate({
         "model": model,
         "prompt": prompt,
         "format": "json",
         "stream": False,
         "options": {"temperature": 0, "num_predict": 500},
-    }).encode("utf-8")
-    request = urllib.request.Request(
-        OLLAMA_ENDPOINT, data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    with urllib.request.urlopen(request, timeout=180) as response:
-        raw = response.read(MAX_RESPONSE_BYTES + 1)
-    if len(raw) > MAX_RESPONSE_BYTES:
-        raise ValueError("Local model response exceeds limit")
-    outer = json.loads(raw.decode("utf-8"))
+    }, endpoint=OLLAMA_ENDPOINT, timeout=180, max_response=MAX_RESPONSE_BYTES)
     result = json.loads(outer.get("response", "{}"))
     if not isinstance(result, dict):
         raise ValueError("Model returned an invalid JSON object")

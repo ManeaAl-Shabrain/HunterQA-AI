@@ -27,6 +27,15 @@ local-first, bounded analysis, not evasion of detection or monitoring.
 
 The dashboard is designed for loopback (`127.0.0.1`) and single-user Kali lab
 operation. Do not expose the Flask development server publicly.
+Application requests also enforce loopback peer addresses and exact local Host
+names, ignoring forwarded-address headers. This does not make it suitable for
+hosting behind a proxy. A Content Security Policy restricts scripts to local
+assets and the dashboard's per-request nonce; imported evidence stays escaped.
+
+All source-review, remediation, report-generation and agent-review Ollama calls
+use the exact `http://127.0.0.1:11434/api/generate` endpoint, disable environmental
+HTTP proxies and redirects, and bound request/response sizes. No remote fallback
+is available. Loopback services still share the operator's local trust boundary.
 
 The original optional Playwright browser lab permits only an owned, explicitly approved
 `127.0.0.1` service; Playwright route interception is **not a network firewall**.

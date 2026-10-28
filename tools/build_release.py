@@ -27,7 +27,7 @@ EXCLUDED_FILES = {".env", ".env.local", ".env.production", "id_rsa", "id_ed25519
 ALLOW_ROOTS = {".github", "hunterqa", "zeroscope", "tests", "docs", "examples", "tools", "labs"}
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml",
-    "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh",
+    "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh", "zero to start.md",
 }
 
 

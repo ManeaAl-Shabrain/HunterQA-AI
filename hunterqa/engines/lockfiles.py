@@ -10,6 +10,7 @@ import json
 import re
 import tomllib
 from pathlib import Path
+from ..source_files import read_bounded
 
 MAX_LOCK_BYTES = 4_000_000
 MAX_PACKAGES_PER_FILE = 1500
@@ -75,14 +76,12 @@ def parse_lockfile(path: Path, relative: str) -> list[dict]:
         return []
     if path.stat().st_size > MAX_LOCK_BYTES:
         return []
-    raw = path.read_bytes()
-    if len(raw) > MAX_LOCK_BYTES:
-        return []
     try:
+        raw = read_bounded(path, MAX_LOCK_BYTES)
         data = tomllib.loads(raw.decode("utf-8")) if path.suffix == ".lock" and path.name in {
             "poetry.lock", "uv.lock"
         } else json.loads(raw.decode("utf-8"))
-    except (UnicodeError, ValueError, tomllib.TOMLDecodeError):
+    except (OSError, UnicodeError, ValueError, tomllib.TOMLDecodeError):
         return []
     if not isinstance(data, dict):
         return []

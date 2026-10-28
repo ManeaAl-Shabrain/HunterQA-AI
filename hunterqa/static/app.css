@@ -4,6 +4,9 @@
 
 /* HunterQA research extension */
 .research-details {padding: 22px 26px; line-height: 1.8; color: var(--text, #e3e9e8);}
+.sidebar nav {flex:1; min-height:0; overflow-y:auto; scrollbar-width:thin;}
+.sidebar .brand,.sidebar .local-guard,.sidebar .sidebar-foot {flex-shrink:0;}
+@media(max-width:720px){.sidebar nav{overflow-x:auto;white-space:nowrap}.sidebar nav a{flex-shrink:0}}
 .research-entry {border-bottom: 1px solid #2a3637; padding: 13px 0;}
 .research-entry summary {cursor:pointer; font-weight:600;}
 .research-meta {display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; padding:20px 24px;}

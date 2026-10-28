@@ -7,12 +7,21 @@ import argparse
 import hashlib
 import json
 import re
+import stat
 import zipfile
 from pathlib import PurePosixPath
 
 MAX_FILES = 2000
 MAX_BYTES = 100_000_000
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _safe_name(name):
+    path = PurePosixPath(name)
+    return (isinstance(name, str) and name.startswith("HunterQA-AI/")
+            and len(path.parts) >= 2 and path.as_posix() == name
+            and all(piece not in {".", ".."} for piece in path.parts)
+            and not any(ord(char) < 32 or ord(char) == 127 or char in "\\:" for char in name))
 
 
 def verify_archive(path):
@@ -24,10 +33,9 @@ def verify_archive(path):
         total = 0
         for info in entries:
             name = info.filename
-            rel = PurePosixPath(name)
-            if (name in by_name or name.startswith("/")
-                    or "\\" in name or ".." in rel.parts
-                    or not name.startswith("HunterQA-AI/")
+            file_type = stat.S_IFMT(info.external_attr >> 16)
+            if (name in by_name or not _safe_name(name)
+                    or file_type not in (0, stat.S_IFREG)
                     or info.is_dir() or info.file_size > 2_000_000):
                 raise ValueError("Unsafe or duplicate release archive member")
             total += info.file_size
@@ -48,7 +56,7 @@ def verify_archive(path):
             sha = item.get("sha256")
             size = item.get("bytes")
             if (not isinstance(rel, str) or not rel or rel.startswith("/")
-                    or ".." in PurePosixPath(rel).parts
+                    or not _safe_name("HunterQA-AI/" + rel)
                     or not isinstance(sha, str) or not SHA256.fullmatch(sha)
                     or type(size) is not int or not 0 <= size <= 2_000_000):
                 raise ValueError("Malformed file metadata")

@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 from .lockfiles import ALLOWED, parse_lockfile
+from ..source_files import project_files, read_bounded
 
 MAX_MANIFEST_BYTES = 1_000_000
 
@@ -15,7 +16,7 @@ def _entry(ecosystem: str, name: str, version: str, source: str) -> dict:
 def inventory(root: Path) -> list[dict]:
     root = root.resolve(strict=True)
     rows = []
-    for p in sorted(root.rglob("*")):
+    for p in project_files(root):
         if p.is_symlink() or not p.is_file() or p.name not in ({"requirements.txt", "package.json", "composer.json"} | ALLOWED):
             continue
         if any(part in {".git", ".venv", "node_modules", "vendor", "__pycache__"} for part in p.relative_to(root).parts):
@@ -32,14 +33,16 @@ def inventory(root: Path) -> list[dict]:
         if p.stat().st_size > MAX_MANIFEST_BYTES:
             continue
         try:
+            content = read_bounded(p, MAX_MANIFEST_BYTES).decode("utf-8")
             if p.name == "requirements.txt":
-                for line in p.read_text(encoding="utf-8").splitlines():
+                for line in content.splitlines():
                     # Only report pinned versions; do not infer installed versions.
                     match = re.match(r"^([A-Za-z0-9_.-]+)==([A-Za-z0-9_.+!-]+)(?:\s|$)", line.strip())
                     if match:
-                        rows.append({**_entry("PyPI", match[1].lower().replace("_", "-"), match[2], rel), "resolution": "exact_manifest_declaration"})
+                        normalized = re.sub(r"[-_.]+", "-", match[1]).lower()
+                        rows.append({**_entry("PyPI", normalized, match[2], rel), "resolution": "exact_manifest_declaration"})
             else:
-                payload = json.loads(p.read_text(encoding="utf-8"))
+                payload = json.loads(content)
                 if not isinstance(payload, dict):
                     continue
                 eco = "npm" if p.name == "package.json" else "Packagist"
@@ -52,7 +55,7 @@ def inventory(root: Path) -> list[dict]:
                             continue
                         # Constraint is not a resolved package version.
                         rows.append({**_entry(eco, str(name)[:160], constraint[:120], rel), "resolution": "unresolved_manifest_constraint"})
-        except (OSError, UnicodeError, json.JSONDecodeError):
+        except (OSError, UnicodeError, ValueError):
             continue
         if len(rows) >= 2000:
             break
@@ -63,6 +66,8 @@ def match_local_advisories(dependencies: list[dict], advisories: list[dict]) -> 
     """Only exact pinned package/version matches; no network calls or speculative CVEs."""
     results = []
     for pkg in dependencies:
+        if pkg.get("resolution") == "unresolved_manifest_constraint":
+            continue
         for a in advisories[:5000]:
             if not isinstance(a, dict):
                 continue

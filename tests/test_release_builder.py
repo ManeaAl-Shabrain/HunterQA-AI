@@ -17,6 +17,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         ("labs/research-lab/verification/local_evidence.json", '{"secret":"private"}'),
         ("LICENSE", "MIT License\n"),
         ("SECURITY.md", "Security policy\n"),
+        ("zero to start.md", "Public setup guide\n"),
         (".github/workflows/release-qa.yml", "name: Test CI\n"),
         ("hunterqa/.env", "TOKEN=SECRET\n"),
         ("instance/cache.sqlite3", "sensitive"),
@@ -42,6 +43,7 @@ def test_builder_excludes_runtime_data_and_private_files(tmp_path):
         assert "HunterQA-AI/labs/research-lab/verification/local_evidence.json" not in names
         assert "HunterQA-AI/LICENSE" in names
         assert "HunterQA-AI/SECURITY.md" in names
+        assert "HunterQA-AI/zero to start.md" in names
         assert "HunterQA-AI/.github/workflows/release-qa.yml" in names
         assert "HunterQA-AI/hunterqa/.env" not in names
         assert "HunterQA-AI/instance/cache.sqlite3" not in names

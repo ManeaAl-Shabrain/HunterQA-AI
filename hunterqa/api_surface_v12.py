@@ -6,7 +6,6 @@ roots. The output is a *review queue*, not a claim of exploitability or CVEs.
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 from datetime import datetime, timezone
 from urllib.parse import urlsplit
@@ -42,8 +41,14 @@ def _auth_declaration(operation, global_security):
         return "invalid"
     if len(security) == 0:
         return "explicitly_public"
-    if len(security) > 20 or any(not isinstance(entry, dict) or not entry for entry in security):
+    if len(security) > 20 or any(not isinstance(entry, dict) for entry in security):
         return "invalid"
+    if any(not isinstance(scopes, list) or len(scopes) > 100 or any(not isinstance(scope, str) for scope in scopes)
+           for entry in security for scopes in entry.values()):
+        return "invalid"
+    # OpenAPI defines {} as an anonymous alternative, not a malformed declaration.
+    if any(not entry for entry in security):
+        return "optional_authentication" if any(entry for entry in security) else "explicitly_public"
     return "declared_inherited" if inherited else "declared"
 
 
@@ -142,10 +147,10 @@ def inspect_openapi(spec_path, profile_path, *, authorized=False):
                         "Check authorization policy on state-changing API",
                         "Schema lacks a valid declared auth requirement; this is not proof of unauthorized access.",
                         "review")
-            if auth == "explicitly_public" and write_method:
+            if auth in ("explicitly_public", "optional_authentication") and write_method:
                 suggest("api.public-write-review",
                         "Check intended public write operation",
-                        "Security is explicitly empty on a modifying operation; public behavior may be intentional.",
+                        "Schema permits an anonymous alternative on a modifying operation; public behavior may be intentional.",
                         "review")
             if object_ref:
                 suggest("api.object-access-review",

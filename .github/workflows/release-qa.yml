@@ -11,6 +11,10 @@ jobs:
   source-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
     steps:
       - name: Check out untrusted source without write credentials
         uses: actions/checkout@v4
@@ -19,10 +23,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: ${{ matrix.python }}
           cache: pip
       - name: Install local project and test dependencies
-        run: python -m pip install -e '.[dev]'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev,quality]'
+      - name: Undefined names and unused imports
+        run: python -m ruff check hunterqa zeroscope tools --select F
+      - name: Review medium and high severity static security checks
+        run: python -m bandit -r hunterqa zeroscope tools -ll
+      - name: Audit installed third-party dependency advisories
+        run: python -m pip_audit --skip-editable --progress-spinner off
       - name: Python syntax verification
         run: python -m compileall -q hunterqa zeroscope
       - name: Regression tests
@@ -42,9 +54,24 @@ jobs:
       - name: Real Chromium approved-form checks with synthetic intercepted responses
         env:
           HUNTERQA_ENGAGEMENT_BROWSER_CI: "1"
-        run: python -m pytest -q tests/test_engagement.py
+        run: python -m pytest -q tests/test_engagement.py tests/test_dashboard_browser.py
       - name: Build and verify complete source package
         shell: bash
         run: |
           python tools/build_release.py --repo . --out "$RUNNER_TEMP/HunterQA-AI-1.2.0-qa-source.zip"
           python tools/verify_release_archive.py "$RUNNER_TEMP/HunterQA-AI-1.2.0-qa-source.zip"
+
+  bundled-rule-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the optional Semgrep engine for real rule validation
+        run: python -m pip install semgrep
+      - name: Validate and exercise bundled rules on synthetic positive and negative fixtures
+        run: python tools/verify_semgrep_rules.py

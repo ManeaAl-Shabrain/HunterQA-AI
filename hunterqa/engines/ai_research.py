@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import json
 import os
-import urllib.request
 from pathlib import Path
+from ..local_ai import generate
 
 SOURCE_EXT = {
     ".py", ".js", ".jsx", ".ts", ".tsx",
@@ -180,7 +180,7 @@ def _ask_ollama(samples: list[dict], model: str):
         + json.dumps(public_samples, ensure_ascii=False)
     )
 
-    payload = json.dumps({
+    envelope = generate({
         "model": model,
         "stream": False,
         "format": "json",
@@ -189,24 +189,7 @@ def _ask_ollama(samples: list[dict], model: str):
             "temperature": 0,
             "num_predict": 1000,
         },
-    }).encode("utf-8")
-
-    request = urllib.request.Request(
-        OLLAMA_URL,
-        data=payload,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
-    with urllib.request.urlopen(
-        request, timeout=240
-    ) as response:
-        raw_response = response.read(512_001)
-
-    if len(raw_response) > 512_000:
-        raise ValueError("Ollama response exceeds size limit")
-
-    envelope = json.loads(raw_response)
+    }, endpoint=OLLAMA_URL, timeout=240, max_response=512_000)
     return json.loads(envelope.get("response", "{}"))
 
 

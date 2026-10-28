@@ -2,6 +2,7 @@
 from __future__ import annotations
 import re
 from pathlib import Path
+from ..source_files import project_files, read_bounded
 
 MAX_FILES = 1500
 MAX_BYTES = 256 * 1024
@@ -24,7 +25,7 @@ def audit_project(root: Path) -> list[dict]:
     root = root.resolve(strict=True)
     results = []
     visited = 0
-    for p in sorted(root.rglob("*")):
+    for p in project_files(root):
         if visited >= MAX_FILES:
             break
         # No symlink following and no analysis outside root.
@@ -36,8 +37,8 @@ def audit_project(root: Path) -> list[dict]:
         try:
             if p.stat().st_size > MAX_BYTES:
                 continue
-            content = p.read_text(encoding="utf-8", errors="replace")
-        except OSError:
+            content = read_bounded(p, MAX_BYTES).decode("utf-8", errors="replace")
+        except (OSError, ValueError):
             continue
         for rule_id, severity, cwe, marker, pattern, message in RULES:
             if marker != "Dockerfile" and p.suffix.lower() != marker:
