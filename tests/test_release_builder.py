@@ -5,6 +5,33 @@ import zipfile
 from tools.build_release import build
 
 
+def test_builder_packages_only_curated_public_templates(tmp_path):
+    repo = tmp_path / "template-repo"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+    files = {
+        "pyproject.toml": '[project]\nname="hunterqa-ai"\nversion="1.3.0"\n',
+        "templates/README.md": "Public template instructions\n",
+        "templates/HunterQA-scope-template.json": '{"acknowledged_authorization":false}\n',
+        "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
+        "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
+    }
+    for name, value in files.items():
+        path = repo / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(value, encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    archive_path = tmp_path / "templates-source.zip"
+    manifest = build(repo, archive_path)
+    included = {row["path"] for row in manifest["files"]}
+    assert "templates/README.md" in included
+    assert "templates/HunterQA-scope-template.json" in included
+    assert "templates/client-filled-profile.json" not in included
+    assert "templates/client-case/findings.json" not in included
+    with zipfile.ZipFile(archive_path) as archive:
+        assert all(b"PRIVATE_FIXTURE" not in archive.read(name) for name in archive.namelist())
+
+
 def test_builder_excludes_runtime_data_and_private_files(tmp_path):
     repo = tmp_path / "repo"
     repo.mkdir()

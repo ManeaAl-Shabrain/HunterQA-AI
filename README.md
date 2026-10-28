@@ -181,6 +181,7 @@ The builder creates a new archive, includes the public guides/artwork, excludes 
 | --- | --- |
 | [Zero to Start](<zero to start.md>) | Installation, complete offline demo, approved checks, reporting and troubleshooting |
 | [Authorized Assessment — Beginner’s Guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) | First organization-approved assessment: scope, reviewed HEAD observation, evidence and reporting |
+| [Assessment templates](templates/README.md) | Original scope/target templates, matching instructions and private worksheets for every step |
 | [1.3.0 release notes](docs/RELEASE_1_3_0.md) | Exact release inventory and known limitations |
 | [Versioning policy](docs/VERSIONING.md) | Canonical version, immutable historical tags and publication procedure |
 | [Operational workflows](docs/WORKFLOW_RUNNER.md) | Adapter bindings, controls, audit and retest semantics |
