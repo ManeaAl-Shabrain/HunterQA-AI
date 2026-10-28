@@ -233,3 +233,30 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
             "contents were exported. Check local server, selectors and allowlist."
         ) from None
     return result
+
+
+
+def read_browser_summary(path):
+    """Read approved local browser metadata without exposing page data."""
+    empty = {"status": "not_configured", "approved_requests": 0,
+             "blocked_requests": 0, "login": "not_attempted"}
+    if not path:
+        return empty
+    from .bounty import _read_json
+    try:
+        report = _read_json(path, 100_000)
+        if not isinstance(report, dict) or report.get("engine") != "hunterqa_v12_owned_browser_lab":
+            return empty
+        stats = report.get("traffic")
+        if not isinstance(stats, dict):
+            return empty
+        approved, blocked = stats.get("approved_requests"), stats.get("blocked_requests")
+        login = report.get("authentication")
+        if (type(approved) is not int or type(blocked) is not int or
+                not 0 <= approved <= 20 or not 0 <= blocked <= 100_000 or
+                login not in ("attempted_unverified", "not_attempted")):
+            return empty
+        return {"status": "ready", "approved_requests": approved,
+                "blocked_requests": blocked, "login": login}
+    except (OSError, ValueError, UnicodeError, TypeError, KeyError):
+        return empty
