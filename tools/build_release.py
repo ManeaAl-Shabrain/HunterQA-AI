@@ -63,7 +63,7 @@ def build(repo: Path, output: Path) -> dict:
     if output.exists():
         raise FileExistsError("Use a new output ZIP filename")
     output.parent.mkdir(parents=True, exist_ok=True)
-    manifest = {"project": "HunterQA AI", "release": "1.1.0", "files": []}
+    manifest = {"project": "HunterQA AI", "release": "1.2.0-development", "files": []}
     with zipfile.ZipFile(output, "x", compression=zipfile.ZIP_DEFLATED) as archive:
         for rel, file in sorted(tracked_files(repo), key=lambda r: r[0].as_posix()):
             content = file.read_bytes()
