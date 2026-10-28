@@ -237,7 +237,8 @@ def resolve_pinned(policy: BountyPolicy, host: str, port: int):
         raise ValueError("DNS did not resolve the authorized host")
     for raw in ips:
         ip = ipaddress.ip_address(raw)
-        if (ip.is_unspecified or ip.is_multicast or
+        if (ip.is_unspecified or ip.is_multicast or ip.is_link_local or
+                ip.is_reserved or
                 (not ip.is_global and not (policy.lab_mode and policy.allow_private_network))):
             raise ValueError("Unsafe DNS answer, refusing the entire host")
     return ips[0]
