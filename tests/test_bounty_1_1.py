@@ -198,3 +198,13 @@ def test_header_analysis_is_not_exploit_confirmation():
     })
     assert findings
     assert all(f["cve_id"] is None and f["zero_day_confirmed"] is False for f in findings)
+
+
+def test_link_local_metadata_address_rejected_even_in_lab(profile, monkeypatch):
+    import socket
+    profile["lab_mode"] = True
+    profile["allow_private_network"] = True
+    monkeypatch.setattr(socket, "getaddrinfo",
+                        lambda *args, **kwargs: [(2, 1, 6, "", ("169.254.169.254", 443))])
+    with pytest.raises(ValueError, match="Unsafe DNS"):
+        resolve_pinned(BountyPolicy.from_dict(profile), "app.example.test", 443)
