@@ -94,6 +94,17 @@ def main(argv=None):
     bounty_export = sub.add_parser("bounty-report", help="Draft a human-reviewed Markdown bug bounty report")
     bounty_export.add_argument("--file", required=True)
     bounty_export.add_argument("--out", required=True)
+    engagement = sub.add_parser("bounty-campaign", help="Unify local SAST/AI, optional OSV/HAR and approved HTTP research")
+    engagement.add_argument("--project", required=True)
+    engagement.add_argument("--out-dir", required=True)
+    engagement.add_argument("--profile", required=True)
+    engagement.add_argument("--snapshot")
+    engagement.add_argument("--har")
+    engagement.add_argument("--with-ai", action="store_true")
+    engagement.add_argument("--with-web", action="store_true")
+    engagement.add_argument("--targets")
+    engagement.add_argument("--method", choices=("HEAD", "GET"), default="HEAD")
+    engagement.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -200,6 +211,19 @@ def main(argv=None):
         from .bounty import bounty_markdown, _read_json
         evidence = _read_json(args.file, 1_000_000)
         _write_bounty_output(args.out, bounty_markdown(evidence))
+    elif args.command == "bounty-campaign":
+        from .bounty_campaign import run_bounty_campaign
+        result = run_bounty_campaign(
+            args.project, args.out_dir, args.profile, authorized=args.authorized,
+            with_ai=args.with_ai, with_web=args.with_web,
+            targets_path=args.targets, method=args.method,
+            snapshot_path=args.snapshot, har_path=args.har,
+        )
+        print("Engagement saved:", result["output_directory"])
+        print("Source candidates:", result["summary"]["source_candidates"])
+        print("Advisory records:", result["summary"]["advisory_records"])
+        print("Web observations:", result["summary"]["http_observations"])
+        print("Findings require human verification before submission.")
     elif args.command == "propose-fix":
         if not args.authorized:
             raise PermissionError("Remediation proposals require --authorized")
