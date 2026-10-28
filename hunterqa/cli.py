@@ -126,6 +126,21 @@ def main(argv=None):
     ai12.add_argument("--model", choices=("qwen2.5-coder:3b", "qwen2.5-coder:7b"), default="qwen2.5-coder:3b")
     ai12.add_argument("--out", required=True)
     ai12.add_argument("--authorized", action="store_true")
+    browser_lab = sub.add_parser("bounty-browser-lab", help="Owned 127.0.0.1 Playwright lab review with optional scoped login")
+    browser_lab.add_argument("--profile", required=True)
+    browser_lab.add_argument("--url", required=True, help="Owned 127.0.0.1 lab URL, no queries")
+    browser_lab.add_argument("--login", action="store_true")
+    browser_lab.add_argument("--login-post-path", help="One approved local login endpoint, e.g. /login")
+    browser_lab.add_argument("--username-selector", default="#username")
+    browser_lab.add_argument("--password-selector", default="#password")
+    browser_lab.add_argument("--submit-selector", default="button[type=submit]")
+    browser_lab.add_argument("--out", required=True)
+    browser_lab.add_argument("--authorized", action="store_true")
+    replay12 = sub.add_parser("bounty-replay-head", help="Safe HEAD-only replay of approved sanitized HAR evidence")
+    replay12.add_argument("--profile", required=True)
+    replay12.add_argument("--har-report", required=True)
+    replay12.add_argument("--out", required=True)
+    replay12.add_argument("--authorized", action="store_true")
     fix = sub.add_parser("propose-fix", help="Generate a read-only local AI patch suggestion for one triage finding")
     fix.add_argument("--project", required=True)
     fix.add_argument("--triage", required=True)
@@ -261,6 +276,22 @@ def main(argv=None):
     elif args.command == "bounty-ai-review":
         from .agent_ai_v12 import suggest_reviews
         report = suggest_reviews(args.plan, model=args.model, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-browser-lab":
+        from .browser_lab_v12 import inspect_owned_browser
+        report = inspect_owned_browser(
+            args.profile, args.url, authorized=args.authorized,
+            login=args.login, login_post_path=args.login_post_path,
+            username_selector=args.username_selector,
+            password_selector=args.password_selector,
+            submit_selector=args.submit_selector,
+        )
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    elif args.command == "bounty-replay-head":
+        from .replay_v12 import replay_har_head
+        report = replay_har_head(
+            args.profile, args.har_report, authorized=args.authorized
+        )
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "propose-fix":
         if not args.authorized:
