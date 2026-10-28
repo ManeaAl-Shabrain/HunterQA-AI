@@ -131,11 +131,27 @@ from source and isolated fuzz evidence. New vulnerability status, impact and
 CVE assignment require independent reproducibility and coordinated disclosure.
 There is no guarantee of finding unknown flaws.
 
+## v1.2 owned-browser and controlled replay milestone
+
+A second implementation milestone now lives on this same development branch:
+
+- `bounty-browser-lab`: isolated, non-persistent headless Playwright
+  against an **owned local loopback application only**, with optional
+  explicitly authorized single-form login, strict response handling, and
+  no saved credentials, cookies, HTML, HAR or screenshots.
+- `bounty-replay-head`: credential-free HEAD comparison of sanitized,
+  in-scope HAR observations using the original pinned-IP authorization gate.
+- Read-only browser and replay summary cards on `/agent-lab`.
+
+See `docs/BROWSER_LAB_V1_2.md` for exact Kali installation, private
+policy examples, optional Chromium acceptance, and important network-isolation
+limits. Playwright routes are not an OS firewall; use a disposable lab VM.
+No browser automation against public HackerOne/Bugcrowd assets is available.
+
 ## Next v1.2 milestones (not yet implemented)
 
-- A sandboxed authenticated Playwright research runner against disposable,
-  self-owned test identities, with per-request scope enforcement and no
-  credential export.
+- Independent host-level browser network isolation for trusted future
+  expansions beyond the currently owned-loopback-only browser lab.
 - Fine-grained HTTP interception and safe replay approvals with strict limits.
 - Enhanced proof reproduction and independent reviewer workflow.
 - Program profile import validation and richer reporting templates.
