@@ -1,7 +1,6 @@
 # HunterQA AI v1.2 — Playwright Browser Lab & Controlled HEAD Replay
 
-**Status:** v1.2 development on `feature/v1-2-ai-research-orchestration`.
-The published v1.1.0 stable release is not modified.
+**Status:** Stable v1.2.0 on `main`. v1.1.0 remains published as a historical release.
 
 ## Implemented in this milestone
 
@@ -153,7 +152,8 @@ A separate real Chromium test uses an ephemeral owned loopback server.
 Run `bash tools/verify_agent_1_2.sh` for existing API and agent acceptance,
 then the optional Chromium test above.
 
-The new code remains **development-only** until Kali acceptance, security
-review and approval to merge. A passed browser login fixture does not prove
+The browser functionality is included in stable v1.2.0 after reproducible CI
+checks; verify it in an isolated owned Kali lab before relying on it.
+A passed browser login fixture does not prove
 security vulnerability detection, zero-day discovery, WAF bypass, or
 fitness for public production targets.
