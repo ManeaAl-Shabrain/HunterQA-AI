@@ -10,6 +10,11 @@
 
 ## Your route
 
+For selected directory posture evidence, follow the
+[Active Directory review guide](docs/ACTIVE_DIRECTORY_REVIEW.md). Its template
+uses unknown values until the owner supplies verified source observations. This
+is offline declaration review, not live directory collection or NetExec execution.
+
 For offline JWT sample and OAuth/OIDC configuration review, follow the
 [Auth & Identity guide](docs/AUTH_IDENTITY_REVIEW.md). Copy its JSON template to
 a private case directory before adding evidence. This review does not verify

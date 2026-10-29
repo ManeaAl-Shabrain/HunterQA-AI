@@ -35,9 +35,10 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Exact admitted TCP host/port reachability
 - [x] Scoped service-evidence import
+- [x] Selected offline normalized AD/SMB/LDAP policy review
 - [ ] OS fingerprinting
 - [ ] Broad service/version assessment
-- [ ] Active Directory
+- [ ] Live Active Directory assessment
 - [ ] Internal attack-path testing
 - [ ] UDP
 
@@ -84,6 +85,15 @@ See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverifi
 - [ ] End-to-end SSO, session and scope-enforcement validation
 
 See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decoded claims remain unverified.
+
+## Additional Active Directory review pack
+
+- [x] Selected offline account, ACL, certificate, trust and hybrid privilege declarations
+- [x] Selected offline domain-controller SMB/LDAP policy review
+- [ ] Live directory collection, effective-access calculation and complete AD CS assessment
+- [ ] Active attack-path validation and native NetExec execution
+
+See [the AD review guide](ACTIVE_DIRECTORY_REVIEW.md). Supplied declarations remain unverified.
 
 ## Check your installation and owned lab
 

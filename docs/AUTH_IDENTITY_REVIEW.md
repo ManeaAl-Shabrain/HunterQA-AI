@@ -122,6 +122,6 @@ redaction, no DNS use, malformed inputs, bounds, explicit authorization, approve
 roots, non-overwrite and SARIF context. They do not establish real-world rates,
 server acceptance, cryptographic correctness or full SSO security.
 
-**Next requested category: Active Directory.** It has not been delivered by this
-pack. Any future addition must distinguish configuration/evidence review from
-unimplemented live attack methods.
+**Following category: [Active Directory](ACTIVE_DIRECTORY_REVIEW.md).** Its later
+offline normalized-evidence pack is separate from JWT/OAuth review and does not
+deliver live directory attack methods.

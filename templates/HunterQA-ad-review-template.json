@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "collected_at": null,
+  "accounts": [
+    {
+      "id": "account-one",
+      "enabled": null,
+      "kind": "unknown",
+      "tier0": null,
+      "is_domain_controller": null,
+      "user_account_control": null,
+      "spn_count": null
+    }
+  ],
+  "domain_controllers": [
+    {
+      "id": "dc-one",
+      "smb_signing_required": null,
+      "ldap_signing_required": null,
+      "ldap_channel_binding": "unknown",
+      "smb1_enabled": null
+    }
+  ],
+  "acl_grants": [
+    {
+      "id": "grant-one",
+      "principal_tier": "unknown",
+      "target_tier": "unknown",
+      "target_kind": "unknown",
+      "effect": "unknown",
+      "rights": null
+    }
+  ],
+  "certificate_templates": [
+    {
+      "id": "template-one",
+      "published": null,
+      "broad_enrollment": null,
+      "enrollee_supplies_subject": null,
+      "authentication_eku": null,
+      "manager_approval": null,
+      "authorized_signatures": null
+    }
+  ],
+  "trusts": [
+    {
+      "id": "trust-one",
+      "kind": "unknown",
+      "sid_filtering_enabled": null,
+      "selective_authentication": null
+    }
+  ],
+  "hybrid_accounts": [
+    {
+      "id": "hybrid-one",
+      "enabled": null,
+      "synchronized": null,
+      "on_prem_privileged": null,
+      "entra_privileged": null
+    }
+  ]
+}

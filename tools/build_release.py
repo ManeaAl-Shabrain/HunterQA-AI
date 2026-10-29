@@ -31,6 +31,7 @@ PUBLIC_TEMPLATES = {
     "02-plan-and-run-checklist.md", "03-findings-and-report.md", "04-retest-record.md",
     "05-web-application-review.md", "06-auth-identity-review.md",
     "HunterQA-identity-review-template.json",
+    "HunterQA-ad-review-template.json", "07-active-directory-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",
