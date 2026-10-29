@@ -390,6 +390,12 @@ def main(argv=None):
         iot.add_argument("--authorized", action="store_true")
         if name == "iot-config-review":
             iot.add_argument("--mode", choices=("mqtt-acl", "uboot-config"), required=True)
+    sub.add_parser("infrastructure-review-catalog", help="Show seven offline defensive Infrastructure review contracts")
+    for name in ("infrastructure-review", "infrastructure-pe-review"):
+        infra = sub.add_parser(name, help="Offline defensive evidence/PE header review; no payload or evasion execution")
+        infra.add_argument("--input", required=True)
+        infra.add_argument("--out", required=True)
+        infra.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -428,6 +434,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "infrastructure-review-catalog":
+        from .infrastructure_review import catalog
+        print(json.dumps({"category": "Infrastructure & Red Team", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("infrastructure-review", "infrastructure-pe-review"):
+        from .infrastructure_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode="pe-headers" if args.command == "infrastructure-pe-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "iot-review-catalog":
         from .iot_review import catalog
         print(json.dumps({"category": "IoT & Embedded", "skills": catalog(), "all_skills_automated": False}, indent=2))

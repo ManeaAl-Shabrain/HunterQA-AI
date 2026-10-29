@@ -7,6 +7,7 @@ from .wireless_review import catalog as wireless_review_catalog
 from .cloud_review import catalog as cloud_review_catalog
 from .mobile_review import catalog as mobile_review_catalog
 from .iot_review import catalog as iot_review_catalog
+from .infrastructure_review import catalog as infrastructure_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -60,7 +61,9 @@ def coverage_audit():
             {"name": "Mobile", "skills": mobile_review_catalog(),
              "all_skills_automated": False, "mode": "offline Android/iOS declarations and selected decoded XML configuration"},
             {"name": "IoT & Embedded", "skills": iot_review_catalog(),
-             "all_skills_automated": False, "mode": "offline IoT declarations and selected MQTT ACL/U-Boot build syntax"}],
+             "all_skills_automated": False, "mode": "offline IoT declarations and selected MQTT ACL/U-Boot build syntax"},
+            {"name": "Infrastructure & Red Team", "skills": infrastructure_review_catalog(),
+             "all_skills_automated": False, "mode": "offline defensive control declarations and selected non-loading PE headers"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -121,6 +124,12 @@ def render_checklist():
         "- [ ] Firmware acquisition/extraction, binary analysis and signed-image/boot-chain verification",
         "- [ ] Hardware, radio, live MQTT/CoAP/ICS and device vulnerability validation",
         "", "See [the IoT review guide](IOT_EMBEDDED_REVIEW.md). Source cues and owner declarations remain unverified.", "",
+        "## Additional Infrastructure & Red Team review pack", "",
+        "- [x] Seven offline defensive review contracts with nullable control observations",
+        "- [x] Selected x86/x64/ARM64 PE header flags and writable/executable section declarations without loading binaries",
+        "- [ ] Actual process mitigation, signature, instrumentation and OS/hardware enforcement verification",
+        "- [ ] Live infrastructure assessment and representative detection-effectiveness evaluation",
+        "", "See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR evasion or input capture is executed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
