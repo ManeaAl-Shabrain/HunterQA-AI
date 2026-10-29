@@ -171,4 +171,5 @@ broker access, signed-image verification, full NIST compliance or OT safety.
 - [CoAP specification](https://www.rfc-editor.org/rfc/rfc7252.html)
 - [NIST IoT capability baseline](https://csrc.nist.gov/pubs/ir/8259/a/final)
 
-**Next requested category: Infrastructure & Red Team.** It is not delivered here.
+The next category now has a separate [Infrastructure defensive review guide](INFRASTRUCTURE_REVIEW.md).
+Its local control/header review does not extend this IoT pack into live device testing.

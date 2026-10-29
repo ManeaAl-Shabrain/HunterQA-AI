@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "infra-initial-access",
+      "skill": "offensive-initial-access",
+      "observations": {
+        "attachment_controls_reviewed": null,
+        "remote_access_mfa_required": null,
+        "external_service_patch_reviewed": null
+      }
+    },
+    {
+      "id": "infra-advanced-redteam",
+      "skill": "offensive-advanced-redteam",
+      "observations": {
+        "scope_verified": null,
+        "segmentation_reviewed": null,
+        "detection_response_exercised": null
+      }
+    },
+    {
+      "id": "infra-edr-evasion",
+      "skill": "offensive-edr-evasion",
+      "observations": {
+        "tamper_protection_enabled": null,
+        "sensor_health_verified": null,
+        "telemetry_coverage_reviewed": null
+      }
+    },
+    {
+      "id": "infra-shellcode",
+      "skill": "offensive-shellcode",
+      "observations": {
+        "dynamic_code_policy_reviewed": null,
+        "unsigned_code_policy_reviewed": null,
+        "execution_telemetry_reviewed": null
+      }
+    },
+    {
+      "id": "infra-keylogger-arch",
+      "skill": "offensive-keylogger-arch",
+      "observations": {
+        "input_access_policy_reviewed": null,
+        "sensitive_input_controls_reviewed": null,
+        "collection_detection_reviewed": null
+      }
+    },
+    {
+      "id": "infra-windows-mitigations",
+      "skill": "offensive-windows-mitigations",
+      "observations": {
+        "dep_policy_reviewed": null,
+        "aslr_policy_reviewed": null,
+        "cfg_policy_reviewed": null,
+        "cet_policy_reviewed": null,
+        "acg_policy_reviewed": null,
+        "cig_policy_reviewed": null
+      }
+    },
+    {
+      "id": "infra-windows-boundaries",
+      "skill": "offensive-windows-boundaries",
+      "observations": {
+        "least_privilege_reviewed": null,
+        "integrity_boundary_reviewed": null,
+        "sandbox_policy_reviewed": null,
+        "broker_authorization_reviewed": null
+      }
+    }
+  ]
+}

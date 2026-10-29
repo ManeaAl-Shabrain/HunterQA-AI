@@ -132,6 +132,15 @@ See [the Mobile review guide](MOBILE_REVIEW.md). Source declarations and actual 
 
 See [the IoT review guide](IOT_EMBEDDED_REVIEW.md). Source cues and owner declarations remain unverified.
 
+## Additional Infrastructure & Red Team review pack
+
+- [x] Seven offline defensive review contracts with nullable control observations
+- [x] Selected x86/x64/ARM64 PE header flags and writable/executable section declarations without loading binaries
+- [ ] Actual process mitigation, signature, instrumentation and OS/hardware enforcement verification
+- [ ] Live infrastructure assessment and representative detection-effectiveness evaluation
+
+See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR evasion or input capture is executed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.
