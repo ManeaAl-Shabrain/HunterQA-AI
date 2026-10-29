@@ -345,6 +345,11 @@ def main(argv=None):
     assessment.add_argument("--authorized", action="store_true")
     coverage = sub.add_parser("coverage-audit", help="Show honest delivery and missing coverage across seven assessment areas")
     coverage.add_argument("--format", choices=("json", "markdown"), default="json")
+    sub.add_parser("web-review-catalog", help="Show all 16 Web Application review contracts and execution limits")
+    web_review = sub.add_parser("web-source-review", help="Offline Python web security source cues; never executes inspected code")
+    web_review.add_argument("--project", required=True)
+    web_review.add_argument("--out", required=True)
+    web_review.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -383,6 +388,17 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "web-review-catalog":
+        from .web_review import catalog
+        print(json.dumps({"category": "Web Application", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command == "web-source-review":
+        if not args.authorized:
+            raise PermissionError("Source review requires --authorized")
+        from .web_review import review_project
+        root = _approved_root(args.project)
+        _write_bounty_output(args.out, json.dumps(review_project(root), indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command.startswith("operator-"):
         from . import operator_store
         if args.command in ("operator-init", "operator-add", "operator-update", "operator-secret") and not args.authorized:

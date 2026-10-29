@@ -1,5 +1,6 @@
 """Explicit seven-area coverage contract. An adapter is not complete coverage."""
 from .workflow_protocol import tool_catalog
+from .web_review import catalog as web_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -40,6 +41,8 @@ def coverage_audit():
     catalog = {row["id"]: row for row in tool_catalog()}
     return {"engine": "hunterqa_coverage_audit", "schema_version": 1,
         "all_seven_areas_complete": False,
+        "category_packs": [{"name": "Web Application", "skills": web_review_catalog(),
+            "all_skills_automated": False, "mode": "offline Python source cues and guided review"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -59,7 +62,12 @@ def render_checklist():
         lines.extend(f"- [x] {label}" for label, _ in FEATURES[key])
         lines.extend(f"- [ ] {label}" for label in missing)
         lines.append("")
-    lines.extend(["## Check your installation and owned lab", "",
+    lines.extend(["## Additional Web Application review pack", "",
+        "- [x] Ten narrow offline Python source cues with source hashes and remediation",
+        "- [x] Six guided review contracts without automated detectors",
+        "- [ ] Comprehensive active validation across all 16 skills",
+        "", "See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverified.", "",
+        "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
         "`assessment-readiness --benchmark-dir PRIVATE_PATH --require-owned-lab` to recompute retained evidence.",

@@ -68,6 +68,14 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [ ] Representative per-class false-negative rates
 - [ ] Complete standards coverage
 
+## Additional Web Application review pack
+
+- [x] Ten narrow offline Python source cues with source hashes and remediation
+- [x] Six guided review contracts without automated detectors
+- [ ] Comprehensive active validation across all 16 skills
+
+See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

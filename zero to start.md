@@ -10,6 +10,12 @@
 
 ## Your route
 
+For the 16-skill Web Application review category, follow the
+[source review guide](docs/WEB_APPLICATION_REVIEW.md) and copy its
+[private worksheet](templates/05-web-application-review.md). Ten narrow Python
+source checks are implemented; six skills require guided review. This pack never
+executes inspected code and does not provide comprehensive active exploitation.
+
 To require viewer/analyst/admin accounts on the local dashboard, follow the
 [operator access setup](docs/OPERATOR_ACCESS.md). Keep its private control root
 separate from assessment roots. These accounts do not replace target permission,

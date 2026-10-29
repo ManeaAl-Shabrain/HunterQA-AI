@@ -12,6 +12,7 @@ from .engines.config_audit import audit_project
 from .engines.openapi import audit_openapi
 from .engines.dependencies import inventory
 from .source_files import positive_line
+from .web_review import review_project
 
 
 def normalize_semgrep(item: dict, root: Path) -> dict:
@@ -73,9 +74,12 @@ def scan_local_source(project: Path, rules: Path, timeout: int = 900) -> dict:
         raise RuntimeError("Semgrep reported errors; verify rule syntax and project files")
     semgrep_findings = [normalize_semgrep(row, project) for row in payload.get("results", [])[:1000]
                              if isinstance(row, dict)]
-    local_findings = audit_project(project) + audit_openapi(project)
+    web_review = review_project(project)
+    local_findings = audit_project(project) + audit_openapi(project) + web_review.pop("findings")
     return {"findings": deduplicate(semgrep_findings + local_findings)[:1000],
+            "web_review": web_review,
             "dependencies": inventory(project),
             "engines": {"semgrep": "completed", "config_audit": "completed",
-                        "openapi_contract": "completed", "dependency_inventory": "completed"},
+                        "openapi_contract": "completed", "dependency_inventory": "completed",
+                        "web_source_review": "partial"},
             "claims": {"zero_days_confirmed": 0, "verification": "unverified"}}

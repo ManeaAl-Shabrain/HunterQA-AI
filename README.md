@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Web Application review pack:** [16-skill coverage and instructions](docs/WEB_APPLICATION_REVIEW.md).
+`web-review-catalog` lists every contract; `web-source-review` inspects authorized
+local Python without executing it. Ten narrow source checks also run through the
+existing local scan engine; six skills provide guided review only. Reports retain
+source hashes, locations, remediation and explicit limits. This does not add
+comprehensive active exploitation or establish real-world detection accuracy.
+Use the [private category worksheet](templates/05-web-application-review.md).
+
 **Optional local operator access:** [setup and limits](docs/OPERATOR_ACCESS.md).
 `operator-init`, `operator-add`, `operator-update`, `operator-status`,
 `operator-audit` and `operator-secret` manage named local dashboard accounts,
