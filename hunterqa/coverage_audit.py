@@ -10,6 +10,7 @@ from .iot_review import catalog as iot_review_catalog
 from .infrastructure_review import catalog as infrastructure_review_catalog
 from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
+from .recon_review import catalog as recon_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -69,7 +70,9 @@ def coverage_audit():
             {"name": "Exploit Development", "skills": exploit_dev_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance declarations, selected sanitizer log markers and non-loading ELF headers"},
             {"name": "Fuzzing & Vulnerability Research", "skills": fuzzing_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance declarations and selected AFL++ stats/libFuzzer log metrics"}],
+             "all_skills_automated": False, "mode": "offline assurance declarations and selected AFL++ stats/libFuzzer log metrics"},
+            {"name": "Reconnaissance", "skills": recon_review_catalog(),
+             "all_skills_automated": False, "mode": "offline OSINT declarations and explicitly scoped name/CT-style name imports"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -148,6 +151,12 @@ def render_checklist():
         "- [ ] Fuzzer/harness execution, corpus minimization and independent coverage verification",
         "- [ ] Unique vulnerability confirmation, cross-build comparisons and representative detection-rate evaluation",
         "", "See [the Fuzzing review guide](FUZZING_RESEARCH_REVIEW.md). Metrics and diagnostic markers remain unverified.", "",
+        "## Additional Reconnaissance review pack", "",
+        "- [x] Two offline OSINT assurance contracts with nullable source/methodology observations",
+        "- [x] Explicit domain-scope matching, deduplication and bounded name/CT-style JSON imports",
+        "- [ ] Live collection, DNS verification, CT/certificate proof validation and independent asset attribution",
+        "- [ ] Comprehensive attack-surface discovery and real-world effectiveness evaluation",
+        "", "See [the Reconnaissance guide](RECONNAISSANCE_REVIEW.md). Imported names do not grant active testing permission.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

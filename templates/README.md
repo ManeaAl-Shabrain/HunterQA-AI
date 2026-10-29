@@ -41,6 +41,9 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Exploit Development review | [13-exploit-development-review.md](13-exploit-development-review.md) | Independent crash, build, memory-safety, mitigation and concurrency review |
 | Optional Fuzzing evidence | [HunterQA-fuzzing-review-template.json](HunterQA-fuzzing-review-template.json) | Four selected campaign/research assurance contracts; null means unassessed |
 | Optional Fuzzing review | [14-fuzzing-research-review.md](14-fuzzing-research-review.md) | Independent harness, metric, coverage, crash and classification review |
+| Optional Recon evidence | [HunterQA-recon-review-template.json](HunterQA-recon-review-template.json) | Two selected OSINT assurance contracts; null means unassessed |
+| Optional Recon name scope | [HunterQA-recon-scope-template.json](HunterQA-recon-scope-template.json) | Exact domain rules for offline inventory imports; not active assessment authorization |
+| Optional Recon review | [15-reconnaissance-review.md](15-reconnaissance-review.md) | Independent source provenance, domain attribution and private inventory review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

@@ -41,6 +41,16 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Reconnaissance review pack:** [coverage and instructions](docs/RECONNAISSANCE_REVIEW.md).
+`recon-review-catalog` lists two offline OSINT contracts; `recon-review` checks
+owner observations. `recon-inventory` filters/deduplicates saved DNS names or
+CT-style name JSON using an explicit private domain scope. Names are withheld by
+default; `--include-names` exports admitted names in the private report. Use the
+[review template](templates/HunterQA-recon-review-template.json),
+[name-scope template](templates/HunterQA-recon-scope-template.json) and
+[worksheet](templates/15-reconnaissance-review.md). No DNS, collection or active
+target enrollment occurs; ownership and current exposure remain unverified.
+
 **Fuzzing & Vulnerability Research review pack:** [coverage and instructions](docs/FUZZING_RESEARCH_REVIEW.md).
 `fuzzing-review-catalog` lists four offline contracts; `fuzzing-review` checks owner
 observations. `fuzzing-artifact-review` reads selected AFL++ stats or libFuzzer

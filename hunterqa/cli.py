@@ -412,6 +412,16 @@ def main(argv=None):
         fuzz.add_argument("--authorized", action="store_true")
         if name == "fuzzing-artifact-review":
             fuzz.add_argument("--mode", choices=("afl-stats", "libfuzzer-log"), required=True)
+    sub.add_parser("recon-review-catalog", help="Show two offline OSINT review contracts")
+    for name in ("recon-review", "recon-inventory"):
+        recon = sub.add_parser(name, help="Offline reconnaissance evidence or scoped name import; no DNS or external collection")
+        recon.add_argument("--input", required=True)
+        recon.add_argument("--out", required=True)
+        recon.add_argument("--authorized", action="store_true")
+        if name == "recon-inventory":
+            recon.add_argument("--scope", required=True)
+            recon.add_argument("--mode", choices=("names", "ct-names-json"), default="names")
+            recon.add_argument("--include-names", action="store_true", help="Include admitted canonical names in the private report")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -450,6 +460,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "recon-review-catalog":
+        from .recon_review import catalog
+        print(json.dumps({"category": "Reconnaissance", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("recon-review", "recon-inventory"):
+        from .recon_review import inventory_file, review_file
+        report = inventory_file(args.input, args.scope, authorized=args.authorized, mode=args.mode, include_names=args.include_names) if args.command == "recon-inventory" else review_file(args.input, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "fuzzing-review-catalog":
         from .fuzzing_review import catalog
         print(json.dumps({"category": "Fuzzing & Vulnerability Research", "skills": catalog(), "all_skills_automated": False}, indent=2))

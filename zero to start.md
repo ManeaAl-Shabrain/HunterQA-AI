@@ -10,6 +10,11 @@
 
 ## Your route
 
+For two offline OSINT review contracts and scoped imports of previously collected
+names, follow the [Reconnaissance guide](docs/RECONNAISSANCE_REVIEW.md). Use private
+copies of its review/scope templates. These commands do not collect intelligence,
+query DNS, verify ownership or enroll active assessment targets.
+
 For four offline Fuzzing research contracts and selected AFL++/libFuzzer metrics,
 follow the [Fuzzing review guide](docs/FUZZING_RESEARCH_REVIEW.md). Use private
 evidence copies. These readers do not run campaigns, replay crashes, minimize
