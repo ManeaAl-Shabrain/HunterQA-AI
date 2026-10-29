@@ -29,6 +29,8 @@ PUBLIC_TEMPLATES = {
     "README.md", "HunterQA-scope-template.json", "HunterQA-targets-template.txt",
     "HunterQA-first-configuration-review.md", "01-scope-and-approval-notes.md",
     "02-plan-and-run-checklist.md", "03-findings-and-report.md", "04-retest-record.md",
+    "05-web-application-review.md", "06-auth-identity-review.md",
+    "HunterQA-identity-review-template.json",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

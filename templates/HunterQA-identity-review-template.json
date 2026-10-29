@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "jwt_samples": [
+    {
+      "id": "review-token",
+      "token": "REPLACE-IN-A-PRIVATE-COPY-WITH-AN-OWNED-SAMPLE",
+      "allowed_algorithms": ["RS256"],
+      "expected_issuer": "https://issuer.company.example",
+      "expected_audience": "REPLACE-WITH-INDEPENDENTLY-APPROVED-AUDIENCE"
+    }
+  ],
+  "oauth_clients": [
+    {
+      "id": "review-client",
+      "client_type": "public",
+      "oidc": true,
+      "issuer": "https://issuer.company.example",
+      "authorization_endpoint": "https://issuer.company.example/authorize",
+      "token_endpoint": "https://issuer.company.example/token",
+      "redirect_uris": ["https://app.company.example/callback"],
+      "response_types": ["code"],
+      "grant_types": ["authorization_code"],
+      "pkce_required": false,
+      "pkce_methods": [],
+      "state_required": false,
+      "nonce_required": false,
+      "redirect_matching": "exact"
+    }
+  ]
+}

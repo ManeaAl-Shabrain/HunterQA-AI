@@ -76,6 +76,15 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverified.
 
+## Additional Auth & Identity review pack
+
+- [x] Offline compact JWT sample comparisons against explicit review policy
+- [x] Offline declared OAuth/OIDC web-client configuration checks
+- [ ] Cryptographic JWT signature verification and server acceptance tests
+- [ ] End-to-end SSO, session and scope-enforcement validation
+
+See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decoded claims remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Auth & Identity review pack:** [JWT and OAuth/OIDC guide](docs/AUTH_IDENTITY_REVIEW.md).
+`identity-review-catalog` lists both review contracts; `identity-review` compares
+private JWT samples and declared web-client settings offline. It retains redacted
+cues, remediation and an input hash. It does not verify signatures, authenticate
+to providers or test actual server acceptance. Use the
+[JSON template](templates/HunterQA-identity-review-template.json) and
+[private reviewer worksheet](templates/06-auth-identity-review.md).
+
 **Web Application review pack:** [16-skill coverage and instructions](docs/WEB_APPLICATION_REVIEW.md).
 `web-review-catalog` lists every contract; `web-source-review` inspects authorized
 local Python without executing it. Ten narrow source checks also run through the

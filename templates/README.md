@@ -23,6 +23,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | 5 | [03-findings-and-report.md](03-findings-and-report.md) | Observations, evidence, review and recommendations |
 | 6 | [04-retest-record.md](04-retest-record.md) | Fresh authorization check and observed retest results |
 | Optional source review | [05-web-application-review.md](05-web-application-review.md) | Evidence and reviewer decisions for all 16 Web Application contracts; 10 source cues and 6 guided-only reviews |
+| Optional identity evidence | [HunterQA-identity-review-template.json](HunterQA-identity-review-template.json) | Private JWT samples and actual OAuth/OIDC web-client settings; replace all placeholders in a private copy |
+| Optional identity review | [06-auth-identity-review.md](06-auth-identity-review.md) | Independent JWT/OAuth reviewer decisions, evidence limits and retest records |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to
