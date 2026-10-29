@@ -46,9 +46,10 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Optional read-only AWS identity and account-summary adapter
 - [x] Selected local configuration/dependency patterns
+- [x] Offline normalized AWS/Azure/GCP posture and selected native policy readers
 - [ ] Resource and effective-permission inventory
 - [ ] Azure/GCP runtime adapters
-- [ ] Cloud infrastructure assessment
+- [ ] Live cloud infrastructure assessment
 
 ## 6. Production platform hardening — partial
 
@@ -103,6 +104,15 @@ See [the AD review guide](ACTIVE_DIRECTORY_REVIEW.md). Supplied declarations rem
 - [ ] Comprehensive protocol and device vulnerability assessment
 
 See [the Wireless review guide](WIRELESS_REVIEW.md). Policy declarations and source cues remain unverified.
+
+## Additional Cloud review pack
+
+- [x] Selected offline AWS/Azure/GCP identity, storage, network, audit, federation, permission and compute declarations
+- [x] Selected native AWS IAM, GCP IAM and Azure NSG JSON readers
+- [ ] Effective IAM/RBAC simulation, inherited policy resolution and actual network reachability
+- [ ] Broad runtime cloud inventory, cross-account validation and multi-cloud enforcement assessment
+
+See [the Cloud review guide](CLOUD_REVIEW.md). Native syntax and owner declarations remain unverified.
 
 ## Check your installation and owned lab
 

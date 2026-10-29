@@ -4,6 +4,7 @@ from .web_review import catalog as web_review_catalog
 from .identity_review import catalog as identity_review_catalog
 from .ad_review import catalog as ad_review_catalog
 from .wireless_review import catalog as wireless_review_catalog
+from .cloud_review import catalog as cloud_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -19,8 +20,8 @@ AREAS = (
      "Exact admitted TCP host/port reachability, service-evidence import and selected offline AD policy review",
      ["OS fingerprinting", "Broad service/version assessment", "Live Active Directory assessment", "Internal attack-path testing", "UDP"]),
     ("cloud-runtime", "Cloud runtime", ["aws-account-audit", "source-review"],
-     "Fixed AWS identity/account-summary APIs and selected local configuration patterns",
-     ["Resource and effective-permission inventory", "Azure/GCP runtime adapters", "Cloud infrastructure assessment"]),
+     "Fixed AWS identity/account-summary APIs, selected local configuration patterns and offline AWS/Azure/GCP policy review",
+     ["Resource and effective-permission inventory", "Azure/GCP runtime adapters", "Live cloud infrastructure assessment"]),
     ("production-hardening", "Production platform hardening", [],
      "Local supervised workers, per-run controls, optional shared quotas and authenticated local dashboard roles",
      ["Hosted multi-user deployment and tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
@@ -34,7 +35,7 @@ FEATURES = {
     "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check")],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],
-    "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review")],
+    "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review"), ("Offline normalized AWS/Azure/GCP posture and selected native policy readers", None)],
     "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
     "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None)],
 }
@@ -51,7 +52,9 @@ def coverage_audit():
             {"name": "Active Directory", "skills": ad_review_catalog(),
              "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"},
             {"name": "Wireless", "skills": wireless_review_catalog(),
-             "all_skills_automated": False, "mode": "offline selected policy declarations and single-BSS hostapd source cues"}],
+             "all_skills_automated": False, "mode": "offline selected policy declarations and single-BSS hostapd source cues"},
+            {"name": "Cloud", "skills": cloud_review_catalog(),
+             "all_skills_automated": False, "mode": "offline AWS/Azure/GCP declarations and selected IAM/NSG syntax"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -94,6 +97,12 @@ def render_checklist():
         "- [ ] Live wireless collection, packet analysis and radio validation",
         "- [ ] Comprehensive protocol and device vulnerability assessment",
         "", "See [the Wireless review guide](WIRELESS_REVIEW.md). Policy declarations and source cues remain unverified.", "",
+        "## Additional Cloud review pack", "",
+        "- [x] Selected offline AWS/Azure/GCP identity, storage, network, audit, federation, permission and compute declarations",
+        "- [x] Selected native AWS IAM, GCP IAM and Azure NSG JSON readers",
+        "- [ ] Effective IAM/RBAC simulation, inherited policy resolution and actual network reachability",
+        "- [ ] Broad runtime cloud inventory, cross-account validation and multi-cloud enforcement assessment",
+        "", "See [the Cloud review guide](CLOUD_REVIEW.md). Native syntax and owner declarations remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

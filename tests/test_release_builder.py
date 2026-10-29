@@ -20,6 +20,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "templates/07-active-directory-review.md": "Public AD review worksheet\n",
         "templates/HunterQA-wireless-review-template.json": '{"schema_version":1,"records":[]}\n',
         "templates/08-wireless-review.md": "Public wireless review worksheet\n",
+        "templates/HunterQA-cloud-review-template.json": '{"schema_version":1,"records":[]}\n',
+        "templates/09-cloud-review.md": "Public cloud review worksheet\n",
         "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
         "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
     }
@@ -37,6 +39,7 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
             "templates/HunterQA-identity-review-template.json"} <= included
     assert {"templates/HunterQA-ad-review-template.json", "templates/07-active-directory-review.md"} <= included
     assert {"templates/HunterQA-wireless-review-template.json", "templates/08-wireless-review.md"} <= included
+    assert {"templates/HunterQA-cloud-review-template.json", "templates/09-cloud-review.md"} <= included
     assert "templates/client-filled-profile.json" not in included
     assert "templates/client-case/findings.json" not in included
     with zipfile.ZipFile(archive_path) as archive:
