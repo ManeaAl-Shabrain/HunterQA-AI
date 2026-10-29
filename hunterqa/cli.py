@@ -366,6 +366,14 @@ def main(argv=None):
         wireless.add_argument("--input", required=True)
         wireless.add_argument("--out", required=True)
         wireless.add_argument("--authorized", action="store_true")
+    sub.add_parser("cloud-review-catalog", help="Show offline AWS/Azure/GCP evidence fields and selected native policy modes")
+    for name in ("cloud-review", "cloud-policy-review"):
+        cloud = sub.add_parser(name, help="Offline cloud policy review; no provider connection or credentials")
+        cloud.add_argument("--input", required=True)
+        cloud.add_argument("--out", required=True)
+        cloud.add_argument("--authorized", action="store_true")
+        if name == "cloud-policy-review":
+            cloud.add_argument("--mode", choices=("aws-iam", "gcp-iam", "azure-nsg"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -404,6 +412,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "cloud-review-catalog":
+        from .cloud_review import catalog
+        print(json.dumps({"category": "Cloud", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("cloud-review", "cloud-policy-review"):
+        from .cloud_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "cloud-policy-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "wireless-review-catalog":
         from .wireless_review import catalog
         print(json.dumps({"category": "Wireless", "skills": catalog(), "all_skills_automated": False}, indent=2))

@@ -10,6 +10,11 @@
 
 ## Your route
 
+For local AWS/Azure/GCP posture evidence and selected IAM/NSG policy JSON,
+follow the [Cloud review guide](docs/CLOUD_REVIEW.md). These offline commands
+need no provider credentials and do not connect to accounts, calculate effective
+access or verify resource reachability. Use private copies of the templates.
+
 For selected wireless policy evidence and a non-executing single-BSS hostapd
 configuration review, follow the [Wireless guide](docs/WIRELESS_REVIEW.md).
 Its 14 contracts are partial offline checks; they do not scan, transmit, capture

@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "aws-identity",
+      "provider": "aws",
+      "area": "identity",
+      "observations": {
+        "principal_kind": null,
+        "privileged": null,
+        "mfa_enforced": null,
+        "long_lived_keys_present": null
+      }
+    },
+    {
+      "id": "aws-storage",
+      "provider": "aws",
+      "area": "storage",
+      "observations": {
+        "public_access": null,
+        "encrypted_at_rest": null,
+        "https_only": null,
+        "access_logging": null
+      }
+    },
+    {
+      "id": "aws-network",
+      "provider": "aws",
+      "area": "network",
+      "observations": {
+        "internet_admin_ports": null,
+        "public_database_endpoint": null,
+        "flow_logs_enabled": null
+      }
+    },
+    {
+      "id": "aws-audit",
+      "provider": "aws",
+      "area": "audit",
+      "observations": {
+        "control_plane_logging": null,
+        "data_access_logging": null,
+        "retention_reviewed": null,
+        "log_protection_reviewed": null
+      }
+    },
+    {
+      "id": "aws-federation",
+      "provider": "aws",
+      "area": "federation",
+      "observations": {
+        "issuer_validated": null,
+        "audience_restricted": null,
+        "subject_restricted": null,
+        "trust_scope_reviewed": null
+      }
+    },
+    {
+      "id": "aws-permissions",
+      "provider": "aws",
+      "area": "permissions",
+      "observations": {
+        "wildcard_actions_allowed": null,
+        "unrestricted_resources": null,
+        "privileged_assignment": null,
+        "assignment_scope_reviewed": null
+      }
+    },
+    {
+      "id": "aws-compute",
+      "provider": "aws",
+      "area": "compute",
+      "observations": {
+        "imds_v2_required": null,
+        "metadata_hop_limit_reviewed": null,
+        "instance_role_scope_reviewed": null
+      }
+    },
+    {
+      "id": "azure-identity",
+      "provider": "azure",
+      "area": "identity",
+      "observations": {
+        "principal_kind": null,
+        "privileged": null,
+        "mfa_enforced": null,
+        "long_lived_keys_present": null
+      }
+    },
+    {
+      "id": "azure-storage",
+      "provider": "azure",
+      "area": "storage",
+      "observations": {
+        "public_access": null,
+        "encrypted_at_rest": null,
+        "https_only": null,
+        "access_logging": null
+      }
+    },
+    {
+      "id": "azure-network",
+      "provider": "azure",
+      "area": "network",
+      "observations": {
+        "internet_admin_ports": null,
+        "public_database_endpoint": null,
+        "flow_logs_enabled": null
+      }
+    },
+    {
+      "id": "azure-audit",
+      "provider": "azure",
+      "area": "audit",
+      "observations": {
+        "control_plane_logging": null,
+        "data_access_logging": null,
+        "retention_reviewed": null,
+        "log_protection_reviewed": null
+      }
+    },
+    {
+      "id": "azure-federation",
+      "provider": "azure",
+      "area": "federation",
+      "observations": {
+        "issuer_validated": null,
+        "audience_restricted": null,
+        "subject_restricted": null,
+        "trust_scope_reviewed": null
+      }
+    },
+    {
+      "id": "azure-permissions",
+      "provider": "azure",
+      "area": "permissions",
+      "observations": {
+        "wildcard_actions_allowed": null,
+        "unrestricted_resources": null,
+        "privileged_assignment": null,
+        "assignment_scope_reviewed": null
+      }
+    },
+    {
+      "id": "azure-compute",
+      "provider": "azure",
+      "area": "compute",
+      "observations": {
+        "managed_identity_scope_reviewed": null,
+        "encryption_at_host_enabled": null,
+        "public_ip_present": null
+      }
+    },
+    {
+      "id": "gcp-identity",
+      "provider": "gcp",
+      "area": "identity",
+      "observations": {
+        "principal_kind": null,
+        "privileged": null,
+        "mfa_enforced": null,
+        "long_lived_keys_present": null
+      }
+    },
+    {
+      "id": "gcp-storage",
+      "provider": "gcp",
+      "area": "storage",
+      "observations": {
+        "public_access": null,
+        "encrypted_at_rest": null,
+        "https_only": null,
+        "access_logging": null
+      }
+    },
+    {
+      "id": "gcp-network",
+      "provider": "gcp",
+      "area": "network",
+      "observations": {
+        "internet_admin_ports": null,
+        "public_database_endpoint": null,
+        "flow_logs_enabled": null
+      }
+    },
+    {
+      "id": "gcp-audit",
+      "provider": "gcp",
+      "area": "audit",
+      "observations": {
+        "control_plane_logging": null,
+        "data_access_logging": null,
+        "retention_reviewed": null,
+        "log_protection_reviewed": null
+      }
+    },
+    {
+      "id": "gcp-federation",
+      "provider": "gcp",
+      "area": "federation",
+      "observations": {
+        "issuer_validated": null,
+        "audience_restricted": null,
+        "subject_restricted": null,
+        "trust_scope_reviewed": null
+      }
+    },
+    {
+      "id": "gcp-permissions",
+      "provider": "gcp",
+      "area": "permissions",
+      "observations": {
+        "wildcard_actions_allowed": null,
+        "unrestricted_resources": null,
+        "privileged_assignment": null,
+        "assignment_scope_reviewed": null
+      }
+    },
+    {
+      "id": "gcp-compute",
+      "provider": "gcp",
+      "area": "compute",
+      "observations": {
+        "secure_boot_enabled": null,
+        "service_account_scope_reviewed": null,
+        "os_login_enabled": null
+      }
+    }
+  ]
+}

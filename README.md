@@ -41,6 +41,16 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Cloud review pack:** [AWS/Azure/GCP coverage and instructions](docs/CLOUD_REVIEW.md).
+`cloud-review-catalog` lists the offline evidence fields; `cloud-review` checks
+selected owner-normalized posture declarations. `cloud-policy-review` reads
+selected native AWS IAM, GCP IAM or Azure NSG JSON without provider connections.
+Reports withhold source identifiers and retain explicit uncertainty, input hashes
+and SARIF context. Use the [JSON template](templates/HunterQA-cloud-review-template.json)
+and [private worksheet](templates/09-cloud-review.md). Effective permissions and
+actual reachability remain unverified; the existing bounded AWS account adapter
+is separate and unchanged.
+
 **Wireless review pack:** [14-skill coverage and instructions](docs/WIRELESS_REVIEW.md).
 `wireless-review-catalog` lists all contracts and typed fields; `wireless-review`
 checks selected local policy declarations. `wireless-hostapd-review` reads seven

@@ -169,5 +169,6 @@ owned declarations/configurations and do not establish real-world detection rate
 - [Silicon Labs Zigbee commissioning guidance](https://docs.silabs.com/zigbee/latest/using-installation-codes-with-zigbee-devices/) and [Z-Wave security overview](https://www.silabs.com/whitepapers/z-wave-security)
 
 These selected checks do not implement the complete standards or replace
-device/vendor applicability review. **Next requested category: Cloud.** It is
-not delivered by this pack; the existing bounded AWS account adapter is separate.
+device/vendor applicability review. **Following category: [Cloud](CLOUD_REVIEW.md).**
+Its later offline declarations and IAM/NSG readers are separate from this pack
+and from the existing bounded AWS account adapter.
