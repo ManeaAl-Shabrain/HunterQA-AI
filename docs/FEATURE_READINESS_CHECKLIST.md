@@ -141,6 +141,15 @@ See [the IoT review guide](IOT_EMBEDDED_REVIEW.md). Source cues and owner declar
 
 See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR evasion or input capture is executed.
 
+## Additional Exploit Development review pack
+
+- [x] Six offline assurance contracts for memory safety, lab review, crash analysis, mitigations and TOCTOU
+- [x] Selected ASan/TSan diagnostic markers and bounded non-loading ELF header review
+- [ ] Independent crash reproduction, root-cause validation and demonstrated security impact
+- [ ] Runtime mitigation verification and complete exploit-development curriculum/coverage
+
+See [the Exploit Development review guide](EXPLOIT_DEVELOPMENT_REVIEW.md). No exploit, binary or race trigger is executed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

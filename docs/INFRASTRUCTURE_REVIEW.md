@@ -134,4 +134,6 @@ or complete Windows/infrastructure coverage.
 - [Microsoft PE format specification](https://learn.microsoft.com/en-us/windows/win32/debug/pe-format)
 - [Microsoft exploit-protection policy and applicability](https://learn.microsoft.com/en-us/defender-endpoint/customize-exploit-protection)
 
-**Next requested category: Exploit Development.** It is not delivered by this pack.
+The next category now has a separate [Exploit Development assurance guide](EXPLOIT_DEVELOPMENT_REVIEW.md).
+Its local evidence/log/header readers do not extend this Infrastructure pack into
+exploit execution or runtime mitigation verification.

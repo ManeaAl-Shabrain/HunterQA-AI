@@ -37,6 +37,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional IoT review | [11-iot-embedded-review.md](11-iot-embedded-review.md) | Independent device/build applicability, ACL scope, boot trust and retest review |
 | Optional Infrastructure evidence | [HunterQA-infrastructure-review-template.json](HunterQA-infrastructure-review-template.json) | Seven selected defensive review contracts; null means unassessed |
 | Optional Infrastructure review | [12-infrastructure-review.md](12-infrastructure-review.md) | Independent policy, process, artifact and platform applicability review |
+| Optional Exploit Development evidence | [HunterQA-exploit-dev-review-template.json](HunterQA-exploit-dev-review-template.json) | Six selected assurance contracts; null means unassessed |
+| Optional Exploit Development review | [13-exploit-development-review.md](13-exploit-development-review.md) | Independent crash, build, memory-safety, mitigation and concurrency review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

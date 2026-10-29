@@ -10,6 +10,11 @@
 
 ## Your route
 
+For six offline Exploit Development assurance contracts, selected sanitizer logs
+and ELF headers, follow the [Exploit Development guide](docs/EXPLOIT_DEVELOPMENT_REVIEW.md).
+Use private evidence copies. These commands do not run binaries, reproduce crashes,
+trigger races or establish exploitability or actual mitigation enforcement.
+
 For seven offline Infrastructure defensive review contracts and selected Windows
 PE header declarations, follow the [Infrastructure guide](docs/INFRASTRUCTURE_REVIEW.md).
 Use private templates and owner-provided artifacts. These commands do not load

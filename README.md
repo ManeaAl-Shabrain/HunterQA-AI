@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Exploit Development assurance pack:** [coverage and instructions](docs/EXPLOIT_DEVELOPMENT_REVIEW.md).
+`exploit-dev-review-catalog` lists six offline contracts; `exploit-dev-review`
+checks owner observations. `exploit-dev-artifact-review` reads selected ASan/TSan
+log markers or ELF header declarations without running artifacts or symbolizers.
+Use the [JSON template](templates/HunterQA-exploit-dev-review-template.json) and
+[private worksheet](templates/13-exploit-development-review.md). Crashes, runtime
+mitigations, exploitability and real-world effectiveness remain unverified.
+
 **Infrastructure & Red Team defensive review pack:** [coverage and instructions](docs/INFRASTRUCTURE_REVIEW.md).
 `infrastructure-review-catalog` lists seven contracts; `infrastructure-review`
 checks selected owner observations. `infrastructure-pe-review` reads selected
