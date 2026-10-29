@@ -396,6 +396,22 @@ def main(argv=None):
         infra.add_argument("--input", required=True)
         infra.add_argument("--out", required=True)
         infra.add_argument("--authorized", action="store_true")
+    sub.add_parser("exploit-dev-review-catalog", help="Show six offline exploit-development assurance contracts")
+    for name in ("exploit-dev-review", "exploit-dev-artifact-review"):
+        dev = sub.add_parser(name, help="Offline assurance/log/ELF review; no exploit or binary execution")
+        dev.add_argument("--input", required=True)
+        dev.add_argument("--out", required=True)
+        dev.add_argument("--authorized", action="store_true")
+        if name == "exploit-dev-artifact-review":
+            dev.add_argument("--mode", choices=("sanitizer-log", "elf-headers"), required=True)
+    sub.add_parser("fuzzing-review-catalog", help="Show four offline fuzzing/research review contracts")
+    for name in ("fuzzing-review", "fuzzing-artifact-review"):
+        fuzz = sub.add_parser(name, help="Offline campaign evidence/metrics review; no fuzzer or harness execution")
+        fuzz.add_argument("--input", required=True)
+        fuzz.add_argument("--out", required=True)
+        fuzz.add_argument("--authorized", action="store_true")
+        if name == "fuzzing-artifact-review":
+            fuzz.add_argument("--mode", choices=("afl-stats", "libfuzzer-log"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -434,6 +450,24 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "fuzzing-review-catalog":
+        from .fuzzing_review import catalog
+        print(json.dumps({"category": "Fuzzing & Vulnerability Research", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("fuzzing-review", "fuzzing-artifact-review"):
+        from .fuzzing_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "fuzzing-artifact-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
+    if args.command == "exploit-dev-review-catalog":
+        from .exploit_dev_review import catalog
+        print(json.dumps({"category": "Exploit Development", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("exploit-dev-review", "exploit-dev-artifact-review"):
+        from .exploit_dev_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "exploit-dev-artifact-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "infrastructure-review-catalog":
         from .infrastructure_review import catalog
         print(json.dumps({"category": "Infrastructure & Red Team", "skills": catalog(), "all_skills_automated": False}, indent=2))

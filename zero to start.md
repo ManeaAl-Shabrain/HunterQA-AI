@@ -10,6 +10,16 @@
 
 ## Your route
 
+For four offline Fuzzing research contracts and selected AFL++/libFuzzer metrics,
+follow the [Fuzzing review guide](docs/FUZZING_RESEARCH_REVIEW.md). Use private
+evidence copies. These readers do not run campaigns, replay crashes, minimize
+inputs or verify actual coverage or unique vulnerabilities.
+
+For six offline Exploit Development assurance contracts, selected sanitizer logs
+and ELF headers, follow the [Exploit Development guide](docs/EXPLOIT_DEVELOPMENT_REVIEW.md).
+Use private evidence copies. These commands do not run binaries, reproduce crashes,
+trigger races or establish exploitability or actual mitigation enforcement.
+
 For seven offline Infrastructure defensive review contracts and selected Windows
 PE header declarations, follow the [Infrastructure guide](docs/INFRASTRUCTURE_REVIEW.md).
 Use private templates and owner-provided artifacts. These commands do not load

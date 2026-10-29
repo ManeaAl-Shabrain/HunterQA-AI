@@ -8,6 +8,8 @@ from .cloud_review import catalog as cloud_review_catalog
 from .mobile_review import catalog as mobile_review_catalog
 from .iot_review import catalog as iot_review_catalog
 from .infrastructure_review import catalog as infrastructure_review_catalog
+from .exploit_dev_review import catalog as exploit_dev_review_catalog
+from .fuzzing_review import catalog as fuzzing_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -63,7 +65,11 @@ def coverage_audit():
             {"name": "IoT & Embedded", "skills": iot_review_catalog(),
              "all_skills_automated": False, "mode": "offline IoT declarations and selected MQTT ACL/U-Boot build syntax"},
             {"name": "Infrastructure & Red Team", "skills": infrastructure_review_catalog(),
-             "all_skills_automated": False, "mode": "offline defensive control declarations and selected non-loading PE headers"}],
+             "all_skills_automated": False, "mode": "offline defensive control declarations and selected non-loading PE headers"},
+            {"name": "Exploit Development", "skills": exploit_dev_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance declarations, selected sanitizer log markers and non-loading ELF headers"},
+            {"name": "Fuzzing & Vulnerability Research", "skills": fuzzing_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance declarations and selected AFL++ stats/libFuzzer log metrics"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -130,6 +136,18 @@ def render_checklist():
         "- [ ] Actual process mitigation, signature, instrumentation and OS/hardware enforcement verification",
         "- [ ] Live infrastructure assessment and representative detection-effectiveness evaluation",
         "", "See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR evasion or input capture is executed.", "",
+        "## Additional Exploit Development review pack", "",
+        "- [x] Six offline assurance contracts for memory safety, lab review, crash analysis, mitigations and TOCTOU",
+        "- [x] Selected ASan/TSan diagnostic markers and bounded non-loading ELF header review",
+        "- [ ] Independent crash reproduction, root-cause validation and demonstrated security impact",
+        "- [ ] Runtime mitigation verification and complete exploit-development curriculum/coverage",
+        "", "See [the Exploit Development review guide](EXPLOIT_DEVELOPMENT_REVIEW.md). No exploit, binary or race trigger is executed.", "",
+        "## Additional Fuzzing & Vulnerability Research review pack", "",
+        "- [x] Four offline assurance contracts for campaign, lab, code-review and classification evidence",
+        "- [x] Bounded selected AFL++ snapshot metrics and libFuzzer progress/error markers",
+        "- [ ] Fuzzer/harness execution, corpus minimization and independent coverage verification",
+        "- [ ] Unique vulnerability confirmation, cross-build comparisons and representative detection-rate evaluation",
+        "", "See [the Fuzzing review guide](FUZZING_RESEARCH_REVIEW.md). Metrics and diagnostic markers remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
