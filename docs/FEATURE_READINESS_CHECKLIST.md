@@ -150,6 +150,15 @@ See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR
 
 See [the Exploit Development review guide](EXPLOIT_DEVELOPMENT_REVIEW.md). No exploit, binary or race trigger is executed.
 
+## Additional Fuzzing & Vulnerability Research review pack
+
+- [x] Four offline assurance contracts for campaign, lab, code-review and classification evidence
+- [x] Bounded selected AFL++ snapshot metrics and libFuzzer progress/error markers
+- [ ] Fuzzer/harness execution, corpus minimization and independent coverage verification
+- [ ] Unique vulnerability confirmation, cross-build comparisons and representative detection-rate evaluation
+
+See [the Fuzzing review guide](FUZZING_RESEARCH_REVIEW.md). Metrics and diagnostic markers remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

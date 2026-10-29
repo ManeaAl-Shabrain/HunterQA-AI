@@ -30,6 +30,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "templates/12-infrastructure-review.md": "Public infrastructure review worksheet\n",
         "templates/HunterQA-exploit-dev-review-template.json": '{"schema_version":1,"records":[]}\n',
         "templates/13-exploit-development-review.md": "Public exploit-development review worksheet\n",
+        "templates/HunterQA-fuzzing-review-template.json": '{"schema_version":1,"records":[]}\n',
+        "templates/14-fuzzing-research-review.md": "Public fuzzing review worksheet\n",
         "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
         "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
     }
@@ -52,6 +54,7 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
     assert {"templates/HunterQA-iot-review-template.json", "templates/11-iot-embedded-review.md"} <= included
     assert {"templates/HunterQA-infrastructure-review-template.json", "templates/12-infrastructure-review.md"} <= included
     assert {"templates/HunterQA-exploit-dev-review-template.json", "templates/13-exploit-development-review.md"} <= included
+    assert {"templates/HunterQA-fuzzing-review-template.json", "templates/14-fuzzing-research-review.md"} <= included
     assert "templates/client-filled-profile.json" not in included
     assert "templates/client-case/findings.json" not in included
     with zipfile.ZipFile(archive_path) as archive:

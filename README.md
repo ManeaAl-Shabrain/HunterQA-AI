@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Fuzzing & Vulnerability Research review pack:** [coverage and instructions](docs/FUZZING_RESEARCH_REVIEW.md).
+`fuzzing-review-catalog` lists four offline contracts; `fuzzing-review` checks owner
+observations. `fuzzing-artifact-review` reads selected AFL++ stats or libFuzzer
+progress/error markers without running a harness. Use the
+[JSON template](templates/HunterQA-fuzzing-review-template.json) and
+[private worksheet](templates/14-fuzzing-research-review.md). Metrics are unverified;
+saved crashes are not confirmed vulnerabilities and bitmap occupancy is not source coverage.
+
 **Exploit Development assurance pack:** [coverage and instructions](docs/EXPLOIT_DEVELOPMENT_REVIEW.md).
 `exploit-dev-review-catalog` lists six offline contracts; `exploit-dev-review`
 checks owner observations. `exploit-dev-artifact-review` reads selected ASan/TSan

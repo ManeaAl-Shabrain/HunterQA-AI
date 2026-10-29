@@ -38,6 +38,7 @@ PUBLIC_TEMPLATES = {
     "HunterQA-iot-review-template.json", "11-iot-embedded-review.md",
     "HunterQA-infrastructure-review-template.json", "12-infrastructure-review.md",
     "HunterQA-exploit-dev-review-template.json", "13-exploit-development-review.md",
+    "HunterQA-fuzzing-review-template.json", "14-fuzzing-research-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

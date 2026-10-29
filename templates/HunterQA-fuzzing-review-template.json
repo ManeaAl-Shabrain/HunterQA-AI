@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "fuzz-fuzzing",
+      "skill": "offensive-fuzzing",
+      "observations": {
+        "harness_reviewed": null,
+        "instrumentation_verified": null,
+        "seed_corpus_reviewed": null,
+        "resource_limits_verified": null
+      }
+    },
+    {
+      "id": "fuzz-fuzzing-course",
+      "skill": "offensive-fuzzing-course",
+      "observations": {
+        "owned_lab_verified": null,
+        "coverage_exercises_reviewed": null,
+        "crash_triage_reviewed": null
+      }
+    },
+    {
+      "id": "fuzz-bug-identification",
+      "skill": "offensive-bug-identification",
+      "observations": {
+        "taint_boundaries_reviewed": null,
+        "unsafe_operations_reviewed": null,
+        "fix_regression_reviewed": null
+      }
+    },
+    {
+      "id": "fuzz-vuln-classes",
+      "skill": "offensive-vuln-classes",
+      "observations": {
+        "classification_reviewed": null,
+        "impact_evidence_reviewed": null,
+        "remediation_mapping_reviewed": null
+      }
+    }
+  ]
+}
