@@ -41,6 +41,16 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Wireless review pack:** [14-skill coverage and instructions](docs/WIRELESS_REVIEW.md).
+`wireless-review-catalog` lists all contracts and typed fields; `wireless-review`
+checks selected local policy declarations. `wireless-hostapd-review` reads seven
+explicit single-BSS configuration directives without executing them. Reports
+omit network identities and credentials, preserve unknown evidence and export
+through the existing SARIF command. Use the
+[JSON template](templates/HunterQA-wireless-review-template.json) and
+[private worksheet](templates/08-wireless-review.md). No radio activity, packet
+capture, device authentication or active vulnerability validation is performed.
+
 **Active Directory review pack:** [coverage and instructions](docs/ACTIVE_DIRECTORY_REVIEW.md).
 `ad-review-catalog` describes both AD and NetExec category contracts; `ad-review`
 checks selected owner-normalized account, SMB/LDAP, ACL, certificate, trust and

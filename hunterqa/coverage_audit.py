@@ -3,6 +3,7 @@ from .workflow_protocol import tool_catalog
 from .web_review import catalog as web_review_catalog
 from .identity_review import catalog as identity_review_catalog
 from .ad_review import catalog as ad_review_catalog
+from .wireless_review import catalog as wireless_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -48,7 +49,9 @@ def coverage_audit():
             {"name": "Auth & Identity", "skills": identity_review_catalog(),
              "all_skills_automated": False, "mode": "offline JWT samples and declared web-client configuration"},
             {"name": "Active Directory", "skills": ad_review_catalog(),
-             "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"}],
+             "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"},
+            {"name": "Wireless", "skills": wireless_review_catalog(),
+             "all_skills_automated": False, "mode": "offline selected policy declarations and single-BSS hostapd source cues"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -85,6 +88,12 @@ def render_checklist():
         "- [ ] Live directory collection, effective-access calculation and complete AD CS assessment",
         "- [ ] Active attack-path validation and native NetExec execution",
         "", "See [the AD review guide](ACTIVE_DIRECTORY_REVIEW.md). Supplied declarations remain unverified.", "",
+        "## Additional Wireless review pack", "",
+        "- [x] Selected offline policy checks for all 14 Wireless review contracts",
+        "- [x] Seven-directive single-BSS hostapd source reader without executing configuration",
+        "- [ ] Live wireless collection, packet analysis and radio validation",
+        "- [ ] Comprehensive protocol and device vulnerability assessment",
+        "", "See [the Wireless review guide](WIRELESS_REVIEW.md). Policy declarations and source cues remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

@@ -27,6 +27,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional identity review | [06-auth-identity-review.md](06-auth-identity-review.md) | Independent JWT/OAuth reviewer decisions, evidence limits and retest records |
 | Optional AD evidence | [HunterQA-ad-review-template.json](HunterQA-ad-review-template.json) | Owner-normalized AD, SMB/LDAP, ACL, certificate, trust and hybrid declarations; null/unknown means unassessed |
 | Optional AD review | [07-active-directory-review.md](07-active-directory-review.md) | Independent source verification, applicability, effective-access review and retest records |
+| Optional Wireless evidence | [HunterQA-wireless-review-template.json](HunterQA-wireless-review-template.json) | Selected observations for all 14 contracts; null means unassessed, not a secure default |
+| Optional Wireless review | [08-wireless-review.md](08-wireless-review.md) | Independent configuration, patch applicability, device and technology review records |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

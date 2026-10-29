@@ -360,6 +360,12 @@ def main(argv=None):
     ad.add_argument("--input", required=True)
     ad.add_argument("--out", required=True)
     ad.add_argument("--authorized", action="store_true")
+    sub.add_parser("wireless-review-catalog", help="Show all 14 offline Wireless review contracts and field schemas")
+    for name in ("wireless-review", "wireless-hostapd-review"):
+        wireless = sub.add_parser(name, help="Offline wireless evidence/source review; no radio access or security-tool execution")
+        wireless.add_argument("--input", required=True)
+        wireless.add_argument("--out", required=True)
+        wireless.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -398,6 +404,16 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "wireless-review-catalog":
+        from .wireless_review import catalog
+        print(json.dumps({"category": "Wireless", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("wireless-review", "wireless-hostapd-review"):
+        from .wireless_review import review_file, review_hostapd
+        review = review_hostapd if args.command == "wireless-hostapd-review" else review_file
+        report = review(args.input, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "ad-review-catalog":
         from .ad_review import catalog
         print(json.dumps({"category": "Active Directory", "skills": catalog(), "all_skills_automated": False}, indent=2))
