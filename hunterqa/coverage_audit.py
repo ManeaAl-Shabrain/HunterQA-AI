@@ -6,6 +6,7 @@ from .ad_review import catalog as ad_review_catalog
 from .wireless_review import catalog as wireless_review_catalog
 from .cloud_review import catalog as cloud_review_catalog
 from .mobile_review import catalog as mobile_review_catalog
+from .iot_review import catalog as iot_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -57,7 +58,9 @@ def coverage_audit():
             {"name": "Cloud", "skills": cloud_review_catalog(),
              "all_skills_automated": False, "mode": "offline AWS/Azure/GCP declarations and selected IAM/NSG syntax"},
             {"name": "Mobile", "skills": mobile_review_catalog(),
-             "all_skills_automated": False, "mode": "offline Android/iOS declarations and selected decoded XML configuration"}],
+             "all_skills_automated": False, "mode": "offline Android/iOS declarations and selected decoded XML configuration"},
+            {"name": "IoT & Embedded", "skills": iot_review_catalog(),
+             "all_skills_automated": False, "mode": "offline IoT declarations and selected MQTT ACL/U-Boot build syntax"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -112,6 +115,12 @@ def render_checklist():
         "- [ ] Binary APK/IPA analysis, signed-artifact verification and complete platform-default resolution",
         "- [ ] Device/runtime, biometric, storage and mobile-backend vulnerability validation",
         "", "See [the Mobile review guide](MOBILE_REVIEW.md). Source declarations and actual platform enforcement remain unverified.", "",
+        "## Additional IoT & Embedded review pack", "",
+        "- [x] Selected offline hardware, firmware, boot, updates, MQTT, CoAP, industrial, lifecycle and ecosystem declarations",
+        "- [x] Bounded selected Mosquitto ACL syntax and four-flag resolved U-Boot build readers",
+        "- [ ] Firmware acquisition/extraction, binary analysis and signed-image/boot-chain verification",
+        "- [ ] Hardware, radio, live MQTT/CoAP/ICS and device vulnerability validation",
+        "", "See [the IoT review guide](IOT_EMBEDDED_REVIEW.md). Source cues and owner declarations remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "iot-hardware",
+      "area": "hardware",
+      "observations": {
+        "debug_access_controlled": null,
+        "sensitive_interfaces_reviewed": null,
+        "physical_access_policy_reviewed": null
+      }
+    },
+    {
+      "id": "iot-firmware",
+      "area": "firmware",
+      "observations": {
+        "provenance_verified": null,
+        "embedded_secrets_reviewed": null,
+        "component_patch_reviewed": null
+      }
+    },
+    {
+      "id": "iot-boot",
+      "area": "boot",
+      "observations": {
+        "boot_chain_verified": null,
+        "trust_anchor_protected": null,
+        "alternate_boot_paths_reviewed": null
+      }
+    },
+    {
+      "id": "iot-updates",
+      "area": "updates",
+      "observations": {
+        "update_authenticity_verified": null,
+        "rollback_policy_reviewed": null,
+        "recovery_process_reviewed": null
+      }
+    },
+    {
+      "id": "iot-mqtt",
+      "area": "mqtt",
+      "observations": {
+        "client_authentication_required": null,
+        "topic_authorization_reviewed": null,
+        "transport_protected": null
+      }
+    },
+    {
+      "id": "iot-coap",
+      "area": "coap",
+      "observations": {
+        "peer_authentication_required": null,
+        "resource_authorization_reviewed": null,
+        "transport_or_object_security_reviewed": null
+      }
+    },
+    {
+      "id": "iot-industrial",
+      "area": "industrial",
+      "observations": {
+        "management_network_segmented": null,
+        "write_operations_authorized": null,
+        "safety_impact_reviewed": null
+      }
+    },
+    {
+      "id": "iot-lifecycle",
+      "area": "lifecycle",
+      "observations": {
+        "unique_credentials_verified": null,
+        "decommissioning_reviewed": null,
+        "security_event_logging_reviewed": null
+      }
+    },
+    {
+      "id": "iot-ecosystem",
+      "area": "ecosystem",
+      "observations": {
+        "companion_authorization_reviewed": null,
+        "cloud_identity_scope_reviewed": null,
+        "device_identity_binding_reviewed": null
+      }
+    }
+  ]
+}

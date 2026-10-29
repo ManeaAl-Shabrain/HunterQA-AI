@@ -382,6 +382,14 @@ def main(argv=None):
         mobile.add_argument("--authorized", action="store_true")
         if name == "mobile-config-review":
             mobile.add_argument("--mode", choices=("android-manifest", "android-network-security", "ios-info", "ios-entitlements"), required=True)
+    sub.add_parser("iot-review-catalog", help="Show selected offline IoT evidence, MQTT ACL and U-Boot review contracts")
+    for name in ("iot-review", "iot-config-review"):
+        iot = sub.add_parser(name, help="Offline IoT evidence/source review; no hardware or network access")
+        iot.add_argument("--input", required=True)
+        iot.add_argument("--out", required=True)
+        iot.add_argument("--authorized", action="store_true")
+        if name == "iot-config-review":
+            iot.add_argument("--mode", choices=("mqtt-acl", "uboot-config"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -420,6 +428,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "iot-review-catalog":
+        from .iot_review import catalog
+        print(json.dumps({"category": "IoT & Embedded", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("iot-review", "iot-config-review"):
+        from .iot_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "iot-config-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "mobile-review-catalog":
         from .mobile_review import catalog
         print(json.dumps({"category": "Mobile", "skills": catalog(), "all_skills_automated": False}, indent=2))

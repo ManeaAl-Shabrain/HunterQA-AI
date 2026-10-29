@@ -180,4 +180,6 @@ quiet output do not establish real-world detection rates or complete MASVS cover
 - [Apple ATS documentation](https://developer.apple.com/documentation/bundleresources/information-property-list/nsapptransportsecurity) and [entitlement verification background](https://developer.apple.com/library/archive/technotes/tn2415/_index.html)
 - [defusedxml parser protections](https://github.com/tiran/defusedxml)
 
-**Next requested category: IoT & Embedded.** It is not delivered by this pack.
+The next category now has a separate [IoT & Embedded review guide](IOT_EMBEDDED_REVIEW.md).
+Its local evidence/source checks do not extend this Mobile pack into device or
+runtime testing.

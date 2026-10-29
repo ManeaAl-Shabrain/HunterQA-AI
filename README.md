@@ -41,6 +41,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**IoT & Embedded review pack:** [coverage and instructions](docs/IOT_EMBEDDED_REVIEW.md).
+`iot-review-catalog` lists nine offline evidence areas; `iot-review` checks owner
+declarations. `iot-config-review` reads selected Mosquitto ACL syntax or four
+resolved U-Boot build flags. Use the [JSON template](templates/HunterQA-iot-review-template.json)
+and [private worksheet](templates/11-iot-embedded-review.md). Reports retain
+unknowns and receipt hashes without native users/topics or unselected build values.
+No hardware, firmware binary or industrial service is operated; effective ACLs,
+boot-chain enforcement and real-world effectiveness remain unverified.
+
 **Mobile review pack:** [Android/iOS coverage and instructions](docs/MOBILE_REVIEW.md).
 `mobile-review-catalog` lists the offline fields; `mobile-review` checks selected
 owner declarations. `mobile-config-review` reads decoded Android Manifest/Network
