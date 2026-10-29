@@ -374,6 +374,14 @@ def main(argv=None):
         cloud.add_argument("--authorized", action="store_true")
         if name == "cloud-policy-review":
             cloud.add_argument("--mode", choices=("aws-iam", "gcp-iam", "azure-nsg"), required=True)
+    sub.add_parser("mobile-review-catalog", help="Show selected offline Android/iOS review fields and XML modes")
+    for name in ("mobile-review", "mobile-config-review"):
+        mobile = sub.add_parser(name, help="Offline mobile evidence/XML review; no app or device execution")
+        mobile.add_argument("--input", required=True)
+        mobile.add_argument("--out", required=True)
+        mobile.add_argument("--authorized", action="store_true")
+        if name == "mobile-config-review":
+            mobile.add_argument("--mode", choices=("android-manifest", "android-network-security", "ios-info", "ios-entitlements"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -412,6 +420,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "mobile-review-catalog":
+        from .mobile_review import catalog
+        print(json.dumps({"category": "Mobile", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("mobile-review", "mobile-config-review"):
+        from .mobile_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "mobile-config-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "cloud-review-catalog":
         from .cloud_review import catalog
         print(json.dumps({"category": "Cloud", "skills": catalog(), "all_skills_automated": False}, indent=2))

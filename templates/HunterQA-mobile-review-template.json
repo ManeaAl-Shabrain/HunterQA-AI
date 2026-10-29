@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "android-storage",
+      "platform": "android",
+      "area": "storage",
+      "observations": {
+        "sensitive_data_protected": null,
+        "secrets_in_logs": null,
+        "backup_policy_reviewed": null
+      }
+    },
+    {
+      "id": "android-transport",
+      "platform": "android",
+      "area": "transport",
+      "observations": {
+        "tls_validation_enforced": null,
+        "cleartext_permitted": null,
+        "pinning_policy_reviewed": null
+      }
+    },
+    {
+      "id": "android-webview",
+      "platform": "android",
+      "area": "webview",
+      "observations": {
+        "untrusted_content_allowed": null,
+        "native_bridge_restricted": null,
+        "file_access_restricted": null
+      }
+    },
+    {
+      "id": "android-authentication",
+      "platform": "android",
+      "area": "authentication",
+      "observations": {
+        "biometric_authentication_used": null,
+        "biometric_crypto_binding": null,
+        "session_revocation_reviewed": null,
+        "local_authorization_reviewed": null
+      }
+    },
+    {
+      "id": "android-links",
+      "platform": "android",
+      "area": "links",
+      "observations": {
+        "input_validation_reviewed": null,
+        "ownership_association_verified": null,
+        "sensitive_action_requires_auth": null
+      }
+    },
+    {
+      "id": "android-ipc",
+      "platform": "android",
+      "area": "ipc",
+      "observations": {
+        "exported_surface_reviewed": null,
+        "sender_authentication_reviewed": null,
+        "least_privilege_reviewed": null
+      }
+    },
+    {
+      "id": "android-build",
+      "platform": "android",
+      "area": "build",
+      "observations": {
+        "production_debug_disabled": null,
+        "release_signing_verified": null,
+        "dependency_patch_reviewed": null
+      }
+    },
+    {
+      "id": "ios-storage",
+      "platform": "ios",
+      "area": "storage",
+      "observations": {
+        "sensitive_data_protected": null,
+        "secrets_in_logs": null,
+        "backup_policy_reviewed": null
+      }
+    },
+    {
+      "id": "ios-transport",
+      "platform": "ios",
+      "area": "transport",
+      "observations": {
+        "tls_validation_enforced": null,
+        "cleartext_permitted": null,
+        "pinning_policy_reviewed": null
+      }
+    },
+    {
+      "id": "ios-webview",
+      "platform": "ios",
+      "area": "webview",
+      "observations": {
+        "untrusted_content_allowed": null,
+        "native_bridge_restricted": null,
+        "file_access_restricted": null
+      }
+    },
+    {
+      "id": "ios-authentication",
+      "platform": "ios",
+      "area": "authentication",
+      "observations": {
+        "biometric_authentication_used": null,
+        "biometric_crypto_binding": null,
+        "session_revocation_reviewed": null,
+        "local_authorization_reviewed": null
+      }
+    },
+    {
+      "id": "ios-links",
+      "platform": "ios",
+      "area": "links",
+      "observations": {
+        "input_validation_reviewed": null,
+        "ownership_association_verified": null,
+        "sensitive_action_requires_auth": null
+      }
+    },
+    {
+      "id": "ios-ipc",
+      "platform": "ios",
+      "area": "ipc",
+      "observations": {
+        "exported_surface_reviewed": null,
+        "sender_authentication_reviewed": null,
+        "least_privilege_reviewed": null
+      }
+    },
+    {
+      "id": "ios-build",
+      "platform": "ios",
+      "area": "build",
+      "observations": {
+        "production_debug_disabled": null,
+        "release_signing_verified": null,
+        "dependency_patch_reviewed": null
+      }
+    }
+  ]
+}

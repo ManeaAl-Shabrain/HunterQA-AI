@@ -10,6 +10,11 @@
 
 ## Your route
 
+For selected Android/iOS evidence and already-decoded XML configuration files,
+follow the [Mobile guide](docs/MOBILE_REVIEW.md). Update the editable installation
+after pulling to obtain the core secure XML dependency. These offline commands
+do not install apps, operate devices, bypass protections or verify actual signing.
+
 For local AWS/Azure/GCP posture evidence and selected IAM/NSG policy JSON,
 follow the [Cloud review guide](docs/CLOUD_REVIEW.md). These offline commands
 need no provider credentials and do not connect to accounts, calculate effective

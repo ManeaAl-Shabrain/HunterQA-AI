@@ -177,5 +177,6 @@ hunterqa report-sarif \
 - [Azure NSG processing](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview) and [disk encryption layers](https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption-overview)
 
 This pack does not implement complete provider standards or replace actual
-effective-permission and runtime assessment. **Next requested category: Mobile.**
-It is not delivered by this pack.
+effective-permission and runtime assessment. **Following category: [Mobile](MOBILE_REVIEW.md).**
+Its later offline declarations and decoded Android/iOS XML review are separate
+from this Cloud pack and do not provide device/runtime assessment.
