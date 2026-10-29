@@ -15,7 +15,9 @@ def test_owned_application_benchmark_retains_labeled_evidence(tmp_path, monkeypa
     root = tmp_path / "benchmark"
     report = benchmark_assessments(root, authorized=True)
     assert report["all_cases_matched"] and len(report["cases"]) == 8
-    assert report["network_requests"] == 14
+    assert report["network_requests"] == 18
+    assert len(report["workflow_controls"]) == 3
+    assert all(row["matched"] for row in report["workflow_controls"])
     assert len(report["ground_truth_sha256"]) == 64 and len(report["fixture_source_sha256"]) == 64
     assert all(row["precision"] == row["recall"] == 1 for row in report["by_class"].values())
     assert (root / "web-canary-check-run" / "report.html").exists()

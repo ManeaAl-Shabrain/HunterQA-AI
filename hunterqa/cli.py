@@ -343,7 +343,12 @@ def main(argv=None):
     assessment.add_argument("--credentials")
     assessment.add_argument("--target", action="append", default=[])
     assessment.add_argument("--authorized", action="store_true")
-    sub.add_parser("coverage-audit", help="Show honest delivery and missing coverage across seven assessment areas")
+    coverage = sub.add_parser("coverage-audit", help="Show honest delivery and missing coverage across seven assessment areas")
+    coverage.add_argument("--format", choices=("json", "markdown"), default="json")
+    readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
+    readiness.add_argument("--profile")
+    readiness.add_argument("--benchmark-dir")
+    readiness.add_argument("--require-owned-lab", action="store_true")
     assessment_benchmark = sub.add_parser("assessment-benchmark", help="Run versioned owned-loopback application controls; never a real-world accuracy score")
     assessment_benchmark.add_argument("--out-dir", required=True)
     assessment_benchmark.add_argument("--authorized", action="store_true")
@@ -361,9 +366,16 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "assessment-readiness":
+        from .assessment_readiness import assessment_readiness
+        result = assessment_readiness(profile=args.profile, benchmark_dir=args.benchmark_dir)
+        print(json.dumps(result, indent=2))
+        if args.require_owned_lab and not result["supported_owned_lab_checks_passed"]:
+            raise SystemExit(2)
+        return
     if args.command == "coverage-audit":
-        from .coverage_audit import coverage_audit
-        print(json.dumps(coverage_audit(), indent=2))
+        from .coverage_audit import coverage_audit, render_checklist
+        print(render_checklist() if args.format == "markdown" else json.dumps(coverage_audit(), indent=2))
         return
     if args.command == "assessment-benchmark":
         from .assessment_benchmark import benchmark_assessments

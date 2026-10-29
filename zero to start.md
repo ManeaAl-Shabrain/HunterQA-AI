@@ -10,6 +10,12 @@
 
 ## Your route
 
+For a marked implementation inventory and a reproducible setup check, use the
+[feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) and
+[owned-lab readiness guide](docs/READINESS.md). `assessment-readiness` performs
+read-only checks; `assessment-benchmark` runs only its owned loopback fixtures.
+Neither certifies comprehensive coverage or authorizes a customer test.
+
 For post-release development features, use the [assessment adapters and shared
 quota guide](docs/ASSESSMENT_ADAPTERS.md). `coverage-audit` reports the seven-area
 implementation status; `assessment-benchmark` runs the versioned owned application

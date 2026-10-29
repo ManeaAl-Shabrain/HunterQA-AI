@@ -41,6 +41,13 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Check what is ready:** [marked feature checklist](docs/FEATURE_READINESS_CHECKLIST.md)
+and [owned-lab setup/readiness guide](docs/READINESS.md). `assessment-readiness`
+checks local installation and recomputes optional retained lab evidence without
+launching tools or contacting targets. `coverage-audit --format markdown` prints
+implemented `[x]` and unfinished `[ ]` features. All seven broad categories remain
+partial, and real-world effectiveness remains unverified.
+
 **Further development:** [assessment adapters and quotas](docs/ASSESSMENT_ADAPTERS.md)
 add `assessment-setup` for fixed `web-canary-check`, `authorization-matrix`,
 `service-enumeration` and optional `aws-account-audit` workflows. These provide

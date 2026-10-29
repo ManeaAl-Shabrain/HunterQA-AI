@@ -16,14 +16,14 @@ from .workflow_store import approved_directory
 
 
 @contextmanager
-def _database(path):
+def _database(path, *, readonly=False):
     path = _approved_file(path)
     if path.stat().st_size > 16_000_000:
         raise ValueError("Quota ledger exceeds size limit")
-    db = sqlite3.connect(path.as_uri() + "?mode=rw", uri=True, timeout=5)
+    db = sqlite3.connect(path.as_uri() + ("?mode=ro" if readonly else "?mode=rw"), uri=True, timeout=5)
     try:
         db.execute("PRAGMA busy_timeout=5000")
-        db.execute("BEGIN IMMEDIATE")
+        db.execute("BEGIN" if readonly else "BEGIN IMMEDIATE")
         yield db
         db.commit()
     except BaseException:
@@ -71,7 +71,7 @@ def _configuration(db):
 
 
 def status(path):
-    with _database(path) as db:
+    with _database(path, readonly=True) as db:
         config, stopped = _configuration(db)
         charged, active = db.execute("SELECT COALESCE(SUM(requests),0), COALESCE(SUM(state='active'),0) FROM reservations").fetchone()
         reservations = [{"run_id": row[0], "requests": row[1], "created_at": row[2]} for row in
