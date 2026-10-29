@@ -265,6 +265,12 @@ access contracts. It retains ground-truth labels, source/label hashes, private r
 evidence, per-class true/false positives and false negatives, precision and recall.
 The configured shared ledger also applies to benchmark workflows.
 
+Fixture version `owned-assessment-1.1.0` also runs discovery/form/privacy and exact
+open/refused TCP controls. Four retained workflows record 18 network operations.
+Use `assessment-readiness --benchmark-dir PRIVATE_PATH --require-owned-lab` to
+recompute their evidence without rerunning tests. See the
+[readiness guide](READINESS.md) and [marked feature checklist](FEATURE_READINESS_CHECKLIST.md).
+
 These are original, source-controlled labels, not an independently audited or
 representative field dataset. Passing this benchmark does **not** establish real-world
 detection rates, confirmed vulnerabilities, coverage of other classes, complete

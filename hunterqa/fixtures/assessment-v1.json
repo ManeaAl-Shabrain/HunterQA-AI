@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
-  "fixture_version": "owned-assessment-1.0.0",
+  "fixture_version": "owned-assessment-1.1.0",
+  "workflow_controls": ["html-links-and-forms", "discovery-scope-and-privacy", "tcp-open-and-refused"],
   "cases": [
     {"id":"markup-raw","class":"markup-reflection","path":"/app/markup/raw","expected":["web.markup-reflection-review"]},
     {"id":"markup-escaped","class":"markup-reflection","path":"/app/markup/escaped","expected":[]},

@@ -1,5 +1,22 @@
 # HunterQA development and release notes
 
+## Unreleased · marked features and owned-lab readiness
+
+- Added a [checked feature inventory](docs/FEATURE_READINESS_CHECKLIST.md) and
+  `coverage-audit --format markdown`; unfinished features stay unchecked.
+- Added read-only `assessment-readiness` with optional strict owned-lab evidence
+  checking. It recomputes retained results, metrics, controls and journal/audit
+  receipts, rejects stale fixture/runtime evidence, and never authorizes a test.
+- Expanded fixture version `owned-assessment-1.1.0` to four supervised workflows:
+  eight application cue cases plus discovery/form/privacy and open/refused TCP
+  controls. Successful runs record 18 network operations. Fixture browser scripts
+  are blocked by a CSP sandbox; JavaScript crawling remains unimplemented.
+- Made shared quota status inspection use a read-only SQLite connection and
+  added the [local establishment guide](docs/READINESS.md).
+- Real-world effectiveness remains unverified by explicit user choice. All seven
+  broad areas remain partial; this does not publish a new release or establish
+  production multi-user readiness.
+
 ## Unreleased · assessment coverage and shared quotas
 
 - Added `assessment-setup` with four closed adapters: fixed inert-markup/SQL-error
