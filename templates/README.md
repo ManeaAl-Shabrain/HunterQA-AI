@@ -31,6 +31,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Wireless review | [08-wireless-review.md](08-wireless-review.md) | Independent configuration, patch applicability, device and technology review records |
 | Optional Cloud evidence | [HunterQA-cloud-review-template.json](HunterQA-cloud-review-template.json) | Selected AWS/Azure/GCP declarations across seven areas; null means unassessed |
 | Optional Cloud review | [09-cloud-review.md](09-cloud-review.md) | Independent provider policy, condition, effective-access and reachability review records |
+| Optional Mobile evidence | [HunterQA-mobile-review-template.json](HunterQA-mobile-review-template.json) | Selected Android/iOS observations across seven areas; null means unassessed |
+| Optional Mobile review | [10-mobile-review.md](10-mobile-review.md) | Independent artifact, platform applicability, signing, runtime and retest review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

@@ -5,6 +5,7 @@ from .identity_review import catalog as identity_review_catalog
 from .ad_review import catalog as ad_review_catalog
 from .wireless_review import catalog as wireless_review_catalog
 from .cloud_review import catalog as cloud_review_catalog
+from .mobile_review import catalog as mobile_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -54,7 +55,9 @@ def coverage_audit():
             {"name": "Wireless", "skills": wireless_review_catalog(),
              "all_skills_automated": False, "mode": "offline selected policy declarations and single-BSS hostapd source cues"},
             {"name": "Cloud", "skills": cloud_review_catalog(),
-             "all_skills_automated": False, "mode": "offline AWS/Azure/GCP declarations and selected IAM/NSG syntax"}],
+             "all_skills_automated": False, "mode": "offline AWS/Azure/GCP declarations and selected IAM/NSG syntax"},
+            {"name": "Mobile", "skills": mobile_review_catalog(),
+             "all_skills_automated": False, "mode": "offline Android/iOS declarations and selected decoded XML configuration"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -103,6 +106,12 @@ def render_checklist():
         "- [ ] Effective IAM/RBAC simulation, inherited policy resolution and actual network reachability",
         "- [ ] Broad runtime cloud inventory, cross-account validation and multi-cloud enforcement assessment",
         "", "See [the Cloud review guide](CLOUD_REVIEW.md). Native syntax and owner declarations remain unverified.", "",
+        "## Additional Mobile review pack", "",
+        "- [x] Selected offline Android/iOS storage, transport, WebView, authentication, links, IPC and build declarations",
+        "- [x] Bounded decoded Android Manifest/Network Security Config and XML iOS Info.plist/entitlements readers",
+        "- [ ] Binary APK/IPA analysis, signed-artifact verification and complete platform-default resolution",
+        "- [ ] Device/runtime, biometric, storage and mobile-backend vulnerability validation",
+        "", "See [the Mobile review guide](MOBILE_REVIEW.md). Source declarations and actual platform enforcement remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

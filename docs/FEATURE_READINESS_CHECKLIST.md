@@ -114,6 +114,15 @@ See [the Wireless review guide](WIRELESS_REVIEW.md). Policy declarations and sou
 
 See [the Cloud review guide](CLOUD_REVIEW.md). Native syntax and owner declarations remain unverified.
 
+## Additional Mobile review pack
+
+- [x] Selected offline Android/iOS storage, transport, WebView, authentication, links, IPC and build declarations
+- [x] Bounded decoded Android Manifest/Network Security Config and XML iOS Info.plist/entitlements readers
+- [ ] Binary APK/IPA analysis, signed-artifact verification and complete platform-default resolution
+- [ ] Device/runtime, biometric, storage and mobile-backend vulnerability validation
+
+See [the Mobile review guide](MOBILE_REVIEW.md). Source declarations and actual platform enforcement remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

@@ -41,6 +41,16 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Mobile review pack:** [Android/iOS coverage and instructions](docs/MOBILE_REVIEW.md).
+`mobile-review-catalog` lists the offline fields; `mobile-review` checks selected
+owner declarations. `mobile-config-review` reads decoded Android Manifest/Network
+Security Config and XML iOS Info.plist/entitlements using a hardened XML parser.
+Reports withhold source identifiers and preserve uncertainty and SARIF context.
+Use the [JSON template](templates/HunterQA-mobile-review-template.json) and
+[private worksheet](templates/10-mobile-review.md). No apps/devices are executed;
+actual signing and runtime enforcement remain unverified. Refresh dependencies
+with `python -m pip install -e .` after updating this checkout.
+
 **Cloud review pack:** [AWS/Azure/GCP coverage and instructions](docs/CLOUD_REVIEW.md).
 `cloud-review-catalog` lists the offline evidence fields; `cloud-review` checks
 selected owner-normalized posture declarations. `cloud-policy-review` reads
