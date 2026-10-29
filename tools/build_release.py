@@ -32,6 +32,7 @@ PUBLIC_TEMPLATES = {
     "05-web-application-review.md", "06-auth-identity-review.md",
     "HunterQA-identity-review-template.json",
     "HunterQA-ad-review-template.json", "07-active-directory-review.md",
+    "HunterQA-wireless-review-template.json", "08-wireless-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

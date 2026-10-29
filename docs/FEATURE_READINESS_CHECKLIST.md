@@ -95,6 +95,15 @@ See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decod
 
 See [the AD review guide](ACTIVE_DIRECTORY_REVIEW.md). Supplied declarations remain unverified.
 
+## Additional Wireless review pack
+
+- [x] Selected offline policy checks for all 14 Wireless review contracts
+- [x] Seven-directive single-BSS hostapd source reader without executing configuration
+- [ ] Live wireless collection, packet analysis and radio validation
+- [ ] Comprehensive protocol and device vulnerability assessment
+
+See [the Wireless review guide](WIRELESS_REVIEW.md). Policy declarations and source cues remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

@@ -137,5 +137,6 @@ owner declarations and hashes do not independently prove truth or consent.
 An empty report or absence of findings is not an AD security certificate.
 Real-world effectiveness remains unverified; tests use owned synthetic evidence.
 
-**Next requested category: Wireless.** Its assessment capabilities are not
-implemented by this pack.
+**Following category: [Wireless](WIRELESS_REVIEW.md).** Its later offline policy
+and hostapd-source review is separate from this AD pack and does not provide live
+radio assessment capabilities.

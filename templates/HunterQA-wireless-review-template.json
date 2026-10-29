@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "review-wifi",
+      "skill": "offensive-wifi",
+      "observations": {
+        "modern_wpa_enabled": null,
+        "legacy_security_enabled": null,
+        "client_isolation": null,
+        "management_plane_isolated": null
+      }
+    },
+    {
+      "id": "review-wifi-recon",
+      "skill": "offensive-wifi-recon",
+      "observations": {
+        "inventory_reviewed": null,
+        "ownership_mapped": null,
+        "band_coverage_reviewed": null
+      }
+    },
+    {
+      "id": "review-wpa2-psk",
+      "skill": "offensive-wpa2-psk",
+      "observations": {
+        "legacy_wpa_enabled": null,
+        "tkip_pairwise_enabled": null,
+        "passphrase_policy_verified": null
+      }
+    },
+    {
+      "id": "review-wpa3-sae",
+      "skill": "offensive-wpa3-sae",
+      "observations": {
+        "transition_mode": null,
+        "pmf_required": null,
+        "sae_patch_status": null
+      }
+    },
+    {
+      "id": "review-wpa-enterprise",
+      "skill": "offensive-wpa-enterprise",
+      "observations": {
+        "server_certificate_validation": null,
+        "trusted_server_names_configured": null,
+        "password_based_eap_allowed": null
+      }
+    },
+    {
+      "id": "review-wps",
+      "skill": "offensive-wps",
+      "observations": {
+        "enabled": null,
+        "pin_enrollment_enabled": null,
+        "lockout_enforced": null
+      }
+    },
+    {
+      "id": "review-evil-twin",
+      "skill": "offensive-evil-twin",
+      "observations": {
+        "auto_join_untrusted_networks": null,
+        "server_identity_validation": null,
+        "rogue_ap_monitoring": null
+      }
+    },
+    {
+      "id": "review-krack-fragattacks",
+      "skill": "offensive-krack-fragattacks",
+      "observations": {
+        "krack_patch_status": null,
+        "fragattacks_patch_status": null
+      }
+    },
+    {
+      "id": "review-deauth-disassoc",
+      "skill": "offensive-deauth-disassoc",
+      "observations": {
+        "pmf_required": null,
+        "legacy_clients_present": null,
+        "legacy_exception_reviewed": null
+      }
+    },
+    {
+      "id": "review-bluetooth-ble",
+      "skill": "offensive-bluetooth-ble",
+      "observations": {
+        "le_secure_connections": null,
+        "authenticated_pairing": null,
+        "sensitive_gatt_authorization": null
+      }
+    },
+    {
+      "id": "review-bluetooth-classic",
+      "skill": "offensive-bluetooth-classic",
+      "observations": {
+        "secure_simple_pairing": null,
+        "legacy_pairing_allowed": null,
+        "minimum_key_policy_enforced": null
+      }
+    },
+    {
+      "id": "review-zigbee-thread-matter",
+      "skill": "offensive-zigbee-thread-matter",
+      "observations": {
+        "technology": null,
+        "authenticated_commissioning": null,
+        "default_shared_keys_in_use": null,
+        "commissioning_window_limited": null
+      }
+    },
+    {
+      "id": "review-z-wave",
+      "skill": "offensive-z-wave",
+      "observations": {
+        "security_mode": null,
+        "inclusion_identity_verified": null
+      }
+    },
+    {
+      "id": "review-lorawan-sub-ghz",
+      "skill": "offensive-lorawan-sub-ghz",
+      "observations": {
+        "technology": null,
+        "activation_mode": null,
+        "frame_counter_validation": null,
+        "unique_device_keys": null,
+        "replay_protection": null
+      }
+    }
+  ]
+}

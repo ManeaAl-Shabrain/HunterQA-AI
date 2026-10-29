@@ -10,6 +10,11 @@
 
 ## Your route
 
+For selected wireless policy evidence and a non-executing single-BSS hostapd
+configuration review, follow the [Wireless guide](docs/WIRELESS_REVIEW.md).
+Its 14 contracts are partial offline checks; they do not scan, transmit, capture
+packets, disconnect clients or certify device/network security.
+
 For selected directory posture evidence, follow the
 [Active Directory review guide](docs/ACTIVE_DIRECTORY_REVIEW.md). Its template
 uses unknown values until the owner supplies verified source observations. This
