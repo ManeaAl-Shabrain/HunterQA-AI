@@ -16,3 +16,5 @@
 .report-body .research-details h2, .report-body .research-details h3 {margin:1.3rem 0 .6rem;}
 .report-body .research-details code {background: #192325; padding: 1px 5px; border-radius:3px; overflow-wrap:anywhere;}
 .workflow-evidence code{overflow-wrap:anywhere}
+
+.operator-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:14px;margin-bottom:22px;border:1px solid var(--line);min-width:0}.operator-bar p{margin:0;overflow-wrap:anywhere;min-width:0}.operator-bar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}.operator-bar-actions form{margin:0}.operator-login-form{display:flex;flex-direction:column;gap:12px;max-width:480px}.operator-login-form input{width:100%;min-width:0;padding:12px;background:var(--bg);color:var(--text);border:1px solid var(--line)}.operator-login-form button{padding:12px;cursor:pointer;background:var(--acid);color:var(--bg);border:0}

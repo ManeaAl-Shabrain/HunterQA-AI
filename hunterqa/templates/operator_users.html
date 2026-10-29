@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Operator access · HunterQA{% endblock %}
+{% block section %}Operator access{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">LOCAL ADMINISTRATION</p><h1>Operator access</h1><p>One shared organization workspace. Local OS administration manages accounts; target approvals remain separate.</p></div></section>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Username</th><th>Role</th><th>Enabled</th><th>Access version</th></tr></thead><tbody>
+{% for user in identities.operators %}<tr><td>{{ user.username }}</td><td>{{ user.role }}</td><td>{{ user.active }}</td><td>{{ user.version }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="panel"><div class="research-details workflow-evidence"><h2>Authentication audit</h2><p>{{ audit.events }} recorded events. Consistency fingerprint: <code>{{ audit.head_sha256 }}</code>.</p><p>Hashes detect inconsistency; the control-directory owner is trusted. This is not independent owner verification, SSO, tenant isolation or an OS sandbox.</p></div></section>
+{% endblock %}

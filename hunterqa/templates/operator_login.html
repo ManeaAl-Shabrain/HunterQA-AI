@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Sign in · HunterQA{% endblock %}
+{% block section %}Operator sign-in{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">LOCAL WORKSPACE ACCESS</p><h1>Sign in to HunterQA</h1><p>Use the account provided by your local administrator. Workspace access does not authorize a target assessment.</p></div></section>
+<section class="panel"><div class="research-details">
+{% if error %}<p class="flash error" role="alert">{{ error }}</p>{% endif %}
+<form class="operator-login-form" method="post" action="{{ url_for('operators.login') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label for="operator-name">Username</label><input id="operator-name" name="username" autocomplete="username" maxlength="64" required>
+<label for="operator-password">Password</label><input id="operator-password" name="password" type="password" autocomplete="current-password" maxlength="256" required>
+<button type="submit">Sign in</button>
+</form></div></section>
+{% endblock %}

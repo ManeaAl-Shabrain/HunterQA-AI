@@ -349,6 +349,23 @@ def main(argv=None):
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
     readiness.add_argument("--require-owned-lab", action="store_true")
+    operator_secret = sub.add_parser("operator-secret", help="Create a private persistent session-key file without displaying its value")
+    operator_secret.add_argument("--out", required=True)
+    operator_secret.add_argument("--authorized", action="store_true")
+    for name in ("operator-init", "operator-add", "operator-update", "operator-status", "operator-audit"):
+        operator = sub.add_parser(name, help="Manage opt-in local dashboard operators; not target assessment permission")
+        operator.add_argument("--database", required=True)
+        if name in ("operator-init", "operator-add", "operator-update"):
+            operator.add_argument("--username", required=True)
+            operator.add_argument("--authorized", action="store_true")
+        if name == "operator-add":
+            operator.add_argument("--role", choices=("viewer", "analyst", "admin"), required=True)
+        if name == "operator-update":
+            operator.add_argument("--role", choices=("viewer", "analyst", "admin"))
+            enabled = operator.add_mutually_exclusive_group()
+            enabled.add_argument("--enable", action="store_true")
+            enabled.add_argument("--disable", action="store_true")
+            operator.add_argument("--reset-password", action="store_true")
     assessment_benchmark = sub.add_parser("assessment-benchmark", help="Run versioned owned-loopback application controls; never a real-world accuracy score")
     assessment_benchmark.add_argument("--out-dir", required=True)
     assessment_benchmark.add_argument("--authorized", action="store_true")
@@ -366,6 +383,33 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command.startswith("operator-"):
+        from . import operator_store
+        if args.command in ("operator-init", "operator-add", "operator-update", "operator-secret") and not args.authorized:
+            raise PermissionError("Local operator administration requires --authorized")
+        password = None
+        if args.command in ("operator-init", "operator-add") or (args.command == "operator-update" and args.reset_password):
+            password = os.environ.get("HUNTERQA_OPERATOR_PASSWORD")
+            if password is None:
+                import getpass
+                password = getpass.getpass("New local operator password: ")
+                if password != getpass.getpass("Confirm password: "):
+                    raise ValueError("Passwords did not match")
+        if args.command == "operator-secret":
+            result = operator_store.create_session_key(args.out, authorized=True)
+        elif args.command == "operator-init":
+            result = operator_store.initialize(args.database, args.username, password, authorized=True)
+        elif args.command == "operator-add":
+            result = operator_store.add_operator(args.database, args.username, args.role, password, authorized=True)
+        elif args.command == "operator-update":
+            result = operator_store.update_operator(args.database, args.username, role=args.role,
+                active=True if args.enable else False if args.disable else None, password=password, authorized=True)
+        elif args.command == "operator-audit":
+            result = operator_store.audit_status(args.database)
+        else:
+            result = operator_store.status(args.database)
+        print(json.dumps(result, indent=2))
+        return
     if args.command == "assessment-readiness":
         from .assessment_readiness import assessment_readiness
         result = assessment_readiness(profile=args.profile, benchmark_dir=args.benchmark_dir)

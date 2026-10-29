@@ -2,7 +2,7 @@
 {% block title %}Projects · HunterQA AI{% endblock %}
 {% block section %}Projects{% endblock %}
 {% block content %}
-<section class="page-head"><div><p class="eyebrow">AUTHORIZED SCOPE</p><h1>Local projects</h1><p>Only directories inside your configured approved roots can be registered or scanned.</p></div><button class="button primary" data-open-modal="project-modal">+ Add project</button></section>
+<section class="page-head"><div><p class="eyebrow">AUTHORIZED SCOPE</p><h1>Local projects</h1><p>Only directories inside your configured approved roots can be registered or scanned.</p></div>{% if not operator_read_only %}<button class="button primary" data-open-modal="project-modal">+ Add project</button>{% endif %}</section>
 
 <section class="panel">
   {% if projects %}<div class="project-grid">{% for project in projects %}
@@ -10,12 +10,12 @@
       <div class="project-card-top"><span class="project-icon large">{{ project.name[0]|upper }}</span><span class="badge {{ project.last_status or 'idle' }}">{{ project.last_status or 'not scanned' }}</span></div>
       <h2>{{ project.name }}</h2><code>{{ project.path }}</code>
       <div class="project-meta"><span>{{ project.scan_count }} scans</span><span>Local directory</span></div>
-      <button class="button scan-button" data-open-modal="scan-{{ project.id }}">Start authorized scan <span>→</span></button>
+      {% if not operator_read_only %}<button class="button scan-button" data-open-modal="scan-{{ project.id }}">Start authorized scan <span>→</span></button>{% endif %}
     </article>
   {% endfor %}</div>{% else %}<div class="empty"><span>⌁</span><h3>No projects registered</h3><p>Add a directory contained by <code>HUNTERQA_APPROVED_ROOTS</code>.</p></div>{% endif %}
 </section>
 
-<dialog id="project-modal" class="modal">
+{% if not operator_read_only %}<dialog id="project-modal" class="modal">
   <form method="post" action="{{ url_for('main.create_project') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="modal-head"><div><p class="eyebrow">NEW SCOPE</p><h2>Add local project</h2></div><button type="button" class="icon-button" data-close-modal aria-label="Close">×</button></div>
@@ -36,6 +36,6 @@
     <p class="callout warn">This scan analyzes local source code only. It does not probe websites, IPs, or remote services.</p>
     <div class="modal-actions"><button type="button" class="button ghost" data-close-modal>Cancel</button><button class="button primary" disabled data-scan-submit>Authorize & start</button></div>
   </form>
-</dialog>{% endfor %}
+</dialog>{% endfor %}{% endif %}
 {% endblock %}
 

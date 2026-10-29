@@ -60,7 +60,7 @@
           <td class="triage-review-cell">
             <strong>{{ item.analyst_status|replace('_',' ')|title }}</strong>
             {% if item.analyst_note %}<details><summary>Last review note</summary><p>{{ item.analyst_note }}</p><small>{{ item.review_updated_at }}</small></details>{% endif %}
-            <details><summary>Update review</summary>
+            {% if not operator_read_only %}<details><summary>Update review</summary>
               <form method="post" action="{{ url_for('main.update_triage_review', record_id=item.id) }}" class="triage-review-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label>New status
@@ -75,7 +75,7 @@
                 </label>
                 <button class="button small" type="submit">Save decision</button>
               </form>
-            </details>
+            </details>{% endif %}
           </td>
         </tr>
         {% else %}<tr><td colspan="5">No records match these filters.</td></tr>{% endfor %}

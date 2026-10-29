@@ -6,6 +6,11 @@ from flask import Flask, current_app, g
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS dashboard_security (
+    id INTEGER PRIMARY KEY CHECK(id=1),
+    operator_required INTEGER NOT NULL CHECK(operator_required IN (0,1))
+);
+INSERT OR IGNORE INTO dashboard_security VALUES (1, 0);
 CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,

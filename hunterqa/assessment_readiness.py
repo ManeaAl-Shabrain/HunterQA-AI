@@ -29,6 +29,24 @@ def assessment_readiness(*, benchmark_dir=None, profile=None):
     add("semgrep", "ok" if shutil.which("semgrep") else "optional_missing", "Needed for Semgrep commands; not required by the fixed HTTP/TCP adapters")
     cloud = all(importlib.util.find_spec(name) is not None for name in ("botocore", "defusedxml"))
     add("cloud_extra", "ok" if cloud else "optional_missing", "Install .[cloud] for AWS account checks; no credential lookup is performed")
+    operator_db = os.environ.get("HUNTERQA_OPERATOR_DB")
+    if operator_db:
+        try:
+            from .operator_store import status, validate_separation, read_session_key
+            validate_separation(os.environ.get("HUNTERQA_APPROVED_ROOTS", ""))
+            status(operator_db)
+            secret = os.environ.get("HUNTERQA_SECRET_KEY") or os.environ.get("ZEROSCOPE_SECRET_KEY", "")
+            key_file = os.environ.get("HUNTERQA_OPERATOR_SESSION_KEY_FILE")
+            if key_file:
+                if secret:
+                    raise ValueError("Ambiguous session-key configuration")
+                secret = read_session_key(key_file)
+            add("operator_access", "ok" if len(secret) >= 32 else "fail",
+                "Opt-in local operator database, separate control root and persistent session-secret configuration; no sign-in attempted", required=True)
+        except (OSError, ValueError, TypeError, KeyError, sqlite3.Error):
+            add("operator_access", "fail", "Operator configuration is inaccessible, invalid or overlaps assessment roots", required=True)
+    else:
+        add("operator_access", "not_configured", "Legacy trusted local-OS-operator mode; authenticated dashboard roles are optional")
     if profile is not None:
         try:
             policy, fingerprint = _policy_snapshot(profile)
@@ -70,4 +88,4 @@ def assessment_readiness(*, benchmark_dir=None, profile=None):
         "authorization": "This report never authorizes a customer test; reviewed scope, protocol, execution and checkpoints are still required",
         "limitations": ["Owned evidence is a retrospective fixture baseline, not a live environment health check",
             "AWS runtime checks have synthetic contract tests only; real cloud readiness is not established",
-            "Independent owner grants, multi-user RBAC, OS sandboxing, distributed enforcement and full category coverage remain incomplete"]}
+            "Independent owner grants, hosted multi-user isolation, OS sandboxing, distributed enforcement and full category coverage remain incomplete"]}

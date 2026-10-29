@@ -56,7 +56,7 @@ jobs:
       - name: Real Chromium approved-form checks with synthetic intercepted responses
         env:
           HUNTERQA_ENGAGEMENT_BROWSER_CI: "1"
-        run: python -m pytest -q tests/test_engagement.py tests/test_dashboard_browser.py tests/test_workflow_runner.py::test_workflow_dashboard_real_browser tests/test_web_discovery.py::test_discovery_dashboard_real_browser tests/test_assessment_adapters.py::test_access_dashboard_real_browser tests/test_assessment_readiness.py::test_owned_fixture_blocks_script_execution_in_real_chromium
+        run: python -m pytest -q tests/test_engagement.py tests/test_dashboard_browser.py tests/test_workflow_runner.py::test_workflow_dashboard_real_browser tests/test_web_discovery.py::test_discovery_dashboard_real_browser tests/test_assessment_adapters.py::test_access_dashboard_real_browser tests/test_assessment_readiness.py::test_owned_fixture_blocks_script_execution_in_real_chromium tests/test_operator_auth.py::test_operator_sign_in_read_only_view_and_sign_out_real_browser
       - name: Build and verify complete source package
         shell: bash
         run: |

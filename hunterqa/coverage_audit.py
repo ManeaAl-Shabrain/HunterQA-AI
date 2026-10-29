@@ -18,8 +18,8 @@ AREAS = (
      "Fixed AWS identity/account-summary APIs and selected local configuration patterns",
      ["Resource and effective-permission inventory", "Azure/GCP runtime adapters", "Cloud infrastructure assessment"]),
     ("production-hardening", "Production platform hardening", [],
-     "Local supervised workers, per-run controls and optional shared host-local quota ledger",
-     ["Authenticated multi-user RBAC", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
+     "Local supervised workers, per-run controls, optional shared quotas and authenticated local dashboard roles",
+     ["Hosted multi-user deployment and tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
      "Versioned owned application benchmark, labeled positive/negative cues and retained evidence",
      ["Independent real-world evaluation", "Representative per-class false-negative rates", "Complete standards coverage"]),
@@ -31,7 +31,7 @@ FEATURES = {
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence")],
     "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review")],
-    "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None)],
+    "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
     "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None)],
 }
 

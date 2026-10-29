@@ -13,7 +13,7 @@ implemented capabilities and unfinished work across all seven areas.
 | `[ ]` in the feature list | Not implemented to the requested breadth; do not advertise or rely on it |
 | `installation_ready` | Required local packages, approved roots and any configured shared ledger pass local checks |
 | `supported_owned_lab_checks_passed` | Current installation checks pass and retained owned-lab results match the installed fixture/runtime and recomputed evidence |
-| `production_multi_user_ready: false` | RBAC, verified owner grants, OS sandboxing and distributed enforcement remain incomplete |
+| `production_multi_user_ready: false` | Hosted/tenant isolation, verified owner grants, OS sandboxing and distributed enforcement remain incomplete; optional local dashboard roles are separate |
 
 All seven broad categories are still partial. A passed lab does not establish
 comprehensive SQLi/XSS/SSRF/upload/traversal, JS/session/SSO coverage, AD attack
@@ -47,6 +47,10 @@ model, browser, customer assessment or subprocess and makes no network request.
 It does not read AWS environment credentials or dedicated-account credential files.
 Root paths and secret values are not displayed. Semgrep and the cloud extra are
 reported separately; neither is required for the fixed owned HTTP/TCP lab.
+
+When `HUNTERQA_OPERATOR_DB` is configured, readiness also checks its public account
+metadata, separate control root and persistent key configuration. It does not
+attempt login or show passwords, hashes or keys. See [local operator access](OPERATOR_ACCESS.md).
 
 Optional AWS adapter dependencies: `python -m pip install -e '.[cloud]'`.
 Optional browser checks need `.[browser]` and installed Playwright Chromium.

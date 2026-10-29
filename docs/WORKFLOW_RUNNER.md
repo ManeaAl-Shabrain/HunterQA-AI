@@ -25,6 +25,11 @@ two fixed read-only API POSTs; TCP journals record connections rather than HTTP.
 
 ## Delivered capabilities and boundaries
 
+Optional [local operator roles](OPERATOR_ACCESS.md) now restrict dashboard reads
+and existing web mutations. They do not authorize target testing or gate the
+trusted OS administrator's workflow CLI. Execution and checkpoint fingerprints
+remain required. The following table describes the original v1.3.0 baseline.
+
 | Priority | Delivered | Boundary |
 | --- | --- | --- |
 | Persistent engine | SQLite run/step state, staged dependency scheduling, exclusive OS coordinator lock, create-only run IDs/directories | No automatic retry or replay; interrupted work requires a new separately reviewed run |
