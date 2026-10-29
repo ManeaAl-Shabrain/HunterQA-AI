@@ -16,6 +16,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "templates/05-web-application-review.md": "Public web review worksheet\n",
         "templates/06-auth-identity-review.md": "Public identity worksheet\n",
         "templates/HunterQA-identity-review-template.json": '{"schema_version":1,"jwt_samples":[],"oauth_clients":[]}\n',
+        "templates/HunterQA-ad-review-template.json": '{"schema_version":1,"collected_at":null}\n',
+        "templates/07-active-directory-review.md": "Public AD review worksheet\n",
         "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
         "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
     }
@@ -31,6 +33,7 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
     assert "templates/HunterQA-scope-template.json" in included
     assert {"templates/05-web-application-review.md", "templates/06-auth-identity-review.md",
             "templates/HunterQA-identity-review-template.json"} <= included
+    assert {"templates/HunterQA-ad-review-template.json", "templates/07-active-directory-review.md"} <= included
     assert "templates/client-filled-profile.json" not in included
     assert "templates/client-case/findings.json" not in included
     with zipfile.ZipFile(archive_path) as archive:

@@ -2,6 +2,7 @@
 from .workflow_protocol import tool_catalog
 from .web_review import catalog as web_review_catalog
 from .identity_review import catalog as identity_review_catalog
+from .ad_review import catalog as ad_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -14,8 +15,8 @@ AREAS = (
      "Explicit dedicated-role/anonymous GET contracts and isolated Authorization headers",
      ["SSO negotiation", "Complex session handling", "Stateful business logic", "General tenant-boundary discovery"]),
     ("network-infrastructure", "Network and infrastructure", ["service-enumeration", "service-evidence"],
-     "Exact admitted TCP host/port reachability and service-evidence import",
-     ["OS fingerprinting", "Broad service/version assessment", "Active Directory", "Internal attack-path testing", "UDP"]),
+     "Exact admitted TCP host/port reachability, service-evidence import and selected offline AD policy review",
+     ["OS fingerprinting", "Broad service/version assessment", "Live Active Directory assessment", "Internal attack-path testing", "UDP"]),
     ("cloud-runtime", "Cloud runtime", ["aws-account-audit", "source-review"],
      "Fixed AWS identity/account-summary APIs and selected local configuration patterns",
      ["Resource and effective-permission inventory", "Azure/GCP runtime adapters", "Cloud infrastructure assessment"]),
@@ -31,7 +32,7 @@ FEATURES = {
     "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery")],
     "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check")],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
-    "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence")],
+    "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],
     "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review")],
     "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
     "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None)],
@@ -45,7 +46,9 @@ def coverage_audit():
         "category_packs": [{"name": "Web Application", "skills": web_review_catalog(),
             "all_skills_automated": False, "mode": "offline Python source cues and guided review"},
             {"name": "Auth & Identity", "skills": identity_review_catalog(),
-             "all_skills_automated": False, "mode": "offline JWT samples and declared web-client configuration"}],
+             "all_skills_automated": False, "mode": "offline JWT samples and declared web-client configuration"},
+            {"name": "Active Directory", "skills": ad_review_catalog(),
+             "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -76,6 +79,12 @@ def render_checklist():
         "- [ ] Cryptographic JWT signature verification and server acceptance tests",
         "- [ ] End-to-end SSO, session and scope-enforcement validation",
         "", "See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decoded claims remain unverified.", "",
+        "## Additional Active Directory review pack", "",
+        "- [x] Selected offline account, ACL, certificate, trust and hybrid privilege declarations",
+        "- [x] Selected offline domain-controller SMB/LDAP policy review",
+        "- [ ] Live directory collection, effective-access calculation and complete AD CS assessment",
+        "- [ ] Active attack-path validation and native NetExec execution",
+        "", "See [the AD review guide](ACTIVE_DIRECTORY_REVIEW.md). Supplied declarations remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

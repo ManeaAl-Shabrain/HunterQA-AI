@@ -41,6 +41,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Active Directory review pack:** [coverage and instructions](docs/ACTIVE_DIRECTORY_REVIEW.md).
+`ad-review-catalog` describes both AD and NetExec category contracts; `ad-review`
+checks selected owner-normalized account, SMB/LDAP, ACL, certificate, trust and
+hybrid declarations offline. Unknown fields remain unassessed; no directory query,
+authentication or external tool is run. Use the
+[JSON template](templates/HunterQA-ad-review-template.json) and
+[private worksheet](templates/07-active-directory-review.md). Effective rights,
+live attack paths and complete AD CS coverage remain unverified/incomplete.
+
 **Auth & Identity review pack:** [JWT and OAuth/OIDC guide](docs/AUTH_IDENTITY_REVIEW.md).
 `identity-review-catalog` lists both review contracts; `identity-review` compares
 private JWT samples and declared web-client settings offline. It retains redacted
