@@ -20,8 +20,15 @@ def _env(name: str, legacy: str, default: str = "") -> str:
 def create_app(test_config: dict | None = None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     pkg = Path(__file__).resolve().parent
+    persistent_key = _env("HUNTERQA_SECRET_KEY", "ZEROSCOPE_SECRET_KEY")
+    operator_key_file = os.environ.get("HUNTERQA_OPERATOR_SESSION_KEY_FILE")
+    if operator_key_file:
+        if persistent_key:
+            raise ValueError("Configure a session-key file or an environment session secret, not both")
+        from .operator_store import read_session_key
+        persistent_key = read_session_key(operator_key_file)
     app.config.from_mapping(
-        SECRET_KEY=_env("HUNTERQA_SECRET_KEY", "ZEROSCOPE_SECRET_KEY") or secrets.token_hex(32),
+        SECRET_KEY=persistent_key or secrets.token_hex(32),
         DATABASE=str(Path(app.instance_path) / "hunterqa.sqlite3"),
         APPROVED_ROOTS=_env("HUNTERQA_APPROVED_ROOTS", "ZEROSCOPE_APPROVED_ROOTS"),
         SEMGREP_RULES=str(pkg / "rules" / "semgrep.yml"),
@@ -42,6 +49,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         ENGAGEMENT_REPORT_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_REPORT", ""),
         ENGAGEMENT_BASELINE_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_BASELINE", ""),
         WORKFLOW_RUN_PATH=os.environ.get("HUNTERQA_WORKFLOW_RUN", ""),
+        OPERATOR_DATABASE=os.environ.get("HUNTERQA_OPERATOR_DB", ""),
         CAMPAIGN_HISTORY_ROOT=os.environ.get("HUNTERQA_CAMPAIGN_HISTORY_ROOT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),
@@ -80,6 +88,10 @@ def create_app(test_config: dict | None = None) -> Flask:
         if not valid_host:
             abort(400)
         g.csp_nonce = secrets.token_urlsafe(18)
+
+    from .operator_auth import init_operator_auth
+    init_operator_auth(app, persistent_secret=bool(persistent_key
+        or (test_config and test_config.get("SECRET_KEY"))))
 
     @app.context_processor
     def browser_policy_context():

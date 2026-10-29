@@ -21,6 +21,14 @@ before publicly claiming vulnerability severity or a CVE identifier.
 
 ## Authorized research boundaries
 
+Development source optionally supports [authenticated local dashboard roles](docs/OPERATOR_ACCESS.md).
+The private operator control root must be disjoint from all assessment/source
+roots. Password/session revocation, role checks and login limits protect dashboard
+access; they do not verify customer ownership or authorize an assessment. This
+remains a trusted local-OS/shared-organization deployment, without hosted tenant
+isolation, SSO, OS sandboxing or distributed access enforcement. Once enabled on a
+dashboard history database, missing operator configuration refuses startup.
+
 The 1.3 workflow runner uses a closed set of trusted adapters, explicit
 execution/checkpoint fingerprints, per-run quotas, isolated Python worker
 processes and stop/deadline supervision. Local authorization/reviewer references

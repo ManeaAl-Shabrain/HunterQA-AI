@@ -50,6 +50,18 @@
         <div class="status-chip"><span></span> Local workspace</div>
       </header>
       <div class="content">
+        {% if config.OPERATOR_DATABASE and g.operator %}
+        <section class="operator-bar" aria-label="Signed-in operator">
+          <p>Signed in as <strong>{{ g.operator.username }}</strong> · {{ g.operator.role }}</p>
+          <div class="operator-bar-actions">
+            {% if g.operator.role == 'admin' %}<a class="button small" href="{{ url_for('operators.operators') }}">Operator access</a>{% endif %}
+            <form method="post" action="{{ url_for('operators.logout') }}" data-operator-logout>
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button small" type="submit">Sign out</button>
+            </form>
+          </div>
+        </section>
+        {% endif %}
+        {% if operator_read_only %}<p class="flash">View-only access. Changes and scans require an analyst or administrator.</p>{% endif %}
         {% for category, message in get_flashed_messages(with_categories=true) %}
           <div class="flash {{ category }}">{{ message }}</div>
         {% endfor %}

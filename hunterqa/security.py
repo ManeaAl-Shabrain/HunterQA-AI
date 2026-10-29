@@ -17,6 +17,9 @@ def approved_roots() -> list[Path]:
 
 
 def validate_project_path(value: str) -> Path:
+    if current_app.config.get("OPERATOR_DATABASE"):
+        from .operator_store import validate_separation
+        validate_separation(current_app.config.get("APPROVED_ROOTS", ""))
     if not value or "\x00" in value:
         raise ValueError("Enter a local project directory.")
     candidate = Path(value).expanduser().resolve(strict=True)

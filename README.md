@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Optional local operator access:** [setup and limits](docs/OPERATOR_ACCESS.md).
+`operator-init`, `operator-add`, `operator-update`, `operator-status`,
+`operator-audit` and `operator-secret` manage named local dashboard accounts,
+viewer/analyst/admin roles, private session keys and revocable sessions. The
+control root must be separate from assessment roots. This is a shared local
+organization workspace; hosted multi-user/tenant isolation, SSO and independently
+verified owner grants remain incomplete.
+
 **Check what is ready:** [marked feature checklist](docs/FEATURE_READINESS_CHECKLIST.md)
 and [owned-lab setup/readiness guide](docs/READINESS.md). `assessment-readiness`
 checks local installation and recomputes optional retained lab evidence without

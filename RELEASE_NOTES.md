@@ -1,5 +1,21 @@
 # HunterQA development and release notes
 
+## Unreleased · authenticated local operator roles
+
+- Added opt-in viewer/analyst/admin dashboard identities with salted password
+  hashes, CSRF-protected login/logout, persistent attempt limits, revocable
+  server-side sessions and role checks before existing mutations.
+- Added private, separate control-root administration, a session-key-file helper,
+  immediate session revocation after account changes, last-admin protection and
+  authentication audit consistency checks. Enabled dashboards refuse a restart
+  that silently drops operator authentication configuration.
+- Added [setup and trust boundaries](docs/OPERATOR_ACCESS.md), read-only readiness
+  configuration checks and an updated marked feature list.
+- This is a shared local workspace on a trusted OS host. It adds neither hosted
+  multi-user/tenant isolation nor independent owner grants, SSO, OS sandboxing or
+  distributed enforcement. Broad assessment gaps and real-world effectiveness
+  remain incomplete/unverified; published v1.3.0 artifacts are unchanged.
+
 ## Unreleased · marked features and owned-lab readiness
 
 - Added a [checked feature inventory](docs/FEATURE_READINESS_CHECKLIST.md) and

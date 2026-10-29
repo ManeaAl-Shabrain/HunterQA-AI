@@ -10,6 +10,11 @@
 
 ## Your route
 
+To require viewer/analyst/admin accounts on the local dashboard, follow the
+[operator access setup](docs/OPERATOR_ACCESS.md). Keep its private control root
+separate from assessment roots. These accounts do not replace target permission,
+and this mode does not enable a publicly hosted multi-tenant service.
+
 For a marked implementation inventory and a reproducible setup check, use the
 [feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) and
 [owned-lab readiness guide](docs/READINESS.md). `assessment-readiness` performs
