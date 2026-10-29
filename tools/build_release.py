@@ -35,6 +35,8 @@ PUBLIC_TEMPLATES = {
     "HunterQA-wireless-review-template.json", "08-wireless-review.md",
     "HunterQA-cloud-review-template.json", "09-cloud-review.md",
     "HunterQA-mobile-review-template.json", "10-mobile-review.md",
+    "HunterQA-iot-review-template.json", "11-iot-embedded-review.md",
+    "HunterQA-infrastructure-review-template.json", "12-infrastructure-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

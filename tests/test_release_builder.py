@@ -24,6 +24,10 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "templates/09-cloud-review.md": "Public cloud review worksheet\n",
         "templates/HunterQA-mobile-review-template.json": '{"schema_version":1,"records":[]}\n',
         "templates/10-mobile-review.md": "Public mobile review worksheet\n",
+        "templates/HunterQA-iot-review-template.json": '{"schema_version":1,"records":[]}\n',
+        "templates/11-iot-embedded-review.md": "Public IoT review worksheet\n",
+        "templates/HunterQA-infrastructure-review-template.json": '{"schema_version":1,"records":[]}\n',
+        "templates/12-infrastructure-review.md": "Public infrastructure review worksheet\n",
         "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
         "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
     }
@@ -43,6 +47,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
     assert {"templates/HunterQA-wireless-review-template.json", "templates/08-wireless-review.md"} <= included
     assert {"templates/HunterQA-cloud-review-template.json", "templates/09-cloud-review.md"} <= included
     assert {"templates/HunterQA-mobile-review-template.json", "templates/10-mobile-review.md"} <= included
+    assert {"templates/HunterQA-iot-review-template.json", "templates/11-iot-embedded-review.md"} <= included
+    assert {"templates/HunterQA-infrastructure-review-template.json", "templates/12-infrastructure-review.md"} <= included
     assert "templates/client-filled-profile.json" not in included
     assert "templates/client-case/findings.json" not in included
     with zipfile.ZipFile(archive_path) as archive:

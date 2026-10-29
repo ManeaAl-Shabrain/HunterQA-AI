@@ -10,6 +10,16 @@
 
 ## Your route
 
+For seven offline Infrastructure defensive review contracts and selected Windows
+PE header declarations, follow the [Infrastructure guide](docs/INFRASTRUCTURE_REVIEW.md).
+Use private templates and owner-provided artifacts. These commands do not load
+binaries, run evasion techniques or verify actual process mitigation enforcement.
+
+For selected IoT evidence, Mosquitto ACL files and resolved U-Boot build settings,
+follow the [IoT & Embedded guide](docs/IOT_EMBEDDED_REVIEW.md). Use private copies
+of its templates. These offline commands do not acquire firmware, contact devices,
+evaluate effective broker access or verify the installed boot chain.
+
 For selected Android/iOS evidence and already-decoded XML configuration files,
 follow the [Mobile guide](docs/MOBILE_REVIEW.md). Update the editable installation
 after pulling to obtain the core secure XML dependency. These offline commands

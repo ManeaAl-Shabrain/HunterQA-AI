@@ -123,6 +123,24 @@ See [the Cloud review guide](CLOUD_REVIEW.md). Native syntax and owner declarati
 
 See [the Mobile review guide](MOBILE_REVIEW.md). Source declarations and actual platform enforcement remain unverified.
 
+## Additional IoT & Embedded review pack
+
+- [x] Selected offline hardware, firmware, boot, updates, MQTT, CoAP, industrial, lifecycle and ecosystem declarations
+- [x] Bounded selected Mosquitto ACL syntax and four-flag resolved U-Boot build readers
+- [ ] Firmware acquisition/extraction, binary analysis and signed-image/boot-chain verification
+- [ ] Hardware, radio, live MQTT/CoAP/ICS and device vulnerability validation
+
+See [the IoT review guide](IOT_EMBEDDED_REVIEW.md). Source cues and owner declarations remain unverified.
+
+## Additional Infrastructure & Red Team review pack
+
+- [x] Seven offline defensive review contracts with nullable control observations
+- [x] Selected x86/x64/ARM64 PE header flags and writable/executable section declarations without loading binaries
+- [ ] Actual process mitigation, signature, instrumentation and OS/hardware enforcement verification
+- [ ] Live infrastructure assessment and representative detection-effectiveness evaluation
+
+See [the Infrastructure review guide](INFRASTRUCTURE_REVIEW.md). No payload, EDR evasion or input capture is executed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.
