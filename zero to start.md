@@ -10,6 +10,11 @@
 
 ## Your route
 
+For offline JWT sample and OAuth/OIDC configuration review, follow the
+[Auth & Identity guide](docs/AUTH_IDENTITY_REVIEW.md). Copy its JSON template to
+a private case directory before adding evidence. This review does not verify
+token signatures, perform provider login or establish end-to-end SSO security.
+
 For the 16-skill Web Application review category, follow the
 [source review guide](docs/WEB_APPLICATION_REVIEW.md) and copy its
 [private worksheet](templates/05-web-application-review.md). Ten narrow Python

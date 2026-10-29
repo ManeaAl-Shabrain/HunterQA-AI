@@ -13,6 +13,9 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "pyproject.toml": '[project]\nname="hunterqa-ai"\nversion="1.3.0"\n',
         "templates/README.md": "Public template instructions\n",
         "templates/HunterQA-scope-template.json": '{"acknowledged_authorization":false}\n',
+        "templates/05-web-application-review.md": "Public web review worksheet\n",
+        "templates/06-auth-identity-review.md": "Public identity worksheet\n",
+        "templates/HunterQA-identity-review-template.json": '{"schema_version":1,"jwt_samples":[],"oauth_clients":[]}\n',
         "templates/client-filled-profile.json": '{"authorization_reference":"PRIVATE_FIXTURE"}',
         "templates/client-case/findings.json": '{"evidence":"PRIVATE_FIXTURE"}',
     }
@@ -26,6 +29,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
     included = {row["path"] for row in manifest["files"]}
     assert "templates/README.md" in included
     assert "templates/HunterQA-scope-template.json" in included
+    assert {"templates/05-web-application-review.md", "templates/06-auth-identity-review.md",
+            "templates/HunterQA-identity-review-template.json"} <= included
     assert "templates/client-filled-profile.json" not in included
     assert "templates/client-case/findings.json" not in included
     with zipfile.ZipFile(archive_path) as archive:

@@ -350,6 +350,11 @@ def main(argv=None):
     web_review.add_argument("--project", required=True)
     web_review.add_argument("--out", required=True)
     web_review.add_argument("--authorized", action="store_true")
+    sub.add_parser("identity-review-catalog", help="Show JWT and OAuth/OIDC offline review contracts")
+    identity = sub.add_parser("identity-review", help="Review private JWT samples and OAuth/OIDC configuration offline")
+    identity.add_argument("--input", required=True)
+    identity.add_argument("--out", required=True)
+    identity.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -388,6 +393,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "identity-review-catalog":
+        from .identity_review import catalog
+        print(json.dumps({"category": "Auth & Identity", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command == "identity-review":
+        from .identity_review import review_file
+        report = review_file(args.input, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "web-review-catalog":
         from .web_review import catalog
         print(json.dumps({"category": "Web Application", "skills": catalog(), "all_skills_automated": False}, indent=2))

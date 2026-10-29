@@ -1,6 +1,7 @@
 """Explicit seven-area coverage contract. An adapter is not complete coverage."""
 from .workflow_protocol import tool_catalog
 from .web_review import catalog as web_review_catalog
+from .identity_review import catalog as identity_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
@@ -42,7 +43,9 @@ def coverage_audit():
     return {"engine": "hunterqa_coverage_audit", "schema_version": 1,
         "all_seven_areas_complete": False,
         "category_packs": [{"name": "Web Application", "skills": web_review_catalog(),
-            "all_skills_automated": False, "mode": "offline Python source cues and guided review"}],
+            "all_skills_automated": False, "mode": "offline Python source cues and guided review"},
+            {"name": "Auth & Identity", "skills": identity_review_catalog(),
+             "all_skills_automated": False, "mode": "offline JWT samples and declared web-client configuration"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -67,6 +70,12 @@ def render_checklist():
         "- [x] Six guided review contracts without automated detectors",
         "- [ ] Comprehensive active validation across all 16 skills",
         "", "See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverified.", "",
+        "## Additional Auth & Identity review pack", "",
+        "- [x] Offline compact JWT sample comparisons against explicit review policy",
+        "- [x] Offline declared OAuth/OIDC web-client configuration checks",
+        "- [ ] Cryptographic JWT signature verification and server acceptance tests",
+        "- [ ] End-to-end SSO, session and scope-enforcement validation",
+        "", "See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decoded claims remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

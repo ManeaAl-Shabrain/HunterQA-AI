@@ -101,6 +101,6 @@ approval and root enforcement, output non-overwrite, parsing/size/result bounds,
 alias handling and non-execution of inspected code. These fixtures establish
 implementation behavior, not real-world detection rates.
 
-**Next requested category: Auth & Identity.** It has not been implemented by
-this change. Existing dedicated-role access contracts and local dashboard
-accounts do not establish JWT/OAuth assessment coverage.
+**Following category: [Auth & Identity](AUTH_IDENTITY_REVIEW.md).** Its later
+offline JWT/OAuth evidence review is separate from this source pack. Dedicated-role
+access contracts and local dashboard accounts do not establish full JWT/OAuth coverage.
