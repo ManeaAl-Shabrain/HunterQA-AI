@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "container-container-escape",
+      "skill": "offensive-container-escape",
+      "observations": {
+        "runtime_patch_reviewed": null,
+        "host_mounts_reviewed": null,
+        "privilege_policy_reviewed": null,
+        "namespace_isolation_reviewed": null,
+        "capability_policy_reviewed": null
+      }
+    },
+    {
+      "id": "container-k8s-attacks",
+      "skill": "offensive-k8s-attacks",
+      "observations": {
+        "rbac_reviewed": null,
+        "workload_identity_reviewed": null,
+        "admission_policy_reviewed": null,
+        "network_policy_reviewed": null,
+        "control_plane_protection_reviewed": null
+      }
+    }
+  ]
+}

@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`container-review-catalog` lists two offline contracts; `container-review` checks
+owner observations. `container-config-review` reads selected Docker inspect or
+Kubernetes workload/RBAC JSON without daemon/cluster connections. Use the
+[JSON template](templates/HunterQA-container-review-template.json) and
+[private worksheet](templates/17-container-kubernetes-review.md). Reports withhold
+native identities and contents; actual isolation, permissions and escape paths remain unverified.
+
 **API Security review pack:** [coverage and instructions](docs/API_SECURITY_REVIEW.md).
 `api-review-catalog` lists two offline API/business-logic contracts; `api-review`
 checks owner observations. `api-openapi-review` reads selected OpenAPI 3.0/3.1 JSON

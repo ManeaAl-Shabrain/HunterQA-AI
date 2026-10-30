@@ -41,6 +41,7 @@ PUBLIC_TEMPLATES = {
     "HunterQA-fuzzing-review-template.json", "14-fuzzing-research-review.md",
     "HunterQA-recon-review-template.json", "HunterQA-recon-scope-template.json", "15-reconnaissance-review.md",
     "HunterQA-api-review-template.json", "16-api-security-review.md",
+    "HunterQA-container-review-template.json", "17-container-kubernetes-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

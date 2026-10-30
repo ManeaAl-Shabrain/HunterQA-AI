@@ -177,6 +177,15 @@ See [the Reconnaissance guide](RECONNAISSANCE_REVIEW.md). Imported names do not 
 
 See [the API review guide](API_SECURITY_REVIEW.md). Contract declarations do not prove server enforcement.
 
+## Additional Containers & Kubernetes review pack
+
+- [x] Two offline runtime/workload/cluster assurance contracts
+- [x] Selected Docker inspect, Linux-style Kubernetes workload and RBAC declaration readers
+- [ ] Effective RBAC, admission/default resolution, image/CVE assessment and isolation verification
+- [ ] Live daemon/cluster assessment and demonstrated container-escape validation
+
+See [the Container review guide](CONTAINER_KUBERNETES_REVIEW.md). No workload or cluster operation is executed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.
