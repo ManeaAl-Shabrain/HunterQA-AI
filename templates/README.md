@@ -52,6 +52,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional CI/CD worksheet | [18-cicd-pipelines-review.md](18-cicd-pipelines-review.md) | Private evidence, scope, runner, OIDC and remediation review |
 | Optional Cryptography evidence | [HunterQA-crypto-review-template.json](HunterQA-crypto-review-template.json) | Two cryptographic-design/TLS assurance contracts; null means unassessed |
 | Optional Cryptography worksheet | [19-cryptography-review.md](19-cryptography-review.md) | Private key/nonce/randomness, protocol, certificate and remediation review |
+| Optional Privilege evidence | [HunterQA-privilege-review-template.json](HunterQA-privilege-review-template.json) | Two Linux/Windows privilege assurance contracts; null means unassessed |
+| Optional Privilege worksheet | [20-privilege-escalation-review.md](20-privilege-escalation-review.md) | Private effective-access, identity, configuration and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

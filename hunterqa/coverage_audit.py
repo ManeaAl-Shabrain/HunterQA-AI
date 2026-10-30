@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .privilege_review import catalog as privilege_review_catalog
 from .crypto_review import catalog as crypto_review_catalog
 from .cicd_review import catalog as cicd_review_catalog
 from .container_review import catalog as container_review_catalog
@@ -84,7 +85,9 @@ def coverage_audit():
             {"name": "CI/CD & Pipelines", "skills": cicd_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected non-executing GitHub Actions JSON"},
             {"name": "Cryptography", "skills": crypto_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected Python AST cryptography/TLS cues"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected Python AST cryptography/TLS cues"},
+            {"name": "Privilege Escalation", "skills": privilege_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected saved getcap/Windows service declarations"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -193,6 +196,12 @@ def render_checklist():
         "- [ ] Dataflow, cryptographic correctness, key/nonce lifecycle and side-channel verification",
         "- [ ] Live protocol/cipher enumeration, certificate trust and exploitability verification",
         "", "See [the Cryptography review guide](CRYPTOGRAPHY_REVIEW.md). Runtime use and real-world effectiveness remain unverified.", "",
+        "## Additional Privilege Escalation review pack", "",
+        "- [x] Two offline Linux/Windows privilege-boundary assurance contracts",
+        "- [x] Selected saved getcap declarations and Windows process-service path cues",
+        "- [ ] Effective ACL/token/user/namespace resolution, native sudo/setid/task/registry policy analysis",
+        "- [ ] Live host enumeration, patch/CVE validation and demonstrated privilege escalation",
+        "", "See [the privilege review guide](PRIVILEGE_ESCALATION_REVIEW.md). No host command or privilege transition is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

@@ -42,6 +42,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`privilege-review-catalog` lists two offline Linux/Windows assurance contracts.
+`privilege-review` reads owner observations; `privilege-inventory-review` reads
+selected saved `getcap` text or Windows service JSON. See the
+[privilege guide](docs/PRIVILEGE_ESCALATION_REVIEW.md),
+[JSON template](templates/HunterQA-privilege-review-template.json) and
+[private worksheet](templates/20-privilege-escalation-review.md). No host enumeration,
+command execution or privilege escalation is performed; effective access remains unverified.
+
 `crypto-review-catalog` lists two offline Cryptography contracts. `crypto-review`
 reads owner observations; `crypto-source-review` inspects selected Python AST
 hash/random/AES ECB/TLS patterns without executing source. See the

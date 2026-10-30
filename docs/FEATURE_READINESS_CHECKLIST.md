@@ -204,6 +204,15 @@ See [the CI/CD review guide](CICD_PIPELINES_REVIEW.md). No workflow is executed 
 
 See [the Cryptography review guide](CRYPTOGRAPHY_REVIEW.md). Runtime use and real-world effectiveness remain unverified.
 
+## Additional Privilege Escalation review pack
+
+- [x] Two offline Linux/Windows privilege-boundary assurance contracts
+- [x] Selected saved getcap declarations and Windows process-service path cues
+- [ ] Effective ACL/token/user/namespace resolution, native sudo/setid/task/registry policy analysis
+- [ ] Live host enumeration, patch/CVE validation and demonstrated privilege escalation
+
+See [the privilege review guide](PRIVILEGE_ESCALATION_REVIEW.md). No host command or privilege transition is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.
