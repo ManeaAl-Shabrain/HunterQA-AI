@@ -103,6 +103,8 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `iot-config-review` | Offline IoT evidence/source review; no hardware or network access |
 | `iot-review` | Offline IoT evidence/source review; no hardware or network access |
 | `iot-review-catalog` | Show selected offline IoT evidence, MQTT ACL and U-Boot review contracts |
+| `lab-sql-validation` | Demonstrate fixed SQL impact on original in-memory toy data only |
+| `lab-sql-verify` | Verify evidence and replay fixed in-memory SQL cases; no target traffic |
 | `mobile-config-review` | Offline mobile evidence/XML review; no app or device execution |
 | `mobile-review` | Offline mobile evidence/XML review; no app or device execution |
 | `mobile-review-catalog` | Show selected offline Android/iOS review fields and XML modes |

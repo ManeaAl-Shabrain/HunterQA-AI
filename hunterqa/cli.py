@@ -140,6 +140,10 @@ def main(argv=None):
     browser_lab.add_argument("--submit-selector", default="button[type=submit]")
     browser_lab.add_argument("--out", required=True)
     browser_lab.add_argument("--authorized", action="store_true")
+    browser_lab.add_argument("--crawl", action="store_true", help="Discover rendered links in the owned loopback lab")
+    browser_lab.add_argument("--max-pages", type=int, default=3)
+    browser_lab.add_argument("--max-depth", type=int, default=1)
+    browser_lab.add_argument("--settle-ms", type=int, default=250)
     replay12 = sub.add_parser("bounty-replay-head", help="Safe HEAD-only replay of approved sanitized HAR evidence")
     replay12.add_argument("--profile", required=True)
     replay12.add_argument("--har-report", required=True)
@@ -542,6 +546,11 @@ def main(argv=None):
     assessment_benchmark = sub.add_parser("assessment-benchmark", help="Run versioned owned-loopback application controls; never a real-world accuracy score")
     assessment_benchmark.add_argument("--out-dir", required=True)
     assessment_benchmark.add_argument("--authorized", action="store_true")
+    validation = sub.add_parser("lab-sql-validation", help="Demonstrate fixed SQL impact on original in-memory toy data only")
+    validation.add_argument("--out-dir", required=True)
+    validation.add_argument("--authorized", action="store_true")
+    validation_verify = sub.add_parser("lab-sql-verify", help="Verify evidence and replay fixed in-memory SQL cases; no target traffic")
+    validation_verify.add_argument("--run", required=True)
     quota_init = sub.add_parser("quota-init", help="Initialize a host-local shared quota window")
     quota_init.add_argument("--ledger", required=True)
     quota_init.add_argument("--max-requests", type=int, required=True)
@@ -814,6 +823,14 @@ def main(argv=None):
     if args.command == "assessment-benchmark":
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
+        return
+    if args.command in ("lab-sql-validation", "lab-sql-verify"):
+        from .lab_validation import validate_owned_sql, verify_owned_sql
+        report = (validate_owned_sql(args.out_dir, authorized=args.authorized)
+                  if args.command == "lab-sql-validation" else verify_owned_sql(args.run))
+        print(json.dumps(report, indent=2))
+        if not report["all_cases_matched"]:
+            raise SystemExit(2)
         return
     if args.command == "assessment-setup":
         from .assessment_setup import setup_assessment
@@ -1091,6 +1108,8 @@ def main(argv=None):
             username_selector=args.username_selector,
             password_selector=args.password_selector,
             submit_selector=args.submit_selector,
+            crawl=args.crawl, max_pages=args.max_pages, max_depth=args.max_depth,
+            settle_ms=args.settle_ms,
         )
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "bounty-replay-head":

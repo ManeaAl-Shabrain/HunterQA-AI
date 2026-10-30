@@ -1,0 +1,13 @@
+{
+  "fixture_version": "owned-sql-impact-1.0.0",
+  "cases": [
+    {"id": "literal-baseline", "mode": "literal", "variant": "baseline", "expected_rows": 0, "expected_foreign_read": false},
+    {"id": "literal-negative", "mode": "literal", "variant": "negative", "expected_rows": 0, "expected_foreign_read": false},
+    {"id": "literal-legitimate", "mode": "literal", "variant": "legitimate", "expected_rows": 1, "expected_foreign_read": false},
+    {"id": "literal-probe", "mode": "literal", "variant": "probe", "expected_rows": 1, "expected_foreign_read": true},
+    {"id": "bound-baseline", "mode": "bound", "variant": "baseline", "expected_rows": 0, "expected_foreign_read": false},
+    {"id": "bound-negative", "mode": "bound", "variant": "negative", "expected_rows": 0, "expected_foreign_read": false},
+    {"id": "bound-legitimate", "mode": "bound", "variant": "legitimate", "expected_rows": 1, "expected_foreign_read": false},
+    {"id": "bound-probe", "mode": "bound", "variant": "probe", "expected_rows": 0, "expected_foreign_read": false}
+  ]
+}

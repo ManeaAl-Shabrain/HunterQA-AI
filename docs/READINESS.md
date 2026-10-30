@@ -5,6 +5,11 @@ loopback fixtures. Real-world effectiveness remains **unverified**, as requested
 The [checked feature list](FEATURE_READINESS_CHECKLIST.md) marks individual
 implemented capabilities and unfinished work across all seven areas.
 
+The separate [owned SQL impact demonstration](OWNED_SQL_VALIDATION.md) exercises
+eight fixed in-memory cases with a vulnerable query and parameterized control.
+It is not part of the HTTP/TCP benchmark or its readiness gate and does not
+validate the HTTP scanner's exploit detection effectiveness.
+
 ## What the marks mean
 
 | Mark / result | Meaning |
@@ -80,8 +85,10 @@ allow sufficient remaining budget and an active-run slot. Unused reservations
 are not refunded. This command never accepts a remote benchmark target.
 
 The toy SQL database is private, in memory and query-only. Fixture HTML uses a
-restrictive CSP sandbox and disables browser scripts. This does not implement
-JavaScript application crawling or prove executable XSS.
+restrictive CSP sandbox and disables browser scripts. This benchmark does not
+exercise JavaScript crawling or prove executable XSS. A separate optional
+[owned-browser rendered-link crawl](BROWSER_LAB_V1_2.md#rendered-link-discovery-development-source)
+has real Chromium regression tests; it does not make the seven broad areas complete.
 
 ## 3. Recompute readiness from retained evidence
 

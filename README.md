@@ -30,6 +30,8 @@ the version number alone does not identify the installed features.
 | --- | --- |
 | Source/configuration review | Selected built-in checks; optional Semgrep and local Ollama suggestions |
 | Web observations | Scoped HEAD/GET checks, bounded HTML discovery and form inventory |
+| Owned browser lab | Optional JavaScript-rendered links and local login context, restricted to owned loopback |
+| Owned SQL lab | Eight fixed in-memory impact/control cases and deterministic evidence replay |
 | Validation cues | Fixed inert-markup and SQL-error comparisons; explicit role/anonymous access contracts |
 | Infrastructure/cloud | Exact TCP connectivity; selected read-only AWS account checks with the cloud extra |
 | Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
@@ -75,11 +77,15 @@ troubleshooting. Use a fresh output directory for each run.
 
 ## What remains incomplete
 
-All seven broad assessment areas remain **partial**. Gaps include JavaScript and
-authenticated crawling, comprehensive active vulnerability validation, SSO and
+All seven broad assessment areas remain **partial**. JavaScript/login discovery
+is limited to the owned browser lab; general authenticated crawling,
+comprehensive active vulnerability validation, SSO and
 business workflows, OS/AD attack paths, broad multi-cloud permissions, hosted
 tenant isolation, independently verified owner grants, OS isolation and
 distributed enforcement. Real-world detection effectiveness is **unverified**.
+
+The SQL lab is a separate in-memory fixture; it does not validate the HTTP
+SQL-error scanner or establish customer findings. See the [SQL lab guide](docs/OWNED_SQL_VALIDATION.md).
 
 See the [feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) before choosing
 an engagement. Authorization does not enable missing functionality.
