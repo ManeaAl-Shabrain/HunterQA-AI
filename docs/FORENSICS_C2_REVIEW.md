@@ -117,4 +117,4 @@ no-overwrite, SARIF and absence of process/network execution.
 - [Event 4616](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4616)
 - [Zeek DNS log](https://docs.zeek.org/en/current/reference/logs/dns.html)
 
-**Next requested category: Supply Chain.** It is not delivered by this pack.
+The next pack is [Supply Chain](SUPPLY_CHAIN_REVIEW.md), delivered separately.

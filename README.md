@@ -42,6 +42,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`supply-chain-review-catalog` lists two offline artifact/build trust and
+dependency-confusion contracts. `supply-chain-review` reads owner observations;
+`supply-chain-config-review` reads selected npm lock v2/v3 JSON, `.npmrc` or pip
+INI declarations. See the [Supply Chain guide](docs/SUPPLY_CHAIN_REVIEW.md),
+[JSON template](templates/HunterQA-supply-chain-review-template.json) and
+[private worksheet](templates/23-supply-chain-review.md). Hash syntax and saved
+source settings do not establish artifact authenticity or effective resolution;
+no packages are installed and no registries are contacted.
+
 `forensics-review-catalog` lists two offline evidence-preservation/C2 governance
 contracts. `forensics-review` reads owner observations; `forensics-log-review`
 reads selected saved Windows event XML or Zeek DNS JSONL. See the
