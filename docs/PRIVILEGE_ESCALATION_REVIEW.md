@@ -108,4 +108,4 @@ unverified; the seven broad readiness areas remain partial.
 - [Win32_Service](https://learn.microsoft.com/en-us/windows/win32/cimwin32prov/win32-service)
 - [CreateService path quoting](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew)
 
-**Next requested category: Post-Exploitation.** It is not delivered by this pack.
+The next pack is [Post-Exploitation](POST_EXPLOITATION_REVIEW.md), delivered separately.

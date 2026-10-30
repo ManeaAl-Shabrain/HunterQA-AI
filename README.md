@@ -42,6 +42,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`post-exploitation-review-catalog` lists three offline assurance contracts for
+lateral movement, persistence and data exfiltration. `post-exploitation-review`
+reads owner observations; `post-exploitation-inventory-review` reads selected
+saved Windows task XML or default VPC flow text. See the
+[post-exploitation guide](docs/POST_EXPLOITATION_REVIEW.md),
+[JSON template](templates/HunterQA-post-exploitation-review-template.json) and
+[private worksheet](templates/21-post-exploitation-review.md). No remote actions,
+task execution or data transfers are performed; compromise remains unverified.
+
 `privilege-review-catalog` lists two offline Linux/Windows assurance contracts.
 `privilege-review` reads owner observations; `privilege-inventory-review` reads
 selected saved `getcap` text or Windows service JSON. See the

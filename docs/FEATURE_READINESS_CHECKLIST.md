@@ -213,6 +213,15 @@ See [the Cryptography review guide](CRYPTOGRAPHY_REVIEW.md). Runtime use and rea
 
 See [the privilege review guide](PRIVILEGE_ESCALATION_REVIEW.md). No host command or privilege transition is performed.
 
+## Additional Post-Exploitation review pack
+
+- [x] Three offline lateral-movement, persistence and data-exfiltration assurance contracts
+- [x] Selected saved Windows task XML and default-format VPC flow v2 review cues
+- [ ] Effective task/identity/ACL resolution, traffic direction, asset attribution and telemetry correlation
+- [ ] Independent compromise, persistence, lateral-movement or exfiltration validation
+
+See [the post-exploitation review guide](POST_EXPLOITATION_REVIEW.md). No remote action, task execution or data transfer is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

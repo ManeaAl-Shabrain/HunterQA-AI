@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .post_exploitation_review import catalog as post_exploitation_review_catalog
 from .privilege_review import catalog as privilege_review_catalog
 from .crypto_review import catalog as crypto_review_catalog
 from .cicd_review import catalog as cicd_review_catalog
@@ -87,7 +88,9 @@ def coverage_audit():
             {"name": "Cryptography", "skills": crypto_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected Python AST cryptography/TLS cues"},
             {"name": "Privilege Escalation", "skills": privilege_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected saved getcap/Windows service declarations"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected saved getcap/Windows service declarations"},
+            {"name": "Post-Exploitation", "skills": post_exploitation_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows task XML/default VPC flow text"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -202,6 +205,12 @@ def render_checklist():
         "- [ ] Effective ACL/token/user/namespace resolution, native sudo/setid/task/registry policy analysis",
         "- [ ] Live host enumeration, patch/CVE validation and demonstrated privilege escalation",
         "", "See [the privilege review guide](PRIVILEGE_ESCALATION_REVIEW.md). No host command or privilege transition is performed.", "",
+        "## Additional Post-Exploitation review pack", "",
+        "- [x] Three offline lateral-movement, persistence and data-exfiltration assurance contracts",
+        "- [x] Selected saved Windows task XML and default-format VPC flow v2 review cues",
+        "- [ ] Effective task/identity/ACL resolution, traffic direction, asset attribution and telemetry correlation",
+        "- [ ] Independent compromise, persistence, lateral-movement or exfiltration validation",
+        "", "See [the post-exploitation review guide](POST_EXPLOITATION_REVIEW.md). No remote action, task execution or data transfer is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
