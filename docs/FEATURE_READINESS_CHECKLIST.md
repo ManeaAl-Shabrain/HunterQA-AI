@@ -258,6 +258,15 @@ See [the Social Engineering review guide](SOCIAL_ENGINEERING_REVIEW.md). No mess
 
 See [the Network review guide](NETWORK_SECURITY_REVIEW.md). No packet injection, interception or host configuration is performed.
 
+## Additional AI Security review pack
+
+- [x] One offline AI application assurance contract with ten prompt/RAG/tool/output/data/model/evaluation observations
+- [x] Owned saved-case synthetic canary/tool/retrieval constraints and selected numeric garak JSONL import
+- [ ] Live model/provider evaluation, semantic/multimodal detection and actual role/tenant authorization verification
+- [ ] Independent detector calibration, model robustness and real-world effectiveness evaluation
+
+See [the AI Security review guide](AI_SECURITY_REVIEW.md). No model, provider, probe, tool or retrieval action is executed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

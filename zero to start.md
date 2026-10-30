@@ -10,6 +10,11 @@
 
 ## Your route
 
+For offline AI application assurance and saved-case/garak review, use the
+[AI Security guide](docs/AI_SECURITY_REVIEW.md),
+[owned-case template](templates/HunterQA-ai-owned-cases-template.json) and
+[private worksheet](templates/26-ai-security-review.md).
+
 For offline Layer 2/3 assurance and saved Linux network/resolver review, use the
 [Network guide](docs/NETWORK_SECURITY_REVIEW.md) and
 [private worksheet](templates/25-network-review.md).

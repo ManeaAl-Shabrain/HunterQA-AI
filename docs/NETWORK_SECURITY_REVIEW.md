@@ -114,4 +114,4 @@ All seven broad readiness areas remain partial; real-world effectiveness remains
 - [Linux IP sysctl](https://docs.kernel.org/networking/ip-sysctl.html)
 - [systemd-resolved configuration](https://www.freedesktop.org/software/systemd/man/latest/resolved.conf.html)
 
-**Next requested category: AI Security.** It is not delivered by this pack.
+The next pack is [AI Security](AI_SECURITY_REVIEW.md), delivered separately.

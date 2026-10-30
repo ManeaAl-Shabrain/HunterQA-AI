@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "ai-security",
+      "skill": "offensive-ai-security",
+      "observations": {
+        "prompt_boundaries_reviewed": null,
+        "rag_access_controls_reviewed": null,
+        "tool_authorization_reviewed": null,
+        "output_handling_reviewed": null,
+        "sensitive_data_controls_reviewed": null,
+        "model_and_data_provenance_reviewed": null,
+        "inference_access_limits_reviewed": null,
+        "logging_and_eval_reviewed": null,
+        "evaluation_dataset_reviewed": null,
+        "adversarial_robustness_reviewed": null
+      }
+    }
+  ]
+}

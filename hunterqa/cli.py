@@ -498,6 +498,14 @@ def main(argv=None):
         network.add_argument("--authorized", action="store_true")
         if name == "network-config-review":
             network.add_argument("--mode", choices=("sysctl-text", "resolved-conf"), required=True)
+    sub.add_parser("ai-security-review-catalog", help="Show one offline AI application assurance contract")
+    for name in ("ai-security-review", "ai-security-evidence-review"):
+        ai_review = sub.add_parser(name, help="Offline observations, owned saved cases or garak summaries; no model or tool calls")
+        ai_review.add_argument("--input", required=True)
+        ai_review.add_argument("--out", required=True)
+        ai_review.add_argument("--authorized", action="store_true")
+        if name == "ai-security-evidence-review":
+            ai_review.add_argument("--mode", choices=("owned-cases-json", "garak-jsonl"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -536,6 +544,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "ai-security-review-catalog":
+        from .ai_security_review import catalog
+        print(json.dumps({"category": "AI Security", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("ai-security-review", "ai-security-evidence-review"):
+        from .ai_security_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "ai-security-evidence-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "network-review-catalog":
         from .network_review import catalog
         print(json.dumps({"category": "Network", "skills": catalog(), "all_skills_automated": False}, indent=2))
