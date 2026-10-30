@@ -42,6 +42,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 ## 4. Network and infrastructure — partial
 
 - [x] Exact admitted TCP host/port reachability
+- [x] Separate one-endpoint TLS certificate/hostname inspection (tls-service-inspect)
 - [x] Scoped service-evidence import
 - [x] Selected offline normalized AD/SMB/LDAP policy review
 - [ ] OS fingerprinting

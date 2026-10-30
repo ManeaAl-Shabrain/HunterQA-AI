@@ -561,6 +561,12 @@ def main(argv=None):
     validation.add_argument("--authorized", action="store_true")
     validation_verify = sub.add_parser("lab-sql-verify", help="Verify evidence and replay fixed in-memory SQL cases; no target traffic")
     validation_verify.add_argument("--run", required=True)
+    tls_inspect = sub.add_parser("tls-service-inspect", help="One scoped TLS handshake with certificate and hostname verification; no HTTP")
+    tls_inspect.add_argument("--profile", required=True)
+    tls_inspect.add_argument("--target", required=True)
+    tls_inspect.add_argument("--ca-file")
+    tls_inspect.add_argument("--out", required=True)
+    tls_inspect.add_argument("--authorized", action="store_true")
     signed_token = sub.add_parser("signed-id-token-verify", help="Offline RS256 ID-token signature and explicit policy verification")
     signed_token.add_argument("--input", required=True)
     signed_token.add_argument("--out", required=True)
@@ -846,6 +852,18 @@ def main(argv=None):
     if args.command == "assessment-benchmark":
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
+        return
+    if args.command == "tls-service-inspect":
+        from .tls_inspection import inspect_service
+        from .workflow_store import approved_directory
+        # Reserve a private create-only destination before any target traffic.
+        output = Path(args.out).expanduser()
+        approved_directory(output.parent)
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        with os.fdopen(os.open(output, flags, 0o600), "w", encoding="utf-8") as stream:
+            report = inspect_service(args.profile, args.target, authorized=args.authorized, ca_file=args.ca_file)
+            stream.write(json.dumps(report, indent=2) + "\n")
+        print("Saved:", output)
         return
     if args.command == "signed-id-token-verify":
         from .oidc_tokens import verify_file
