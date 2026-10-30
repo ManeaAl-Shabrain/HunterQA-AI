@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+import time
 from types import SimpleNamespace
 
 import pytest
@@ -263,3 +264,38 @@ def test_real_page_script_cannot_choose_another_login_account(case, monkeypatch)
     result = run_assessment(case.profile, case.path, case.save(), case.stop, authorized=True, transport=transport)
     assert result["stopped"] and calls == ["GET"]
     assert result["observations"][0]["authentication"] == "not_attempted"
+
+
+@real_browser
+def test_real_unresponsive_dom_evaluation_times_out_and_closes(case):
+    pytest.importorskip("playwright.async_api")
+    def transport(*args, **kwargs):
+        return {"status": 200, "headers": [("Content-Type", "text/html")], "body": b'''<body>
+            <a href="/app/one">link</a><script>
+            Object.defineProperty(HTMLAnchorElement.prototype, 'href', {get() {while(true) {}}});
+            </script>'''}
+    started = time.monotonic()
+    result = run_assessment(case.profile, case.path, case.save(), case.stop, authorized=True, transport=transport)
+    assert time.monotonic() - started < 20
+    assert result["stopped"] and result["requests"] == 1
+    assert result["observations"][0]["error_type"] == "TimeoutError"
+
+
+@real_browser
+def test_real_parallel_login_requests_reserve_only_one_submission(case, monkeypatch):
+    pytest.importorskip("playwright.async_api")
+    case.plan["dedicated_test_account"] = True
+    case.plan["steps"][0]["login_url"] = START + "/login"
+    monkeypatch.setenv("HUNTERQA_TEST_USERNAME", "designated-user")
+    monkeypatch.setenv("HUNTERQA_TEST_PASSWORD", "designated-password")
+    calls = []
+    def transport(policy, url, method, **kwargs):
+        calls.append(method)
+        return {"status": 200, "headers": [("Content-Type", "text/html")], "body": b'''<script>
+            const options={method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                body:'username=designated-user&password=designated-password'};
+            Promise.allSettled([fetch('/app/login', options), fetch('/app/login', options)]);
+            </script>'''}
+    result = run_assessment(case.profile, case.path, case.save(), case.stop, authorized=True, transport=transport)
+    assert calls.count("POST") == 1 and result["requests"] == 2
+    assert result["stopped"]  # No conventional login form exists in this fixture.

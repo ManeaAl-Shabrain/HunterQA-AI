@@ -41,6 +41,9 @@ JavaScript-disabled `browser` mode. It is a post-v1.3.0 source addition.
   the request budget without counting as visited pages.
 - Redirects, denials, rate limits, server errors, transport errors, exhausted
   budgets, expiry and the stop file stop execution without retries.
+- DOM inventory evaluation and final structure reads have three-second waits;
+  context/browser cleanup waits are five seconds each. This bounds an
+  unresponsive renderer read without treating it as an empty route inventory.
 
 Run in an isolated disposable browser environment with OS egress controls.
 Browser interception and CSP are not an OS firewall or process sandbox. The

@@ -1,4 +1,5 @@
 """Rendered anchor inventory and reference scoring; no browser-owned transport."""
+import asyncio
 from collections import deque
 import hashlib
 import re
@@ -28,7 +29,7 @@ def url_hash(url):
     return hashlib.sha256(url.encode("utf-8")).hexdigest()
 
 
-def crawl(page, policy, step, gate):
+async def crawl(page, policy, step, gate):
     """Only navigate anchors; all network admission stays in the context route.
 
     The supplied page reuses an ephemeral cookie jar from the optional single
@@ -43,20 +44,20 @@ def crawl(page, policy, step, gate):
         gate.check()
         url, depth = frontier.popleft()
         if rows:
-            response = page.goto(url, wait_until="domcontentloaded", timeout=12_000)
+            response = await page.goto(url, wait_until="domcontentloaded", timeout=12_000)
             if response is None:
                 raise RuntimeError("Rendered navigation returned no response")
         gate.check()
         if options["settle_ms"]:
-            page.wait_for_timeout(options["settle_ms"])
+            await page.wait_for_timeout(options["settle_ms"])
         gate.check()
         if candidate(policy, step["url"], page.url) != url:
             raise RuntimeError("Page changed during rendered discovery")
-        snapshot = page.evaluate("""() => ({
+        snapshot = await asyncio.wait_for(page.evaluate("""() => ({
             links: Array.from(document.querySelectorAll('a[href]')).slice(0, 201)
                 .map(a => a.href.length <= 2048 ? a.href : null),
             forms: Math.min(100, document.querySelectorAll('form').length)
-        })""")
+        })"""), timeout=3)
         if (not isinstance(snapshot, dict) or set(snapshot) != {"links", "forms"}
                 or not isinstance(snapshot["links"], list) or len(snapshot["links"]) > 201
                 or type(snapshot["forms"]) is not int or not 0 <= snapshot["forms"] <= 100):
