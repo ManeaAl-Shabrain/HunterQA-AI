@@ -42,6 +42,17 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`utility-review-catalog` lists two offline triage/reporting contracts.
+`utility-review` reads owner observations; `utility-report-review` checks selected
+saved finding metadata and writes JSON or a sanitized Markdown quality summary.
+`utility-cvss31` calculates CVSS 3.1 Base arithmetic from a complete caller-chosen
+vector. See the [Utility guide](docs/UTILITY_REVIEW.md),
+[assurance template](templates/HunterQA-utility-review-template.json),
+[report input template](templates/HunterQA-report-quality-template.json) and
+[private worksheet](templates/27-utility-review.md). The
+[category index](docs/CATEGORY_REVIEW_INDEX.md) lists all review packs and their
+bounded modes; it is not a claim of complete automated pentesting coverage.
+
 `ai-security-review-catalog` lists one offline AI application assurance contract.
 `ai-security-review` reads owner observations; `ai-security-evidence-review` checks
 owned saved canary/tool/retrieval constraints or imports numeric garak summaries.

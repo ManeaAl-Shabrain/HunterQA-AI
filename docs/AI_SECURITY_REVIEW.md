@@ -128,4 +128,4 @@ All seven broad readiness areas remain partial; real-world effectiveness is unve
 
 These are selected topic references, not a full or latest-edition standards-coverage claim.
 
-**Next requested category: Utility.** It is not delivered by this pack.
+The next pack is [Utility](UTILITY_REVIEW.md), delivered separately. See the [category index](CATEGORY_REVIEW_INDEX.md) for the completed review-pack sequence and its coverage limits.

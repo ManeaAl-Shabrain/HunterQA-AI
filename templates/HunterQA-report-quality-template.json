@@ -1,0 +1,18 @@
+{
+  "findings": [
+    {
+      "rule_id": "owned-review",
+      "title": "",
+      "severity": "INFO",
+      "verification_status": "unverified",
+      "remediation": "",
+      "evidence": [],
+      "file_path": "external-evidence",
+      "line_start": 1,
+      "cvss_vector": null,
+      "cvss_score": null,
+      "cvss_justification": null
+    }
+  ],
+  "truncated": false
+}

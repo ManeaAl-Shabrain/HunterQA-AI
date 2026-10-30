@@ -267,6 +267,15 @@ See [the Network review guide](NETWORK_SECURITY_REVIEW.md). No packet injection,
 
 See [the AI Security review guide](AI_SECURITY_REVIEW.md). No model, provider, probe, tool or retrieval action is executed.
 
+## Additional Utility review pack
+
+- [x] Two offline triage and professional-reporting assurance contracts
+- [x] Saved finding metadata quality, conservative duplicate-context suggestions, safe Markdown quality summary and CVSS 3.1 Base arithmetic
+- [ ] Independent evidence validation, analyst verdicts, business-risk priority and client-delivery approval
+- [ ] CVSS 4.0, Temporal/Environmental calculations and full report/standards certification
+
+See [the Utility review guide](UTILITY_REVIEW.md) and [category index](CATEGORY_REVIEW_INDEX.md). No finding is automatically confirmed, removed or submitted.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

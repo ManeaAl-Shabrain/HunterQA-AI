@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline report quality/triage and CVSS 3.1 Base arithmetic, use the
+[Utility guide](docs/UTILITY_REVIEW.md) and [private worksheet](templates/27-utility-review.md).
+See [the category index](docs/CATEGORY_REVIEW_INDEX.md) for bounded modes and remaining coverage.
+
 For offline AI application assurance and saved-case/garak review, use the
 [AI Security guide](docs/AI_SECURITY_REVIEW.md),
 [owned-case template](templates/HunterQA-ai-owned-cases-template.json) and

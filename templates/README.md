@@ -67,6 +67,9 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional AI Security evidence | [HunterQA-ai-security-review-template.json](HunterQA-ai-security-review-template.json) | One contract with ten AI application-control observations; null means unassessed |
 | Optional owned AI cases | [HunterQA-ai-owned-cases-template.json](HunterQA-ai-owned-cases-template.json) | Saved synthetic-canary/tool/retrieval constraints; null means unobserved |
 | Optional AI Security worksheet | [26-ai-security-review.md](26-ai-security-review.md) | Private trust-boundary, tenant/role, dataset, provenance and remediation review |
+| Optional Utility evidence | [HunterQA-utility-review-template.json](HunterQA-utility-review-template.json) | Two triage/reporting assurance contracts; null means unassessed |
+| Optional report quality input | [HunterQA-report-quality-template.json](HunterQA-report-quality-template.json) | Saved finding metadata template; empty fields are placeholders, not reviewed evidence |
+| Optional Utility worksheet | [27-utility-review.md](27-utility-review.md) | Private scope, evidence, severity justification, retest and deliverable review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to
