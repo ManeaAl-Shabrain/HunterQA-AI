@@ -27,6 +27,10 @@ The existing `aws-account-audit` remains a separate, explicitly approved runtime
 adapter with its original two read-only account APIs. This pack does not expand
 that adapter, add Azure/GCP connections or reuse its credentials.
 
+For separate bounded Azure GET inventory with an explicit temporary token, see
+[Azure inventory](SCOPED_AZURE_INVENTORY.md). It does not evaluate effective
+permissions or change these offline readers.
+
 ## Mode A — normalized owner evidence
 
 Copy [the JSON template](../templates/HunterQA-cloud-review-template.json) and
