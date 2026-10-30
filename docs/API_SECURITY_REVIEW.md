@@ -164,4 +164,5 @@ real-world vulnerability detection rates or complete OWASP/API standards coverag
 - [OpenAPI 3.0.4](https://spec.openapis.org/oas/v3.0.4.html)
 - [OpenAPI 3.1.1](https://spec.openapis.org/oas/v3.1.1.html)
 
-**Next requested category: Containers & Kubernetes.** It is not delivered here.
+The next category now has a separate [Containers & Kubernetes review guide](CONTAINER_KUBERNETES_REVIEW.md).
+Its local configuration readers do not extend this API pack into live cluster or API operations.

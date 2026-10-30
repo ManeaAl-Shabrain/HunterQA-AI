@@ -10,6 +10,11 @@
 
 ## Your route
 
+For offline container assurance and selected Docker inspect/Kubernetes workload
+and RBAC JSON, follow the [Containers guide](docs/CONTAINER_KUBERNETES_REVIEW.md).
+Use private evidence copies. These commands do not connect to a daemon/cluster,
+start workloads, read mounted paths or verify effective permissions/isolation.
+
 For two offline API assurance contracts and selected OpenAPI JSON declarations,
 follow the [API Security guide](docs/API_SECURITY_REVIEW.md). Use private evidence
 copies. These commands do not call endpoints, follow references, manipulate

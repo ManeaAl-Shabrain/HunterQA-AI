@@ -428,6 +428,14 @@ def main(argv=None):
         api.add_argument("--input", required=True)
         api.add_argument("--out", required=True)
         api.add_argument("--authorized", action="store_true")
+    sub.add_parser("container-review-catalog", help="Show two offline Container/Kubernetes review contracts")
+    for name in ("container-review", "container-config-review"):
+        container = sub.add_parser(name, help="Offline container evidence/JSON review; no daemon or cluster connection")
+        container.add_argument("--input", required=True)
+        container.add_argument("--out", required=True)
+        container.add_argument("--authorized", action="store_true")
+        if name == "container-config-review":
+            container.add_argument("--mode", choices=("docker-inspect", "kubernetes"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -466,6 +474,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "container-review-catalog":
+        from .container_review import catalog
+        print(json.dumps({"category": "Containers & Kubernetes", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("container-review", "container-config-review"):
+        from .container_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "container-config-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "api-review-catalog":
         from .api_review import catalog
         print(json.dumps({"category": "API Security", "skills": catalog(), "all_skills_automated": False}, indent=2))
