@@ -184,4 +184,4 @@ effectiveness, actual permissions or complete platform/standards coverage.
 - [Kubernetes Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
 - [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
-**Next requested category: CI/CD & Pipelines.** It is not delivered by this pack.
+The next pack is [CI/CD & Pipelines](CICD_PIPELINES_REVIEW.md), delivered separately.

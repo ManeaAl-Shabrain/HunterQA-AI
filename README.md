@@ -42,6 +42,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`cicd-review-catalog` lists two offline CI/CD contracts. `cicd-review` reads
+owner observations; `cicd-workflow-review` reviews selected saved GitHub Actions
+**JSON** declarations without executing workflows. See the [CI/CD guide](docs/CICD_PIPELINES_REVIEW.md),
+[JSON template](templates/HunterQA-cicd-review-template.json) and
+[private worksheet](templates/18-cicd-pipelines-review.md). YAML and native
+Jenkins/GitLab/Azure parsing are not implemented; secret protection and effective
+permissions remain unverified.
+
 `container-review-catalog` lists two offline contracts; `container-review` checks
 owner observations. `container-config-review` reads selected Docker inspect or
 Kubernetes workload/RBAC JSON without daemon/cluster connections. Use the

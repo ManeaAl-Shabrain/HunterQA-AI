@@ -48,6 +48,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional API review | [16-api-security-review.md](16-api-security-review.md) | Independent OpenAPI applicability, server authorization, bounds and workflow review |
 | Optional Container evidence | [HunterQA-container-review-template.json](HunterQA-container-review-template.json) | Two selected runtime/workload/cluster assurance contracts; null means unassessed |
 | Optional Container review | [17-container-kubernetes-review.md](17-container-kubernetes-review.md) | Independent runtime, identity, mount, admission and effective-permission review |
+| Optional CI/CD evidence | [HunterQA-cicd-review-template.json](HunterQA-cicd-review-template.json) | Two pipeline trust and secret-handling assurance contracts; null means unassessed |
+| Optional CI/CD worksheet | [18-cicd-pipelines-review.md](18-cicd-pipelines-review.md) | Private evidence, scope, runner, OIDC and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

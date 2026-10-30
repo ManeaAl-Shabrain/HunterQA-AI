@@ -186,6 +186,15 @@ See [the API review guide](API_SECURITY_REVIEW.md). Contract declarations do not
 
 See [the Container review guide](CONTAINER_KUBERNETES_REVIEW.md). No workload or cluster operation is executed.
 
+## Additional CI/CD & Pipelines review pack
+
+- [x] Two offline pipeline trust and secret-handling assurance contracts
+- [x] Selected GitHub Actions JSON permission, immutable-reference and untrusted-context cues
+- [ ] YAML/native Jenkins/GitLab/Azure parsing, expression resolution and complete workflow validation
+- [ ] Independent runner isolation, effective grants, environment approvals and OIDC/secret protection verification
+
+See [the CI/CD review guide](CICD_PIPELINES_REVIEW.md). No workflow is executed or secret extracted.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

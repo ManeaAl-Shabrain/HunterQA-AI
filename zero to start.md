@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline CI/CD assurance and saved GitHub Actions JSON review, use the
+[CI/CD guide](docs/CICD_PIPELINES_REVIEW.md) and
+[private worksheet](templates/18-cicd-pipelines-review.md). No workflow is executed.
+
 For offline container assurance and selected Docker inspect/Kubernetes workload
 and RBAC JSON, follow the [Containers guide](docs/CONTAINER_KUBERNETES_REVIEW.md).
 Use private evidence copies. These commands do not connect to a daemon/cluster,
