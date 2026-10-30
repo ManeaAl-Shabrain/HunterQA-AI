@@ -222,6 +222,15 @@ See [the privilege review guide](PRIVILEGE_ESCALATION_REVIEW.md). No host comman
 
 See [the post-exploitation review guide](POST_EXPLOITATION_REVIEW.md). No remote action, task execution or data transfer is performed.
 
+## Additional Forensics & C2 review pack
+
+- [x] Two offline evidence-preservation and authorized-framework governance contracts
+- [x] Selected Windows audit/time event context and Zeek DNS string/type review cues
+- [ ] EVTX/PCAP parsing, timeline correlation, provenance/integrity verification and chain-of-custody proof
+- [ ] Independent tampering/C2 attribution and demonstrated real-world detection effectiveness
+
+See [the Forensics & C2 review guide](FORENSICS_C2_REVIEW.md). No evidence alteration, agent deployment or remote tasking is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

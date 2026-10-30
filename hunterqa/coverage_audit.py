@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .forensics_review import catalog as forensics_review_catalog
 from .post_exploitation_review import catalog as post_exploitation_review_catalog
 from .privilege_review import catalog as privilege_review_catalog
 from .crypto_review import catalog as crypto_review_catalog
@@ -90,7 +91,9 @@ def coverage_audit():
             {"name": "Privilege Escalation", "skills": privilege_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected saved getcap/Windows service declarations"},
             {"name": "Post-Exploitation", "skills": post_exploitation_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows task XML/default VPC flow text"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows task XML/default VPC flow text"},
+            {"name": "Forensics & C2", "skills": forensics_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows event XML/Zeek DNS JSONL"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -211,6 +214,12 @@ def render_checklist():
         "- [ ] Effective task/identity/ACL resolution, traffic direction, asset attribution and telemetry correlation",
         "- [ ] Independent compromise, persistence, lateral-movement or exfiltration validation",
         "", "See [the post-exploitation review guide](POST_EXPLOITATION_REVIEW.md). No remote action, task execution or data transfer is performed.", "",
+        "## Additional Forensics & C2 review pack", "",
+        "- [x] Two offline evidence-preservation and authorized-framework governance contracts",
+        "- [x] Selected Windows audit/time event context and Zeek DNS string/type review cues",
+        "- [ ] EVTX/PCAP parsing, timeline correlation, provenance/integrity verification and chain-of-custody proof",
+        "- [ ] Independent tampering/C2 attribution and demonstrated real-world detection effectiveness",
+        "", "See [the Forensics & C2 review guide](FORENSICS_C2_REVIEW.md). No evidence alteration, agent deployment or remote tasking is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
