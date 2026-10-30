@@ -39,6 +39,19 @@ Git tags and published release assets are **immutable**. Never rewrite,
 delete or reuse historical tags, force-push `main`, or overwrite versioned
 source archives. Historical tagged releases remain downloadable.
 
+## Build a source archive
+
+From a clean, reviewed checkout with development dependencies installed:
+
+```bash
+python tools/build_release.py --repo . --out ../HunterQA-AI-1.3.0-source.zip
+python tools/verify_release_archive.py ../HunterQA-AI-1.3.0-source.zip
+```
+
+Choose a new output filename if it exists. A local archive contains the selected
+checkout; it is not the immutable published v1.3.0 archive. Record its commit and
+keep private cases outside the repository.
+
 ## Canonical version
 
 `pyproject.toml` is the source of truth. Its project version is read

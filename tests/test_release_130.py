@@ -41,5 +41,6 @@ def test_release_artwork_is_packagable_and_has_accessible_labels():
     image = ROOT / "docs/assets/hunterqa-cybersecurity-infographic.png"
     assert image.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
     assert image.stat().st_size <= 2_000_000
-    for filename in ("README.md", "zero to start.md"):
-        assert "![HunterQA cybersecurity" in (ROOT / filename).read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    labels = re.findall(r"!\[([^\]]+)\]\(docs/assets/hunterqa-cybersecurity-infographic.png\)", readme)
+    assert labels and all(len(label.split()) >= 4 for label in labels)

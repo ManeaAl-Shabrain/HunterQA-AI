@@ -1,457 +1,178 @@
-# Zero to Start · HunterQA 1.3.0
+# HunterQA — Zero to Start
 
-![HunterQA cybersecurity assessment flow](docs/assets/hunterqa-cybersecurity-infographic.png)
+Get from installation to a working local lab with retained evidence. You do not
+need a website, customer credentials, an AI model or a cloud account.
 
-**From a clean Kali environment to a reviewed, traceable assessment.**
+Use **current source**: the package reports `1.3.0`, but the original v1.3.0
+archive lacks later lab/review commands. This is a bounded owned-fixture
+benchmark, not a full attack or proof of complete coverage.
 
-[Overview](README.md) · [Release inventory](docs/RELEASE_1_3_0.md) · [Runtime contracts](docs/WORKFLOW_RUNNER.md) · [Security](SECURITY.md)
+## 1. Install
 
-> This guide covers source version **1.3.0**. Confirm the published tag on [GitHub Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases). A prepared release branch is not a published release. The first walkthrough below is entirely offline and uses files you create yourself.
+### Kali / Linux
 
-## Your route
-
-For offline report quality/triage and CVSS 3.1 Base arithmetic, use the
-[Utility guide](docs/UTILITY_REVIEW.md) and [private worksheet](templates/27-utility-review.md).
-See [the category index](docs/CATEGORY_REVIEW_INDEX.md) for bounded modes and remaining coverage.
-
-For offline AI application assurance and saved-case/garak review, use the
-[AI Security guide](docs/AI_SECURITY_REVIEW.md),
-[owned-case template](templates/HunterQA-ai-owned-cases-template.json) and
-[private worksheet](templates/26-ai-security-review.md).
-
-For offline Layer 2/3 assurance and saved Linux network/resolver review, use the
-[Network guide](docs/NETWORK_SECURITY_REVIEW.md) and
-[private worksheet](templates/25-network-review.md).
-
-For offline approved-simulation/participant-protection and saved DMARC/result review,
-use the [Social Engineering guide](docs/SOCIAL_ENGINEERING_REVIEW.md) and
-[private worksheet](templates/24-social-engineering-review.md).
-
-For offline artifact/build trust and package-source review, use the
-[Supply Chain guide](docs/SUPPLY_CHAIN_REVIEW.md) and
-[private worksheet](templates/23-supply-chain-review.md).
-
-For offline evidence-preservation/C2 governance and saved Windows/DNS log review,
-use the [Forensics & C2 guide](docs/FORENSICS_C2_REVIEW.md) and
-[private worksheet](templates/22-forensics-c2-review.md).
-
-For offline post-exploitation assurance and saved task/flow review, use the
-[post-exploitation guide](docs/POST_EXPLOITATION_REVIEW.md) and
-[private worksheet](templates/21-post-exploitation-review.md).
-
-For offline Linux/Windows privilege assurance and saved capability/service review,
-use the [privilege guide](docs/PRIVILEGE_ESCALATION_REVIEW.md) and
-[private worksheet](templates/20-privilege-escalation-review.md).
-
-For offline cryptographic-design/TLS assurance and selected Python source review,
-use the [Cryptography guide](docs/CRYPTOGRAPHY_REVIEW.md) and
-[private worksheet](templates/19-cryptography-review.md). No source is executed.
-
-For offline CI/CD assurance and saved GitHub Actions JSON review, use the
-[CI/CD guide](docs/CICD_PIPELINES_REVIEW.md) and
-[private worksheet](templates/18-cicd-pipelines-review.md). No workflow is executed.
-
-For offline container assurance and selected Docker inspect/Kubernetes workload
-and RBAC JSON, follow the [Containers guide](docs/CONTAINER_KUBERNETES_REVIEW.md).
-Use private evidence copies. These commands do not connect to a daemon/cluster,
-start workloads, read mounted paths or verify effective permissions/isolation.
-
-For two offline API assurance contracts and selected OpenAPI JSON declarations,
-follow the [API Security guide](docs/API_SECURITY_REVIEW.md). Use private evidence
-copies. These commands do not call endpoints, follow references, manipulate
-accounts or verify actual authorization or business-logic enforcement.
-
-For two offline OSINT review contracts and scoped imports of previously collected
-names, follow the [Reconnaissance guide](docs/RECONNAISSANCE_REVIEW.md). Use private
-copies of its review/scope templates. These commands do not collect intelligence,
-query DNS, verify ownership or enroll active assessment targets.
-
-For four offline Fuzzing research contracts and selected AFL++/libFuzzer metrics,
-follow the [Fuzzing review guide](docs/FUZZING_RESEARCH_REVIEW.md). Use private
-evidence copies. These readers do not run campaigns, replay crashes, minimize
-inputs or verify actual coverage or unique vulnerabilities.
-
-For six offline Exploit Development assurance contracts, selected sanitizer logs
-and ELF headers, follow the [Exploit Development guide](docs/EXPLOIT_DEVELOPMENT_REVIEW.md).
-Use private evidence copies. These commands do not run binaries, reproduce crashes,
-trigger races or establish exploitability or actual mitigation enforcement.
-
-For seven offline Infrastructure defensive review contracts and selected Windows
-PE header declarations, follow the [Infrastructure guide](docs/INFRASTRUCTURE_REVIEW.md).
-Use private templates and owner-provided artifacts. These commands do not load
-binaries, run evasion techniques or verify actual process mitigation enforcement.
-
-For selected IoT evidence, Mosquitto ACL files and resolved U-Boot build settings,
-follow the [IoT & Embedded guide](docs/IOT_EMBEDDED_REVIEW.md). Use private copies
-of its templates. These offline commands do not acquire firmware, contact devices,
-evaluate effective broker access or verify the installed boot chain.
-
-For selected Android/iOS evidence and already-decoded XML configuration files,
-follow the [Mobile guide](docs/MOBILE_REVIEW.md). Update the editable installation
-after pulling to obtain the core secure XML dependency. These offline commands
-do not install apps, operate devices, bypass protections or verify actual signing.
-
-For local AWS/Azure/GCP posture evidence and selected IAM/NSG policy JSON,
-follow the [Cloud review guide](docs/CLOUD_REVIEW.md). These offline commands
-need no provider credentials and do not connect to accounts, calculate effective
-access or verify resource reachability. Use private copies of the templates.
-
-For selected wireless policy evidence and a non-executing single-BSS hostapd
-configuration review, follow the [Wireless guide](docs/WIRELESS_REVIEW.md).
-Its 14 contracts are partial offline checks; they do not scan, transmit, capture
-packets, disconnect clients or certify device/network security.
-
-For selected directory posture evidence, follow the
-[Active Directory review guide](docs/ACTIVE_DIRECTORY_REVIEW.md). Its template
-uses unknown values until the owner supplies verified source observations. This
-is offline declaration review, not live directory collection or NetExec execution.
-
-For offline JWT sample and OAuth/OIDC configuration review, follow the
-[Auth & Identity guide](docs/AUTH_IDENTITY_REVIEW.md). Copy its JSON template to
-a private case directory before adding evidence. This review does not verify
-token signatures, perform provider login or establish end-to-end SSO security.
-
-For the 16-skill Web Application review category, follow the
-[source review guide](docs/WEB_APPLICATION_REVIEW.md) and copy its
-[private worksheet](templates/05-web-application-review.md). Ten narrow Python
-source checks are implemented; six skills require guided review. This pack never
-executes inspected code and does not provide comprehensive active exploitation.
-
-To require viewer/analyst/admin accounts on the local dashboard, follow the
-[operator access setup](docs/OPERATOR_ACCESS.md). Keep its private control root
-separate from assessment roots. These accounts do not replace target permission,
-and this mode does not enable a publicly hosted multi-tenant service.
-
-For a marked implementation inventory and a reproducible setup check, use the
-[feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) and
-[owned-lab readiness guide](docs/READINESS.md). `assessment-readiness` performs
-read-only checks; `assessment-benchmark` runs only its owned loopback fixtures.
-Neither certifies comprehensive coverage or authorizes a customer test.
-
-For post-release development features, use the [assessment adapters and shared
-quota guide](docs/ASSESSMENT_ADAPTERS.md). `coverage-audit` reports the seven-area
-implementation status; `assessment-benchmark` runs the versioned owned application
-baseline. Neither command certifies complete pentest coverage. These additions
-are absent from the original v1.3.0 archive; the walkthrough below remains the
-offline release baseline.
-
-| Step | Outcome |
-| --- | --- |
-| 1. Prepare | Python environment and current source |
-| 2. Verify | Correct installed version and passing checks |
-| 3. Create a case | Private source, policy, configuration and output |
-| 4. Review and run | An offline workflow with an explicit execution fingerprint |
-| 5. Assess evidence | Analyst review, reports and a conservative retest |
-| 6. Extend carefully | Optional approved HTTP, browser and local-AI workflows |
-| 7. Maintain | Updates, backups, diagnostics and release verification |
-
-## 1. Prepare Kali and install
-
-Use a Kali/Linux environment you control. Keep assessment data separate from the public repository. A disposable VM is useful for executable lab research; a VM alone does not enforce target scope.
+Use Python 3.11+:
 
 ```bash
 sudo apt update
 sudo apt install -y git python3 python3-venv python3-pip
-
 git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
 cd HunterQA-AI
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e '.[dev,quality]'
+python -m pip install -e .
 hunterqa --version
+git rev-parse HEAD
 ```
 
-Expected for this source: **HunterQA AI 1.3.0**. Before its PR is merged or release published, use the reviewed release branch/archive rather than assuming `main` already contains it. After publication, use `git switch --detach v1.3.0` for the immutable release, or stay on `main` for development.
+### Windows PowerShell
 
-| Component | Required? | Purpose |
-| --- | --- | --- |
-| Python 3.11+, Git and virtual environment | Yes | CLI, local app and fixed workers |
-| Semgrep executable | Optional | SAST scan/campaign commands |
-| Ollama plus supported local Qwen model | Optional | Local AI suggestions |
-| Playwright extra and Chromium | Optional | Browser workflows/tests |
-| Instrumented compiler/AFL++ | Optional | Isolated executable lab research |
+Install Python 3.11+ and Git first. No script execution policy change is needed:
 
-Install Semgrep only for source scanning: `python -m pip install semgrep`. Optional local model/browser dependencies are not required for the offline lesson.
-
-## 2. Verify the installation
-
-```bash
-hunterqa doctor --json
-python -m ruff check hunterqa zeroscope tools --select F
-python -m bandit -r hunterqa zeroscope tools -ll
-python -m pytest -q
-python tools/verify_release_1_3.py
+```powershell
+git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
+cd HunterQA-AI
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\hunterqa.exe --version
+git rev-parse HEAD
 ```
 
-The release verifier creates its own temporary synthetic case, exercises the actual workflow CLI, verifies reports/retesting and makes no target requests. Optional browser/platform tests may be skipped in the default suite.
+Already installed? Preserve local edits, switch to a clean `main` checkout, run
+`git pull --ff-only`, then repeat the installation command. Do not update during
+an active assessment. Back up the complete private case directory first.
+Record the commit with your evidence; the version number alone is insufficient.
 
-For browser acceptance:
+## 2. Create a private workspace
 
-```bash
-python -m pip install -e '.[dev,quality,browser]'
-python -m playwright install --with-deps chromium
-HUNTERQA_REAL_BROWSER_CI=1 HUNTERQA_ENGAGEMENT_BROWSER_CI=1 python -m pytest -q
-```
+Keep the same terminal open in the repository directory. Choose the commands
+for your operating system; the environment variables apply to this terminal only.
 
-These tests use owned loopback services or synthetic intercepted responses. They do not assess a public website. Re-run optional bundled-rule checks after installing Semgrep:
-
-```bash
-python tools/verify_semgrep_rules.py
-```
-
-## 3. Create your first private offline case
-
-Keep this terminal in the repository with the virtual environment active. Choose a fresh case name if the example directory already exists.
+Linux:
 
 ```bash
 umask 077
-mkdir ../hunterqa-demo-v130
-export HUNTERQA_CASEDIR="$(realpath ../hunterqa-demo-v130)"
-export HUNTERQA_APPROVED_ROOTS="$HUNTERQA_CASEDIR"
-mkdir "$HUNTERQA_CASEDIR/source"
-
-printf 'FROM example:latest\nUSER root\n' > "$HUNTERQA_CASEDIR/source/Dockerfile"
-
-python - <<'PY'
-import json, os
-from pathlib import Path
-root = Path(os.environ["HUNTERQA_CASEDIR"])
-profile = {
-    "program": "Owned offline teaching fixture",
-    "platform": "local-lab",
-    "authorization_reference": "Owned synthetic local files; this lesson authorizes no external traffic",
-    "acknowledged_authorization": True,
-    "allowed_hosts": ["app.example.test"],
-    "excluded_hosts": [],
-    "allowed_paths": ["/"],
-    "excluded_paths": [],
-    "methods": ["HEAD"],
-    "allowed_ports": [443],
-    "max_requests": 1,
-    "interval_seconds": 1,
-    "lab_mode": False,
-    "allow_private_network": False,
-    "allow_http": False
-}
-with (root / "profile.json").open("x", encoding="utf-8") as stream:
-    json.dump(profile, stream, indent=2)
-PY
+mkdir -p "$HOME/hunterqa-private"
+chmod 700 "$HOME/hunterqa-private"
+export HUNTERQA_APPROVED_ROOTS="$HOME/hunterqa-private"
+export HUNTERQA_LAB="$HOME/hunterqa-private/lab-$(date +%Y%m%d-%H%M%S)"
+hunterqa assessment-readiness
 ```
 
-The fictional URL below supplies a scope label; the default workflow sends no traffic and performs no DNS lookup. **Do not add `--observe` to this teaching case.** Any real target needs a separate profile backed by actual written authorization.
+Windows:
 
-Your case will contain:
-
-```text
-hunterqa-demo-v130/
-├── source/             owned source/configuration
-├── profile.json        permission reference and exact scope
-├── plan-001/           reviewed protocol, bindings and execution plan
-├── run-001/            private SQLite state, evidence and reports
-└── run-002/            independent retest
+```powershell
+$caseRoot = Join-Path $env:USERPROFILE 'hunterqa-private'
+New-Item -ItemType Directory -Path $caseRoot -Force | Out-Null
+$env:HUNTERQA_APPROVED_ROOTS = $caseRoot
+$env:HUNTERQA_LAB = Join-Path $caseRoot ('lab-' + (Get-Date -Format 'yyyyMMdd-HHmmss'))
+.\.venv\Scripts\hunterqa.exe assessment-readiness
 ```
 
-## 4. Plan, inspect and run offline
+Use a private Windows account directory with suitable access permissions. Expect
+`installation_ready: true`; lab evidence has not yet been provided. Optional
+missing packages do not prevent the built-in HTTP/TCP lab.
 
-Create the starter:
+## 3. Run the owned lab
+
+This step authorizes testing of HunterQA’s own loopback fixture only. It starts
+the service, runs four bounded workflows, saves evidence and closes the service.
+No external target is accepted.
+
+Linux:
 
 ```bash
-hunterqa workflow-setup \
-  --profile "$HUNTERQA_CASEDIR/profile.json" \
-  --project "$HUNTERQA_CASEDIR/source" \
-  --target "https://app.example.test/" \
-  --out-dir "$HUNTERQA_CASEDIR/plan-001" --authorized
-
-python -m json.tool "$HUNTERQA_CASEDIR/plan-001/execution-plan.json"
+hunterqa assessment-benchmark --out-dir "$HUNTERQA_LAB" --authorized
+hunterqa assessment-readiness --benchmark-dir "$HUNTERQA_LAB" --require-owned-lab
 ```
 
-Read the scope, bindings, selected adapters, limits and fingerprints. This starter selects declared assets → local configuration/API review → evidence index → reporting. Service enumeration and active validation are unselected, not silently completed.
+Windows:
 
-After reviewing this wholly offline fixture, obtain its execution fingerprint:
-
-```bash
-export HUNTERQA_EXECUTION_SHA="$(python -c 'import json,os; from pathlib import Path; print(json.loads((Path(os.environ["HUNTERQA_CASEDIR"])/"plan-001"/"execution-plan.json").read_text())["execution_sha256"])')"
-
-hunterqa workflow-run \
-  --profile "$HUNTERQA_CASEDIR/profile.json" \
-  --protocol "$HUNTERQA_CASEDIR/plan-001/protocol.json" \
-  --bindings "$HUNTERQA_CASEDIR/plan-001/bindings.json" \
-  --approve-execution "$HUNTERQA_EXECUTION_SHA" \
-  --out-dir "$HUNTERQA_CASEDIR/run-001" \
-  --operator "Local teaching operator" --authorized
+```powershell
+.\.venv\Scripts\hunterqa.exe assessment-benchmark --out-dir $env:HUNTERQA_LAB --authorized
+.\.venv\Scripts\hunterqa.exe assessment-readiness --benchmark-dir $env:HUNTERQA_LAB --require-owned-lab
 ```
 
-Expected: a completed offline run with two configuration candidates, zero charged requests and new report files. The Dockerfile is inspected as text; no container is built or executed.
-
-| Artifact | Meaning |
+| Expected result | Meaning |
 | --- | --- |
-| `run.sqlite3` | Durable state, quota, reviews and event chain |
-| `*.result.json` | Fixed-worker result artifacts |
-| `summary.json` | Initial run summary |
-| `report.html` | Printable report |
-| `report.sarif` | Conservative candidate export |
-| `*.network.jsonl` | Only present for applicable live workers; durable intent/outcome records |
+| `all_cases_matched: true` | Eight application cases and three workflow controls matched |
+| `network_requests: 18` in the benchmark | 16 fixture HTTP requests and two TCP connections recorded |
+| `supported_owned_lab_checks_passed: true` | Installation and recomputed current-runtime evidence passed |
+| `real_world_effectiveness: unverified` | This does not measure field accuracy or complete coverage |
+| `production_multi_user_ready: false` | Hosted multi-tenant production use is not ready |
 
-An existing output directory is rejected. Never delete a prior case to bypass this; choose a new run name. If a plan expires, create and review a fresh plan.
+Cases cover inert markup reflection, SQL-error cues, access contracts, HTML
+links/forms, scope/privacy and open/refused TCP connections. Findings remain
+unverified candidates. This does not prove executable XSS or general SQL injection
+exploitability, and does not exercise all 79 catalog entries.
 
-## 5. Open the dashboard and review evidence
+## 4. Read the evidence
+
+Open the private directory named by `HUNTERQA_LAB` in your file manager.
+
+| Artifact | Purpose |
+| --- | --- |
+| `benchmark.json` | Expected/observed cases, metrics and workflow controls |
+| `ground-truth.json` | Versioned expected labels |
+| `web-canary-check-run/report.html` | Printable reflection/SQL-error candidate report |
+| `authorization-matrix-run/report.html` | Access-contract candidate report |
+| Each `*-run` directory | Workflow state, reports, audit and network evidence |
+
+Keep the whole directory. Readiness recomputes retained evidence; the summary
+alone is insufficient. Hashes check consistency, not independent authenticity.
+
+To view the canary run on the local dashboard, in the same terminal:
 
 ```bash
-export HUNTERQA_WORKFLOW_RUN="$HUNTERQA_CASEDIR/run-001"
+# Linux
+export HUNTERQA_WORKFLOW_RUN="$HUNTERQA_LAB/web-canary-check-run"
 python run.py
 ```
 
-Open **http://127.0.0.1:5000/workflows**. Keep the server on loopback. Stop it with Ctrl+C before continuing CLI examples in the same terminal.
-
-The page shows recorded state, charged reservations, selected/completed stages, candidates and audit references. Refresh for current records. It cannot start a workflow or accept arbitrary file paths.
-
-Review the generated HTML directly in your browser, or export a fresh report:
-
-```bash
-hunterqa workflow-status --run "$HUNTERQA_CASEDIR/run-001"
-hunterqa workflow-export --run "$HUNTERQA_CASEDIR/run-001" \
-  --format html --out "$HUNTERQA_CASEDIR/report-after-review.html"
+```powershell
+# Windows
+$env:HUNTERQA_WORKFLOW_RUN = Join-Path $env:HUNTERQA_LAB 'web-canary-check-run'
+.\.venv\Scripts\python.exe run.py
 ```
 
-Use browser Print → Save as PDF for a PDF copy. Keep detailed evidence private. An initial generated report does not automatically change after later analyst decisions; export again under a new filename.
+Open `http://127.0.0.1:5000/workflows`. Stop the server with Ctrl+C. Optional local
+accounts are described in [operator access](docs/OPERATOR_ACCESS.md).
 
-### Record a responsible analyst decision
+Export or print `report.html` from your browser to save a PDF. After recording
+analyst decisions, use `workflow-export` to create an updated report; the original
+HTML does not refresh itself. See the [command reference](docs/COMMAND_REFERENCE.md)
+for commands and their execution modes.
 
-Get a candidate ID from `workflow-status`. Create an evidence note based on your own inspection, then record `needs-review` while deployment impact remains unknown:
+## 5. Choose your next task
 
-```bash
-printf 'Inspected the owned Dockerfile declaration; runtime deployment impact is unverified.\n' \
-  > "$HUNTERQA_CASEDIR/analyst-note.txt"
-
-hunterqa workflow-review --run "$HUNTERQA_CASEDIR/run-001" \
-  --finding EXACT_CANDIDATE_ID --decision needs-review \
-  --reviewer "Local analyst" --note "Deployment impact needs independent verification" \
-  --evidence "$HUNTERQA_CASEDIR/analyst-note.txt" --authorized
-```
-
-Replace `EXACT_CANDIDATE_ID` with the full ID. `confirmed` and `false-positive` are also analyst attestations; they are not independently verified owner identities or proofs of exploitability. SARIF remains conservative and labels exported candidates unverified.
-
-## 6. Make a change and retest
-
-Change only the synthetic Dockerfile you created:
-
-```bash
-printf 'FROM example:1\nUSER 10001\n' > "$HUNTERQA_CASEDIR/source/Dockerfile"
-
-hunterqa workflow-run \
-  --profile "$HUNTERQA_CASEDIR/profile.json" \
-  --protocol "$HUNTERQA_CASEDIR/plan-001/protocol.json" \
-  --bindings "$HUNTERQA_CASEDIR/plan-001/bindings.json" \
-  --approve-execution "$HUNTERQA_EXECUTION_SHA" \
-  --out-dir "$HUNTERQA_CASEDIR/run-002" \
-  --operator "Local retest operator" --authorized
-
-hunterqa workflow-compare --first "$HUNTERQA_CASEDIR/run-001" \
-  --second "$HUNTERQA_CASEDIR/run-002" --out "$HUNTERQA_CASEDIR/retest.json"
-
-hunterqa workflow-benchmark --out "$HUNTERQA_CASEDIR/fixture-benchmark.json"
-```
-
-Within the still-valid plan window, the retest should report two candidates not observed. This demonstrates configuration-rule behavior, not proof that a deployed vulnerability was repaired. A project binding approves a mutable directory; it is not an immutable source snapshot. Each new invocation is an explicit local attestation, and budgets are per run.
-
-The benchmark covers three synthetic Docker fixtures. Its score does not measure overall vulnerability discovery accuracy.
-
-## 7. Move to explicitly authorized live checks
-
-Use a separate real assessment case. Obtain the owner's written permission and define exact targets, ports, methods, paths, testing window, traffic limits and permitted actions. Empty exclusions never expand an allowlist.
-
-1. Create a private real scope profile using `examples/bounty_profile.example.json`.
-2. Use `bounty-preflight` for an existing target list, or review a new workflow protocol.
-3. Use `workflow-setup --observe` only when HEAD/GET observations are permitted.
-4. Inspect `workflow-run-plan` output. Approve its exact execution hash.
-5. For every required checkpoint, also pass `--approve-protocol EXACT_PROTOCOL_SHA256 --approve-step STEP_ID`.
-6. Start with the smallest necessary request budget and retain an emergency-stop terminal.
-
-The observation adapter prefers HEAD when the profile permits it, otherwise GET. It uses pinned DNS/TLS transport, no proxies/retries/redirects, sequential calls and conservative stop conditions. HTTP status matches do not prove successful authentication or a vulnerability.
-
-```bash
-hunterqa workflow-stop --run /absolute/path/to/your/run
-hunterqa workflow-abandon --run /absolute/path/to/crashed-run --authorized
-```
-
-Stop is supervised outside the worker; workers also watch expiry, deadlines and parent death. An already sent request cannot be recalled. Abandon refuses a held coordinator lock, reconciles unfinished records and never replays traffic.
-
-For separate account/browser checks, follow [approved engagements](docs/APPROVED_ASSESSMENTS.md). The dedicated-account HTTPS check and narrow remote form browser remain separate from workflow workers. The original `bounty-browser-lab` supports only an owned loopback application. Playwright interception is not an OS firewall.
-
-## 8. Add evidence and optional research tools
-
-| Need | Command or guide |
+| Task | Guide |
 | --- | --- |
-| Offline Nuclei/ZAP evidence | `external-import`; [formats and limits](docs/RESEARCH_WORKFLOWS.md) |
-| Source SAST | `scan` or `campaign` after installing Semgrep |
-| Configuration/API/dependencies | `audit`, `bounty-api-inventory`, `cve-check` with a local advisory snapshot |
-| Original methodology | `research-playbooks`, `research-init`, `research-note`, `research-resume` |
-| Local AI | `hypothesize`, `bounty-ai-review`, `propose-fix`; model advice is unverified |
-| Private disclosure dossier | `bounty-review-init` → `bounty-review-decide` → `bounty-review-export` |
-| Reviewed package | `engagement-package`; private unsent disclosure/CVE-request draft |
-| Executable crash research | `verify-crashes` only in a separately isolated owned lab |
+| Check implemented and missing features | [Feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) |
+| Choose a category/evidence reader | [23-category index](docs/CATEGORY_REVIEW_INDEX.md) |
+| Prepare an approved organization assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
+| Run selected adapters with reviewed approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) and [adapters](docs/ASSESSMENT_ADAPTERS.md) |
+| Review report quality or CVSS 3.1 Base | [Utility guide](docs/UTILITY_REVIEW.md) |
 
-Install Ollama from its official distribution and run it locally. Supported model examples in the constrained agent review are `qwen2.5-coder:3b` and `qwen2.5-coder:7b`. Downloading a model requires network access; subsequent supported model calls use the fixed loopback service.
+A customer assessment is separate. It needs written permission, exact targets,
+methods, limits, dates and checkpoints. Fill private copies of templates outside
+this repository. A URL or `--authorized` flag alone is not permission or a test plan.
 
-```bash
-ollama pull qwen2.5-coder:3b
-hunterqa doctor --check-ollama --json
-```
+## Troubleshooting
 
-Ollama must be running for the probe/model commands. No external model provider is required. Imported reports and AI output never become executable instructions.
-
-## 9. Update, back up and verify archives
-
-Before updating, preserve local edits and back up the complete private case directory, including SQLite and evidence artifacts. Avoid replacing guides/source while a worker run is active.
-
-```bash
-git status --short --untracked-files=all
-git fetch origin --tags
-git switch main
-git pull --ff-only origin main
-source .venv/bin/activate
-python -m pip install -e '.[dev,quality]'
-hunterqa --version
-python tools/verify_release_1_3.py
-```
-
-Resolve local edits deliberately if Git refuses the switch/pull. Do not use `reset --hard`, `git clean` or force-push as an update procedure. Updating source/runtime code invalidates old execution fingerprints; generate and review a new plan.
-
-Build a new archive from a clean, reviewed checkout:
-
-```bash
-python tools/build_release.py --repo . --out ../HunterQA-AI-1.3.0-source.zip
-python tools/verify_release_archive.py ../HunterQA-AI-1.3.0-source.zip
-```
-
-For downloaded published assets, run `sha256sum -c HunterQA-AI-1.3.0-source.zip.sha256` beside the archive, then verify its internal manifest. Only trust checksums from the authenticated release source. Immutable historical releases remain separate.
-
-## 10. Troubleshooting
-
-| Symptom | Check and next step |
+| Problem | Action |
 | --- | --- |
-| Wrong version after pulling | Activate the intended environment; reinstall with `python -m pip install -e '.[dev,quality]'`; inspect `python -m pip show hunterqa-ai` |
-| Directory outside approved roots | Use canonical absolute paths and explicitly set `HUNTERQA_APPROVED_ROOTS`; keep source/config/run as siblings |
-| Execution fingerprint mismatch | Recreate `workflow-run-plan` after code, profile, protocol or binding changes; read it before approving |
-| Plan expired or window closed | Obtain a valid testing window and generate a new reviewed plan |
-| Output already exists | Choose a fresh output filename/run directory; preserve previous evidence |
-| Missing approval checkpoint | Review and explicitly name every pending checkpoint against the exact protocol fingerprint |
-| Worker failed/timed out | Inspect recorded step state and selected limits; distinguish missing/invalid input from a security finding |
-| Recorded running after a crash | Confirm the coordinator is gone; use `workflow-abandon`; no automatic replay |
-| Integrity check failed | Preserve the complete case, investigate changed/missing artifacts, and do not treat it as verified evidence |
-| Browser unavailable | Install the browser extra, Chromium and required Linux libraries |
-| Semgrep/Ollama warning | Install/start only the optional engine you need; offline configuration review still works |
-| Dashboard unavailable | Use 127.0.0.1:5000 and inspect port use; do not expose the server publicly |
-| Missing findings on retest | Compare matching scope/assessment coverage; absence alone does not prove repair |
+| Command not found | Activate `.venv` on Linux; use the full executable path on Windows |
+| Lab command unknown | Update current source and reinstall; the old archive lacks it |
+| Outside approved roots | Set `HUNTERQA_APPROVED_ROOTS` to an existing absolute private directory in this terminal |
+| Output already exists | Choose a fresh lab name and preserve the previous run |
+| Evidence is `stale` | After code/dependency changes, run again into a new directory |
+| Evidence is `invalid` | Retain the failed run, inspect missing/changed artifacts and rerun after fixing the cause |
+| Quota admission fails | Review the configured shared ledger and authorized remaining budget |
 
-## Readiness before a real assessment
-
-- Written authorization and exact scope are current.
-- The local environment and selected adapters passed relevant checks.
-- The execution plan and all required checkpoints were personally reviewed.
-- Traffic, concurrency, deadline and emergency-stop behavior are understood.
-- Private evidence storage and retention are established.
-- Findings, severity labels and AI suggestions will receive human review.
-
-**Release-ready means the documented local capability set passes its checks. It does not mean unrestricted testing, zero false positives, guaranteed discovery, a verified company grant service or safe public multi-user deployment.**
+The built-in lab needs only the core installation. Install optional dependencies
+**before** producing evidence: `.[cloud]` for AWS account checks, `.[browser]` plus
+Playwright Chromium for browser workflows, or `.[dev,quality]` for developer
+verification. Semgrep and Ollama are separate optional tools. See
+[readiness](docs/READINESS.md) for further setup and verification commands.
