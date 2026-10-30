@@ -8,48 +8,73 @@ import re
 import tomllib
 from urllib.parse import unquote
 
+import argparse
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 README = (ROOT / "README.md").read_text(encoding="utf-8")
+REFERENCE = (ROOT / "docs/COMMAND_REFERENCE.md").read_text(encoding="utf-8")
 
 
-def test_readme_local_links_resolve_in_repository():
-    matches = re.findall(r"\]\(([^)]+)\)", README)
+@pytest.mark.parametrize("filename", ["README.md", "zero to start.md", "docs/COMMAND_REFERENCE.md", "docs/VERSIONING.md"])
+def test_readme_local_links_resolve_in_repository(filename):
+    document = ROOT / filename
+    content = document.read_text(encoding="utf-8")
+    assert sum(line.startswith("```") for line in content.splitlines()) % 2 == 0
+    matches = re.findall(r"\]\(([^)]+)\)", content)
     assert matches, "README lacks navigation links"
     for link in matches:
         if link.startswith(("http://", "https://", "#", "mailto:")):
             continue
-        target = unquote(link.strip("<>").rstrip("/"))
-        assert (ROOT / target).exists(), f"Broken local README link: {link}"
+        target = unquote(link.strip("<>").rstrip("/")).split("#")[0]
+        assert (document.parent / target).exists(), f"Broken local link in {filename}: {link}"
 
 
 def test_readme_describes_stable_package_and_compatible_archive_commands():
     version = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
     assert version == "1.3.0"
     assert f"v{version}" in README
-    assert f"HunterQA-AI-{version}-source.zip" in README
-    assert "HunterQA-AI-1.1.0-source.zip" not in README
-    assert "python tools/build_release.py" in README
-    assert "python tools/verify_release_archive.py" in README
     assert "docs/VERSIONING.md" in README
+    versioning = (ROOT / "docs/VERSIONING.md").read_text(encoding="utf-8")
+    assert f"HunterQA-AI-{version}-source.zip" in versioning
+    assert "python tools/build_release.py" in versioning
+    assert "python tools/verify_release_archive.py" in versioning
+    assert "immutable" in versioning.casefold()
 
 
-def test_readme_documents_cli_groups_and_all_commands():
-    cli = (ROOT / "hunterqa" / "cli.py").read_text(encoding="utf-8")
-    names = set(re.findall(r'sub\.add_parser\("([^"]+)"', cli))
+def test_readme_links_complete_command_reference(monkeypatch):
+    from hunterqa.cli import main
+
+    captured = []
+
+    class ParserCaptured(Exception):
+        pass
+
+    def capture(parser, *args, **kwargs):
+        captured.append(parser)
+        raise ParserCaptured
+
+    monkeypatch.setattr(argparse.ArgumentParser, "parse_args", capture)
+    with pytest.raises(ParserCaptured):
+        main([])
+    sub = next(action for action in captured[0]._actions if isinstance(action, argparse._SubParsersAction))
+    names = set(sub.choices)
     assert len(names) >= 25
-    for name in names:
-        assert name in README, f"Undocumented CLI subcommand: {name}"
+    documented = set(re.findall(r"^\| `([^`]+)` \|", REFERENCE, re.MULTILINE))
+    assert documented == names
+    assert "docs/COMMAND_REFERENCE.md" in README
     assert "hunterqa --version" in README
 
 
 def test_readme_explicitly_separates_offline_vs_authorized_network_testing():
+    for text in ("127.0.0.1", "HUNTERQA_APPROVED_ROOTS", "--authorized", "written permission"):
+        assert text.casefold() in README.casefold(), f"Missing safety statement: {text}"
     for text in (
-        "127.0.0.1", "HUNTERQA_APPROVED_ROOTS", "--authorized",
         "bounty-preflight", "bounty-assess", "bounty-replay-head",
         "No guaranteed zero-days", "synthetic",
         "no automatic", "Playwright interception",
     ):
-        assert text.casefold() in README.casefold(), f"Missing safety statement: {text}"
+        assert text.casefold() in REFERENCE.casefold(), f"Missing execution boundary: {text}"
 
 
 def test_release_notes_and_architecture_retain_honest_limits():

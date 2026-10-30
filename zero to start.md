@@ -20,6 +20,7 @@ git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
 cd HunterQA-AI
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e .
 hunterqa --version
 git rev-parse HEAD
@@ -33,18 +34,21 @@ Install Python 3.11+ and Git first. No script execution policy change is needed:
 git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
 cd HunterQA-AI
 py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -e .
 .\.venv\Scripts\hunterqa.exe --version
 git rev-parse HEAD
 ```
 
-Already installed? From a clean `main` checkout, run `git pull --ff-only`, then
-repeat the installation command. Preserve local edits before switching branches.
+Already installed? Preserve local edits, switch to a clean `main` checkout, run
+`git pull --ff-only`, then repeat the installation command. Do not update during
+an active assessment. Back up the complete private case directory first.
 Record the commit with your evidence; the version number alone is insufficient.
 
 ## 2. Create a private workspace
 
-Keep the same terminal open in the repository directory. Use your OS commands.
+Keep the same terminal open in the repository directory. Choose the commands
+for your operating system; the environment variables apply to this terminal only.
 
 Linux:
 
@@ -135,6 +139,11 @@ $env:HUNTERQA_WORKFLOW_RUN = Join-Path $env:HUNTERQA_LAB 'web-canary-check-run'
 
 Open `http://127.0.0.1:5000/workflows`. Stop the server with Ctrl+C. Optional local
 accounts are described in [operator access](docs/OPERATOR_ACCESS.md).
+
+Export or print `report.html` from your browser to save a PDF. After recording
+analyst decisions, use `workflow-export` to create an updated report; the original
+HTML does not refresh itself. See the [command reference](docs/COMMAND_REFERENCE.md)
+for commands and their execution modes.
 
 ## 5. Choose your next task
 

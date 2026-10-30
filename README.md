@@ -1,10 +1,10 @@
 # HunterQA
 
-![HunterQA: scope, assess, evidence and report](docs/assets/hunterqa-cybersecurity-infographic.png)
+![HunterQA cybersecurity workflow: scope, assess, evidence and report](docs/assets/hunterqa-cybersecurity-infographic.png)
 
-HunterQA helps you plan authorized assessments, inspect code and saved evidence,
-run controlled checks, and prepare reports for human review. It runs locally for
-a single operator.
+HunterQA is a local workspace for authorized security assessments. Review code
+and saved evidence, run selected checks within an approved scope, and produce
+reports you can review and retest. It is designed for a single operator.
 
 **Python 3.11+ · Kali/Linux recommended · CLI and local dashboard**
 
@@ -51,10 +51,13 @@ git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
 cd HunterQA-AI
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e .
+hunterqa --version
 
 umask 077
 mkdir -p "$HOME/hunterqa-private"
+chmod 700 "$HOME/hunterqa-private"
 export HUNTERQA_APPROVED_ROOTS="$HOME/hunterqa-private"
 export HUNTERQA_LAB="$HOME/hunterqa-private/lab-$(date +%Y%m%d-%H%M%S)"
 hunterqa assessment-benchmark --out-dir "$HUNTERQA_LAB" --authorized
@@ -86,12 +89,14 @@ an engagement. Authorization does not enable missing functionality.
 | Need | Read |
 | --- | --- |
 | First approved assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
+| CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |
 | Dashboard accounts | [Operator access](docs/OPERATOR_ACCESS.md) |
 | All category guides | [Category index](docs/CATEGORY_REVIEW_INDEX.md) |
 | Report quality/scoring | [Utility guide](docs/UTILITY_REVIEW.md) |
+| Release packaging/version policy | [Versioning](docs/VERSIONING.md) |
 | Releases/security reports | [Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases) and [security policy](SECURITY.md) |
 
 Use only systems you own or have explicit written permission to assess, within
