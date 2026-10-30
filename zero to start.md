@@ -153,6 +153,7 @@ for commands and their execution modes.
 | Choose a category/evidence reader | [23-category index](docs/CATEGORY_REVIEW_INDEX.md) |
 | Prepare an approved organization assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | Run selected adapters with reviewed approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) and [adapters](docs/ASSESSMENT_ADAPTERS.md) |
+| Try fixed HTTP SQL/XSS controls with Chromium | [Controlled runtime validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Review report quality or CVSS 3.1 Base | [Utility guide](docs/UTILITY_REVIEW.md) |
 
 A customer assessment is separate. It needs written permission, exact targets,

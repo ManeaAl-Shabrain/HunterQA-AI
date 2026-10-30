@@ -16,13 +16,13 @@
 <article class="stat"><span>Status changes</span><strong>{{ evidence.comparison.status_changes if evidence.comparison else '—' }}</strong><small>Same-plan baseline only</small></article>
 </section>
 <section class="panel"><div class="panel-head"><h2>Recorded observations</h2></div><div class="table-wrap"><table>
-<thead><tr><th>Step</th><th>Mode</th><th>Target fingerprint</th><th>HTTP status</th><th>Expected status</th><th>Outcome</th></tr></thead>
-<tbody>{% for row in report.observations %}<tr><td>{{ row.index }}</td><td>{{ row.mode }}</td><td><code>{{ row.target_sha256[:16] }}</code></td><td>{{ row.status if row.status is not none else 'Unknown' }}</td><td>{% if row.expected_status_matches is sameas true %}Matched{% elif row.expected_status_matches is sameas false %}Different{% else %}Not specified{% endif %}</td><td>{{ row.outcome }}</td></tr>{% endfor %}</tbody>
+<thead><tr><th>Step</th><th>Mode</th><th>Target fingerprint</th><th>HTTP status</th><th>Expected status</th><th>Controlled validation</th><th>Outcome</th></tr></thead>
+<tbody>{% for row in report.observations %}<tr><td>{{ row.index }}</td><td>{{ row.mode }}</td><td><code>{{ row.target_sha256[:16] }}</code></td><td>{{ row.status if row.status is not none else 'Unknown' }}</td><td>{% if row.expected_status_matches is sameas true %}Matched{% elif row.expected_status_matches is sameas false %}Different{% else %}Not specified{% endif %}</td><td>{% if row.validation_state == 'matched' %}Canary matched · review required{% elif row.validation_state == 'not_observed' %}Not observed{% elif row.validation_state == 'inconclusive' %}Inconclusive{% else %}Not assessed{% endif %}</td><td>{{ row.outcome }}</td></tr>{% endfor %}</tbody>
 </table></div></section>
 {% if evidence.comparison %}
 {% set comparison = evidence.comparison %}
 <section class="panel"><div class="panel-head"><h2>Baseline comparison</h2></div><div class="research-details">
-<p>{{ comparison.status_changes }} HTTP status changes; {{ comparison.body_changes }} body fingerprint changes. Missing values remain unknown.</p>
+<p>{{ comparison.status_changes }} HTTP status changes; {{ comparison.body_changes }} body fingerprint changes; {{ comparison.validation_changes }} controlled-validation state changes. Missing or inconclusive validation evidence remains unknown. A change does not establish remediation.</p>
 {% if not comparison.coverage_equal or comparison.first_stopped or comparison.second_stopped %}<p class="callout warn">At least one run stopped or recorded a different number of steps. Coverage is incomplete; inspect the private reports before drawing conclusions.</p>{% endif %}
 <p>Both reports reference the same approved plan and scope profile. Fingerprints check consistency, not author identity.</p></div></section>
 {% elif evidence.comparison_status != 'not_configured' %}<p class="callout warn">The baseline is unavailable or incompatible. Comparison requires reports from the same exact plan and policy.</p>{% endif %}

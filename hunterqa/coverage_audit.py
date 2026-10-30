@@ -29,8 +29,8 @@ AREAS = (
      "Bounded HTML and opt-in same-origin HTTPS rendered-anchor discovery with ephemeral dedicated-account cookie login",
      ["General action-driven SPA discovery", "Complex sessions and SSO", "Comprehensive endpoint discovery"]),
     ("active-vulnerability-testing", "Active vulnerability testing", ["web-canary-check"],
-     "Fixed inert markup and SQL error comparisons; separate in-memory SQL cross-owner impact fixture with parameterized controls",
-     ["Confirmed SQLi/XSS validators", "SSRF", "File upload", "Traversal", "Blind/OOB and application-specific validation"]),
+     "Fixed inert markup/SQL error cues, owned-endpoint SQL canary differentials and reflected-HTML Chromium execution witnesses",
+     ["General SQLi/XSS validation across contexts", "SSRF", "File upload", "Traversal", "Blind/OOB and application-specific validation"]),
     ("authentication-authorization", "Authentication and authorization", ["authorization-matrix"],
      "Explicit dedicated-role/anonymous GET contracts and isolated Authorization headers",
      ["SSO negotiation", "Complex session handling", "Stateful business logic", "General tenant-boundary discovery"]),
@@ -44,18 +44,18 @@ AREAS = (
      "Local supervised workers, per-run controls, optional shared quotas and authenticated local dashboard roles",
      ["Hosted multi-user deployment and tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
-     "Versioned owned application benchmark, labeled positive/negative cues and retained evidence",
+     "Owned application and six-endpoint HTTP/Chromium baselines, per-class metrics, inconclusive counts and retained evidence",
      ["Independent real-world evaluation", "Representative per-class false-negative rates", "Complete standards coverage"]),
 )
 
 FEATURES = {
     "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None), ("Scoped HTTPS rendered-anchor discovery with ephemeral cookie login", None), ("Offline discovery recall against supplied route references", None)],
-    "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check"), ("Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay", None)],
+    "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check"), ("Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay", None), ("Fixed owned-endpoint SQL canary differential with negative/repeat controls", None), ("Fixed reflected-HTML XSS canary execution in isolated Chromium", None)],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],
     "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review"), ("Offline normalized AWS/Azure/GCP posture and selected native policy readers", None)],
     "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
-    "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None)],
+    "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None), ("Six-endpoint HTTP/Chromium baseline with per-class confusion metrics and inconclusive counts", None), ("Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2", None)],
 }
 
 

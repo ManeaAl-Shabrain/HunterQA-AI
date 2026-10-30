@@ -39,6 +39,47 @@ def test_comparison_reports_changes_without_vulnerability_claims(reports):
     assert result["coverage_equal"] is True
 
 
+def _runtime(path, signals):
+    import hashlib
+    from hunterqa.runtime_validation import CASE_NAMES, SQL_INPUTS, _result
+    data = json.loads(path.read_text())
+    data["requests"] = 5
+    row = data["observations"][0]
+    row.update(mode="sql-canary-check")
+    receipts = [{"case": name, "input_sha256": hashlib.sha256(value.encode()).hexdigest(),
+                 "body_sha256": "d" * 64, "body_bytes": 64, "status": 200, "canary_present": signal}
+                for name, value, signal in zip(CASE_NAMES, SQL_INPUTS, signals)]
+    row["validation"] = _result("sql", receipts, signals, False)
+    row["validation"]["private_details"] = "<script>private-probe-content</script>"
+    path.write_text(json.dumps(data))
+
+
+def test_runtime_states_are_recomputed_projected_and_compared(reports, app, client):
+    first, second = reports
+    _runtime(first, [False, True, False, True, False])
+    _runtime(second, [False] * 5)
+    assert load_assessment(first)["observations"][0]["validation_state"] == "matched"
+    comparison = compare_assessments(first, second)
+    assert comparison["validation_changes"] == 1
+    app.config.update(ENGAGEMENT_REPORT_PATH=str(first), ENGAGEMENT_BASELINE_PATH=str(second))
+    response = client.get("/assessments")
+    assert b"Canary matched" in response.data and b"review required" in response.data
+    assert b"private-probe-content" not in response.data
+    assert "private-probe-content" not in json.dumps(dashboard_evidence(first, second))
+    change(first, lambda d: d["observations"][0]["validation"].update(state="not_observed"))
+    with pytest.raises(ValueError):
+        load_assessment(first)
+
+
+def test_inconclusive_validation_is_unknown_in_comparison(reports):
+    first, second = reports
+    _runtime(first, [False, True, False, True, False])
+    _runtime(second, [True] * 5)
+    result = compare_assessments(first, second)
+    assert result["comparisons"][0]["validation_state_changed"] is None
+    assert result["validation_changes"] == 0
+
+
 def test_missing_evidence_is_unknown_not_unchanged(reports):
     first, second = reports
     def partial(data):

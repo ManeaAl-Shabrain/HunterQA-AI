@@ -46,7 +46,16 @@ def load_assessment(path):
                 "status": status, "body_sha256": row.get("body_sha256"),
                 "expected_status_matches": row.get("expected_status_matches"),
                 "outcome": "stopped" if row.get("outcome") == "stopped" else "observed",
-                "verification": "unverified_observation"}
+                "verification": "unverified_observation", "validation_state": None, "validation_kind": None}
+        if row["mode"] in {"sql-canary-check", "xss-canary-check"}:
+            from .runtime_validation import retained_state
+            kind = "sql" if row["mode"] == "sql-canary-check" else "xss"
+            validation = row.get("validation")
+            if validation is None and stopped:
+                state = "inconclusive"
+            else:
+                state = retained_state(validation, kind, stopped)
+            item.update(validation_state=state, validation_kind=kind)
         if "authentication" in row:
             if row["authentication"] not in ("attempted_unverified", "not_attempted"):
                 raise ValueError("Unsupported authentication claim")
@@ -68,16 +77,20 @@ def compare_assessments(first_path, second_path):
             raise ValueError("Assessment step identities or order differ")
         both_statuses = left["status"] is not None and right["status"] is not None
         both_bodies = left["body_sha256"] is not None and right["body_sha256"] is not None
+        decisive = {"matched", "not_observed"}
+        both_validations = left["validation_state"] in decisive and right["validation_state"] in decisive
         comparisons.append({"index": left["index"], "mode": left["mode"],
             "target_sha256": left["target_sha256"], "before_status": left["status"],
             "after_status": right["status"],
             "status_changed": left["status"] != right["status"] if both_statuses else None,
-            "body_changed": left["body_sha256"] != right["body_sha256"] if both_bodies else None})
+            "body_changed": left["body_sha256"] != right["body_sha256"] if both_bodies else None,
+            "validation_state_changed": left["validation_state"] != right["validation_state"] if both_validations else None})
     return {"schema_version": 1, "engine": "hunterqa_assessment_comparison",
             "plan_sha256": first["plan_sha256"], "policy_sha256": first["policy_sha256"],
             "first_content_sha256": first["content_sha256"], "second_content_sha256": second["content_sha256"],
             "comparisons": comparisons, "status_changes": sum(row["status_changed"] is True for row in comparisons),
             "body_changes": sum(row["body_changed"] is True for row in comparisons),
+            "validation_changes": sum(row["validation_state_changed"] is True for row in comparisons),
             "coverage_equal": len(first["observations"]) == len(second["observations"]),
             "first_stopped": first["stopped"], "second_stopped": second["stopped"],
             "review_required": True, "network_requests": 0,

@@ -228,7 +228,7 @@ def main(argv=None):
     plan_cmd = sub.add_parser("engagement-plan", help="Create an offline assessment plan for review")
     plan_cmd.add_argument("--profile", required=True)
     plan_cmd.add_argument("--url", action="append", required=True)
-    plan_cmd.add_argument("--mode", choices=("observe", "waf-canary", "auth-check", "browser", "browser-discovery"), default="observe")
+    plan_cmd.add_argument("--mode", choices=("observe", "waf-canary", "auth-check", "browser", "browser-discovery", "sql-canary-check", "xss-canary-check"), default="observe")
     plan_cmd.add_argument("--method", choices=("GET", "HEAD", "POST"), default="GET")
     plan_cmd.add_argument("--ttl-minutes", type=int, default=60)
     plan_cmd.add_argument("--dedicated-test-account", action="store_true")
@@ -238,6 +238,9 @@ def main(argv=None):
     plan_cmd.add_argument("--max-pages", type=int)
     plan_cmd.add_argument("--max-depth", type=int)
     plan_cmd.add_argument("--settle-ms", type=int)
+    plan_cmd.add_argument("--parameter", help="Reviewed GET parameter for a fixed owned canary check")
+    plan_cmd.add_argument("--owned-test-endpoint", action="store_true")
+    plan_cmd.add_argument("--canary-marker", help="Public owner-installed synthetic SQL canary")
     plan_cmd.add_argument("--out", required=True)
     preflight = sub.add_parser("engagement-preflight", help="Offline review of an expiring exact assessment plan")
     preflight.add_argument("--profile", required=True)
@@ -558,6 +561,11 @@ def main(argv=None):
     validation.add_argument("--authorized", action="store_true")
     validation_verify = sub.add_parser("lab-sql-verify", help="Verify evidence and replay fixed in-memory SQL cases; no target traffic")
     validation_verify.add_argument("--run", required=True)
+    runtime_benchmark = sub.add_parser("runtime-validation-benchmark", help="Run six owned HTTP SQL/XSS controls with real Chromium")
+    runtime_benchmark.add_argument("--out-dir", required=True)
+    runtime_benchmark.add_argument("--authorized", action="store_true")
+    runtime_verify = sub.add_parser("runtime-validation-verify", help="Offline consistency of retained HTTP runtime benchmark evidence")
+    runtime_verify.add_argument("--run", required=True)
     quota_init = sub.add_parser("quota-init", help="Initialize a host-local shared quota window")
     quota_init.add_argument("--ledger", required=True)
     quota_init.add_argument("--max-requests", type=int, required=True)
@@ -831,6 +839,11 @@ def main(argv=None):
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
         return
+    if args.command in ("runtime-validation-benchmark", "runtime-validation-verify"):
+        from .runtime_validation_lab import benchmark, verify
+        report = benchmark(args.out_dir, authorized=args.authorized) if args.command == "runtime-validation-benchmark" else verify(args.run)
+        print(json.dumps(report, indent=2))
+        return
     if args.command in ("lab-sql-validation", "lab-sql-verify"):
         from .lab_validation import validate_owned_sql, verify_owned_sql
         report = (validate_owned_sql(args.out_dir, authorized=args.authorized)
@@ -956,6 +969,12 @@ def main(argv=None):
         return
     if args.command == "engagement-plan":
         from .engagement import create_plan
+        validation = None
+        if (args.mode in {"sql-canary-check", "xss-canary-check"} or args.parameter is not None
+                or args.owned_test_endpoint or args.canary_marker is not None):
+            validation = {"parameter": args.parameter, "owned_test_endpoint": args.owned_test_endpoint}
+            if args.canary_marker is not None:
+                validation["canary_marker"] = args.canary_marker
         discovery = None
         if args.mode == "browser-discovery" or any(value is not None for value in
                                                    (args.max_pages, args.max_depth, args.settle_ms)):
@@ -965,7 +984,7 @@ def main(argv=None):
         plan = create_plan(args.profile, args.url, mode=args.mode, method=args.method,
                            ttl_minutes=args.ttl_minutes, dedicated_test_account=args.dedicated_test_account,
                            browser_isolated=args.browser_isolated, login_url=args.login_url,
-                           expected_status=args.expected_status, discovery=discovery)
+                           expected_status=args.expected_status, discovery=discovery, validation=validation)
         _write_bounty_output(args.out, json.dumps(plan, indent=2) + "\n")
         return
     if args.command == "engagement-discovery-coverage":
