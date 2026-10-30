@@ -27,6 +27,9 @@ suggestions require human review. See [security policy](../SECURITY.md).
 `browser-discovery` is a separately reviewed engagement mode for bounded
 same-origin rendered links and ephemeral cookie login. See the [guide](SCOPED_RENDERED_DISCOVERY.md).
 
+`sql-canary-check` and `xss-canary-check` are reviewed engagement modes with five
+fixed owned-endpoint inputs. See [runtime controls](CONTROLLED_RUNTIME_VALIDATION.md).
+
 ## Commands
 
 Descriptions below match CLI help. Category aliases are listed by `--help` and
@@ -142,6 +145,8 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `research-playbooks` | List original non-executing research review checklists |
 | `research-report` | Normalize validated local research JSON |
 | `research-resume` | Read and verify private research context; executes no tests |
+| `runtime-validation-benchmark` | Run six owned HTTP SQL/XSS controls with real Chromium |
+| `runtime-validation-verify` | Offline consistency of retained HTTP runtime benchmark evidence |
 | `scan` | Run unified offline Semgrep + config + API + dependency scan |
 | `social-evidence-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |
 | `social-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |

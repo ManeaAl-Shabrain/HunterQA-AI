@@ -32,7 +32,8 @@ the version number alone does not identify the installed features.
 | Web observations | Scoped HEAD/GET and HTML discovery; opt-in same-origin HTTPS JavaScript/cookie-session discovery |
 | Owned browser lab | Optional JavaScript-rendered links and local login context, restricted to owned loopback |
 | Owned SQL lab | Eight fixed in-memory impact/control cases and deterministic evidence replay |
-| Validation cues | Fixed inert-markup and SQL-error comparisons; explicit role/anonymous access contracts |
+| Controlled validation | Fixed owned-endpoint SQL canary differentials and Chromium XSS witnesses; baseline/negative/repeat controls |
+| Validation cues | Fixed inert-markup/SQL-error comparisons and explicit role/anonymous access contracts |
 | Infrastructure/cloud | Exact TCP connectivity; selected read-only AWS account checks with the cloud extra |
 | Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
 | Category packs | 23 categories and 79 catalog entries, with implemented modes in the category index |
@@ -97,6 +98,7 @@ an engagement. Authorization does not enable missing functionality.
 | First approved assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
 | Rendered discovery and reference recall | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
+| Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |

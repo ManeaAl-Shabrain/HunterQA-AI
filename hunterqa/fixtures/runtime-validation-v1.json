@@ -1,0 +1,11 @@
+{
+  "fixture_version": "owned-http-runtime-1.0.0",
+  "cases": [
+    {"id": "sql-literal", "kind": "sql", "path": "/sql/literal", "expected_state": "matched"},
+    {"id": "sql-bound", "kind": "sql", "path": "/sql/bound", "expected_state": "not_observed"},
+    {"id": "sql-reflection", "kind": "sql", "path": "/sql/reflection", "expected_state": "not_observed"},
+    {"id": "xss-html", "kind": "xss", "path": "/xss/html", "expected_state": "matched"},
+    {"id": "xss-escaped", "kind": "xss", "path": "/xss/escaped", "expected_state": "not_observed"},
+    {"id": "xss-csp", "kind": "xss", "path": "/xss/csp", "expected_state": "not_observed"}
+  ]
+}

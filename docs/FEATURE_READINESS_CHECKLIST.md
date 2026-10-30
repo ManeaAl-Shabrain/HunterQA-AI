@@ -20,7 +20,9 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Fixed inert-markup baseline/probe comparisons
 - [x] Fixed SQL-error baseline/probe comparisons
 - [x] Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay
-- [ ] Confirmed SQLi/XSS validators
+- [x] Fixed owned-endpoint SQL canary differential with negative/repeat controls
+- [x] Fixed reflected-HTML XSS canary execution in isolated Chromium
+- [ ] General SQLi/XSS validation across contexts
 - [ ] SSRF
 - [ ] File upload
 - [ ] Traversal
@@ -70,6 +72,8 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Versioned owned application cases with positive/negative controls
 - [x] Retained run evidence, per-class metrics and current-runtime consistency checks
+- [x] Six-endpoint HTTP/Chromium baseline with per-class confusion metrics and inconclusive counts
+- [x] Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2
 - [ ] Independent real-world evaluation
 - [ ] Representative per-class false-negative rates
 - [ ] Complete standards coverage
