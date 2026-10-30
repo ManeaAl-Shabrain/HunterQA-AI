@@ -161,4 +161,5 @@ They do not establish live collection effectiveness or complete attack-surface c
 - [X.509 name representation background](https://www.rfc-editor.org/rfc/rfc5280.html)
 - [Certificate Transparency background](https://www.rfc-editor.org/rfc/rfc9162.html)
 
-**Next requested category: API Security.** It is not delivered by this pack.
+The next category now has a separate [API Security review guide](API_SECURITY_REVIEW.md).
+Its local contract/evidence checks do not extend this Recon pack into active API testing.

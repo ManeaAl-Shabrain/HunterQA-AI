@@ -168,6 +168,15 @@ See [the Fuzzing review guide](FUZZING_RESEARCH_REVIEW.md). Metrics and diagnost
 
 See [the Reconnaissance guide](RECONNAISSANCE_REVIEW.md). Imported names do not grant active testing permission.
 
+## Additional API Security review pack
+
+- [x] Two offline contracts for API authorization, authentication, resource and business-logic assurance
+- [x] Selected OpenAPI 3.0/3.1 JSON security inheritance/alternatives, server and inline request-bound declarations
+- [ ] Reference/composed-schema resolution, complete OpenAPI validation and broader format/version support
+- [ ] Live BOLA/BFLA, workflow, webhook, rate-limit, gRPC and WebSocket validation
+
+See [the API review guide](API_SECURITY_REVIEW.md). Contract declarations do not prove server enforcement.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

@@ -10,6 +10,11 @@
 
 ## Your route
 
+For two offline API assurance contracts and selected OpenAPI JSON declarations,
+follow the [API Security guide](docs/API_SECURITY_REVIEW.md). Use private evidence
+copies. These commands do not call endpoints, follow references, manipulate
+accounts or verify actual authorization or business-logic enforcement.
+
 For two offline OSINT review contracts and scoped imports of previously collected
 names, follow the [Reconnaissance guide](docs/RECONNAISSANCE_REVIEW.md). Use private
 copies of its review/scope templates. These commands do not collect intelligence,

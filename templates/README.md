@@ -44,6 +44,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Recon evidence | [HunterQA-recon-review-template.json](HunterQA-recon-review-template.json) | Two selected OSINT assurance contracts; null means unassessed |
 | Optional Recon name scope | [HunterQA-recon-scope-template.json](HunterQA-recon-scope-template.json) | Exact domain rules for offline inventory imports; not active assessment authorization |
 | Optional Recon review | [15-reconnaissance-review.md](15-reconnaissance-review.md) | Independent source provenance, domain attribution and private inventory review |
+| Optional API evidence | [HunterQA-api-review-template.json](HunterQA-api-review-template.json) | Two selected API/business-logic assurance contracts; null means unassessed |
+| Optional API review | [16-api-security-review.md](16-api-security-review.md) | Independent OpenAPI applicability, server authorization, bounds and workflow review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to
