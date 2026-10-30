@@ -42,6 +42,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`crypto-review-catalog` lists two offline Cryptography contracts. `crypto-review`
+reads owner observations; `crypto-source-review` inspects selected Python AST
+hash/random/AES ECB/TLS patterns without executing source. See the
+[Cryptography guide](docs/CRYPTOGRAPHY_REVIEW.md),
+[JSON template](templates/HunterQA-crypto-review-template.json) and
+[private worksheet](templates/19-cryptography-review.md). Cryptographic correctness,
+live TLS, key/nonce handling and exploitability remain unverified.
+
 `cicd-review-catalog` lists two offline CI/CD contracts. `cicd-review` reads
 owner observations; `cicd-workflow-review` reviews selected saved GitHub Actions
 **JSON** declarations without executing workflows. See the [CI/CD guide](docs/CICD_PIPELINES_REVIEW.md),

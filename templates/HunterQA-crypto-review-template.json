@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "crypto-attacks",
+      "skill": "offensive-crypto-attacks",
+      "observations": {
+        "algorithm_usage_reviewed": null,
+        "authenticated_encryption_reviewed": null,
+        "key_lifecycle_reviewed": null,
+        "nonce_uniqueness_reviewed": null,
+        "secure_randomness_reviewed": null,
+        "password_kdf_reviewed": null,
+        "side_channels_reviewed": null
+      }
+    },
+    {
+      "id": "tls-attacks",
+      "skill": "offensive-tls-attacks",
+      "observations": {
+        "protocol_policy_reviewed": null,
+        "cipher_policy_reviewed": null,
+        "certificate_chain_reviewed": null,
+        "hostname_validation_reviewed": null,
+        "patch_status_reviewed": null,
+        "replay_policy_reviewed": null,
+        "mtls_identity_reviewed": null
+      }
+    }
+  ]
+}

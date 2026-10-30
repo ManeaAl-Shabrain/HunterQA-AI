@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .crypto_review import catalog as crypto_review_catalog
 from .cicd_review import catalog as cicd_review_catalog
 from .container_review import catalog as container_review_catalog
 
@@ -81,7 +82,9 @@ def coverage_audit():
             {"name": "Containers & Kubernetes", "skills": container_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance, selected Docker inspect and Kubernetes workload/RBAC JSON"},
             {"name": "CI/CD & Pipelines", "skills": cicd_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected non-executing GitHub Actions JSON"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected non-executing GitHub Actions JSON"},
+            {"name": "Cryptography", "skills": crypto_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected Python AST cryptography/TLS cues"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -184,6 +187,12 @@ def render_checklist():
         "- [ ] YAML/native Jenkins/GitLab/Azure parsing, expression resolution and complete workflow validation",
         "- [ ] Independent runner isolation, effective grants, environment approvals and OIDC/secret protection verification",
         "", "See [the CI/CD review guide](CICD_PIPELINES_REVIEW.md). No workflow is executed or secret extracted.", "",
+        "## Additional Cryptography review pack", "",
+        "- [x] Two offline cryptographic-design and TLS assurance contracts",
+        "- [x] Selected non-executing Python AST hash, general-random, AES ECB and TLS verification/protocol cues",
+        "- [ ] Dataflow, cryptographic correctness, key/nonce lifecycle and side-channel verification",
+        "- [ ] Live protocol/cipher enumeration, certificate trust and exploitability verification",
+        "", "See [the Cryptography review guide](CRYPTOGRAPHY_REVIEW.md). Runtime use and real-world effectiveness remain unverified.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
