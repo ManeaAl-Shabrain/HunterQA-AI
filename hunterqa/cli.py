@@ -506,6 +506,18 @@ def main(argv=None):
         ai_review.add_argument("--authorized", action="store_true")
         if name == "ai-security-evidence-review":
             ai_review.add_argument("--mode", choices=("owned-cases-json", "garak-jsonl"), required=True)
+    sub.add_parser("utility-review-catalog", help="Show two offline triage/reporting assurance contracts")
+    utility = sub.add_parser("utility-review", help="Review owner reporting/triage observations offline")
+    utility.add_argument("--input", required=True)
+    utility.add_argument("--out", required=True)
+    utility.add_argument("--authorized", action="store_true")
+    quality = sub.add_parser("utility-report-review", help="Review saved finding metadata; no evidence references opened or verdict changes")
+    quality.add_argument("--input", required=True)
+    quality.add_argument("--out", required=True)
+    quality.add_argument("--authorized", action="store_true")
+    quality.add_argument("--format", choices=("json", "markdown"), default="json")
+    cvss = sub.add_parser("utility-cvss31", help="Calculate CVSS 3.1 Base arithmetic from a complete caller-chosen vector")
+    cvss.add_argument("--vector", required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -544,6 +556,20 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "utility-review-catalog":
+        from .utility_review import catalog
+        print(json.dumps({"category": "Utility", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command == "utility-cvss31":
+        from .utility_review import cvss31
+        print(json.dumps(cvss31(args.vector), indent=2))
+        return
+    if args.command in ("utility-review", "utility-report-review"):
+        from .utility_review import review_file, render_markdown
+        report = review_file(args.input, authorized=args.authorized, mode="finding-report-json" if args.command == "utility-report-review" else "normalized")
+        content = render_markdown(report) if args.command == "utility-report-review" and args.format == "markdown" else json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+        _write_bounty_output(args.out, content)
+        return
     if args.command == "ai-security-review-catalog":
         from .ai_security_review import catalog
         print(json.dumps({"category": "AI Security", "skills": catalog(), "all_skills_automated": False}, indent=2))

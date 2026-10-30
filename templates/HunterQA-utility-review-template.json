@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "fast-checking",
+      "skill": "offensive-fast-checking",
+      "observations": {
+        "scope_and_budget_reviewed": null,
+        "coverage_gaps_reviewed": null,
+        "evidence_triage_reviewed": null,
+        "false_positive_controls_reviewed": null,
+        "validation_approval_reviewed": null,
+        "handoff_priority_reviewed": null
+      }
+    },
+    {
+      "id": "reporting",
+      "skill": "offensive-reporting",
+      "observations": {
+        "scope_and_limitations_reviewed": null,
+        "executive_summary_reviewed": null,
+        "finding_evidence_reviewed": null,
+        "severity_justification_reviewed": null,
+        "remediation_reviewed": null,
+        "retest_status_reviewed": null,
+        "redaction_and_delivery_reviewed": null
+      }
+    }
+  ]
+}

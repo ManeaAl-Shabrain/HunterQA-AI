@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .utility_review import catalog as utility_review_catalog
 from .ai_security_review import catalog as ai_security_review_catalog
 from .network_review import catalog as network_review_catalog
 from .social_engineering_review import catalog as social_review_catalog
@@ -105,7 +106,9 @@ def coverage_audit():
             {"name": "Network", "skills": network_review_catalog(),
              "all_skills_automated": False, "mode": "offline Layer 2/3 assurance and selected saved Linux sysctl/resolved declarations"},
             {"name": "AI Security", "skills": ai_security_review_catalog(),
-             "all_skills_automated": False, "mode": "offline application assurance, owned saved-case constraints and numeric garak summaries"}],
+             "all_skills_automated": False, "mode": "offline application assurance, owned saved-case constraints and numeric garak summaries"},
+            {"name": "Utility", "skills": utility_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance, saved report metadata quality and CVSS 3.1 Base arithmetic"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -256,10 +259,33 @@ def render_checklist():
         "- [ ] Live model/provider evaluation, semantic/multimodal detection and actual role/tenant authorization verification",
         "- [ ] Independent detector calibration, model robustness and real-world effectiveness evaluation",
         "", "See [the AI Security review guide](AI_SECURITY_REVIEW.md). No model, provider, probe, tool or retrieval action is executed.", "",
+        "## Additional Utility review pack", "",
+        "- [x] Two offline triage and professional-reporting assurance contracts",
+        "- [x] Saved finding metadata quality, conservative duplicate-context suggestions, safe Markdown quality summary and CVSS 3.1 Base arithmetic",
+        "- [ ] Independent evidence validation, analyst verdicts, business-risk priority and client-delivery approval",
+        "- [ ] CVSS 4.0, Temporal/Environmental calculations and full report/standards certification",
+        "", "See [the Utility review guide](UTILITY_REVIEW.md) and [category index](CATEGORY_REVIEW_INDEX.md). No finding is automatically confirmed, removed or submitted.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
         "`assessment-readiness --benchmark-dir PRIVATE_PATH --require-owned-lab` to recompute retained evidence.",
         "Real-world effectiveness remains unverified; AWS has synthetic API-contract tests only.",
         "See [the readiness guide](READINESS.md) and [adapter contracts](ASSESSMENT_ADAPTERS.md).", ""])
+    return "\n".join(lines)
+
+
+def render_category_index():
+    packs = coverage_audit()["category_packs"]
+    total = sum(len(pack["skills"]) for pack in packs)
+    lines = ["# HunterQA category review index", "",
+        "This index lists source-development review packs, not availability of every upstream offensive operation.",
+        "Catalog entries include owner-observation contracts and selected bounded implementations; all packs retain limits.",
+        "No pack claims all skills are automated. The seven broad readiness areas remain partial, and real-world effectiveness is unverified.", "",
+        "Categories: " + str(len(packs)) + ". Catalog entries: " + str(total) + ".", "",
+        "| Category | Catalog entries | Implemented mode |", "| --- | --- | --- |"]
+    for pack in packs:
+        lines.append("| " + pack["name"] + " | " + str(len(pack["skills"])) + " | " + pack["mode"] + " |")
+    lines.extend(["", "See [the feature readiness checklist](FEATURE_READINESS_CHECKLIST.md), run `hunterqa coverage-audit`,",
+        "and inspect the category CLI catalog/topic guide for exact input contracts and remaining work.",
+        "Legacy skill-name aliases are not additional independent implementations. Immutable v1.3.0 release assets remain unchanged.", ""])
     return "\n".join(lines)
