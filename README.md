@@ -29,7 +29,7 @@ the version number alone does not identify the installed features.
 | Capability | Implemented today |
 | --- | --- |
 | Source/configuration review | Selected built-in checks; optional Semgrep and local Ollama suggestions |
-| Web observations | Scoped HEAD/GET checks, bounded HTML discovery and form inventory |
+| Web observations | Scoped HEAD/GET and HTML discovery; opt-in same-origin HTTPS JavaScript/cookie-session discovery |
 | Owned browser lab | Optional JavaScript-rendered links and local login context, restricted to owned loopback |
 | Owned SQL lab | Eight fixed in-memory impact/control cases and deterministic evidence replay |
 | Validation cues | Fixed inert-markup and SQL-error comparisons; explicit role/anonymous access contracts |
@@ -77,8 +77,8 @@ troubleshooting. Use a fresh output directory for each run.
 
 ## What remains incomplete
 
-All seven broad assessment areas remain **partial**. JavaScript/login discovery
-is limited to the owned browser lab; general authenticated crawling,
+All seven broad assessment areas remain **partial**. Rendered discovery supports
+bounded same-origin anchors and conventional cookie login; general authenticated crawling,
 comprehensive active vulnerability validation, SSO and
 business workflows, OS/AD attack paths, broad multi-cloud permissions, hosted
 tenant isolation, independently verified owner grants, OS isolation and
@@ -96,6 +96,8 @@ an engagement. Authorization does not enable missing functionality.
 | --- | --- |
 | First approved assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
+| Rendered discovery and reference recall | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
+| Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |

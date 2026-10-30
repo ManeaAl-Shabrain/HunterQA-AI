@@ -1,17 +1,21 @@
 """Narrow remote HTTPS form review with pinned transport and ephemeral cookies.
 
-Only exact start/login URLs are admitted. JavaScript is disabled. A separate
+The original form mode admits exact start/login URLs with JavaScript disabled.
+The separately approved discovery mode admits scoped same-origin GET resources.
+A separate
 OS/network sandbox is still required; browser interception is not a firewall.
 """
 from __future__ import annotations
 
 import os
+from urllib.parse import parse_qsl
 
 from .engagement import credentials
 
 
 def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
     start, login = step["url"], step.get("login_url")
+    rendered = step["mode"] == "browser-discovery"
     if login:
         user, secret = credentials()
     # Playwright also starts a Node driver BEFORE Chromium. Remove credential
@@ -38,7 +42,7 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                                         args=["--disable-background-networking", "--disable-sync"])
         try:
             context = browser.new_context(service_workers="block", accept_downloads=False,
-                                          ignore_https_errors=False, java_script_enabled=False,
+                                          ignore_https_errors=False, java_script_enabled=rendered,
                                           permissions=[])
             try:
                 def route_check(route):
@@ -47,13 +51,34 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                     try:
                         method, url = request.method, request.url
                         gate.check()
-                        if method in ("GET", "HEAD") and url == start:
+                        if rendered:
+                            from .scoped_rendered_discovery import candidate
+                            try:
+                                candidate(policy, start, url)
+                            except (ValueError, TypeError):
+                                blocked += 1
+                                route.abort("blockedbyclient")
+                                return
+                            # No child frames/popups or unreviewed browser channels.
+                            if (request.frame != page.main_frame or request.resource_type not in
+                                    {"document", "script", "stylesheet", "fetch", "xhr"}):
+                                blocked += 1
+                                route.abort("blockedbyclient")
+                                return
+                        if method in ("GET", "HEAD") and (url == start or (rendered and method == "GET")):
                             body = None
                         elif method == "POST" and login and url == login and not used_post:
                             body = request.post_data_buffer
                             if not isinstance(body, bytes) or len(body) > 8192:
                                 raise ValueError("Invalid bounded login body")
-                            used_post = True
+                            if rendered:
+                                fields = parse_qsl(body.decode("utf-8"), keep_blank_values=True,
+                                                   strict_parsing=True, max_num_fields=20)
+                                names = [key for key, _ in fields]
+                                values = dict(fields)
+                                if (len(set(names)) != len(names) or values.get("username") != user
+                                        or values.get("password") != secret):
+                                    raise ValueError("Rendered login must use the designated account")
                         else:
                             blocked += 1
                             route.abort("blockedbyclient")
@@ -63,6 +88,8 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                         if sum(len(k) + len(v) for k, v in headers.items()) > 16_384:
                             raise ValueError("Browser request headers too large")
                         gate.admit()
+                        if method == "POST":
+                            used_post = True
                         result = transport(policy, url, method, body=body, headers=headers)
                         last_status = result["status"]
                         gate.response(last_status)
@@ -77,8 +104,22 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                                 continue
                             if key == "set-cookie" and key in outgoing:
                                 outgoing[key] += "\n" + value
+                            elif key == "content-security-policy" and key in outgoing:
+                                outgoing[key] += ", " + value
                             else:
                                 outgoing[key] = value
+                        if rendered:
+                            # The tool only reads links and executes same-origin/inline
+                            # scripts. No frames, workers, images, plugin objects or
+                            # arbitrary form submissions are needed for that task.
+                            # Keep the site's own CSP: an extra policy may restrict it,
+                            # never replace a stricter owner policy.
+                            confinement = ("default-src 'none'; script-src 'self' 'unsafe-inline'; "
+                                           "style-src 'self' 'unsafe-inline'; connect-src 'self'; "
+                                           "form-action 'self'; base-uri 'none'; frame-src 'none'; "
+                                           "worker-src 'none'; object-src 'none'")
+                            prior = outgoing.get("content-security-policy")
+                            outgoing["content-security-policy"] = (prior + ", " if prior else "") + confinement
                         route.fulfill(status=last_status, headers=outgoing, body=result["body"])
                     except Exception as exc:
                         failure = type(exc).__name__
@@ -89,8 +130,13 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                 context.route_web_socket("**/*", lambda websocket: websocket.close())
                 page = context.new_page()
                 navigation_failed = False
+                discovery = None
+                initial_status = None
                 try:
-                    page.goto(start, wait_until="domcontentloaded", timeout=12_000)
+                    initial = page.goto(start, wait_until="domcontentloaded", timeout=12_000)
+                    if initial is None:
+                        raise RuntimeError("Browser start returned no response")
+                    initial_status = initial.status
                     if login and not gate.stopped:
                         # Deliberately fixed conventional field names, no arbitrary scripts/actions.
                         page.locator('input[name="username"]').fill(user, timeout=3_000)
@@ -98,22 +144,34 @@ def inspect_browser(policy, step, gate, *, transport, browser_provider=None):
                         with page.expect_response(lambda r: r.request.method == "POST" and r.url == login,
                                                   timeout=8_000):
                             page.locator('button[type="submit"]').click(timeout=5_000, no_wait_after=True)
-                except Exception:
+                    if rendered and not gate.stopped:
+                        from .scoped_rendered_discovery import crawl
+                        if login:
+                            # expect_response can resolve before the login document
+                            # commits. Wait for it before starting a fresh GET.
+                            page.wait_for_url(login, wait_until="domcontentloaded", timeout=8_000)
+                            page.goto(start, wait_until="domcontentloaded", timeout=12_000)
+                        discovery = crawl(page, policy, step, gate)
+                except Exception as exc:
                     navigation_failed = True
+                    failure = failure or type(exc).__name__
                     gate.stopped = True
                 outcome = {"status": last_status, "blocked_requests": blocked,
                            "authentication": "attempted_unverified" if used_post else "not_attempted",
-                           "browser_context": "ephemeral_javascript_disabled",
+                           "browser_context": ("ephemeral_scoped_javascript" if rendered
+                                               else "ephemeral_javascript_disabled"),
                            "outcome": "stopped" if navigation_failed or gate.stopped else "observed"}
                 if failure:
                     outcome["error_type"] = failure
+                if discovery is not None:
+                    outcome["discovery"] = discovery
                 if not navigation_failed and not gate.stopped:
                     outcome["page_structure"] = {
                         "form_count": min(100, page.locator("form").count()),
                         "link_count": min(200, page.locator("a[href]").count()),
                     }
                 if "expected_status" in step and last_status is not None:
-                    outcome["expected_status_matches"] = last_status == step["expected_status"]
+                    outcome["expected_status_matches"] = (initial_status if rendered else last_status) == step["expected_status"]
                 return outcome
             finally:
                 context.close()

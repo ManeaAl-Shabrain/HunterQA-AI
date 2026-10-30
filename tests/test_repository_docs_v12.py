@@ -16,7 +16,8 @@ README = (ROOT / "README.md").read_text(encoding="utf-8")
 REFERENCE = (ROOT / "docs/COMMAND_REFERENCE.md").read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize("filename", ["README.md", "zero to start.md", "docs/COMMAND_REFERENCE.md", "docs/VERSIONING.md"])
+@pytest.mark.parametrize("filename", ["README.md", "zero to start.md", "docs/COMMAND_REFERENCE.md", "docs/VERSIONING.md",
+                                      "docs/SCOPED_RENDERED_DISCOVERY.md", "docs/EXPANSION_PROGRESS.md"])
 def test_readme_local_links_resolve_in_repository(filename):
     document = ROOT / filename
     content = document.read_text(encoding="utf-8")

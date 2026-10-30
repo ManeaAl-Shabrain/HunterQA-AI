@@ -19,8 +19,8 @@ from .bounty import (BountyPolicy, MAX_PROFILE, _approved_file, _read_json, _Pin
                      _PinnedHTTPS, resolve_pinned)
 
 ENGINE = "hunterqa_approved_assessment"
-MODES = {"observe", "waf-canary", "auth-check", "browser"}
-FIELDS = {"mode", "url", "method", "expected_status", "login_url"}
+MODES = {"observe", "waf-canary", "auth-check", "browser", "browser-discovery"}
+FIELDS = {"mode", "url", "method", "expected_status", "login_url", "discovery"}
 MAX_PLAN_BYTES = 32_768
 
 
@@ -108,7 +108,7 @@ def validate_plan(policy, plan, profile_hash, *, now=None):
             if method != "POST" or not plan["dedicated_test_account"]:
                 raise ValueError("auth-check requires POST and a dedicated test account")
             credentials += 1
-        elif mode == "browser":
+        elif mode in {"browser", "browser-discovery"}:
             if method != "GET" or len(steps) != 1 or not plan["browser_isolated"] or parts.scheme != "https":
                 raise ValueError("Browser must be the only step, HTTPS GET, and isolated")
             if step.get("login_url") is not None:
@@ -120,7 +120,12 @@ def validate_plan(policy, plan, profile_hash, *, now=None):
                 credentials += 1
         elif method not in ("GET", "HEAD") or (mode == "waf-canary" and method != "GET"):
             raise ValueError("Observation uses HEAD/GET; WAF canary uses GET")
-        if "login_url" in step and mode != "browser":
+        if mode == "browser-discovery":
+            from .scoped_rendered_discovery import validate_options
+            validate_options(step.get("discovery"))
+        elif "discovery" in step:
+            raise ValueError("Discovery bounds apply only to browser-discovery")
+        if "login_url" in step and mode not in {"browser", "browser-discovery"}:
             raise ValueError("login_url applies only to browser steps")
         expected = step.get("expected_status")
         if expected is not None and (type(expected) is not int or not 100 <= expected <= 599):
@@ -134,12 +139,16 @@ def validate_plan(policy, plan, profile_hash, *, now=None):
 
 def create_plan(profile_path, urls, *, mode="observe", method="GET", ttl_minutes=60,
                 dedicated_test_account=False, browser_isolated=False, login_url=None,
-                expected_status=None):
+                expected_status=None, discovery=None):
     if type(ttl_minutes) is not int or not 1 <= ttl_minutes <= 1440:
         raise ValueError("Plan lifetime must be 1..1440 minutes")
     policy, profile_hash = _policy_snapshot(profile_path)
     steps = [{"mode": mode, "url": url, "method": method} for url in urls]
     for step in steps:
+        if discovery is not None:
+            step["discovery"] = discovery
+        elif mode == "browser-discovery":
+            step["discovery"] = {"max_pages": 3, "max_depth": 1, "settle_ms": 250}
         if login_url is not None:
             step["login_url"] = login_url
         if expected_status is not None:
@@ -240,7 +249,7 @@ def run_assessment(profile_path, plan_path, approval, stop_file, *, authorized=F
                 "verification": "unverified_observation"}
         try:
             gate.check()
-            if step["mode"] == "browser":
+            if step["mode"] in {"browser", "browser-discovery"}:
                 from .engagement_browser import inspect_browser
                 item.update(inspect_browser(policy, step, gate, transport=transport,
                                             browser_provider=browser_provider))
