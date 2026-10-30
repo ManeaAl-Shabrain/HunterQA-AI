@@ -140,6 +140,10 @@ def main(argv=None):
     browser_lab.add_argument("--submit-selector", default="button[type=submit]")
     browser_lab.add_argument("--out", required=True)
     browser_lab.add_argument("--authorized", action="store_true")
+    browser_lab.add_argument("--crawl", action="store_true", help="Discover rendered links in the owned loopback lab")
+    browser_lab.add_argument("--max-pages", type=int, default=3)
+    browser_lab.add_argument("--max-depth", type=int, default=1)
+    browser_lab.add_argument("--settle-ms", type=int, default=250)
     replay12 = sub.add_parser("bounty-replay-head", help="Safe HEAD-only replay of approved sanitized HAR evidence")
     replay12.add_argument("--profile", required=True)
     replay12.add_argument("--har-report", required=True)
@@ -1091,6 +1095,8 @@ def main(argv=None):
             username_selector=args.username_selector,
             password_selector=args.password_selector,
             submit_selector=args.submit_selector,
+            crawl=args.crawl, max_pages=args.max_pages, max_depth=args.max_depth,
+            settle_ms=args.settle_ms,
         )
         _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     elif args.command == "bounty-replay-head":
