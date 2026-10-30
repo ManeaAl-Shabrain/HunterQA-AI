@@ -41,6 +41,7 @@ PUBLIC_TEMPLATES = {
     "HunterQA-fuzzing-review-template.json", "14-fuzzing-research-review.md",
     "HunterQA-recon-review-template.json", "HunterQA-recon-scope-template.json", "15-reconnaissance-review.md",
     "HunterQA-api-review-template.json", "16-api-security-review.md",
+    "HunterQA-social-review-template.json", "24-social-engineering-review.md",
     "HunterQA-supply-chain-review-template.json", "23-supply-chain-review.md",
     "HunterQA-forensics-review-template.json", "22-forensics-c2-review.md",
     "HunterQA-post-exploitation-review-template.json", "21-post-exploitation-review.md",

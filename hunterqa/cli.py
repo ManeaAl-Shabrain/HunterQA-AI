@@ -482,6 +482,14 @@ def main(argv=None):
         supply.add_argument("--authorized", action="store_true")
         if name == "supply-chain-config-review":
             supply.add_argument("--mode", choices=("npm-lock-json", "npmrc-text", "pip-conf"), required=True)
+    sub.add_parser("social-review-catalog", help="Show two offline social-engineering assurance contracts")
+    for name in ("social-review", "social-evidence-review"):
+        social = sub.add_parser(name, help="Offline observations or saved DMARC/simulation metadata; no delivery or collection")
+        social.add_argument("--input", required=True)
+        social.add_argument("--out", required=True)
+        social.add_argument("--authorized", action="store_true")
+        if name == "social-evidence-review":
+            social.add_argument("--mode", choices=("dmarc-text", "gophish-results-json"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -520,6 +528,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "social-review-catalog":
+        from .social_engineering_review import catalog
+        print(json.dumps({"category": "Social Engineering", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("social-review", "social-evidence-review"):
+        from .social_engineering_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "social-evidence-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "supply-chain-review-catalog":
         from .supply_chain_review import catalog
         print(json.dumps({"category": "Supply Chain", "skills": catalog(), "all_skills_automated": False}, indent=2))

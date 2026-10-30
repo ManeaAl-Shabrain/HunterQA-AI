@@ -42,6 +42,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`social-review-catalog` lists two offline approved-simulation and participant-
+protection contracts. `social-review` reads owner observations; `social-evidence-review`
+reads selected saved DMARC text or aggregate GoPhish result/config metadata.
+See the [Social Engineering guide](docs/SOCIAL_ENGINEERING_REVIEW.md),
+[JSON template](templates/HunterQA-social-review-template.json) and
+[private worksheet](templates/24-social-engineering-review.md). No messages are sent
+or credentials collected; live mail controls and participant behavior remain unverified.
+
 `supply-chain-review-catalog` lists two offline artifact/build trust and
 dependency-confusion contracts. `supply-chain-review` reads owner observations;
 `supply-chain-config-review` reads selected npm lock v2/v3 JSON, `.npmrc` or pip

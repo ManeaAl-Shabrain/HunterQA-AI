@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline approved-simulation/participant-protection and saved DMARC/result review,
+use the [Social Engineering guide](docs/SOCIAL_ENGINEERING_REVIEW.md) and
+[private worksheet](templates/24-social-engineering-review.md).
+
 For offline artifact/build trust and package-source review, use the
 [Supply Chain guide](docs/SUPPLY_CHAIN_REVIEW.md) and
 [private worksheet](templates/23-supply-chain-review.md).

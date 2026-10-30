@@ -240,6 +240,15 @@ See [the Forensics & C2 review guide](FORENSICS_C2_REVIEW.md). No evidence alter
 
 See [the Supply Chain review guide](SUPPLY_CHAIN_REVIEW.md). No package installation, namespace registration or registry access is performed.
 
+## Additional Social Engineering review pack
+
+- [x] Two offline approved-simulation and participant-protection assurance contracts
+- [x] Selected saved DMARC declarations and aggregate GoPhish latest-result/config metadata
+- [ ] Live DNS/mail authentication, full DMARC policy discovery and receiver enforcement verification
+- [ ] Independently verified exercise provenance, human behavior and demonstrated training effectiveness
+
+See [the Social Engineering review guide](SOCIAL_ENGINEERING_REVIEW.md). No message delivery, targeting or credential collection is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

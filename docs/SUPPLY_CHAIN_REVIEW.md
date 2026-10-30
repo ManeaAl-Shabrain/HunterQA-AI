@@ -125,4 +125,4 @@ SARIF and absence of process/network execution.
 - [pip package source selection](https://pip.pypa.io/en/stable/cli/pip_install/)
 - [pip configuration](https://pip.pypa.io/en/stable/topics/configuration/)
 
-**Next requested category: Social Engineering.** It is not delivered by this pack.
+The next pack is [Social Engineering](SOCIAL_ENGINEERING_REVIEW.md), delivered separately.

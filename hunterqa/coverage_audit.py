@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .social_engineering_review import catalog as social_review_catalog
 from .supply_chain_review import catalog as supply_chain_review_catalog
 from .forensics_review import catalog as forensics_review_catalog
 from .post_exploitation_review import catalog as post_exploitation_review_catalog
@@ -96,7 +97,9 @@ def coverage_audit():
             {"name": "Forensics & C2", "skills": forensics_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected saved Windows event XML/Zeek DNS JSONL"},
             {"name": "Supply Chain", "skills": supply_chain_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected npm lock/npmrc/pip configuration declarations"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected npm lock/npmrc/pip configuration declarations"},
+            {"name": "Social Engineering", "skills": social_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance, selected DMARC text and aggregate saved GoPhish metadata"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -229,6 +232,12 @@ def render_checklist():
         "- [ ] Artifact digest/signature/provenance verification, complete config precedence and dependency resolution",
         "- [ ] Independent namespace ownership, registry trust, package compromise and real-world effectiveness validation",
         "", "See [the Supply Chain review guide](SUPPLY_CHAIN_REVIEW.md). No package installation, namespace registration or registry access is performed.", "",
+        "## Additional Social Engineering review pack", "",
+        "- [x] Two offline approved-simulation and participant-protection assurance contracts",
+        "- [x] Selected saved DMARC declarations and aggregate GoPhish latest-result/config metadata",
+        "- [ ] Live DNS/mail authentication, full DMARC policy discovery and receiver enforcement verification",
+        "- [ ] Independently verified exercise provenance, human behavior and demonstrated training effectiveness",
+        "", "See [the Social Engineering review guide](SOCIAL_ENGINEERING_REVIEW.md). No message delivery, targeting or credential collection is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
