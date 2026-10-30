@@ -5,6 +5,11 @@ loopback fixtures. Real-world effectiveness remains **unverified**, as requested
 The [checked feature list](FEATURE_READINESS_CHECKLIST.md) marks individual
 implemented capabilities and unfinished work across all seven areas.
 
+The separate [owned SQL impact demonstration](OWNED_SQL_VALIDATION.md) exercises
+eight fixed in-memory cases with a vulnerable query and parameterized control.
+It is not part of the HTTP/TCP benchmark or its readiness gate and does not
+validate the HTTP scanner's exploit detection effectiveness.
+
 ## What the marks mean
 
 | Mark / result | Meaning |

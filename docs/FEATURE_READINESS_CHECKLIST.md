@@ -17,6 +17,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Fixed inert-markup baseline/probe comparisons
 - [x] Fixed SQL-error baseline/probe comparisons
+- [x] Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay
 - [ ] Confirmed SQLi/XSS validators
 - [ ] SSRF
 - [ ] File upload
@@ -283,4 +284,5 @@ Use `hunterqa assessment-readiness` for local installation/dependency checks.
 Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then
 `assessment-readiness --benchmark-dir PRIVATE_PATH --require-owned-lab` to recompute retained evidence.
 Real-world effectiveness remains unverified; AWS has synthetic API-contract tests only.
+For a separate fixed in-memory SQL impact demonstration, see [owned SQL validation](OWNED_SQL_VALIDATION.md). This does not validate the HTTP SQL-error scanner.
 See [the readiness guide](READINESS.md) and [adapter contracts](ASSESSMENT_ADAPTERS.md).

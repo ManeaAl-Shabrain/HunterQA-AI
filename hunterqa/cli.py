@@ -546,6 +546,11 @@ def main(argv=None):
     assessment_benchmark = sub.add_parser("assessment-benchmark", help="Run versioned owned-loopback application controls; never a real-world accuracy score")
     assessment_benchmark.add_argument("--out-dir", required=True)
     assessment_benchmark.add_argument("--authorized", action="store_true")
+    validation = sub.add_parser("lab-sql-validation", help="Demonstrate fixed SQL impact on original in-memory toy data only")
+    validation.add_argument("--out-dir", required=True)
+    validation.add_argument("--authorized", action="store_true")
+    validation_verify = sub.add_parser("lab-sql-verify", help="Verify evidence and replay fixed in-memory SQL cases; no target traffic")
+    validation_verify.add_argument("--run", required=True)
     quota_init = sub.add_parser("quota-init", help="Initialize a host-local shared quota window")
     quota_init.add_argument("--ledger", required=True)
     quota_init.add_argument("--max-requests", type=int, required=True)
@@ -818,6 +823,14 @@ def main(argv=None):
     if args.command == "assessment-benchmark":
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
+        return
+    if args.command in ("lab-sql-validation", "lab-sql-verify"):
+        from .lab_validation import validate_owned_sql, verify_owned_sql
+        report = (validate_owned_sql(args.out_dir, authorized=args.authorized)
+                  if args.command == "lab-sql-validation" else verify_owned_sql(args.run))
+        print(json.dumps(report, indent=2))
+        if not report["all_cases_matched"]:
+            raise SystemExit(2)
         return
     if args.command == "assessment-setup":
         from .assessment_setup import setup_assessment

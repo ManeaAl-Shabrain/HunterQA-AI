@@ -29,7 +29,7 @@ AREAS = (
      "Bounded HTML discovery plus opt-in rendered-link crawling in the owned loopback browser, including its local login context",
      ["General JavaScript-heavy discovery beyond owned rendered anchors", "Remote session-aware crawling and SSO", "Comprehensive endpoint discovery"]),
     ("active-vulnerability-testing", "Active vulnerability testing", ["web-canary-check"],
-     "Fixed inert markup and SQL error comparisons, with baseline controls",
+     "Fixed inert markup and SQL error comparisons; separate in-memory SQL cross-owner impact fixture with parameterized controls",
      ["Confirmed SQLi/XSS validators", "SSRF", "File upload", "Traversal", "Blind/OOB and application-specific validation"]),
     ("authentication-authorization", "Authentication and authorization", ["authorization-matrix"],
      "Explicit dedicated-role/anonymous GET contracts and isolated Authorization headers",
@@ -50,7 +50,7 @@ AREAS = (
 
 FEATURES = {
     "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None)],
-    "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check")],
+    "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check"), ("Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay", None)],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],
     "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Selected local configuration/dependency patterns", "source-review"), ("Offline normalized AWS/Azure/GCP posture and selected native policy readers", None)],
@@ -270,6 +270,7 @@ def render_checklist():
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
         "`assessment-readiness --benchmark-dir PRIVATE_PATH --require-owned-lab` to recompute retained evidence.",
         "Real-world effectiveness remains unverified; AWS has synthetic API-contract tests only.",
+        "For a separate fixed in-memory SQL impact demonstration, see [owned SQL validation](OWNED_SQL_VALIDATION.md). This does not validate the HTTP SQL-error scanner.",
         "See [the readiness guide](READINESS.md) and [adapter contracts](ASSESSMENT_ADAPTERS.md).", ""])
     return "\n".join(lines)
 
