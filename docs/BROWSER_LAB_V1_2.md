@@ -65,7 +65,7 @@ HTML/SQL-error/access/TCP fixtures, not this optional browser capability.
 ## Remaining development sequence
 
 1. Extend owned-lab browser evidence and session contracts before adding more interactions.
-2. Add labeled owned-app validation cases per vulnerability class; distinguish cues from demonstrated impact.
+2. Extend labeled owned-app validation per class. The first separate [in-memory SQL impact case](OWNED_SQL_VALIDATION.md) is implemented; general HTTP vulnerability validation remains pending.
 3. Model SSO and business workflows with explicit roles and expected outcomes.
 4. Add offline directory/attack-path and cloud permission analysis with reviewed evidence sources.
 5. Design and independently test tenant isolation and worker enforcement before hosted deployment.

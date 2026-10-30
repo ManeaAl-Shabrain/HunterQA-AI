@@ -41,6 +41,11 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+`lab-sql-validation` runs eight fixed in-memory SQL impact/control cases without
+target traffic. `lab-sql-verify` checks retained evidence and replays those local
+cases. See [owned SQL validation](docs/OWNED_SQL_VALIDATION.md). This separate
+fixture does not validate the HTTP SQL-error scanner or confirm customer findings.
+
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
 `utility-review-catalog` lists two offline triage/reporting contracts.
 `utility-review` reads owner observations; `utility-report-review` checks selected
