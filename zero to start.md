@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline cryptographic-design/TLS assurance and selected Python source review,
+use the [Cryptography guide](docs/CRYPTOGRAPHY_REVIEW.md) and
+[private worksheet](templates/19-cryptography-review.md). No source is executed.
+
 For offline CI/CD assurance and saved GitHub Actions JSON review, use the
 [CI/CD guide](docs/CICD_PIPELINES_REVIEW.md) and
 [private worksheet](templates/18-cicd-pipelines-review.md). No workflow is executed.

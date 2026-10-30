@@ -195,6 +195,15 @@ See [the Container review guide](CONTAINER_KUBERNETES_REVIEW.md). No workload or
 
 See [the CI/CD review guide](CICD_PIPELINES_REVIEW.md). No workflow is executed or secret extracted.
 
+## Additional Cryptography review pack
+
+- [x] Two offline cryptographic-design and TLS assurance contracts
+- [x] Selected non-executing Python AST hash, general-random, AES ECB and TLS verification/protocol cues
+- [ ] Dataflow, cryptographic correctness, key/nonce lifecycle and side-channel verification
+- [ ] Live protocol/cipher enumeration, certificate trust and exploitability verification
+
+See [the Cryptography review guide](CRYPTOGRAPHY_REVIEW.md). Runtime use and real-world effectiveness remain unverified.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

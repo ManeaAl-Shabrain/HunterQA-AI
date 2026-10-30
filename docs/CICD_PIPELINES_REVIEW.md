@@ -95,4 +95,4 @@ of process/network execution. They do not establish real-world effectiveness.
 - [GitHub secure use](https://docs.github.com/en/actions/reference/security/secure-use)
 - [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax)
 
-**Next requested category: Cryptography.** It is not delivered by this pack.
+The next pack is [Cryptography](CRYPTOGRAPHY_REVIEW.md), delivered separately.

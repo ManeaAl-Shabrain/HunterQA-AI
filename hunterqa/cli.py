@@ -442,6 +442,12 @@ def main(argv=None):
         cicd.add_argument("--input", required=True)
         cicd.add_argument("--out", required=True)
         cicd.add_argument("--authorized", action="store_true")
+    sub.add_parser("crypto-review-catalog", help="Show two offline Cryptography assurance contracts")
+    for name in ("crypto-review", "crypto-source-review"):
+        crypto = sub.add_parser(name, help="Offline cryptography observations or selected Python AST; no execution or connections")
+        crypto.add_argument("--input", required=True)
+        crypto.add_argument("--out", required=True)
+        crypto.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -480,6 +486,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "crypto-review-catalog":
+        from .crypto_review import catalog
+        print(json.dumps({"category": "Cryptography", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("crypto-review", "crypto-source-review"):
+        from .crypto_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode="python-source" if args.command == "crypto-source-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "cicd-review-catalog":
         from .cicd_review import catalog
         print(json.dumps({"category": "CI/CD & Pipelines", "skills": catalog(), "all_skills_automated": False}, indent=2))
