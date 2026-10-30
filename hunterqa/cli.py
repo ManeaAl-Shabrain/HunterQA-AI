@@ -456,6 +456,15 @@ def main(argv=None):
         privilege.add_argument("--authorized", action="store_true")
         if name == "privilege-inventory-review":
             privilege.add_argument("--mode", choices=("getcap-text", "windows-services-json"), required=True)
+    sub.add_parser("post-exploitation-review-catalog", help="Show three offline post-exploitation assurance contracts")
+    for name in ("post-exploitation-review", "post-exploitation-inventory-review"):
+        post = sub.add_parser(name, help="Offline observations or saved task/flow review; no execution or transfers")
+        post.add_argument("--input", required=True)
+        post.add_argument("--out", required=True)
+        post.add_argument("--authorized", action="store_true")
+        if name == "post-exploitation-inventory-review":
+            post.add_argument("--mode", choices=("windows-task-xml", "vpc-flow-text"), required=True)
+            post.add_argument("--large-flow-bytes", type=int, default=10485760, help="Per-record flow review threshold; not an exfiltration verdict")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -494,6 +503,16 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "post-exploitation-review-catalog":
+        from .post_exploitation_review import catalog
+        print(json.dumps({"category": "Post-Exploitation", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("post-exploitation-review", "post-exploitation-inventory-review"):
+        from .post_exploitation_review import review_file
+        kwargs = {"mode": args.mode, "large_flow_bytes": args.large_flow_bytes} if args.command == "post-exploitation-inventory-review" else {}
+        report = review_file(args.input, authorized=args.authorized, **kwargs)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "privilege-review-catalog":
         from .privilege_review import catalog
         print(json.dumps({"category": "Privilege Escalation", "skills": catalog(), "all_skills_automated": False}, indent=2))

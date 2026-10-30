@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline post-exploitation assurance and saved task/flow review, use the
+[post-exploitation guide](docs/POST_EXPLOITATION_REVIEW.md) and
+[private worksheet](templates/21-post-exploitation-review.md).
+
 For offline Linux/Windows privilege assurance and saved capability/service review,
 use the [privilege guide](docs/PRIVILEGE_ESCALATION_REVIEW.md) and
 [private worksheet](templates/20-privilege-escalation-review.md).

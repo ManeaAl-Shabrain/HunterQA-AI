@@ -54,6 +54,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Cryptography worksheet | [19-cryptography-review.md](19-cryptography-review.md) | Private key/nonce/randomness, protocol, certificate and remediation review |
 | Optional Privilege evidence | [HunterQA-privilege-review-template.json](HunterQA-privilege-review-template.json) | Two Linux/Windows privilege assurance contracts; null means unassessed |
 | Optional Privilege worksheet | [20-privilege-escalation-review.md](20-privilege-escalation-review.md) | Private effective-access, identity, configuration and remediation review |
+| Optional Post-Exploitation evidence | [HunterQA-post-exploitation-review-template.json](HunterQA-post-exploitation-review-template.json) | Three lateral-movement/persistence/exfiltration assurance contracts; null means unassessed |
+| Optional Post-Exploitation worksheet | [21-post-exploitation-review.md](21-post-exploitation-review.md) | Private baseline, segmentation, egress, telemetry and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to
