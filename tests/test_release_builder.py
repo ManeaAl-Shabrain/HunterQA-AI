@@ -37,6 +37,8 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
         "templates/15-reconnaissance-review.md": "Public reconnaissance review worksheet\n",
         "templates/HunterQA-api-review-template.json": '{"schema_version":1,"records":[]}\n',
         "templates/16-api-security-review.md": "Public API review worksheet\n",
+        "templates/HunterQA-network-review-template.json": '{"schema_version":1,"records":[]}\n',
+        "templates/25-network-review.md": "Public network review worksheet\n",
         "templates/HunterQA-social-review-template.json": '{"schema_version":1,"records":[]}\n',
         "templates/24-social-engineering-review.md": "Public social-engineering worksheet\n",
         "templates/HunterQA-supply-chain-review-template.json": '{"schema_version":1,"records":[]}\n',
@@ -78,6 +80,7 @@ def test_builder_packages_only_curated_public_templates(tmp_path):
     assert {"templates/HunterQA-fuzzing-review-template.json", "templates/14-fuzzing-research-review.md"} <= included
     assert {"templates/HunterQA-recon-review-template.json", "templates/HunterQA-recon-scope-template.json", "templates/15-reconnaissance-review.md"} <= included
     assert {"templates/HunterQA-api-review-template.json", "templates/16-api-security-review.md"} <= included
+    assert {"templates/HunterQA-network-review-template.json", "templates/25-network-review.md"} <= included
     assert {"templates/HunterQA-social-review-template.json", "templates/24-social-engineering-review.md"} <= included
     assert {"templates/HunterQA-supply-chain-review-template.json", "templates/23-supply-chain-review.md"} <= included
     assert {"templates/HunterQA-forensics-review-template.json", "templates/22-forensics-c2-review.md"} <= included

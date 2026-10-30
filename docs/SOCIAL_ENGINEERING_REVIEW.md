@@ -110,4 +110,4 @@ partial, and real-world effectiveness remains unverified.
 - [RFC 9989: DMARC](https://www.rfc-editor.org/rfc/rfc9989.html)
 - [GoPhish campaign/results format](https://docs.getgophish.com/api-documentation/campaigns)
 
-**Next requested category: Network.** It is not delivered by this pack.
+The next pack is [Network](NETWORK_SECURITY_REVIEW.md), delivered separately.

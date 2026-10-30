@@ -490,6 +490,14 @@ def main(argv=None):
         social.add_argument("--authorized", action="store_true")
         if name == "social-evidence-review":
             social.add_argument("--mode", choices=("dmarc-text", "gophish-results-json"), required=True)
+    sub.add_parser("network-review-catalog", help="Show one offline Layer 2/3 network assurance contract")
+    for name in ("network-review", "network-config-review"):
+        network = sub.add_parser(name, help="Offline observations or saved network/resolver config; no packets or host changes")
+        network.add_argument("--input", required=True)
+        network.add_argument("--out", required=True)
+        network.add_argument("--authorized", action="store_true")
+        if name == "network-config-review":
+            network.add_argument("--mode", choices=("sysctl-text", "resolved-conf"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -528,6 +536,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "network-review-catalog":
+        from .network_review import catalog
+        print(json.dumps({"category": "Network", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("network-review", "network-config-review"):
+        from .network_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "network-config-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "social-review-catalog":
         from .social_engineering_review import catalog
         print(json.dumps({"category": "Social Engineering", "skills": catalog(), "all_skills_automated": False}, indent=2))
