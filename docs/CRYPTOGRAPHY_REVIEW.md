@@ -91,4 +91,4 @@ absence of network/process execution. Real-world effectiveness remains unverifie
 - [Python SSL contexts](https://docs.python.org/3/library/ssl.html)
 - [RFC 8996: deprecated TLS versions](https://www.rfc-editor.org/rfc/rfc8996.html)
 
-**Next requested category: Privilege Escalation.** It is not delivered by this pack.
+The next pack is [Privilege Escalation](PRIVILEGE_ESCALATION_REVIEW.md), delivered separately.

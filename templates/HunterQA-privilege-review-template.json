@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "linux-privesc",
+      "skill": "offensive-linux-privesc",
+      "observations": {
+        "sudo_policy_reviewed": null,
+        "setid_files_reviewed": null,
+        "file_capabilities_reviewed": null,
+        "scheduled_jobs_reviewed": null,
+        "service_permissions_reviewed": null,
+        "namespace_boundaries_reviewed": null,
+        "patch_status_reviewed": null
+      }
+    },
+    {
+      "id": "windows-privesc",
+      "skill": "offensive-windows-privesc",
+      "observations": {
+        "service_permissions_reviewed": null,
+        "service_paths_reviewed": null,
+        "token_privileges_reviewed": null,
+        "scheduled_tasks_reviewed": null,
+        "installer_policy_reviewed": null,
+        "dll_search_policy_reviewed": null,
+        "patch_status_reviewed": null
+      }
+    }
+  ]
+}

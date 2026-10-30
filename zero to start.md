@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline Linux/Windows privilege assurance and saved capability/service review,
+use the [privilege guide](docs/PRIVILEGE_ESCALATION_REVIEW.md) and
+[private worksheet](templates/20-privilege-escalation-review.md).
+
 For offline cryptographic-design/TLS assurance and selected Python source review,
 use the [Cryptography guide](docs/CRYPTOGRAPHY_REVIEW.md) and
 [private worksheet](templates/19-cryptography-review.md). No source is executed.
