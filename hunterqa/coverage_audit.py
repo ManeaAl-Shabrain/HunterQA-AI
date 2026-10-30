@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .supply_chain_review import catalog as supply_chain_review_catalog
 from .forensics_review import catalog as forensics_review_catalog
 from .post_exploitation_review import catalog as post_exploitation_review_catalog
 from .privilege_review import catalog as privilege_review_catalog
@@ -93,7 +94,9 @@ def coverage_audit():
             {"name": "Post-Exploitation", "skills": post_exploitation_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected saved Windows task XML/default VPC flow text"},
             {"name": "Forensics & C2", "skills": forensics_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows event XML/Zeek DNS JSONL"}],
+             "all_skills_automated": False, "mode": "offline assurance and selected saved Windows event XML/Zeek DNS JSONL"},
+            {"name": "Supply Chain", "skills": supply_chain_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected npm lock/npmrc/pip configuration declarations"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -220,6 +223,12 @@ def render_checklist():
         "- [ ] EVTX/PCAP parsing, timeline correlation, provenance/integrity verification and chain-of-custody proof",
         "- [ ] Independent tampering/C2 attribution and demonstrated real-world detection effectiveness",
         "", "See [the Forensics & C2 review guide](FORENSICS_C2_REVIEW.md). No evidence alteration, agent deployment or remote tasking is performed.", "",
+        "## Additional Supply Chain review pack", "",
+        "- [x] Two offline artifact/build trust and dependency-confusion assurance contracts",
+        "- [x] Selected npm lock integrity/script/source and npmrc/pip source-policy declarations",
+        "- [ ] Artifact digest/signature/provenance verification, complete config precedence and dependency resolution",
+        "- [ ] Independent namespace ownership, registry trust, package compromise and real-world effectiveness validation",
+        "", "See [the Supply Chain review guide](SUPPLY_CHAIN_REVIEW.md). No package installation, namespace registration or registry access is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

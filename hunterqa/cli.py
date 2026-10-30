@@ -474,6 +474,14 @@ def main(argv=None):
         if name == "forensics-log-review":
             forensic.add_argument("--mode", choices=("windows-events-xml", "zeek-dns-jsonl"), required=True)
             forensic.add_argument("--long-query-chars", type=int, default=80, help="DNS string review threshold; not a C2 verdict")
+    sub.add_parser("supply-chain-review-catalog", help="Show two offline supply-chain assurance contracts")
+    for name in ("supply-chain-review", "supply-chain-config-review"):
+        supply = sub.add_parser(name, help="Offline observations or saved npm/pip declarations; no registry access or installation")
+        supply.add_argument("--input", required=True)
+        supply.add_argument("--out", required=True)
+        supply.add_argument("--authorized", action="store_true")
+        if name == "supply-chain-config-review":
+            supply.add_argument("--mode", choices=("npm-lock-json", "npmrc-text", "pip-conf"), required=True)
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -512,6 +520,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "supply-chain-review-catalog":
+        from .supply_chain_review import catalog
+        print(json.dumps({"category": "Supply Chain", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("supply-chain-review", "supply-chain-config-review"):
+        from .supply_chain_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode=args.mode if args.command == "supply-chain-config-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "forensics-review-catalog":
         from .forensics_review import catalog
         print(json.dumps({"category": "Forensics & C2", "skills": catalog(), "all_skills_automated": False}, indent=2))

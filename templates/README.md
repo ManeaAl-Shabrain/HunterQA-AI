@@ -58,6 +58,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Post-Exploitation worksheet | [21-post-exploitation-review.md](21-post-exploitation-review.md) | Private baseline, segmentation, egress, telemetry and remediation review |
 | Optional Forensics evidence | [HunterQA-forensics-review-template.json](HunterQA-forensics-review-template.json) | Two evidence-preservation/C2 governance contracts; null means unassessed |
 | Optional Forensics worksheet | [22-forensics-c2-review.md](22-forensics-c2-review.md) | Private provenance, retention, telemetry, framework inventory and remediation review |
+| Optional Supply Chain evidence | [HunterQA-supply-chain-review-template.json](HunterQA-supply-chain-review-template.json) | Two artifact/build trust and private-namespace assurance contracts; null means unassessed |
+| Optional Supply Chain worksheet | [23-supply-chain-review.md](23-supply-chain-review.md) | Private registry/source boundaries, artifact provenance and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

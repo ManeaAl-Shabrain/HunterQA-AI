@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline artifact/build trust and package-source review, use the
+[Supply Chain guide](docs/SUPPLY_CHAIN_REVIEW.md) and
+[private worksheet](templates/23-supply-chain-review.md).
+
 For offline evidence-preservation/C2 governance and saved Windows/DNS log review,
 use the [Forensics & C2 guide](docs/FORENSICS_C2_REVIEW.md) and
 [private worksheet](templates/22-forensics-c2-review.md).

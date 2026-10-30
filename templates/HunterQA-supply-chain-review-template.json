@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "supply-chain",
+      "skill": "offensive-supply-chain",
+      "observations": {
+        "dependency_inventory_reviewed": null,
+        "artifact_provenance_reviewed": null,
+        "integrity_policy_reviewed": null,
+        "install_scripts_reviewed": null,
+        "maintainer_access_reviewed": null,
+        "build_isolation_reviewed": null,
+        "release_verification_reviewed": null
+      }
+    },
+    {
+      "id": "dependency-confusion",
+      "skill": "offensive-dependency-confusion",
+      "observations": {
+        "private_namespace_inventory_reviewed": null,
+        "registry_routing_reviewed": null,
+        "source_mapping_reviewed": null,
+        "index_policy_reviewed": null,
+        "credential_scoping_reviewed": null,
+        "resolution_precedence_reviewed": null,
+        "namespace_monitoring_reviewed": null
+      }
+    }
+  ]
+}

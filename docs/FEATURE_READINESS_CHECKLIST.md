@@ -231,6 +231,15 @@ See [the post-exploitation review guide](POST_EXPLOITATION_REVIEW.md). No remote
 
 See [the Forensics & C2 review guide](FORENSICS_C2_REVIEW.md). No evidence alteration, agent deployment or remote tasking is performed.
 
+## Additional Supply Chain review pack
+
+- [x] Two offline artifact/build trust and dependency-confusion assurance contracts
+- [x] Selected npm lock integrity/script/source and npmrc/pip source-policy declarations
+- [ ] Artifact digest/signature/provenance verification, complete config precedence and dependency resolution
+- [ ] Independent namespace ownership, registry trust, package compromise and real-world effectiveness validation
+
+See [the Supply Chain review guide](SUPPLY_CHAIN_REVIEW.md). No package installation, namespace registration or registry access is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.
