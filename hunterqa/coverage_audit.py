@@ -26,8 +26,8 @@ from .container_review import catalog as container_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
-     "Bounded HTML discovery plus opt-in rendered-link crawling in the owned loopback browser, including its local login context",
-     ["General JavaScript-heavy discovery beyond owned rendered anchors", "Remote session-aware crawling and SSO", "Comprehensive endpoint discovery"]),
+     "Bounded HTML and opt-in same-origin HTTPS rendered-anchor discovery with ephemeral dedicated-account cookie login",
+     ["General action-driven SPA discovery", "Complex sessions and SSO", "Comprehensive endpoint discovery"]),
     ("active-vulnerability-testing", "Active vulnerability testing", ["web-canary-check"],
      "Fixed inert markup and SQL error comparisons; separate in-memory SQL cross-owner impact fixture with parameterized controls",
      ["Confirmed SQLi/XSS validators", "SSRF", "File upload", "Traversal", "Blind/OOB and application-specific validation"]),
@@ -49,7 +49,7 @@ AREAS = (
 )
 
 FEATURES = {
-    "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None)],
+    "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None), ("Scoped HTTPS rendered-anchor discovery with ephemeral cookie login", None), ("Offline discovery recall against supplied route references", None)],
     "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check"), ("Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay", None)],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix")],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],

@@ -24,6 +24,9 @@ No guaranteed zero-days, no automatic vulnerability confirmation, CVE assignment
 or disclosure submission. Command names do not grant permission. Findings and AI
 suggestions require human review. See [security policy](../SECURITY.md).
 
+`browser-discovery` is a separately reviewed engagement mode for bounded
+same-origin rendered links and ephemeral cookie login. See the [guide](SCOPED_RENDERED_DISCOVERY.md).
+
 ## Commands
 
 Descriptions below match CLI help. Category aliases are listed by `--help` and
@@ -80,6 +83,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `doctor` | Read-only local release diagnostics |
 | `engagement-compare` | Offline comparison of two saved same-plan assessment reports |
 | `engagement-package` | Offline reviewed disclosure/CVE request handoff; does not send |
+| `engagement-discovery-coverage` | Offline discovery recall against a supplied hashed URL reference |
 | `engagement-plan` | Create an offline assessment plan for review |
 | `engagement-preflight` | Offline review of an expiring exact assessment plan |
 | `engagement-run` | Execute fingerprint-approved bounded assessment steps |

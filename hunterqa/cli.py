@@ -228,17 +228,24 @@ def main(argv=None):
     plan_cmd = sub.add_parser("engagement-plan", help="Create an offline assessment plan for review")
     plan_cmd.add_argument("--profile", required=True)
     plan_cmd.add_argument("--url", action="append", required=True)
-    plan_cmd.add_argument("--mode", choices=("observe", "waf-canary", "auth-check", "browser"), default="observe")
+    plan_cmd.add_argument("--mode", choices=("observe", "waf-canary", "auth-check", "browser", "browser-discovery"), default="observe")
     plan_cmd.add_argument("--method", choices=("GET", "HEAD", "POST"), default="GET")
     plan_cmd.add_argument("--ttl-minutes", type=int, default=60)
     plan_cmd.add_argument("--dedicated-test-account", action="store_true")
     plan_cmd.add_argument("--browser-isolated", action="store_true")
     plan_cmd.add_argument("--login-url")
     plan_cmd.add_argument("--expected-status", type=int)
+    plan_cmd.add_argument("--max-pages", type=int)
+    plan_cmd.add_argument("--max-depth", type=int)
+    plan_cmd.add_argument("--settle-ms", type=int)
     plan_cmd.add_argument("--out", required=True)
     preflight = sub.add_parser("engagement-preflight", help="Offline review of an expiring exact assessment plan")
     preflight.add_argument("--profile", required=True)
     preflight.add_argument("--plan", required=True)
+    coverage = sub.add_parser("engagement-discovery-coverage", help="Offline discovery recall against a supplied hashed URL reference")
+    coverage.add_argument("--report", required=True)
+    coverage.add_argument("--reference", required=True)
+    coverage.add_argument("--out", required=True)
     run = sub.add_parser("engagement-run", help="Execute fingerprint-approved bounded assessment steps")
     run.add_argument("--profile", required=True)
     run.add_argument("--plan", required=True)
@@ -949,11 +956,23 @@ def main(argv=None):
         return
     if args.command == "engagement-plan":
         from .engagement import create_plan
+        discovery = None
+        if args.mode == "browser-discovery" or any(value is not None for value in
+                                                   (args.max_pages, args.max_depth, args.settle_ms)):
+            discovery = {"max_pages": 3 if args.max_pages is None else args.max_pages,
+                         "max_depth": 1 if args.max_depth is None else args.max_depth,
+                         "settle_ms": 250 if args.settle_ms is None else args.settle_ms}
         plan = create_plan(args.profile, args.url, mode=args.mode, method=args.method,
                            ttl_minutes=args.ttl_minutes, dedicated_test_account=args.dedicated_test_account,
                            browser_isolated=args.browser_isolated, login_url=args.login_url,
-                           expected_status=args.expected_status)
+                           expected_status=args.expected_status, discovery=discovery)
         _write_bounty_output(args.out, json.dumps(plan, indent=2) + "\n")
+        return
+    if args.command == "engagement-discovery-coverage":
+        from .bounty import _read_json
+        from .scoped_rendered_discovery import measure
+        report = measure(_read_json(args.report, 1_048_576), _read_json(args.reference, 100_000))
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
         return
     if args.command == "engagement-preflight":
         from .engagement import load_plan, digest
