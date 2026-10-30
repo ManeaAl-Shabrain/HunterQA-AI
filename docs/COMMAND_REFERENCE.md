@@ -161,6 +161,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `supply-chain-review` | Offline observations or saved npm/pip declarations; no registry access or installation |
 | `supply-chain-review-catalog` | Show two offline supply-chain assurance contracts |
 | `trust-graph` | Build a local Python call graph and trust-boundary review paths |
+| `udp-dns-inspect` | One expiring exact-endpoint UDP DNS A question; no recursion or retries |
 | `tls-service-inspect` | One scoped TLS handshake with certificate and hostname verification; no HTTP |
 | `utility-cvss31` | Calculate CVSS 3.1 Base arithmetic from a complete caller-chosen vector |
 | `utility-report-review` | Review saved finding metadata; no evidence references opened or verdict changes |

@@ -156,6 +156,7 @@ for commands and their execution modes.
 | Try fixed HTTP SQL/XSS controls with Chromium | [Controlled runtime validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Verify a saved signed ID token or run owned OIDC/session controls | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Inspect TLS on one explicitly permitted host/port | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
+| Check one approved UDP DNS endpoint against an expected A answer | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
 | Review report quality or CVSS 3.1 Base | [Utility guide](docs/UTILITY_REVIEW.md) |
 
 A customer assessment is separate. It needs written permission, exact targets,
