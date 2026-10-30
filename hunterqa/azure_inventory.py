@@ -12,7 +12,8 @@ import time
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
-from .engagement import _expiry, digest, utcnow
+from .engagement import digest, utcnow
+from .cloud_inventory_common import live_window as _live, temporary_credentials as _credentials, bounded_json as _json
 from .source_files import read_bounded
 
 HOST = "management.azure.com"
@@ -26,11 +27,6 @@ KINDS = {"microsoft.compute/virtualmachines": "virtual-machine", "microsoft.stor
     "microsoft.sql/servers": "sql-server", "microsoft.sql/servers/databases": "sql-database",
     "microsoft.keyvault/vaults": "key-vault", "microsoft.web/sites": "app-service",
     "microsoft.containerservice/managedclusters": "kubernetes-cluster", "microsoft.containerregistry/registries": "container-registry"}
-
-
-def _live(expiry):
-    if not 0 < (_expiry(expiry) - utcnow()).total_seconds() <= 86400:
-        raise ValueError("Expired or invalid Azure authorization window")
 
 
 def validate_contract(data):
@@ -54,39 +50,6 @@ def validate_contract(data):
         _live(data["expires_at"])
     except (ValueError, TypeError):
         raise ValueError("Invalid Azure inventory contract; private values withheld") from None
-    return data
-
-
-def _credentials(raw):
-    try:
-        data = _decode_json(raw)
-        if not isinstance(data, dict) or set(data) != {"access_token", "expires_at"}:
-            raise ValueError
-        token = data["access_token"]
-        if not isinstance(token, str) or not 16 <= len(token) <= 16384 or not re.fullmatch(r"[A-Za-z0-9._~+/-]+=*", token):
-            raise ValueError
-        _live(data["expires_at"])
-    except (ValueError, TypeError, UnicodeError, RecursionError):
-        raise ValueError("Invalid temporary Azure credential file; contents withheld") from None
-    return data
-
-
-def _json(raw):
-    if not isinstance(raw, bytes) or len(raw) > 1048576:
-        raise ValueError("Azure response size rejected")
-    data = _decode_json(raw)
-    stack, count = [(data, 0)], 0
-    while stack:
-        value, depth = stack.pop()
-        count += 1
-        if count > 20000 or depth > 32 or (isinstance(value, float) and not math.isfinite(value)):
-            raise ValueError("Azure response structure rejected")
-        if isinstance(value, dict):
-            stack.extend((item, depth + 1) for item in value.values())
-        elif isinstance(value, list):
-            stack.extend((item, depth + 1) for item in value)
-    if not isinstance(data, dict):
-        raise ValueError("Azure response shape rejected")
     return data
 
 

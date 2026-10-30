@@ -50,6 +50,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `api-review-catalog` | Show two offline API security and business-logic assurance contracts |
 | `assessment-benchmark` | Run versioned owned-loopback application controls; never a real-world accuracy score |
 | `azure-resource-inventory` | Bounded Azure subscription-context and visible-resource GETs with explicit temporary token |
+| `gcp-resource-inventory` | Bounded GCP project context and Cloud Asset Inventory GETs with explicit temporary token |
 | `assessment-readiness` | Read-only installation and retained owned-lab evidence checks; no assessment authorization |
 | `assessment-setup` | Plan fixed access, service or read-only AWS checks without traffic |
 | `audit` | Offline source/config/dependency/OpenAPI inspection |
