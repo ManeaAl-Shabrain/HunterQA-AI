@@ -101,6 +101,7 @@ an engagement. Authorization does not enable missing functionality.
 | Rendered discovery and reference recall | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
 | Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Signed tokens and OIDC/session fixtures | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
+| Certificate and hostname verification on one approved endpoint | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
