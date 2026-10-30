@@ -55,11 +55,12 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 ## 5. Cloud runtime — partial
 
 - [x] Optional read-only AWS identity and account-summary adapter
+- [x] Separate bounded Azure subscription context and visible-resource GET inventory (azure-resource-inventory)
 - [x] Selected local configuration/dependency patterns
 - [x] Offline normalized AWS/Azure/GCP posture and selected native policy readers
-- [ ] Resource and effective-permission inventory
-- [ ] Azure/GCP runtime adapters
-- [ ] Live cloud infrastructure assessment
+- [ ] Complete resource and effective-permission inventory
+- [ ] GCP runtime adapter
+- [ ] Broader Azure/AWS and representative cloud assessment
 
 ## 6. Production platform hardening — partial
 

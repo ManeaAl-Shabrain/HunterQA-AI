@@ -571,6 +571,11 @@ def main(argv=None):
     udp_inspect.add_argument("--input", required=True)
     udp_inspect.add_argument("--out", required=True)
     udp_inspect.add_argument("--authorized", action="store_true")
+    azure_inventory = sub.add_parser("azure-resource-inventory", help="Bounded Azure subscription-context and visible-resource GETs with explicit temporary token")
+    azure_inventory.add_argument("--input", required=True)
+    azure_inventory.add_argument("--credentials", required=True)
+    azure_inventory.add_argument("--out", required=True)
+    azure_inventory.add_argument("--authorized", action="store_true")
     signed_token = sub.add_parser("signed-id-token-verify", help="Offline RS256 ID-token signature and explicit policy verification")
     signed_token.add_argument("--input", required=True)
     signed_token.add_argument("--out", required=True)
@@ -857,7 +862,7 @@ def main(argv=None):
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
         return
-    if args.command in ("tls-service-inspect", "udp-dns-inspect"):
+    if args.command in ("tls-service-inspect", "udp-dns-inspect", "azure-resource-inventory"):
         from .workflow_store import approved_directory
         # Reserve a private create-only destination before any target traffic.
         output = Path(args.out).expanduser()
@@ -867,9 +872,12 @@ def main(argv=None):
             if args.command == "tls-service-inspect":
                 from .tls_inspection import inspect_service
                 report = inspect_service(args.profile, args.target, authorized=args.authorized, ca_file=args.ca_file)
-            else:
+            elif args.command == "udp-dns-inspect":
                 from .udp_dns_inspection import inspect_dns
                 report = inspect_dns(args.input, authorized=args.authorized)
+            else:
+                from .azure_inventory import inventory as azure_resources
+                report = azure_resources(args.input, args.credentials, authorized=args.authorized)
             stream.write(json.dumps(report, indent=2) + "\n")
         print("Saved:", output)
         return
