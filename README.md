@@ -41,6 +41,14 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 
 ## What is included
 
+**API Security review pack:** [coverage and instructions](docs/API_SECURITY_REVIEW.md).
+`api-review-catalog` lists two offline API/business-logic contracts; `api-review`
+checks owner observations. `api-openapi-review` reads selected OpenAPI 3.0/3.1 JSON
+security inheritance/alternatives, server and inline request-bound declarations.
+Use the [JSON template](templates/HunterQA-api-review-template.json) and
+[private worksheet](templates/16-api-security-review.md). No references or endpoints
+are requested; contract cues do not prove server authorization or business-logic enforcement.
+
 **Reconnaissance review pack:** [coverage and instructions](docs/RECONNAISSANCE_REVIEW.md).
 `recon-review-catalog` lists two offline OSINT contracts; `recon-review` checks
 owner observations. `recon-inventory` filters/deduplicates saved DNS names or

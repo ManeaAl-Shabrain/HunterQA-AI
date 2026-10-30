@@ -40,6 +40,7 @@ PUBLIC_TEMPLATES = {
     "HunterQA-exploit-dev-review-template.json", "13-exploit-development-review.md",
     "HunterQA-fuzzing-review-template.json", "14-fuzzing-research-review.md",
     "HunterQA-recon-review-template.json", "HunterQA-recon-scope-template.json", "15-reconnaissance-review.md",
+    "HunterQA-api-review-template.json", "16-api-security-review.md",
 }
 ALLOW_FILES = {
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",

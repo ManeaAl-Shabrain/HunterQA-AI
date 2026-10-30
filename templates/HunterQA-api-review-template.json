@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "api-api-security",
+      "skill": "offensive-api-security",
+      "observations": {
+        "object_authorization_reviewed": null,
+        "function_authorization_reviewed": null,
+        "authentication_reviewed": null,
+        "response_minimization_reviewed": null,
+        "resource_limits_reviewed": null,
+        "transport_policy_reviewed": null
+      }
+    },
+    {
+      "id": "api-api-abuse",
+      "skill": "offensive-api-abuse",
+      "observations": {
+        "business_invariants_reviewed": null,
+        "workflow_order_reviewed": null,
+        "idempotency_reviewed": null,
+        "batch_limits_reviewed": null,
+        "webhook_destination_policy_reviewed": null,
+        "webhook_authenticity_reviewed": null
+      }
+    }
+  ]
+}
