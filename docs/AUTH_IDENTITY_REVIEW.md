@@ -11,6 +11,10 @@ are not installed, copied or executed. Selected review checks are informed by
 [OAuth Security BCP / RFC 9700](https://www.rfc-editor.org/rfc/rfc9700.html).
 This is not full standards coverage or a compliance certification.
 
+A separate [signed ID-token verifier and owned OIDC/session fixture](OIDC_SESSION_ASSURANCE.md)
+now provide bounded optional identity assurance. The declaration-review commands
+below still do not verify signatures or contact providers.
+
 ## Coverage
 
 | Skill | Implemented offline comparisons | Still requires independent assessment |

@@ -32,7 +32,9 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Dedicated-role and anonymous GET contracts
 - [x] Origin-bound per-request credentials and optional body-hash checks
-- [ ] SSO negotiation
+- [x] Offline RS256 ID-token signature and explicit issuer/audience/nonce/time policy
+- [x] Owned OIDC PKCE/code/session/tenant/logout HTTP controls
+- [ ] External interactive SSO negotiation
 - [ ] Complex session handling
 - [ ] Stateful business logic
 - [ ] General tenant-boundary discovery
@@ -90,7 +92,9 @@ See [the category guide](WEB_APPLICATION_REVIEW.md). Source cues remain unverifi
 
 - [x] Offline compact JWT sample comparisons against explicit review policy
 - [x] Offline declared OAuth/OIDC web-client configuration checks
-- [ ] Cryptographic JWT signature verification and server acceptance tests
+- [x] Separate optional RS256 ID-token signature and explicit claim-policy verifier
+- [x] Fixed owned OIDC/session HTTP baseline with separately declared labels
+- [ ] Effective live token acceptance, key rotation and revocation assessment
 - [ ] End-to-end SSO, session and scope-enforcement validation
 
 See [the identity review guide](AUTH_IDENTITY_REVIEW.md). Declarations and decoded claims remain unverified.

@@ -9,7 +9,7 @@ Categories: 23. Catalog entries: 79.
 | Category | Catalog entries | Implemented mode |
 | --- | --- | --- |
 | Web Application | 16 | offline Python source cues and guided review |
-| Auth & Identity | 2 | offline JWT samples and declared web-client configuration |
+| Auth & Identity | 2 | offline JWT samples/configuration; separate optional RS256 ID-token verification and owned OIDC/session fixtures |
 | Active Directory | 2 | offline selected normalized directory and SMB/LDAP declarations |
 | Wireless | 14 | offline selected policy declarations and single-BSS hostapd source cues |
 | Cloud | 1 | offline AWS/Azure/GCP declarations and selected IAM/NSG syntax |

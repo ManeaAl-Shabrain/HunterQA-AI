@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import importlib.util
+from importlib.metadata import PackageNotFoundError, version
 import os
 import shutil
 import sqlite3
 import sys
 from pathlib import Path
+from packaging.version import InvalidVersion, Version
 
 from .assessment_benchmark import StaleBenchmark, verify_benchmark
 from .coverage_audit import coverage_audit
@@ -29,6 +31,11 @@ def assessment_readiness(*, benchmark_dir=None, profile=None):
     add("semgrep", "ok" if shutil.which("semgrep") else "optional_missing", "Needed for Semgrep commands; not required by the fixed HTTP/TCP adapters")
     cloud = all(importlib.util.find_spec(name) is not None for name in ("botocore", "defusedxml"))
     add("cloud_extra", "ok" if cloud else "optional_missing", "Install .[cloud] for AWS account checks; no credential lookup is performed")
+    try:
+        identity = Version(version("PyJWT")) >= Version("2.15.1") and Version(version("cryptography")) >= Version("50.0.2")
+    except (PackageNotFoundError, InvalidVersion):
+        identity = False
+    add("identity_extra", "ok" if identity else "optional_missing", "Install .[identity] for explicit RS256 ID-token verification and owned OIDC fixtures; no tokens or keys are read")
     operator_db = os.environ.get("HUNTERQA_OPERATOR_DB")
     if operator_db:
         try:

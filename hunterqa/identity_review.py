@@ -23,6 +23,7 @@ REFERENCES = ["https://github.com/SnailSploit/Claude-Red#auth--identity",
 def catalog():
     return [{"id": "offensive-jwt", "implementation": "offline-sample-policy-review",
         "active_exploitation_available": False, "cryptographic_verification_available": False,
+        "separate_signature_command": "signed-id-token-verify (RS256 ID tokens; optional identity extra)",
         "required_evidence": "Private compact JWS samples and independently selected issuer, audience and algorithm policy; server acceptance and signature validation require independent tests"},
         {"id": "offensive-oauth", "implementation": "offline-web-client-configuration-review",
         "active_exploitation_available": False,
