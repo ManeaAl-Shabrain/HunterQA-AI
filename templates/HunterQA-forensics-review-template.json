@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "anti-forensics",
+      "skill": "offensive-anti-forensics",
+      "observations": {
+        "log_retention_reviewed": null,
+        "central_collection_reviewed": null,
+        "tamper_alerting_reviewed": null,
+        "time_integrity_reviewed": null,
+        "immutable_evidence_reviewed": null,
+        "chain_of_custody_reviewed": null,
+        "incident_preservation_reviewed": null
+      }
+    },
+    {
+      "id": "c2-frameworks",
+      "skill": "offensive-c2-frameworks",
+      "observations": {
+        "framework_inventory_reviewed": null,
+        "operator_access_reviewed": null,
+        "network_isolation_reviewed": null,
+        "transport_visibility_reviewed": null,
+        "domain_and_egress_policy_reviewed": null,
+        "session_audit_reviewed": null,
+        "revocation_and_cleanup_reviewed": null
+      }
+    }
+  ]
+}

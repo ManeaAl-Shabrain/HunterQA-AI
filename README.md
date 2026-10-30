@@ -42,6 +42,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`forensics-review-catalog` lists two offline evidence-preservation/C2 governance
+contracts. `forensics-review` reads owner observations; `forensics-log-review`
+reads selected saved Windows event XML or Zeek DNS JSONL. See the
+[Forensics & C2 guide](docs/FORENSICS_C2_REVIEW.md),
+[JSON template](templates/HunterQA-forensics-review-template.json) and
+[private worksheet](templates/22-forensics-c2-review.md). Evidence integrity,
+malicious activity and C2 attribution remain unverified; no logs are altered or
+agents deployed.
+
 `post-exploitation-review-catalog` lists three offline assurance contracts for
 lateral movement, persistence and data exfiltration. `post-exploitation-review`
 reads owner observations; `post-exploitation-inventory-review` reads selected

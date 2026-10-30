@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline evidence-preservation/C2 governance and saved Windows/DNS log review,
+use the [Forensics & C2 guide](docs/FORENSICS_C2_REVIEW.md) and
+[private worksheet](templates/22-forensics-c2-review.md).
+
 For offline post-exploitation assurance and saved task/flow review, use the
 [post-exploitation guide](docs/POST_EXPLOITATION_REVIEW.md) and
 [private worksheet](templates/21-post-exploitation-review.md).

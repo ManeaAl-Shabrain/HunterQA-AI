@@ -465,6 +465,15 @@ def main(argv=None):
         if name == "post-exploitation-inventory-review":
             post.add_argument("--mode", choices=("windows-task-xml", "vpc-flow-text"), required=True)
             post.add_argument("--large-flow-bytes", type=int, default=10485760, help="Per-record flow review threshold; not an exfiltration verdict")
+    sub.add_parser("forensics-review-catalog", help="Show two offline evidence-integrity/C2 assurance contracts")
+    for name in ("forensics-review", "forensics-log-review"):
+        forensic = sub.add_parser(name, help="Offline observations or saved event/DNS logs; no alteration, agents or connections")
+        forensic.add_argument("--input", required=True)
+        forensic.add_argument("--out", required=True)
+        forensic.add_argument("--authorized", action="store_true")
+        if name == "forensics-log-review":
+            forensic.add_argument("--mode", choices=("windows-events-xml", "zeek-dns-jsonl"), required=True)
+            forensic.add_argument("--long-query-chars", type=int, default=80, help="DNS string review threshold; not a C2 verdict")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -503,6 +512,16 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "forensics-review-catalog":
+        from .forensics_review import catalog
+        print(json.dumps({"category": "Forensics & C2", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("forensics-review", "forensics-log-review"):
+        from .forensics_review import review_file
+        kwargs = {"mode": args.mode, "long_query_chars": args.long_query_chars} if args.command == "forensics-log-review" else {}
+        report = review_file(args.input, authorized=args.authorized, **kwargs)
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "post-exploitation-review-catalog":
         from .post_exploitation_review import catalog
         print(json.dumps({"category": "Post-Exploitation", "skills": catalog(), "all_skills_automated": False}, indent=2))
