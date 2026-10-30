@@ -8,8 +8,9 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Bounded automatic HTML crawling
 - [x] Form inventory without submission
-- [ ] JavaScript-heavy discovery
-- [ ] Session-aware crawling
+- [x] Optional owned-loopback rendered-anchor crawling with ephemeral local login context
+- [ ] General JavaScript-heavy discovery beyond owned rendered anchors
+- [ ] Remote session-aware crawling and SSO
 - [ ] Comprehensive endpoint discovery
 
 ## 2. Active vulnerability testing — partial

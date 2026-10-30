@@ -1,6 +1,77 @@
 # HunterQA AI v1.2 — Playwright Browser Lab & Controlled HEAD Replay
 
-**Status:** Stable v1.2.0 on `main`. v1.1.0 remains published as a historical release.
+**Status:** Original v1.2 browser baseline, extended in current development source.
+The rendered-link crawl below is not included in the immutable v1.3.0 release.
+
+## Rendered-link discovery (development source)
+
+Add `--crawl` to `bounty-browser-lab` to inspect links created by JavaScript,
+then visit admitted anchors breadth-first in the same ephemeral context. An
+optional explicitly approved local login can precede discovery; its in-memory
+session is reused without exporting cookies. Login remains **attempted_unverified**.
+Only your owned, isolated `127.0.0.1` lab is supported by this browser mode.
+
+```bash
+hunterqa bounty-browser-lab \
+  --profile /absolute/private/lab-profile.json \
+  --url http://127.0.0.1:49151/app \
+  --crawl --max-pages 3 --max-depth 1 --settle-ms 250 \
+  --out /absolute/private/rendered-discovery.json --authorized
+```
+
+Use the actual port and scope of your already running owned lab. This command
+does not start a fixture server. Copy the profile fields described below into
+your private scope file, with your permission reference and allowed/excluded
+paths. For local login, use the existing credential environment variables and
+`--login --login-post-path /login`; no credentials belong in command arguments.
+
+| Bound | Behavior |
+| --- | --- |
+| Pages | 1–10; default 3, counting the page after optional login as depth zero |
+| Depth | 0–3; default 1 |
+| Rendering window | 0–2000 ms per page; default 250, not a guarantee that all JavaScript finished |
+| Link sample | First 200 rendered anchors per page; at most 200 admitted URLs retained internally |
+| Requests | Shared existing browser budget: minimum of policy budget and 20, including login, scripts, fetches and subresources |
+| Navigation | Same exact scheme, IP and port; admitted paths only; queries and unapproved redirects denied |
+
+`discovery.pages` contains URL hashes, depths, and capped form/link counts, not
+URLs, page content, input values, form actions, cookies or credentials.
+`limit_reached` indicates a page/depth/frontier/link-sample bound; even when
+false, `coverage_complete` remains false. Oversized or out-of-scope links are
+skipped. Repeated URLs and fragments do not cause repeated crawler visits.
+Only anchors are followed; forms and application buttons are not operated by
+the crawler. Page JavaScript still runs and can initiate admitted GET requests.
+GET endpoints in this lab must be designed to avoid state changes.
+
+Denial/rate-limit/server-error responses, request-budget exhaustion or unexpected
+page navigation stop the run. Navigation and request timeouts remain in force;
+this is not a hard wall-clock limit or a browser-process resource sandbox.
+Keep the OS/network isolation described below. Failed runs do not produce a
+successful crawl report; inspect the failure and use a fresh output file.
+
+Real Chromium tests cover delayed JavaScript links, reuse of an owned login
+cookie, page/depth/request limits, exclusions, query rejection, cross-port
+blocking and report privacy. Run them only in your isolated owned lab:
+
+```bash
+HUNTERQA_REAL_BROWSER_CI=1 python -m pytest -q tests/test_browser_lab_playwright_v12.py
+```
+
+This increment does not provide remote authenticated crawling, SSO negotiation,
+automatic SPA interaction, API endpoint enumeration or vulnerability validation.
+The separate `assessment-benchmark` continues to measure its original fixed
+HTML/SQL-error/access/TCP fixtures, not this optional browser capability.
+
+## Remaining development sequence
+
+1. Extend owned-lab browser evidence and session contracts before adding more interactions.
+2. Add labeled owned-app validation cases per vulnerability class; distinguish cues from demonstrated impact.
+3. Model SSO and business workflows with explicit roles and expected outcomes.
+4. Add offline directory/attack-path and cloud permission analysis with reviewed evidence sources.
+5. Design and independently test tenant isolation and worker enforcement before hosted deployment.
+
+These are pending stages, not capabilities enabled by `--authorized`. All seven
+broad readiness areas remain partial and real-world effectiveness is unverified.
 
 ## Implemented in this milestone
 

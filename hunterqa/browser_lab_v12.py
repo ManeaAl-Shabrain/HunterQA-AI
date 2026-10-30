@@ -115,7 +115,8 @@ class BrowserRequestGate:
 def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=False,
                           login_post_path=None, username_selector="#username",
                           password_selector="#password", submit_selector="button[type=submit]",
-                          browser_provider=None):
+                          browser_provider=None, crawl=False, max_pages=3, max_depth=1,
+                          settle_ms=250):
     """Read-only visual/structural examination of an owned loopback web app.
 
     Optional login can submit the one explicit form to the exact local endpoint.
@@ -123,6 +124,10 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
     """
     if not authorized:
         raise PermissionError("Playwright lab testing requires --authorized")
+    from .browser_discovery import crawl_options
+    crawl_options(max_pages, max_depth, settle_ms)
+    if type(crawl) is not bool:
+        raise ValueError("Owned browser crawl must be explicitly enabled")
     policy = BountyPolicy.load(profile_path)
     preflight_lab_browser(policy, start_url, login_post_path if login else None)
     if login:
@@ -258,6 +263,12 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                             page.wait_for_load_state("domcontentloaded", timeout=8_000)
                     if gate.stop:
                         raise RuntimeError("Browser session stopped after rejection or rate limit")
+                    discovery = None
+                    if crawl:
+                        from .browser_discovery import crawl_rendered
+                        phase = "rendered_link_discovery"
+                        discovery = crawl_rendered(page, gate, max_pages=max_pages,
+                                                   max_depth=max_depth, settle_ms=settle_ms)
                     phase = "final_lab_validation"
                     # Final URL must remain within the same exact origin + allowed paths.
                     gate.policy.authorize_url(page.url, "GET")
@@ -294,6 +305,8 @@ def inspect_owned_browser(profile_path, start_url, *, authorized=False, login=Fa
                                        "screenshots, cookies, tokens or credentials exported. "
                                        "Browser interceptors are not a network firewall.",
                     }
+                    if discovery is not None:
+                        result["discovery"] = discovery
                 finally:
                     context.close()
             finally:
