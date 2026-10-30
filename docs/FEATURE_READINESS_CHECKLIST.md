@@ -159,6 +159,15 @@ See [the Exploit Development review guide](EXPLOIT_DEVELOPMENT_REVIEW.md). No ex
 
 See [the Fuzzing review guide](FUZZING_RESEARCH_REVIEW.md). Metrics and diagnostic markers remain unverified.
 
+## Additional Reconnaissance review pack
+
+- [x] Two offline OSINT assurance contracts with nullable source/methodology observations
+- [x] Explicit domain-scope matching, deduplication and bounded name/CT-style JSON imports
+- [ ] Live collection, DNS verification, CT/certificate proof validation and independent asset attribution
+- [ ] Comprehensive attack-surface discovery and real-world effectiveness evaluation
+
+See [the Reconnaissance guide](RECONNAISSANCE_REVIEW.md). Imported names do not grant active testing permission.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

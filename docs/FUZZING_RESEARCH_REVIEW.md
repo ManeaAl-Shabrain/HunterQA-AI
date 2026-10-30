@@ -161,4 +161,5 @@ production fuzzing engines or execute them.
 - [LLVM libFuzzer documentation](https://llvm.org/docs/LibFuzzer.html)
 - [AFL++ status metrics](https://aflplus.plus/docs/status_screen/) and [stats writer](https://github.com/AFLplusplus/AFLplusplus/blob/stable/src/afl-fuzz-stats.c)
 
-**Next requested category: Reconnaissance.** It is not delivered by this pack.
+The next category now has a separate [Reconnaissance review guide](RECONNAISSANCE_REVIEW.md).
+Its scoped local name imports do not extend this pack into live reconnaissance or collection.

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "recon-osint",
+      "skill": "offensive-osint",
+      "observations": {
+        "authorized_scope_reviewed": null,
+        "source_provenance_reviewed": null,
+        "asset_attribution_reviewed": null,
+        "data_minimization_reviewed": null
+      }
+    },
+    {
+      "id": "recon-osint-methodology",
+      "skill": "offensive-osint-methodology",
+      "observations": {
+        "collection_plan_reviewed": null,
+        "source_corroboration_reviewed": null,
+        "evidence_timestamps_reviewed": null,
+        "retention_policy_reviewed": null
+      }
+    }
+  ]
+}
