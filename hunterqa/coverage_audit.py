@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .cicd_review import catalog as cicd_review_catalog
 from .container_review import catalog as container_review_catalog
 
 AREAS = (
@@ -78,7 +79,9 @@ def coverage_audit():
             {"name": "API Security", "skills": api_review_catalog(),
              "all_skills_automated": False, "mode": "offline API assurance declarations and selected non-resolving OpenAPI 3.0/3.1 JSON"},
             {"name": "Containers & Kubernetes", "skills": container_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance, selected Docker inspect and Kubernetes workload/RBAC JSON"}],
+             "all_skills_automated": False, "mode": "offline assurance, selected Docker inspect and Kubernetes workload/RBAC JSON"},
+            {"name": "CI/CD & Pipelines", "skills": cicd_review_catalog(),
+             "all_skills_automated": False, "mode": "offline assurance and selected non-executing GitHub Actions JSON"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -175,6 +178,12 @@ def render_checklist():
         "- [ ] Effective RBAC, admission/default resolution, image/CVE assessment and isolation verification",
         "- [ ] Live daemon/cluster assessment and demonstrated container-escape validation",
         "", "See [the Container review guide](CONTAINER_KUBERNETES_REVIEW.md). No workload or cluster operation is executed.", "",
+        "## Additional CI/CD & Pipelines review pack", "",
+        "- [x] Two offline pipeline trust and secret-handling assurance contracts",
+        "- [x] Selected GitHub Actions JSON permission, immutable-reference and untrusted-context cues",
+        "- [ ] YAML/native Jenkins/GitLab/Azure parsing, expression resolution and complete workflow validation",
+        "- [ ] Independent runner isolation, effective grants, environment approvals and OIDC/secret protection verification",
+        "", "See [the CI/CD review guide](CICD_PIPELINES_REVIEW.md). No workflow is executed or secret extracted.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

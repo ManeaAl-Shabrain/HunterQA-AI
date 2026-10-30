@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "cicd-pipeline",
+      "skill": "offensive-cicd-pipeline",
+      "observations": {
+        "trust_boundaries_reviewed": null,
+        "dependencies_pinned": null,
+        "least_privilege_reviewed": null,
+        "runner_isolation_reviewed": null,
+        "deployment_approvals_reviewed": null
+      }
+    },
+    {
+      "id": "cicd-secrets",
+      "skill": "offensive-cicd-secrets",
+      "observations": {
+        "secret_scope_reviewed": null,
+        "log_redaction_reviewed": null,
+        "oidc_trust_reviewed": null,
+        "artifact_retention_reviewed": null,
+        "rotation_reviewed": null
+      }
+    }
+  ]
+}

@@ -436,6 +436,12 @@ def main(argv=None):
         container.add_argument("--authorized", action="store_true")
         if name == "container-config-review":
             container.add_argument("--mode", choices=("docker-inspect", "kubernetes"), required=True)
+    sub.add_parser("cicd-review-catalog", help="Show two offline CI/CD assurance contracts")
+    for name in ("cicd-review", "cicd-workflow-review"):
+        cicd = sub.add_parser(name, help="Offline CI/CD observations or saved GitHub Actions JSON; no workflow execution")
+        cicd.add_argument("--input", required=True)
+        cicd.add_argument("--out", required=True)
+        cicd.add_argument("--authorized", action="store_true")
     readiness = sub.add_parser("assessment-readiness", help="Read-only installation and retained owned-lab evidence checks; no assessment authorization")
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
@@ -474,6 +480,15 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "cicd-review-catalog":
+        from .cicd_review import catalog
+        print(json.dumps({"category": "CI/CD & Pipelines", "skills": catalog(), "all_skills_automated": False}, indent=2))
+        return
+    if args.command in ("cicd-review", "cicd-workflow-review"):
+        from .cicd_review import review_file
+        report = review_file(args.input, authorized=args.authorized, mode="github-actions-json" if args.command == "cicd-workflow-review" else "normalized")
+        _write_bounty_output(args.out, json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        return
     if args.command == "container-review-catalog":
         from .container_review import catalog
         print(json.dumps({"category": "Containers & Kubernetes", "skills": catalog(), "all_skills_automated": False}, indent=2))
