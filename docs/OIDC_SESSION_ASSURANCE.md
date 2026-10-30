@@ -78,6 +78,9 @@ equivalent to accepting a token.
 - No clock leeway. `nbf` and `auth_time`, when present, must be strict integer
   dates; not-before is enforced and authentication time cannot follow issuance.
   Noncanonical compact encoding, duplicate JSON keys and non-finite numbers fail.
+- The local `max_age_seconds` policy limits token issuance age (`iat`). It is
+  not the OIDC authorization-request `max_age` parameter and does not prove
+  recent user authentication, MFA strength, `acr` or `amr` requirements.
 - Token header key URLs/certificates, critical extensions, compression and
   alternate payload encoding are unsupported and rejected. No token-selected
   URL or key identifier is used as a network or filesystem location.
