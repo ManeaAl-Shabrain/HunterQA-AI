@@ -249,6 +249,15 @@ See [the Supply Chain review guide](SUPPLY_CHAIN_REVIEW.md). No package installa
 
 See [the Social Engineering review guide](SOCIAL_ENGINEERING_REVIEW.md). No message delivery, targeting or credential collection is performed.
 
+## Additional Network review pack
+
+- [x] One offline Layer 2/3 assurance contract with eight ARP/name-resolution/VLAN/DHCP/NAC/IPv6/management/monitoring observations
+- [x] Selected saved Linux IPv4/IPv6 sysctl and systemd-resolved declaration readers
+- [ ] Runtime all/default/interface/drop-in policy, topology and actual resolver-path verification
+- [ ] Independent switch/ARP/DHCP/RA/NAC enforcement and demonstrated network attack resistance
+
+See [the Network review guide](NETWORK_SECURITY_REVIEW.md). No packet injection, interception or host configuration is performed.
+
 ## Check your installation and owned lab
 
 Use `hunterqa assessment-readiness` for local installation/dependency checks.

@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .network_review import catalog as network_review_catalog
 from .social_engineering_review import catalog as social_review_catalog
 from .supply_chain_review import catalog as supply_chain_review_catalog
 from .forensics_review import catalog as forensics_review_catalog
@@ -99,7 +100,9 @@ def coverage_audit():
             {"name": "Supply Chain", "skills": supply_chain_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance and selected npm lock/npmrc/pip configuration declarations"},
             {"name": "Social Engineering", "skills": social_review_catalog(),
-             "all_skills_automated": False, "mode": "offline assurance, selected DMARC text and aggregate saved GoPhish metadata"}],
+             "all_skills_automated": False, "mode": "offline assurance, selected DMARC text and aggregate saved GoPhish metadata"},
+            {"name": "Network", "skills": network_review_catalog(),
+             "all_skills_automated": False, "mode": "offline Layer 2/3 assurance and selected saved Linux sysctl/resolved declarations"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -238,6 +241,12 @@ def render_checklist():
         "- [ ] Live DNS/mail authentication, full DMARC policy discovery and receiver enforcement verification",
         "- [ ] Independently verified exercise provenance, human behavior and demonstrated training effectiveness",
         "", "See [the Social Engineering review guide](SOCIAL_ENGINEERING_REVIEW.md). No message delivery, targeting or credential collection is performed.", "",
+        "## Additional Network review pack", "",
+        "- [x] One offline Layer 2/3 assurance contract with eight ARP/name-resolution/VLAN/DHCP/NAC/IPv6/management/monitoring observations",
+        "- [x] Selected saved Linux IPv4/IPv6 sysctl and systemd-resolved declaration readers",
+        "- [ ] Runtime all/default/interface/drop-in policy, topology and actual resolver-path verification",
+        "- [ ] Independent switch/ARP/DHCP/RA/NAC enforcement and demonstrated network attack resistance",
+        "", "See [the Network review guide](NETWORK_SECURITY_REVIEW.md). No packet injection, interception or host configuration is performed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",

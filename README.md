@@ -42,6 +42,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`network-review-catalog` lists one offline Layer 2/3 assurance contract with eight
+control observations. `network-review` reads owner observations;
+`network-config-review` reads selected saved Linux sysctl or systemd-resolved
+settings. See the [Network guide](docs/NETWORK_SECURITY_REVIEW.md),
+[JSON template](templates/HunterQA-network-review-template.json) and
+[private worksheet](templates/25-network-review.md). Host/router roles, effective
+interface/resolver policy and exploitability remain unverified; no packets are
+injected and no host settings are changed.
+
 `social-review-catalog` lists two offline approved-simulation and participant-
 protection contracts. `social-review` reads owner observations; `social-evidence-review`
 reads selected saved DMARC text or aggregate GoPhish result/config metadata.

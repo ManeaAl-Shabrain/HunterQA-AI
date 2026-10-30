@@ -10,6 +10,10 @@
 
 ## Your route
 
+For offline Layer 2/3 assurance and saved Linux network/resolver review, use the
+[Network guide](docs/NETWORK_SECURITY_REVIEW.md) and
+[private worksheet](templates/25-network-review.md).
+
 For offline approved-simulation/participant-protection and saved DMARC/result review,
 use the [Social Engineering guide](docs/SOCIAL_ENGINEERING_REVIEW.md) and
 [private worksheet](templates/24-social-engineering-review.md).

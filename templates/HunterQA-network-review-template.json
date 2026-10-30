@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "network-attacks",
+      "skill": "offensive-network-attacks",
+      "observations": {
+        "arp_inspection_reviewed": null,
+        "name_resolution_policy_reviewed": null,
+        "vlan_segmentation_reviewed": null,
+        "dhcp_snooping_reviewed": null,
+        "nac_policy_reviewed": null,
+        "ipv6_ra_guard_reviewed": null,
+        "management_plane_reviewed": null,
+        "traffic_monitoring_reviewed": null
+      }
+    }
+  ]
+}
