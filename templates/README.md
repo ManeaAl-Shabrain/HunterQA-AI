@@ -60,6 +60,8 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Forensics worksheet | [22-forensics-c2-review.md](22-forensics-c2-review.md) | Private provenance, retention, telemetry, framework inventory and remediation review |
 | Optional Supply Chain evidence | [HunterQA-supply-chain-review-template.json](HunterQA-supply-chain-review-template.json) | Two artifact/build trust and private-namespace assurance contracts; null means unassessed |
 | Optional Supply Chain worksheet | [23-supply-chain-review.md](23-supply-chain-review.md) | Private registry/source boundaries, artifact provenance and remediation review |
+| Optional Social Engineering evidence | [HunterQA-social-review-template.json](HunterQA-social-review-template.json) | Two approved-simulation/participant-protection assurance contracts; null means unassessed |
+| Optional Social Engineering worksheet | [24-social-engineering-review.md](24-social-engineering-review.md) | Private authorization, scope, mail policy, privacy, debrief and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

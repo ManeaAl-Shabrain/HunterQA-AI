@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "phishing",
+      "skill": "offensive-phishing",
+      "observations": {
+        "owner_authorization_reviewed": null,
+        "recipient_scope_reviewed": null,
+        "mail_authentication_reviewed": null,
+        "simulation_content_reviewed": null,
+        "credential_collection_avoided": null,
+        "reporting_path_reviewed": null,
+        "privacy_and_debrief_reviewed": null
+      }
+    },
+    {
+      "id": "social-engineering",
+      "skill": "offensive-social-engineering",
+      "observations": {
+        "channel_scope_reviewed": null,
+        "participant_protection_reviewed": null,
+        "identity_verification_reviewed": null,
+        "physical_access_policy_reviewed": null,
+        "removable_media_policy_reviewed": null,
+        "stop_and_escalation_reviewed": null,
+        "training_followup_reviewed": null
+      }
+    }
+  ]
+}
