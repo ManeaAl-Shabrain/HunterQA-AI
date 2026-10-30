@@ -66,7 +66,7 @@ def coverage_audit():
         "category_packs": [{"name": "Web Application", "skills": web_review_catalog(),
             "all_skills_automated": False, "mode": "offline Python source cues and guided review"},
             {"name": "Auth & Identity", "skills": identity_review_catalog(),
-             "all_skills_automated": False, "mode": "offline JWT samples and declared web-client configuration"},
+             "all_skills_automated": False, "mode": "offline JWT samples/configuration; separate optional RS256 ID-token verification and owned OIDC/session fixtures"},
             {"name": "Active Directory", "skills": ad_review_catalog(),
              "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"},
             {"name": "Wireless", "skills": wireless_review_catalog(),
