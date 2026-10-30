@@ -43,13 +43,14 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Exact admitted TCP host/port reachability
 - [x] Separate one-endpoint TLS certificate/hostname inspection (tls-service-inspect)
+- [x] Expiring one-endpoint UDP DNS A question and expected-answer comparison (udp-dns-inspect)
 - [x] Scoped service-evidence import
 - [x] Selected offline normalized AD/SMB/LDAP policy review
 - [ ] OS fingerprinting
 - [ ] Broad service/version assessment
 - [ ] Live Active Directory assessment
 - [ ] Internal attack-path testing
-- [ ] UDP
+- [ ] Broader UDP protocol assessment
 
 ## 5. Cloud runtime — partial
 

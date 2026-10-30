@@ -36,6 +36,11 @@ def assessment_readiness(*, benchmark_dir=None, profile=None):
     except (PackageNotFoundError, InvalidVersion):
         identity = False
     add("identity_extra", "ok" if identity else "optional_missing", "Install .[identity] for explicit RS256 ID-token verification and owned OIDC fixtures; no tokens or keys are read")
+    try:
+        network = Version(version("dnspython")) >= Version("2.9.1")
+    except (PackageNotFoundError, InvalidVersion):
+        network = False
+    add("network_extra", "ok" if network else "optional_missing", "Install .[network] for exact-endpoint UDP DNS inspection; no socket opened")
     operator_db = os.environ.get("HUNTERQA_OPERATOR_DB")
     if operator_db:
         try:

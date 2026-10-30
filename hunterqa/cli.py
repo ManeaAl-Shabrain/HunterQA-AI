@@ -567,6 +567,10 @@ def main(argv=None):
     tls_inspect.add_argument("--ca-file")
     tls_inspect.add_argument("--out", required=True)
     tls_inspect.add_argument("--authorized", action="store_true")
+    udp_inspect = sub.add_parser("udp-dns-inspect", help="One expiring exact-endpoint UDP DNS A question; no recursion or retries")
+    udp_inspect.add_argument("--input", required=True)
+    udp_inspect.add_argument("--out", required=True)
+    udp_inspect.add_argument("--authorized", action="store_true")
     signed_token = sub.add_parser("signed-id-token-verify", help="Offline RS256 ID-token signature and explicit policy verification")
     signed_token.add_argument("--input", required=True)
     signed_token.add_argument("--out", required=True)
@@ -853,15 +857,19 @@ def main(argv=None):
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
         return
-    if args.command == "tls-service-inspect":
-        from .tls_inspection import inspect_service
+    if args.command in ("tls-service-inspect", "udp-dns-inspect"):
         from .workflow_store import approved_directory
         # Reserve a private create-only destination before any target traffic.
         output = Path(args.out).expanduser()
         approved_directory(output.parent)
         flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
         with os.fdopen(os.open(output, flags, 0o600), "w", encoding="utf-8") as stream:
-            report = inspect_service(args.profile, args.target, authorized=args.authorized, ca_file=args.ca_file)
+            if args.command == "tls-service-inspect":
+                from .tls_inspection import inspect_service
+                report = inspect_service(args.profile, args.target, authorized=args.authorized, ca_file=args.ca_file)
+            else:
+                from .udp_dns_inspection import inspect_dns
+                report = inspect_dns(args.input, authorized=args.authorized)
             stream.write(json.dumps(report, indent=2) + "\n")
         print("Saved:", output)
         return
