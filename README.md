@@ -42,6 +42,15 @@ repository; do not upload organization approvals, contacts or assessment evidenc
 ## What is included
 
 **Containers & Kubernetes review pack:** [coverage and instructions](docs/CONTAINER_KUBERNETES_REVIEW.md).
+`ai-security-review-catalog` lists one offline AI application assurance contract.
+`ai-security-review` reads owner observations; `ai-security-evidence-review` checks
+owned saved canary/tool/retrieval constraints or imports numeric garak summaries.
+See the [AI Security guide](docs/AI_SECURITY_REVIEW.md),
+[assurance template](templates/HunterQA-ai-security-review-template.json),
+[owned-case template](templates/HunterQA-ai-owned-cases-template.json) and
+[private worksheet](templates/26-ai-security-review.md). No model or tools are called;
+runtime authorization, model behavior and robustness remain unverified.
+
 `network-review-catalog` lists one offline Layer 2/3 assurance contract with eight
 control observations. `network-review` reads owner observations;
 `network-config-review` reads selected saved Linux sysctl or systemd-resolved

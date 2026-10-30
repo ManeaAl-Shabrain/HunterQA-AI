@@ -64,6 +64,9 @@ authorization acknowledgment **false** until you fill and review the scope.
 | Optional Social Engineering worksheet | [24-social-engineering-review.md](24-social-engineering-review.md) | Private authorization, scope, mail policy, privacy, debrief and remediation review |
 | Optional Network evidence | [HunterQA-network-review-template.json](HunterQA-network-review-template.json) | One Layer 2/3 contract with eight network-control observations; null means unassessed |
 | Optional Network worksheet | [25-network-review.md](25-network-review.md) | Private host/router role, topology, interface, switch and resolver policy review |
+| Optional AI Security evidence | [HunterQA-ai-security-review-template.json](HunterQA-ai-security-review-template.json) | One contract with ten AI application-control observations; null means unassessed |
+| Optional owned AI cases | [HunterQA-ai-owned-cases-template.json](HunterQA-ai-owned-cases-template.json) | Saved synthetic-canary/tool/retrieval constraints; null means unobserved |
+| Optional AI Security worksheet | [26-ai-security-review.md](26-ai-security-review.md) | Private trust-boundary, tenant/role, dataset, provenance and remediation review |
 
 **Work on private copies outside this repository.** Do not commit filled client
 profiles, agreement references, contacts, credentials, captures or reports to

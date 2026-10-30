@@ -12,6 +12,7 @@ from .exploit_dev_review import catalog as exploit_dev_review_catalog
 from .fuzzing_review import catalog as fuzzing_review_catalog
 from .recon_review import catalog as recon_review_catalog
 from .api_review import catalog as api_review_catalog
+from .ai_security_review import catalog as ai_security_review_catalog
 from .network_review import catalog as network_review_catalog
 from .social_engineering_review import catalog as social_review_catalog
 from .supply_chain_review import catalog as supply_chain_review_catalog
@@ -102,7 +103,9 @@ def coverage_audit():
             {"name": "Social Engineering", "skills": social_review_catalog(),
              "all_skills_automated": False, "mode": "offline assurance, selected DMARC text and aggregate saved GoPhish metadata"},
             {"name": "Network", "skills": network_review_catalog(),
-             "all_skills_automated": False, "mode": "offline Layer 2/3 assurance and selected saved Linux sysctl/resolved declarations"}],
+             "all_skills_automated": False, "mode": "offline Layer 2/3 assurance and selected saved Linux sysctl/resolved declarations"},
+            {"name": "AI Security", "skills": ai_security_review_catalog(),
+             "all_skills_automated": False, "mode": "offline application assurance, owned saved-case constraints and numeric garak summaries"}],
         "areas": [{"id": key, "name": name, "status": "partial", "implemented": implemented,
             "features": [{"name": label, "implemented": True, "adapter": tool,
                 "adapter_available": catalog[tool]["workflow_execution_available"] if tool else None} for label, tool in FEATURES[key]],
@@ -247,6 +250,12 @@ def render_checklist():
         "- [ ] Runtime all/default/interface/drop-in policy, topology and actual resolver-path verification",
         "- [ ] Independent switch/ARP/DHCP/RA/NAC enforcement and demonstrated network attack resistance",
         "", "See [the Network review guide](NETWORK_SECURITY_REVIEW.md). No packet injection, interception or host configuration is performed.", "",
+        "## Additional AI Security review pack", "",
+        "- [x] One offline AI application assurance contract with ten prompt/RAG/tool/output/data/model/evaluation observations",
+        "- [x] Owned saved-case synthetic canary/tool/retrieval constraints and selected numeric garak JSONL import",
+        "- [ ] Live model/provider evaluation, semantic/multimodal detection and actual role/tenant authorization verification",
+        "- [ ] Independent detector calibration, model robustness and real-world effectiveness evaluation",
+        "", "See [the AI Security review guide](AI_SECURITY_REVIEW.md). No model, provider, probe, tool or retrieval action is executed.", "",
         "## Check your installation and owned lab", "",
         "Use `hunterqa assessment-readiness` for local installation/dependency checks.",
         "Run `assessment-benchmark --out-dir PRIVATE_PATH --authorized`, then",
