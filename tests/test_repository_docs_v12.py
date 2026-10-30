@@ -18,7 +18,7 @@ REFERENCE = (ROOT / "docs/COMMAND_REFERENCE.md").read_text(encoding="utf-8")
 
 @pytest.mark.parametrize("filename", ["README.md", "zero to start.md", "docs/COMMAND_REFERENCE.md", "docs/VERSIONING.md",
                                       "docs/SCOPED_RENDERED_DISCOVERY.md", "docs/EXPANSION_PROGRESS.md",
-                                      "docs/CONTROLLED_RUNTIME_VALIDATION.md"])
+                                      "docs/CONTROLLED_RUNTIME_VALIDATION.md", "docs/OIDC_SESSION_ASSURANCE.md"])
 def test_readme_local_links_resolve_in_repository(filename):
     document = ROOT / filename
     content = document.read_text(encoding="utf-8")

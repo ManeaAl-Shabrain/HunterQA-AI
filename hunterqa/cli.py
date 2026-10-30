@@ -561,6 +561,14 @@ def main(argv=None):
     validation.add_argument("--authorized", action="store_true")
     validation_verify = sub.add_parser("lab-sql-verify", help="Verify evidence and replay fixed in-memory SQL cases; no target traffic")
     validation_verify.add_argument("--run", required=True)
+    signed_token = sub.add_parser("signed-id-token-verify", help="Offline RS256 ID-token signature and explicit policy verification")
+    signed_token.add_argument("--input", required=True)
+    signed_token.add_argument("--out", required=True)
+    oidc_benchmark = sub.add_parser("oidc-session-benchmark", help="Run an owned HTTP OIDC/PKCE/session/tenant fixture; no external issuer")
+    oidc_benchmark.add_argument("--out-dir", required=True)
+    oidc_benchmark.add_argument("--authorized", action="store_true")
+    oidc_verify = sub.add_parser("oidc-session-verify", help="Offline consistency of retained owned OIDC/session evidence")
+    oidc_verify.add_argument("--run", required=True)
     runtime_benchmark = sub.add_parser("runtime-validation-benchmark", help="Run six owned HTTP SQL/XSS controls with real Chromium")
     runtime_benchmark.add_argument("--out-dir", required=True)
     runtime_benchmark.add_argument("--authorized", action="store_true")
@@ -838,6 +846,16 @@ def main(argv=None):
     if args.command == "assessment-benchmark":
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
+        return
+    if args.command == "signed-id-token-verify":
+        from .oidc_tokens import verify_file
+        report = verify_file(args.input)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        return
+    if args.command in ("oidc-session-benchmark", "oidc-session-verify"):
+        from .oidc_session_lab import benchmark, verify
+        report = benchmark(args.out_dir, authorized=args.authorized) if args.command == "oidc-session-benchmark" else verify(args.run)
+        print(json.dumps(report, indent=2))
         return
     if args.command in ("runtime-validation-benchmark", "runtime-validation-verify"):
         from .runtime_validation_lab import benchmark, verify

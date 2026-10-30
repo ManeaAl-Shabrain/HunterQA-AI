@@ -30,6 +30,9 @@ same-origin rendered links and ephemeral cookie login. See the [guide](SCOPED_RE
 `sql-canary-check` and `xss-canary-check` are reviewed engagement modes with five
 fixed owned-endpoint inputs. See [runtime controls](CONTROLLED_RUNTIME_VALIDATION.md).
 
+Saved signed-token verification and the owned OIDC/session fixture require the
+optional identity extra; see [identity assurance](OIDC_SESSION_ASSURANCE.md).
+
 ## Commands
 
 Descriptions below match CLI help. Category aliases are listed by `--help` and
@@ -118,6 +121,8 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `network-config-review` | Offline observations or saved network/resolver config; no packets or host changes |
 | `network-review` | Offline observations or saved network/resolver config; no packets or host changes |
 | `network-review-catalog` | Show one offline Layer 2/3 network assurance contract |
+| `oidc-session-benchmark` | Run an owned HTTP OIDC/PKCE/session/tenant fixture; no external issuer |
+| `oidc-session-verify` | Offline consistency of retained owned OIDC/session evidence |
 | `operator-add` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-audit` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-init` | Manage opt-in local dashboard operators; not target assessment permission |
@@ -148,6 +153,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `runtime-validation-benchmark` | Run six owned HTTP SQL/XSS controls with real Chromium |
 | `runtime-validation-verify` | Offline consistency of retained HTTP runtime benchmark evidence |
 | `scan` | Run unified offline Semgrep + config + API + dependency scan |
+| `signed-id-token-verify` | Offline RS256 ID-token signature and explicit policy verification |
 | `social-evidence-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |
 | `social-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |
 | `social-review-catalog` | Show two offline social-engineering assurance contracts |

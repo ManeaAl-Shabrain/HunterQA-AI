@@ -34,6 +34,7 @@ the version number alone does not identify the installed features.
 | Owned SQL lab | Eight fixed in-memory impact/control cases and deterministic evidence replay |
 | Controlled validation | Fixed owned-endpoint SQL canary differentials and Chromium XSS witnesses; baseline/negative/repeat controls |
 | Validation cues | Fixed inert-markup/SQL-error comparisons and explicit role/anonymous access contracts |
+| Identity assurance | Optional offline RS256 ID-token verification; owned OIDC/PKCE/session/tenant HTTP fixtures |
 | Infrastructure/cloud | Exact TCP connectivity; selected read-only AWS account checks with the cloud extra |
 | Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
 | Category packs | 23 categories and 79 catalog entries, with implemented modes in the category index |
@@ -99,6 +100,7 @@ an engagement. Authorization does not enable missing functionality.
 | CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
 | Rendered discovery and reference recall | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
 | Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
+| Signed tokens and OIDC/session fixtures | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |

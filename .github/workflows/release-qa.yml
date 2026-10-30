@@ -28,7 +28,7 @@ jobs:
       - name: Install local project and test dependencies
         run: |
           python -m pip install --upgrade pip setuptools
-          python -m pip install -e '.[dev,quality,cloud]'
+          python -m pip install -e '.[dev,quality,cloud,identity]'
       - name: Undefined names and unused imports
         run: python -m ruff check hunterqa zeroscope tools --select F
       - name: Review medium and high severity static security checks

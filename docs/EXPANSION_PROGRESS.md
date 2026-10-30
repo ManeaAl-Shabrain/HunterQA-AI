@@ -8,7 +8,7 @@ assets are unchanged.
 | --- | --- | --- |
 | Web discovery | Opt-in scoped HTTPS rendered-anchor crawl, bounded same-origin resources and ephemeral conventional-login cookie reuse | SSO, complex sessions, general SPA actions, representative compatibility evaluation, complete endpoint discovery |
 | Vulnerability validation | Fixed owned-endpoint SQL canary differentials, Chromium reflected-XSS execution controls and a six-endpoint HTTP baseline | General validation across input/SQL/HTML contexts, representative datasets and broader vulnerability classes |
-| Identity and authorization | Existing explicit role/anonymous contracts; dedicated-account binding on rendered login | SSO, stateful business logic and general tenant boundaries |
+| Identity and authorization | Explicit role contracts, optional signed ID-token verification, owned OIDC/PKCE/code/session/tenant/logout controls | External interactive SSO, production sessions/federation, stateful business logic and general tenant boundaries |
 | Internal infrastructure | Existing exact TCP reachability and selected saved evidence review | Service/OS identification, UDP, live directory/effective-access and attack-path assessment |
 | Cloud | Existing narrow AWS APIs and saved AWS/Azure/GCP policy readers | Resource/effective-permission inventory, Azure/GCP runtime adapters and representative cloud evaluations |
 | Production and users | Existing local roles, per-run controls and optional shared local quotas | Verified grants, tenant isolation, OS sandboxing, distributed workers and cross-host quotas |
@@ -16,6 +16,7 @@ assets are unchanged.
 
 First implementation: [scoped rendered discovery](SCOPED_RENDERED_DISCOVERY.md).
 Second implementation: [controlled runtime validation](CONTROLLED_RUNTIME_VALIDATION.md).
-Both remain bounded source-development capabilities. Multi-user
+Third implementation: [signed ID tokens and owned OIDC/session assurance](OIDC_SESSION_ASSURANCE.md).
+These remain bounded source-development capabilities. Multi-user
 production changes require a separate deployment architecture and threat model;
 local roles alone do not provide tenant isolation.

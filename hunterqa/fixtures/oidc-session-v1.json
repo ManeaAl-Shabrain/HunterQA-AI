@@ -1,0 +1,14 @@
+{
+  "fixture_version": "owned-oidc-session-1.0.0",
+  "checks": [
+    {"id": "callback-state", "class": "callback", "secure": true, "weak": true},
+    {"id": "signed-id-token", "class": "token", "secure": true, "weak": true},
+    {"id": "nonce-binding", "class": "token", "secure": true, "weak": true},
+    {"id": "pkce-verifier", "class": "pkce", "secure": true, "weak": false},
+    {"id": "code-single-use", "class": "authorization-code", "secure": true, "weak": false},
+    {"id": "session-rotation", "class": "session", "secure": true, "weak": false},
+    {"id": "own-tenant-access", "class": "tenant", "secure": true, "weak": true},
+    {"id": "cross-tenant-boundary", "class": "tenant", "secure": true, "weak": false},
+    {"id": "logout-revocation", "class": "session", "secure": true, "weak": false}
+  ]
+}
