@@ -31,6 +31,10 @@ For separate bounded Azure GET inventory with an explicit temporary token, see
 [Azure inventory](SCOPED_AZURE_INVENTORY.md). It does not evaluate effective
 permissions or change these offline readers.
 
+For separate bounded GCP project asset GET inventory, see
+[GCP inventory](SCOPED_GCP_INVENTORY.md). It uses its own project contract and
+temporary token; IAM evaluation and representative field validation remain incomplete.
+
 ## Mode A — normalized owner evidence
 
 Copy [the JSON template](../templates/HunterQA-cloud-review-template.json) and
