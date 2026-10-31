@@ -15,6 +15,7 @@ from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
 from .cloud_inventory_common import live_window, temporary_credentials, bounded_json
 from .engagement import _expiry, digest, utcnow
 from .source_files import read_bounded
+from . import shared_quota
 
 CONTEXT_HOST = "cloudresourcemanager.googleapis.com"
 ASSET_HOST = "cloudasset.googleapis.com"
@@ -189,6 +190,7 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
     keys = temporary_credentials(secret)
     transport = transport or _gcp_get
     def gate():
+        admission.ensure_active()
         try:
             if read_bounded(_approved_file(input_file), 16384) != raw or read_bounded(_approved_file(credential_file), 32768) != secret:
                 raise ValueError
@@ -211,84 +213,89 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
             "Exact project number/ID/direct parent and per-asset ancestry are required; unsupported or cross-project shapes stop the entire page",
             "Reported snapshot time is pinned across pages but does not prove atomicity, freshness, CAI completeness or consistency during indexing delays",
             "No IAM/deny/condition evaluation, organization/folder enumeration, data-plane requests or general tenant isolation testing",
-            "Five-second socket inactivity timeout and one-MiB response cap; no independent process-wide deadline, OS isolation or shared quota",
+            "Five-second socket inactivity timeout and one-MiB response cap; no independent process-wide deadline, OS isolation or cross-host quota",
             "Local operator attestation and hashes do not verify owner grants, provenance or anonymity; representative GCP field effectiveness is unverified"]}
-    target = "https://" + CONTEXT_HOST + "/v3/projects/" + contract["project_number"] + "?" + urlencode({"fields": "name,projectId,parent,state"})
-    seen_assets, seen_tokens = set(), set()
-    for index in range(1 + contract["max_pages"]):
-        if index:
-            sleeper(contract["interval_seconds"])
-        receipt = {"action": "project-context" if index == 0 else "list-assets", "target_sha256": digest(target),
-                   "status": None, "body_bytes": None, "body_sha256": None}
-        try:
-            gate()
-            report["requests_attempted"] += 1
-            report["receipts"].append(receipt)
-            response = transport(target, keys["access_token"], before_send=gate)
-        except PermissionError:
-            report["outcome"] = "authorization-stopped"
-            break
-        except (OSError, http.client.HTTPException, ValueError):
-            report["outcome"] = "transport-rejected"
-            break
-        try:
-            status, body = response["status"], response["body"]
-            if type(status) is not int or not 100 <= status <= 599 or not isinstance(body, bytes) or len(body) > 1048576:
-                raise ValueError
-            receipt.update(status=status, body_bytes=len(body), body_sha256=hashlib.sha256(body).hexdigest())
-            report["requests_completed"] += 1
-            if status != 200:
-                report["outcome"] = "http-error"
+    with shared_quota.invocation(1 + contract["max_pages"]) as admission:
+        report["shared_quota"] = admission.receipt
+        target = "https://" + CONTEXT_HOST + "/v3/projects/" + contract["project_number"] + "?" + urlencode({"fields": "name,projectId,parent,state"})
+        seen_assets, seen_tokens = set(), set()
+        for index in range(1 + contract["max_pages"]):
+            if index:
+                sleeper(contract["interval_seconds"])
+            receipt = {"action": "project-context" if index == 0 else "list-assets", "target_sha256": digest(target),
+                       "status": None, "body_bytes": None, "body_sha256": None}
+            try:
+                gate()
+                report["requests_attempted"] += 1
+                report["receipts"].append(receipt)
+                response = transport(target, keys["access_token"], before_send=gate)
+            except shared_quota.QuotaStopped:
+                report["outcome"] = "quota-stopped"
                 break
-            data = bounded_json(body)
-            if index == 0:
-                if (data.get("name") != "projects/" + contract["project_number"] or data.get("projectId") != contract["project_id"]
-                        or data.get("parent") != contract["expected_parent"] or data.get("state") != "ACTIVE"):
-                    report["outcome"] = "project-context-mismatch"
-                    break
-                report["project_context_matched"] = True
-                target = _target(contract, read_time=contract["read_time"])
-                continue
-            stamp = _read_time(data.get("readTime"))
-            if stamp != report["requested_read_time"]:
-                report.update(outcome="snapshot-mismatch", read_time_consistent=False)
+            except PermissionError:
+                report["outcome"] = "authorization-stopped"
                 break
-            values = data.get("assets", [])
-            if not isinstance(values, list) or len(values) > 500:
-                raise ValueError
-            rows = [_asset(row, contract) for row in values]
-            report.update(snapshot_read_time=stamp, read_time_consistent=True)
-            report["pages_observed"] += 1
-            limited = False
-            for row in rows:
-                if row["asset_ref"] in seen_assets:
-                    report["duplicates_not_retained"] += 1
-                elif len(report["assets"]) < contract["max_resources"]:
-                    seen_assets.add(row["asset_ref"])
-                    report["assets"].append(row)
-                else:
-                    limited = True
-            continuation = data.get("nextPageToken", "")
-            if continuation == "":
-                report.update(visible_pagination_exhausted=not limited, outcome="resource-limit" if limited else "visible-pages-exhausted")
-                break
-            if limited or len(report["assets"]) >= contract["max_resources"]:
-                report["outcome"] = "resource-limit"
+            except (OSError, http.client.HTTPException, ValueError):
+                report["outcome"] = "transport-rejected"
                 break
             try:
-                if not isinstance(continuation, str):
-                    raise ValueError("Unsupported GCP page token shape")
-                target = _target(contract, continuation, stamp)
-            except ValueError:
-                report["outcome"] = "page-token-rejected"
+                status, body = response["status"], response["body"]
+                if type(status) is not int or not 100 <= status <= 599 or not isinstance(body, bytes) or len(body) > 1048576:
+                    raise ValueError
+                receipt.update(status=status, body_bytes=len(body), body_sha256=hashlib.sha256(body).hexdigest())
+                report["requests_completed"] += 1
+                if status != 200:
+                    report["outcome"] = "http-error"
+                    break
+                data = bounded_json(body)
+                if index == 0:
+                    if (data.get("name") != "projects/" + contract["project_number"] or data.get("projectId") != contract["project_id"]
+                            or data.get("parent") != contract["expected_parent"] or data.get("state") != "ACTIVE"):
+                        report["outcome"] = "project-context-mismatch"
+                        break
+                    report["project_context_matched"] = True
+                    target = _target(contract, read_time=contract["read_time"])
+                    continue
+                stamp = _read_time(data.get("readTime"))
+                if stamp != report["requested_read_time"]:
+                    report.update(outcome="snapshot-mismatch", read_time_consistent=False)
+                    break
+                values = data.get("assets", [])
+                if not isinstance(values, list) or len(values) > 500:
+                    raise ValueError
+                rows = [_asset(row, contract) for row in values]
+                report.update(snapshot_read_time=stamp, read_time_consistent=True)
+                report["pages_observed"] += 1
+                limited = False
+                for row in rows:
+                    if row["asset_ref"] in seen_assets:
+                        report["duplicates_not_retained"] += 1
+                    elif len(report["assets"]) < contract["max_resources"]:
+                        seen_assets.add(row["asset_ref"])
+                        report["assets"].append(row)
+                    else:
+                        limited = True
+                continuation = data.get("nextPageToken", "")
+                if continuation == "":
+                    report.update(visible_pagination_exhausted=not limited, outcome="resource-limit" if limited else "visible-pages-exhausted")
+                    break
+                if limited or len(report["assets"]) >= contract["max_resources"]:
+                    report["outcome"] = "resource-limit"
+                    break
+                try:
+                    if not isinstance(continuation, str):
+                        raise ValueError("Unsupported GCP page token shape")
+                    target = _target(contract, continuation, stamp)
+                except ValueError:
+                    report["outcome"] = "page-token-rejected"
+                    break
+                if continuation in seen_tokens:
+                    report["outcome"] = "pagination-loop"
+                    break
+                seen_tokens.add(continuation)
+                report["outcome"] = "page-limit"
+            except (ValueError, TypeError, KeyError, AttributeError, UnicodeError, RecursionError):
+                report["outcome"] = "invalid-response"
                 break
-            if continuation in seen_tokens:
-                report["outcome"] = "pagination-loop"
-                break
-            seen_tokens.add(continuation)
-            report["outcome"] = "page-limit"
-        except (ValueError, TypeError, KeyError, AttributeError, UnicodeError, RecursionError):
-            report["outcome"] = "invalid-response"
-            break
-    report["assets_retained"] = len(report["assets"])
+        report["assets_retained"] = len(report["assets"])
     return report

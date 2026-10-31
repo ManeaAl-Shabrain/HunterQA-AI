@@ -41,7 +41,7 @@ AREAS = (
      "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, and offline AWS/Azure/GCP policy review",
      ["Complete resource and effective-permission inventory", "Broader AWS/Azure/GCP and representative cloud assessment"]),
     ("production-hardening", "Production platform hardening", [],
-     "Local supervised workers, per-run controls, optional shared quotas and authenticated local dashboard roles",
+     "Local supervised workers, per-run controls, optional shared quotas for workflows/native TLS/UDP/Azure/GCP, and authenticated local dashboard roles",
      ["Hosted multi-user deployment and tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
      "Owned application and six-endpoint HTTP/Chromium baselines, per-class metrics, inconclusive counts and retained evidence",
@@ -54,7 +54,7 @@ FEATURES = {
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix"), ("Offline RS256 ID-token signature and explicit issuer/audience/nonce/time policy", None), ("Owned OIDC PKCE/code/session/tenant/logout HTTP controls", None)],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Separate one-endpoint TLS certificate/hostname inspection (tls-service-inspect)", None), ("Expiring one-endpoint UDP DNS A question and expected-answer comparison (udp-dns-inspect)", None), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],
     "cloud-runtime": [("Optional read-only AWS identity and account-summary adapter", "aws-account-audit"), ("Separate bounded Azure subscription context and visible-resource GET inventory (azure-resource-inventory)", None), ("Separate bounded GCP project context, ancestry and snapshot-time-pinned asset GET inventory (gcp-resource-inventory)", None), ("Selected local configuration/dependency patterns", "source-review"), ("Offline normalized AWS/Azure/GCP posture and selected native policy readers", None)],
-    "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger and crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
+    "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Optional shared host-local quota ledger for workflows and native TLS/UDP/Azure/GCP, with crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None)],
     "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None), ("Six-endpoint HTTP/Chromium baseline with per-class confusion metrics and inconclusive counts", None), ("Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2", None)],
 }
 

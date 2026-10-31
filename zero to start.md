@@ -159,6 +159,7 @@ for commands and their execution modes.
 | Check one approved UDP DNS endpoint against an expected A answer | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
 | Inventory visible resources in one approved Azure subscription | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
 | Inventory visible assets in one approved GCP project | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
+| Coordinate workflow and native TLS/DNS/cloud limits on one host | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
 | Review report quality or CVSS 3.1 Base | [Utility guide](docs/UTILITY_REVIEW.md) |
 
 A customer assessment is separate. It needs written permission, exact targets,
