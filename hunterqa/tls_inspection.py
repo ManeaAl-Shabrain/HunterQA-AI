@@ -10,6 +10,7 @@ import time
 from .bounty import _approved_file, resolve_pinned
 from .engagement import _policy_snapshot, digest, utcnow
 from .source_files import read_bounded
+from . import shared_quota
 
 
 def inspect_service(profile, target, *, authorized=False, ca_file=None):
@@ -41,7 +42,6 @@ def inspect_service(profile, target, *, authorized=False, ca_file=None):
         ca_hash = hashlib.sha256(raw).hexdigest()
     context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.set_alpn_protocols(["h2", "http/1.1"])
-    ip = resolve_pinned(policy, host, port)  # Check every answer; dial only one numeric address.
     report = {"engine": "scoped-tls-inspection", "schema_version": 1,
         "observed_at": utcnow().isoformat(), "policy_sha256": profile_hash,
         "target_sha256": digest(target), "port": port,
@@ -58,34 +58,47 @@ def inspect_service(profile, target, *, authorized=False, ca_file=None):
             "No cipher/protocol enumeration, OCSP/CRL retrieval, service/version identification, UDP, AD or attack-path testing",
             "Platform trust and OpenSSL policy vary; a supplied CA replaces platform roots and its ownership is unverified",
             "Five-second combined TCP/handshake budget after DNS; OS DNS resolution has no portable deadline",
-            "Invocation-local scope and budget only; no distributed quota, persistent approval or independent owner verification"]}
-    family = socket.AF_INET6 if ipaddress.ip_address(ip).version == 6 else socket.AF_INET
-    deadline = time.monotonic() + 5
-    try:
-        with socket.socket(family, socket.SOCK_STREAM) as raw_socket:
-            raw_socket.settimeout(5)
-            report["connection_attempts"] = 1
-            raw_socket.connect((ip, port))
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                raise TimeoutError
-            raw_socket.settimeout(remaining)
-            with context.wrap_socket(raw_socket, server_hostname=host) as tls:
-                certificate = tls.getpeercert(binary_form=True)
-                cipher = tls.cipher()
-                report.update(outcome="verified", certificate_and_hostname_verified=True,
-                    tls_version=tls.version(), cipher={"name": cipher[0], "bits": cipher[2]},
-                    alpn=tls.selected_alpn_protocol(),
-                    leaf_certificate_sha256=hashlib.sha256(certificate).hexdigest())
-    except ssl.SSLCertVerificationError as exc:
-        report.update(outcome="certificate-rejected", certificate_and_hostname_verified=False,
-                      certificate_verification_code=exc.verify_code)
-    except TimeoutError:
-        report["outcome"] = "timeout"
-    except ConnectionRefusedError:
-        report["outcome"] = "refused"
-    except ssl.SSLError:
-        report["outcome"] = "tls-error"
-    except OSError:
-        report["outcome"] = "unreachable"
+            "Invocation-local scope and optional cooperating host-local quota; no distributed quota, persistent approval or independent owner verification"]}
+    with shared_quota.invocation(1) as admission:
+        report["shared_quota"] = admission.receipt
+        admission.ensure_active()
+        ip = resolve_pinned(policy, host, port)
+        admission.ensure_active()
+        family = socket.AF_INET6 if ipaddress.ip_address(ip).version == 6 else socket.AF_INET
+        deadline = time.monotonic() + 5
+        try:
+            with socket.socket(family, socket.SOCK_STREAM) as raw_socket:
+                raw_socket.settimeout(5)
+                admission.ensure_active()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError
+                raw_socket.settimeout(remaining)
+                report["connection_attempts"] = 1
+                raw_socket.connect((ip, port))
+                admission.ensure_active()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError
+                raw_socket.settimeout(remaining)
+                with context.wrap_socket(raw_socket, server_hostname=host) as tls:
+                    certificate = tls.getpeercert(binary_form=True)
+                    cipher = tls.cipher()
+                    report.update(outcome="verified", certificate_and_hostname_verified=True,
+                        tls_version=tls.version(), cipher={"name": cipher[0], "bits": cipher[2]},
+                        alpn=tls.selected_alpn_protocol(),
+                        leaf_certificate_sha256=hashlib.sha256(certificate).hexdigest())
+        except shared_quota.QuotaStopped:
+            report["outcome"] = "quota-stopped"
+        except ssl.SSLCertVerificationError as exc:
+            report.update(outcome="certificate-rejected", certificate_and_hostname_verified=False,
+                          certificate_verification_code=exc.verify_code)
+        except TimeoutError:
+            report["outcome"] = "timeout"
+        except ConnectionRefusedError:
+            report["outcome"] = "refused"
+        except ssl.SSLError:
+            report["outcome"] = "tls-error"
+        except OSError:
+            report["outcome"] = "unreachable"
     return report

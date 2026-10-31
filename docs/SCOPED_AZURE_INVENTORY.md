@@ -78,7 +78,10 @@ Inputs are checked for changes and expiry before each call, after DNS and after
 TLS before the bearer header. Change/remove either input to stop between calls.
 Changing a token stops the invocation; a replacement requires a new invocation.
 These checks are local controls, not atomic grant revocation. In-flight requests
-can finish after expiry. There is no shared or cross-host quota.
+can finish after expiry. A configured `HUNTERQA_QUOTA_LEDGER` reserves
+`1 + max_pages` units and a slot before transport and is rechecked at these same
+gates. See [native shared quotas](NATIVE_SHARED_QUOTAS.md) for release, stopping
+and no-refund semantics. Cross-host enforcement remains unavailable.
 
 ## Results and limits
 

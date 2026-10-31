@@ -70,7 +70,10 @@ The input is bounded to 16 KiB and fingerprinted. It is checked again immediatel
 before transmission for expiry and changes. This remains a local operator
 attestation; it does not authenticate an owner grant or provide atomic external
 revocation. Each invocation reserves one query. Account for repeated invocations
-in the written budget; no shared or cross-host quota is applied here.
+in the written budget. With `HUNTERQA_QUOTA_LEDGER`, one unit and an active slot
+are reserved before transport, with checks before connect/send. See
+[native shared quotas](NATIVE_SHARED_QUOTAS.md). Cross-host enforcement remains
+unavailable; unconfigured invocations retain their existing limit.
 
 ## Interpret the result
 

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import uuid
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -15,9 +16,16 @@ from .workflow_protocol import _fields, _integer
 from .workflow_store import approved_directory
 
 
+def _local_path(path):
+    candidate = Path(path).expanduser()
+    if str(candidate).startswith(("\\\\", "//")) or candidate.drive.startswith("\\\\"):
+        raise ValueError("Shared quota requires a local filesystem; UNC/network-share paths are unsupported")
+    return candidate
+
+
 @contextmanager
 def _database(path, *, readonly=False):
-    path = _approved_file(path)
+    path = _approved_file(_local_path(path))
     if path.stat().st_size > 16_000_000:
         raise ValueError("Quota ledger exceeds size limit")
     db = sqlite3.connect(path.as_uri() + ("?mode=ro" if readonly else "?mode=rw"), uri=True, timeout=5)
@@ -40,7 +48,7 @@ def initialize(path, *, max_requests, max_active_runs, expires_at, authorized=Fa
     _integer(max_active_runs, 1, 64, "max_active_runs")
     if not 0 < (_expiry(expires_at) - utcnow()).total_seconds() <= 86_400:
         raise ValueError("Quota window must expire within 24 hours")
-    destination = Path(path).expanduser().absolute()
+    destination = _local_path(path).absolute()
     parent = approved_directory(destination.parent)
     destination = parent / destination.name
     fd = os.open(destination, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
@@ -83,15 +91,18 @@ def status(path):
             "trust": "Cooperating local coordinators; database owner is trusted; no refunds"}
 
 
-def configured_review():
-    value = os.environ.get("HUNTERQA_QUOTA_LEDGER")
+def _review_ledger(value):
     if not value:
         return None
-    path = _approved_file(value)
+    path = _approved_file(_local_path(value))
     snapshot = status(path)
     if snapshot["stopped"] or snapshot["expired"]:
         raise PermissionError("Shared quota ledger is stopped or expired")
     return {"path": str(path), "configuration_sha256": snapshot["configuration_sha256"]}
+
+
+def configured_review():
+    return _review_ledger(os.environ.get("HUNTERQA_QUOTA_LEDGER"))
 
 
 def reserve(review, run_id, requests):
@@ -118,6 +129,7 @@ def check(review, run_id):
 def release(review, run_id):
     with _database(review["path"]) as db:
         db.execute("UPDATE reservations SET state='released' WHERE run_id=? AND state='active'", (run_id,))
+        return db.execute("SELECT state FROM reservations WHERE run_id=?", (run_id,)).fetchone() == ("released",)
 
 
 def stop(path, *, authorized=False):
@@ -134,3 +146,61 @@ def reconcile(path, run_id, *, authorized=False):
         raise PermissionError("Quota reconciliation requires --authorized")
     release({"path": str(_approved_file(path))}, run_id)
     return status(path)
+
+
+class QuotaStopped(PermissionError):
+    """An admitted native invocation must stop before its next operation."""
+
+
+class Invocation:
+    def __init__(self, review, setting, requests):
+        self.review, self.setting = review, setting
+        self.run_id = uuid.uuid4().hex if review else None
+        self.receipt = {"configured": review is not None,
+            "reservation_id": self.run_id, "reserved_requests": requests if review else 0,
+            "configuration_sha256": review["configuration_sha256"] if review else None,
+            "reservation_released": None, "release_state": "not-configured" if review is None else "active",
+            "charge_policy": "full-reservation-no-refund", "scope": "cooperating-host-local"}
+
+    def ensure_active(self):
+        # Do not silently switch to unmetered mode if configuration disappears.
+        if (os.environ.get("HUNTERQA_QUOTA_LEDGER") or None) != self.setting:
+            raise QuotaStopped("Shared quota configuration changed during invocation")
+        if self.review:
+            try:
+                active = check(self.review, self.run_id)
+            except (OSError, ValueError, sqlite3.Error):
+                raise QuotaStopped("Shared quota is inaccessible or invalid; invocation stopped") from None
+            if not active:
+                raise QuotaStopped("Shared quota stopped, changed, expired or reservation was reconciled")
+
+
+@contextmanager
+def invocation(requests):
+    """Reserve a native command's worst-case operation count before any traffic.
+
+    A crash can strand an active slot; reconciliation never refunds the charge.
+    Cleanup failure is retained in the receipt so completed evidence is not lost.
+    """
+    _integer(requests, 1, 40, "native request reservation")
+    setting = os.environ.get("HUNTERQA_QUOTA_LEDGER") or None
+    try:
+        review = _review_ledger(setting)
+        admitted = Invocation(review, setting, requests)
+        if review:
+            reserve(review, admitted.run_id, requests)
+    except PermissionError:
+        raise
+    except (OSError, ValueError, sqlite3.Error):
+        raise PermissionError("Shared quota admission failed; inspect the configured local ledger") from None
+    try:
+        admitted.ensure_active()
+        yield admitted
+    finally:
+        if review:
+            try:
+                if not release(review, admitted.run_id):
+                    raise ValueError("Quota release could not be confirmed")
+                admitted.receipt.update(reservation_released=True, release_state="released")
+            except (OSError, ValueError, sqlite3.Error):
+                admitted.receipt.update(reservation_released=False, release_state="manual-reconciliation-required")

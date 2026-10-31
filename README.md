@@ -106,6 +106,7 @@ an engagement. Authorization does not enable missing functionality.
 | Bounded Azure resource inventory with an explicit temporary token | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
 | Bounded GCP project asset inventory with an explicit temporary token | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
+| Shared local limits for workflows and native TLS/DNS/cloud commands | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |
