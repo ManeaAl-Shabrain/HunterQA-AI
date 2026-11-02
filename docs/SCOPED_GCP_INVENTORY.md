@@ -137,7 +137,10 @@ Inputs are fingerprinted and rechecked before calls, after DNS and after TLS
 before bearer transmission. Change/remove an input to stop between calls; a new
 token requires a new invocation. In-flight requests can complete after expiry.
 These are local attestations, not independently authenticated grants or atomic
-revocation. Quotas are invocation-local, without cross-host enforcement.
+revocation. A configured `HUNTERQA_QUOTA_LEDGER` reserves `1 + max_pages` units
+and a slot before transport and is rechecked at these same gates. See
+[native shared quotas](NATIVE_SHARED_QUOTAS.md) for release, stopping and
+no-refund semantics. Cross-host enforcement remains unavailable.
 
 The transport admits global DNS answers only, pins a numeric address, verifies
 the original host with platform TLS trust, uses TLS 1.2 minimum/strict X.509, and

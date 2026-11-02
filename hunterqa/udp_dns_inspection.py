@@ -14,6 +14,7 @@ from packaging.version import InvalidVersion, Version
 from .bounty import _approved_file, _decode_json
 from .engagement import _expiry, digest, utcnow
 from .source_files import read_bounded
+from . import shared_quota
 
 FIELDS = {"schema_version", "transport", "authorization_reference", "acknowledged_authorization",
           "expires_at", "server_ip", "server_port", "query_name", "expected_ipv4", "allow_private_network"}
@@ -135,49 +136,55 @@ def inspect_dns(input_file, *, authorized=False):
             "Only an authoritative-flagged NOERROR direct A RRset is compared with owner expectations; AA/AD flags do not authenticate the server or validate DNSSEC",
             "A timeout does not distinguish open, closed or filtered UDP; transport failure and answer mismatch are not automatic vulnerabilities",
             "No recursion/amplification test, zone transfer, update, version query, subnet/port sweep, OS fingerprint, AD or access-path assessment",
-            "Three-second send/receive deadline bounded by contract expiry; invocation-local quota and operator attestation only",
+            "Three-second send/receive deadline bounded by contract expiry; optional cooperating host-local quota and operator attestation only",
             "Hashes and local receipts do not prove provenance, owner consent, DNS data authenticity or real-world effectiveness"]}
-    family = socket.AF_INET6 if ipaddress.ip_address(contract["server_ip"]).version == 6 else socket.AF_INET
-    deadline = time.monotonic() + min(3.0, (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
-    try:
-        with socket.socket(family, socket.SOCK_DGRAM) as channel:
-            remaining = deadline - time.monotonic()
-            if remaining <= 0:
-                raise TimeoutError
-            channel.settimeout(remaining)
-            channel.connect((contract["server_ip"], contract["server_port"]))
-            validate_contract(contract)
-            if read_bounded(_approved_file(input_file), 16384) != raw:
-                raise ValueError("UDP DNS contract changed before transmission")
-            remaining = min(deadline - time.monotonic(), (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
-            if remaining <= 0:
-                raise TimeoutError
-            channel.settimeout(remaining)
-            report["datagrams_attempted"] = 1
-            if channel.send(wire) != len(wire):
-                report["outcome"] = "send-incomplete"
-                return report
-            report["datagrams_sent"] = 1
-            remaining = min(deadline - time.monotonic(), (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
-            if remaining <= 0:
-                raise TimeoutError
-            channel.settimeout(remaining)
-            reply = channel.recv(513)
-            report.update(response_datagrams=1, response_bytes=len(reply))
-            if len(reply) > 512:
-                report["outcome"] = "oversized-response"
+    with shared_quota.invocation(1) as admission:
+        report["shared_quota"] = admission.receipt
+        family = socket.AF_INET6 if ipaddress.ip_address(contract["server_ip"]).version == 6 else socket.AF_INET
+        deadline = time.monotonic() + min(3.0, (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
+        try:
+            with socket.socket(family, socket.SOCK_DGRAM) as channel:
+                admission.ensure_active()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError
+                channel.settimeout(remaining)
+                channel.connect((contract["server_ip"], contract["server_port"]))
+                validate_contract(contract)
+                if read_bounded(_approved_file(input_file), 16384) != raw:
+                    raise ValueError("UDP DNS contract changed before transmission")
+                admission.ensure_active()
+                remaining = min(deadline - time.monotonic(), (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
+                if remaining <= 0:
+                    raise TimeoutError
+                channel.settimeout(remaining)
+                report["datagrams_attempted"] = 1
+                if channel.send(wire) != len(wire):
+                    report["outcome"] = "send-incomplete"
+                    return report
+                report["datagrams_sent"] = 1
+                remaining = min(deadline - time.monotonic(), (_expiry(contract["expires_at"]) - utcnow()).total_seconds())
+                if remaining <= 0:
+                    raise TimeoutError
+                channel.settimeout(remaining)
+                reply = channel.recv(513)
+                report.update(response_datagrams=1, response_bytes=len(reply))
+                if len(reply) > 512:
+                    report["outcome"] = "oversized-response"
+                    report["datagram_complete"] = False
+                else:
+                    report["datagram_complete"] = True
+                    report["response_sha256"] = hashlib.sha256(reply).hexdigest()
+                    report.update(_interpret(dns, query, reply, contract["expected_ipv4"]))
+        except shared_quota.QuotaStopped:
+            report["outcome"] = "quota-stopped"
+        except TimeoutError:
+            report["outcome"] = "timeout"
+        except (ConnectionRefusedError, ConnectionResetError):
+            report["outcome"] = "refused-or-unreachable"
+        except OSError as exc:
+            report["outcome"] = "oversized-response" if getattr(exc, "winerror", None) == 10040 else "unreachable"
+            if report["outcome"] == "oversized-response":
+                report["response_datagrams"] = 1
                 report["datagram_complete"] = False
-            else:
-                report["datagram_complete"] = True
-                report["response_sha256"] = hashlib.sha256(reply).hexdigest()
-                report.update(_interpret(dns, query, reply, contract["expected_ipv4"]))
-    except TimeoutError:
-        report["outcome"] = "timeout"
-    except (ConnectionRefusedError, ConnectionResetError):
-        report["outcome"] = "refused-or-unreachable"
-    except OSError as exc:
-        report["outcome"] = "oversized-response" if getattr(exc, "winerror", None) == 10040 else "unreachable"
-        if report["outcome"] == "oversized-response":
-            report["response_datagrams"] = 1
-            report["datagram_complete"] = False
     return report

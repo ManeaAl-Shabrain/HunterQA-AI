@@ -12,6 +12,9 @@ or distributed RBAC enforcement. The CLI and filesystem OS owner remain trusted.
 Do not expose this dashboard through a reverse proxy or use a shared OS account
 with untrusted people. Production multi-user readiness remains false.
 
+Optional [native shared quotas](NATIVE_SHARED_QUOTAS.md) coordinate selected
+commands on this host; they do not change permissions or add tenant isolation.
+
 ## Permissions
 
 | Role | Read saved workspace data | Register approved projects / start local source scans / review triage | Read operator state and auth-audit consistency |

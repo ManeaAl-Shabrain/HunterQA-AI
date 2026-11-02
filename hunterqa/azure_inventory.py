@@ -15,6 +15,7 @@ from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
 from .engagement import digest, utcnow
 from .cloud_inventory_common import live_window as _live, temporary_credentials as _credentials, bounded_json as _json
 from .source_files import read_bounded
+from . import shared_quota
 
 HOST = "management.azure.com"
 ORIGIN = "https://" + HOST
@@ -168,6 +169,7 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
     keys = _credentials(secret)
     transport = transport or _arm_get
     def gate():
+        admission.ensure_active()
         try:
             if read_bounded(_approved_file(input_file), 16384) != raw or read_bounded(_approved_file(credential_file), 32768) != secret:
                 raise ValueError
@@ -188,78 +190,83 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
             "No RBAC, deny/condition/PIM evaluation, data-plane access, configuration review or general tenant isolation assessment",
             "Pagination exhaustion is not inventory completeness: permissions, API omissions, service behavior and concurrent changes can hide resources",
             "Five-second socket inactivity timeout, one-MiB response cap; no independent process-wide wall-clock deadline",
-            "Invocation-local quotas and operator attestation only; hashes do not authenticate provenance or anonymize guessable data",
+            "Optional cooperating host-local quota and operator attestation only; hashes do not authenticate provenance or anonymize guessable data",
             "Runtime adapter has owned/synthetic transport controls; representative Azure field effectiveness remains unverified"]}
-    target = ORIGIN + "/subscriptions/" + contract["subscription_id"] + "?api-version=2022-12-01"
-    seen_targets, seen_resources = set(), set()
-    for index in range(1 + contract["max_pages"]):
-        if index:
-            sleeper(contract["interval_seconds"])
-        receipt = {"action": "subscription-context" if index == 0 else "list-resources",
-                   "target_sha256": digest(target), "status": None, "body_sha256": None, "body_bytes": None}
-        try:
-            gate()
-            report["requests_attempted"] += 1
-            seen_targets.add(target)
-            report["receipts"].append(receipt)
-            response = transport(target, keys["access_token"], before_send=gate)
-        except PermissionError:
-            report["outcome"] = "authorization-stopped"
-            break
-        except (OSError, http.client.HTTPException, ValueError):
-            report["outcome"] = "transport-rejected"
-            break
-        try:
-            status, body = response["status"], response["body"]
-            if type(status) is not int or not 100 <= status <= 599 or not isinstance(body, bytes) or len(body) > 1048576:
-                raise ValueError
-            receipt.update(status=status, body_sha256=hashlib.sha256(body).hexdigest(), body_bytes=len(body))
-            report["requests_completed"] += 1
-            if status != 200:
-                report["outcome"] = "http-error"
+    with shared_quota.invocation(1 + contract["max_pages"]) as admission:
+        report["shared_quota"] = admission.receipt
+        target = ORIGIN + "/subscriptions/" + contract["subscription_id"] + "?api-version=2022-12-01"
+        seen_targets, seen_resources = set(), set()
+        for index in range(1 + contract["max_pages"]):
+            if index:
+                sleeper(contract["interval_seconds"])
+            receipt = {"action": "subscription-context" if index == 0 else "list-resources",
+                       "target_sha256": digest(target), "status": None, "body_sha256": None, "body_bytes": None}
+            try:
+                gate()
+                report["requests_attempted"] += 1
+                seen_targets.add(target)
+                report["receipts"].append(receipt)
+                response = transport(target, keys["access_token"], before_send=gate)
+            except shared_quota.QuotaStopped:
+                report["outcome"] = "quota-stopped"
                 break
-            data = _json(body)
-            if index == 0:
-                if (data.get("subscriptionId") != contract["subscription_id"] or data.get("tenantId") != contract["tenant_id"]
-                        or data.get("id", "").lower() != "/subscriptions/" + contract["subscription_id"]):
-                    report["outcome"] = "subscription-context-mismatch"
-                    break
-                report["subscription_context_matched"] = True
-                target = ORIGIN + _resource_path(contract) + "?" + urlencode({"api-version": "2021-04-01", "$top": contract["page_size"]})
-                continue
-            values = data.get("value")
-            if not isinstance(values, list) or len(values) > 500:
-                raise ValueError
-            rows = [_resource(row, contract) for row in values]
-            report["pages_observed"] += 1
-            limited = False
-            for row in rows:
-                if row["resource_ref"] in seen_resources:
-                    report["duplicates_not_retained"] += 1
-                elif len(report["resources"]) < contract["max_resources"]:
-                    seen_resources.add(row["resource_ref"])
-                    report["resources"].append(row)
-                else:
-                    limited = True
-            continuation = data.get("nextLink")
-            if continuation is None or continuation == "":
-                report.update(visible_pagination_exhausted=not limited,
-                              outcome="resource-limit" if limited else "visible-pages-exhausted")
+            except PermissionError:
+                report["outcome"] = "authorization-stopped"
                 break
-            if limited or len(report["resources"]) >= contract["max_resources"]:
-                report["outcome"] = "resource-limit"
+            except (OSError, http.client.HTTPException, ValueError):
+                report["outcome"] = "transport-rejected"
                 break
             try:
-                target = _next_target(continuation, contract)
-            except ValueError:
-                report["outcome"] = "next-link-rejected"
+                status, body = response["status"], response["body"]
+                if type(status) is not int or not 100 <= status <= 599 or not isinstance(body, bytes) or len(body) > 1048576:
+                    raise ValueError
+                receipt.update(status=status, body_sha256=hashlib.sha256(body).hexdigest(), body_bytes=len(body))
+                report["requests_completed"] += 1
+                if status != 200:
+                    report["outcome"] = "http-error"
+                    break
+                data = _json(body)
+                if index == 0:
+                    if (data.get("subscriptionId") != contract["subscription_id"] or data.get("tenantId") != contract["tenant_id"]
+                            or data.get("id", "").lower() != "/subscriptions/" + contract["subscription_id"]):
+                        report["outcome"] = "subscription-context-mismatch"
+                        break
+                    report["subscription_context_matched"] = True
+                    target = ORIGIN + _resource_path(contract) + "?" + urlencode({"api-version": "2021-04-01", "$top": contract["page_size"]})
+                    continue
+                values = data.get("value")
+                if not isinstance(values, list) or len(values) > 500:
+                    raise ValueError
+                rows = [_resource(row, contract) for row in values]
+                report["pages_observed"] += 1
+                limited = False
+                for row in rows:
+                    if row["resource_ref"] in seen_resources:
+                        report["duplicates_not_retained"] += 1
+                    elif len(report["resources"]) < contract["max_resources"]:
+                        seen_resources.add(row["resource_ref"])
+                        report["resources"].append(row)
+                    else:
+                        limited = True
+                continuation = data.get("nextLink")
+                if continuation is None or continuation == "":
+                    report.update(visible_pagination_exhausted=not limited,
+                                  outcome="resource-limit" if limited else "visible-pages-exhausted")
+                    break
+                if limited or len(report["resources"]) >= contract["max_resources"]:
+                    report["outcome"] = "resource-limit"
+                    break
+                try:
+                    target = _next_target(continuation, contract)
+                except ValueError:
+                    report["outcome"] = "next-link-rejected"
+                    break
+                if target in seen_targets:
+                    report["outcome"] = "pagination-loop"
+                    break
+                report["outcome"] = "page-limit"
+            except (ValueError, UnicodeError, RecursionError, TypeError, KeyError, AttributeError):
+                report["outcome"] = "invalid-response"
                 break
-            if target in seen_targets:
-                report["outcome"] = "pagination-loop"
-                break
-            report["outcome"] = "page-limit"
-        except (ValueError, UnicodeError, RecursionError, TypeError, KeyError, AttributeError):
-            report["outcome"] = "invalid-response"
-            break
-    report["resources_retained"] = len(report["resources"])
+        report["resources_retained"] = len(report["resources"])
     return report

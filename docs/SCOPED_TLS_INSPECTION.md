@@ -76,10 +76,12 @@ verify revocation, identify an HTTP product, fingerprint an OS or assess UDP,
 AD or access paths. ALPN is negotiation metadata, not proof of an application
 product. A successful handshake does not establish general service security.
 
-Each invocation admits at most one connection. There is no persistent approval,
-cross-invocation budget or shared quota integration. Use this command separately
-from workflow runs and account for its connection in the written assessment
-budget. `SSLKEYLOGFILE` is not applied to this connection.
+Each invocation admits at most one connection. When `HUNTERQA_QUOTA_LEDGER` is
+configured, one unit and an active slot are reserved before DNS/transport.
+See [native shared quotas](NATIVE_SHARED_QUOTAS.md) for checks, no-refund
+accounting, stopping and recovery. Unconfigured invocations retain their existing
+limit. There is no persistent owner approval or cross-host enforcement.
+`SSLKEYLOGFILE` is not applied to this connection.
 
 ## Validation
 
