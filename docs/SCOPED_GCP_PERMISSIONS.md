@@ -93,8 +93,10 @@ and one fixed permission POST. DNS must yield only public addresses; the selecte
 address is pinned and TLS certificate/hostname verification remains required.
 Authorization is rechecked before calls, after DNS and after TLS before bearer
 transmission. Redirects, retries, compression and fallback are unsupported.
-The response caps are one MiB for context and 16 KiB for permissions, with a
-five-second socket inactivity timeout rather than a process-wide deadline.
+The response caps are one MiB for context and 16 KiB for permissions. Each native
+request shares one five-second post-DNS TCP/TLS/send/header/body I/O deadline.
+DNS and a process-wide deadline remain outside this control; see
+[cloud transport deadlines](CLOUD_TRANSPORT_DEADLINES.md).
 
 With `HUNTERQA_QUOTA_LEDGER`, two operations and an active slot are reserved
 upfront, even if context fails. Units are not refunded; the slot is released and

@@ -121,14 +121,16 @@ The native transport pins a globally admitted DNS address and verifies platform
 TLS trust, TLS 1.2 minimum and strict X.509 policy. It ignores proxies, suppresses
 HTTP debug output and does not apply `SSLKEYLOGFILE`. Private DNS answers and
 sovereign/custom ARM hosts are unsupported. Each response is bounded to one MiB,
-500 rows, 20,000 parsed nodes and depth 32; compression is rejected. Its five-second
-socket timeout is an inactivity limit, not a process-wide deadline or OS isolation.
+500 rows, 20,000 parsed nodes and depth 32; compression is rejected. Each native
+request has a shared five-second post-DNS TCP/TLS/send/header/body I/O deadline.
+DNS and a process-wide deadline remain outside this control; see
+[cloud transport deadlines](CLOUD_TRANSPORT_DEADLINES.md).
 
 Tests use synthetic contracts and an owned loopback HTTPS server with a test CA
 and controlled DNS/dial mapping. They exercise context, pagination, TLS/SNI,
 bearer destination, limits, input changes, privacy and malformed data. No real
-subscription was assessed. Representative cloud field effectiveness and GCP
-runtime remain unfinished.
+subscription was assessed. Representative cloud field effectiveness and complete
+effective-permission inventory remain unfinished.
 
 API references: [Subscription Get](https://learn.microsoft.com/en-us/rest/api/resources/subscriptions/get?view=rest-resources-2022-12-01)
 and [Resources List](https://learn.microsoft.com/en-us/rest/api/resources/resources/list?view=rest-resources-2021-04-01).

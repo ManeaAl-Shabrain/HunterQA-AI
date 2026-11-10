@@ -67,6 +67,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 ## 6. Production platform hardening — partial
 
 - [x] Per-run budgets, approvals, deadlines and emergency stop
+- [x] Shared post-DNS TCP/TLS/HTTP I/O deadline per native Azure/GCP request
 - [x] Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation
 - [x] Opt-in authenticated local dashboard roles and revocable sessions
 - [ ] Hosted multi-user deployment and tenant isolation

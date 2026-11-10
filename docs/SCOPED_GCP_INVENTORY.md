@@ -150,8 +150,9 @@ The transport admits global DNS answers only, pins a numeric address, verifies
 the original host with platform TLS trust, uses TLS 1.2 minimum/strict X.509, and
 suppresses HTTP debug and `SSLKEYLOGFILE`. Proxies and custom endpoints are not
 used. Compressed bodies are rejected. Limits are one MiB per response, 500 input
-rows, 20,000 parsed nodes and depth 32. The five-second socket timeout is an
-inactivity limit, not an independent process deadline or OS isolation.
+rows, 20,000 parsed nodes and depth 32. Each native request has a shared five-second
+post-DNS TCP/TLS/send/header/body I/O deadline. DNS, process supervision and OS
+isolation remain outside it; see [cloud transport deadlines](CLOUD_TRANSPORT_DEADLINES.md).
 
 Tests use synthetic contracts and owned HTTPS with a fixture CA and controlled
 DNS/dial mapping for both hosts. They cover scope/ancestry, pagination, nanosecond

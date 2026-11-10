@@ -16,6 +16,7 @@ from .cloud_inventory_common import live_window, temporary_credentials, bounded_
 from .engagement import _expiry, digest, utcnow
 from .source_files import read_bounded
 from . import shared_quota
+from . import cloud_transport
 
 CONTEXT_HOST = "cloudresourcemanager.googleapis.com"
 ASSET_HOST = "cloudasset.googleapis.com"
@@ -120,7 +121,7 @@ def _asset(row, contract):
 def _dial(ip):
     channel = socket.socket(socket.AF_INET6 if ipaddress.ip_address(ip).version == 6 else socket.AF_INET, socket.SOCK_STREAM)
     try:
-        channel.settimeout(5)
+        channel.settimeout(cloud_transport.REQUEST_TIMEOUT)
         channel.connect((ip, 443))
         return channel
     except BaseException:
@@ -140,12 +141,9 @@ class _GCPConnection(http.client.HTTPSConnection):
         self.ip, self.debuglevel = ip, 0
 
     def connect(self):
+        end = cloud_transport.deadline()
         channel = _dial(self.ip)
-        try:
-            self.sock = self._context.wrap_socket(channel, server_hostname=self.host)
-        except BaseException:
-            channel.close()
-            raise
+        self.sock = cloud_transport.finish_tls(channel, self._context, self.host, end)
 
 
 def _gcp_get(target, token, *, before_send):
@@ -162,18 +160,13 @@ def _gcp_get(target, token, *, before_send):
     before_send()
     connection = _GCPConnection(host, ip)
     try:
+        before_send()  # Recheck after local trust setup, immediately before TCP.
         connection.connect()
         before_send()
         connection.request("GET", parts.path + ("?" + parts.query if parts.query else ""), headers={
             "Authorization": "Bearer " + token, "Accept": "application/json", "Accept-Encoding": "identity",
             "Connection": "close", "User-Agent": "HunterQA-AI scoped-gcp-inventory"})
-        response = connection.getresponse()
-        if response.getheader("Content-Encoding", "identity").lower() != "identity":
-            raise ValueError("Unsupported GCP response encoding")
-        body = response.read(1048577)
-        if len(body) > 1048576:
-            raise ValueError("GCP response size rejected")
-        return {"status": response.status, "body": body}
+        return cloud_transport.read_response(connection.getresponse(), 1048576)
     finally:
         connection.close()
 
@@ -213,7 +206,7 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
             "Exact project number/ID/direct parent and per-asset ancestry are required; unsupported or cross-project shapes stop the entire page",
             "Reported snapshot time is pinned across pages but does not prove atomicity, freshness, CAI completeness or consistency during indexing delays",
             "No IAM/deny/condition evaluation, organization/folder enumeration, data-plane requests or general tenant isolation testing",
-            "Five-second socket inactivity timeout and one-MiB response cap; no independent process-wide deadline, OS isolation or cross-host quota",
+            "Native HTTPS: five-second shared post-DNS TCP/TLS/send/header/body I/O deadline per request and one-MiB body cap; no DNS/process-wide deadline, OS isolation or cross-host quota",
             "Local operator attestation and hashes do not verify owner grants, provenance or anonymity; representative GCP field effectiveness is unverified"]}
     with shared_quota.invocation(1 + contract["max_pages"]) as admission:
         report["shared_quota"] = admission.receipt
