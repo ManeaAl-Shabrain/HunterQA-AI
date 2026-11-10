@@ -10,7 +10,8 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Form inventory without submission
 - [x] Optional owned-loopback rendered-anchor crawling with ephemeral local login context
 - [x] Scoped HTTPS rendered-anchor discovery with ephemeral cookie login
-- [x] Offline discovery recall against supplied route references
+- [x] Explicit start-document SPA slash hash-route states within reviewed page/depth bounds
+- [x] Separate offline discovered/visited recall against supplied route references
 - [ ] General action-driven SPA discovery
 - [ ] Complex sessions and SSO
 - [ ] Comprehensive endpoint discovery

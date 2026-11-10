@@ -80,11 +80,11 @@ troubleshooting. Use a fresh output directory for each run.
 ## What remains incomplete
 
 All seven broad assessment areas remain **partial**. Rendered discovery supports
-bounded same-origin anchors and conventional cookie login; general authenticated crawling,
-comprehensive active vulnerability validation, SSO and
+bounded same-origin anchors, selected slash hash routes and conventional cookie login.
+General authenticated crawling, comprehensive active vulnerability validation, SSO and
 business workflows, OS/AD attack paths, broad multi-cloud permissions, hosted
 tenant isolation, independently verified owner grants, OS isolation and
-distributed enforcement. Real-world detection effectiveness is **unverified**.
+distributed enforcement remain unfinished. Real-world detection effectiveness is **unverified**.
 
 The SQL lab is a separate in-memory fixture; it does not validate the HTTP
 SQL-error scanner or establish customer findings. See the [SQL lab guide](docs/OWNED_SQL_VALIDATION.md).
@@ -98,7 +98,7 @@ an engagement. Authorization does not enable missing functionality.
 | --- | --- |
 | First approved assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
-| Rendered discovery and reference recall | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
+| Rendered links, selected SPA routes and reference coverage | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
 | Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Signed tokens and OIDC/session fixtures | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Certificate and hostname verification on one approved endpoint | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |

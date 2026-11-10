@@ -238,6 +238,7 @@ def main(argv=None):
     plan_cmd.add_argument("--max-pages", type=int)
     plan_cmd.add_argument("--max-depth", type=int)
     plan_cmd.add_argument("--settle-ms", type=int)
+    plan_cmd.add_argument("--hash-route", action="append", help="Exact reviewed slash hash route on the start document; repeat for browser-discovery")
     plan_cmd.add_argument("--parameter", help="Reviewed GET parameter for a fixed owned canary check")
     plan_cmd.add_argument("--owned-test-endpoint", action="store_true")
     plan_cmd.add_argument("--canary-marker", help="Public owner-installed synthetic SQL canary")
@@ -1051,11 +1052,13 @@ def main(argv=None):
             if args.canary_marker is not None:
                 validation["canary_marker"] = args.canary_marker
         discovery = None
-        if args.mode == "browser-discovery" or any(value is not None for value in
+        if args.mode == "browser-discovery" or args.hash_route is not None or any(value is not None for value in
                                                    (args.max_pages, args.max_depth, args.settle_ms)):
             discovery = {"max_pages": 3 if args.max_pages is None else args.max_pages,
                          "max_depth": 1 if args.max_depth is None else args.max_depth,
                          "settle_ms": 250 if args.settle_ms is None else args.settle_ms}
+            if args.hash_route is not None:
+                discovery["hash_routes"] = args.hash_route
         plan = create_plan(args.profile, args.url, mode=args.mode, method=args.method,
                            ttl_minutes=args.ttl_minutes, dedicated_test_account=args.dedicated_test_account,
                            browser_isolated=args.browser_isolated, login_url=args.login_url,

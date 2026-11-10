@@ -26,7 +26,7 @@ from .container_review import catalog as container_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
-     "Bounded HTML and opt-in same-origin HTTPS rendered-anchor discovery with ephemeral dedicated-account cookie login",
+     "Bounded HTML and opt-in same-origin HTTPS rendered anchors/selected slash hash states with ephemeral dedicated-account cookie login",
      ["General action-driven SPA discovery", "Complex sessions and SSO", "Comprehensive endpoint discovery"]),
     ("active-vulnerability-testing", "Active vulnerability testing", ["web-canary-check"],
      "Fixed inert markup/SQL error cues, owned-endpoint SQL canary differentials and reflected-HTML Chromium execution witnesses",
@@ -49,7 +49,7 @@ AREAS = (
 )
 
 FEATURES = {
-    "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None), ("Scoped HTTPS rendered-anchor discovery with ephemeral cookie login", None), ("Offline discovery recall against supplied route references", None)],
+    "website-discovery": [("Bounded automatic HTML crawling", "web-discovery"), ("Form inventory without submission", "web-discovery"), ("Optional owned-loopback rendered-anchor crawling with ephemeral local login context", None), ("Scoped HTTPS rendered-anchor discovery with ephemeral cookie login", None), ("Explicit start-document SPA slash hash-route states within reviewed page/depth bounds", None), ("Separate offline discovered/visited recall against supplied route references", None)],
     "active-vulnerability-testing": [("Fixed inert-markup baseline/probe comparisons", "web-canary-check"), ("Fixed SQL-error baseline/probe comparisons", "web-canary-check"), ("Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay", None), ("Fixed owned-endpoint SQL canary differential with negative/repeat controls", None), ("Fixed reflected-HTML XSS canary execution in isolated Chromium", None)],
     "authentication-authorization": [("Dedicated-role and anonymous GET contracts", "authorization-matrix"), ("Origin-bound per-request credentials and optional body-hash checks", "authorization-matrix"), ("Offline RS256 ID-token signature and explicit issuer/audience/nonce/time policy", None), ("Owned OIDC PKCE/code/session/tenant/logout HTTP controls", None)],
     "network-infrastructure": [("Exact admitted TCP host/port reachability", "service-enumeration"), ("Separate one-endpoint TLS certificate/hostname inspection (tls-service-inspect)", None), ("Bounded numeric-endpoint server-first SSH identification claims (ssh-service-inspect)", None), ("Expiring one-endpoint UDP DNS A question and expected-answer comparison (udp-dns-inspect)", None), ("Scoped service-evidence import", "service-evidence"), ("Selected offline normalized AD/SMB/LDAP policy review", None)],

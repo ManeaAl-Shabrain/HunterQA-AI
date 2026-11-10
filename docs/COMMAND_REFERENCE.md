@@ -26,6 +26,8 @@ suggestions require human review. See [security policy](../SECURITY.md).
 
 `browser-discovery` is a separately reviewed engagement mode for bounded
 same-origin rendered links and ephemeral cookie login. See the [guide](SCOPED_RENDERED_DISCOVERY.md).
+For explicitly selected start-document SPA hash routes, repeat `--hash-route`
+on `engagement-plan`; see [hash routes and visit coverage](SCOPED_SPA_HASH_DISCOVERY.md).
 
 `sql-canary-check` and `xss-canary-check` are reviewed engagement modes with five
 fixed owned-endpoint inputs. See [runtime controls](CONTROLLED_RUNTIME_VALIDATION.md).
