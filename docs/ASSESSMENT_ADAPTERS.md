@@ -232,7 +232,7 @@ run directory. Requests are not refunded after success, cancellation or failure.
 The active-run slot is released after worker termination. SQLite transactions
 prevent simultaneous coordinators from overspending this ledger.
 
-The same optional ledger now covers native TLS, UDP DNS, Azure and GCP commands;
+The same optional ledger now covers native TLS, SSH identification, UDP DNS, Azure and GCP commands;
 see [native shared quotas](NATIVE_SHARED_QUOTAS.md) for their reservations and
 receipts. Other entry points are not automatically metered by that extension.
 Use a local filesystem on one host; UNC/share paths are rejected and network

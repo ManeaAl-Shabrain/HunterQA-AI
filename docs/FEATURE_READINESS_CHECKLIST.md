@@ -43,6 +43,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 
 - [x] Exact admitted TCP host/port reachability
 - [x] Separate one-endpoint TLS certificate/hostname inspection (tls-service-inspect)
+- [x] Bounded numeric-endpoint server-first SSH identification claims (ssh-service-inspect)
 - [x] Expiring one-endpoint UDP DNS A question and expected-answer comparison (udp-dns-inspect)
 - [x] Scoped service-evidence import
 - [x] Selected offline normalized AD/SMB/LDAP policy review
@@ -65,7 +66,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 ## 6. Production platform hardening — partial
 
 - [x] Per-run budgets, approvals, deadlines and emergency stop
-- [x] Optional shared host-local quota ledger for workflows and native TLS/UDP/Azure/GCP, with crash-slot reconciliation
+- [x] Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation
 - [x] Opt-in authenticated local dashboard roles and revocable sessions
 - [ ] Hosted multi-user deployment and tenant isolation
 - [ ] Independently verified owner grants

@@ -8,13 +8,13 @@ benchmark. None changes the immutable published v1.3.0 release. See
 
 | Priority | Area | Current delivery | Next acceptance gate |
 | --- | --- | --- | --- |
-| P0 | Website discovery | Bounded unauthenticated HTML link following, form inventory, scope/pacing/quota controls and private evidence | Add owned SPA fixtures and explicit browser request admission before JavaScript/session coverage; measure reachable-route coverage |
+| P0 | Website discovery | Bounded HTML and scoped rendered-anchor discovery, ephemeral conventional login and reference-route recall | General SPA actions, complex sessions/SSO and representative route-coverage evaluation |
 | P0 | Platform hardening | Supervised fixed workers, per-run controls, shared host-local quotas and optional authenticated local dashboard roles with revocable sessions | Independently verified owner grants, hosted multi-user/tenant isolation, OS sandbox with denied-egress tests, enforced cross-host quotas and distributed workers |
 | P0 | Detection effectiveness | Eight versioned owned application cases, retained evidence, source/label hashes and per-class metrics; existing source/header/cookie controls | Externally reviewed ground truth, representative real-world datasets, detection rates across remaining classes and standards coverage |
-| P1 | Active vulnerability validation | Fixed baseline/probe pairs for inert markup reflection and SQL error cues; no automatic exploitability confirmation | Confirmed class-specific validators; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
-| P1 | Authentication/authorization | Exact multi-role/anonymous GET matrix, per-request dedicated credentials, expected status/optional body-digest contracts, cross-origin credential blocking | SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
-| P2 | Infrastructure/network | Exact admitted TCP host/port connect enumeration with pinned DNS and connection-outcome journals; existing offline evidence import | Broader service/version and OS assessment, UDP, isolated AD fixtures and internal attack-path testing |
-| P2 | Cloud runtime | Fixed AWS STS identity/account binding and IAM summary counters with temporary credentials; selected local configuration checks | Real sandbox-account validation; resource/effective-permission inventory, Azure/GCP and broader infrastructure assessment |
+| P1 | Active vulnerability validation | Fixed SQL canary differential and reflected-HTML Chromium witnesses with owned positive/negative controls | General context-specific validation; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
+| P1 | Authentication/authorization | Multi-role/anonymous GET contracts, optional offline signed ID-token verification and owned OIDC/session controls | External SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
+| P2 | Infrastructure/network | Exact TCP reachability, verified TLS handshake, bounded SSH identification claims, one expiring UDP DNS question and offline evidence import | Authenticated/general service and OS assessment, broader UDP, isolated AD fixtures and internal attack-path testing |
+| P2 | Cloud runtime | Fixed AWS identity/account counters and bounded Azure/GCP resource metadata GETs with explicit temporary tokens | Representative sandbox-account validation, complete resource/effective-permission inventory and broader provider coverage |
 
 ## Implementation sequence
 
@@ -38,6 +38,11 @@ Every increment needs reproducible tests, documented inputs and output limits,
 honest coverage statements, evidence handling, and compatibility checks. A catalog
 entry, imported finding, checklist, or passing synthetic test alone does not make
 a vulnerability class implemented or prove real-world detection effectiveness.
+
+See [expansion progress](EXPANSION_PROGRESS.md) for each delivered increment.
+Current native TLS/SSH/DNS/Azure/GCP commands share the optional host-local
+ledger; legacy entry points, cross-host enforcement and tenant isolation remain
+outside its coverage.
 
 This roadmap does not include credential theft, covert persistence, security-tool
 evasion, data exfiltration or anti-forensics automation. It supports authorized

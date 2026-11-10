@@ -156,6 +156,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `runtime-validation-verify` | Offline consistency of retained HTTP runtime benchmark evidence |
 | `scan` | Run unified offline Semgrep + config + API + dependency scan |
 | `signed-id-token-verify` | Offline RS256 ID-token signature and explicit policy verification |
+| `ssh-service-inspect` | Observe one approved numeric endpoint's SSH identification; no client data or authentication |
 | `social-evidence-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |
 | `social-review` | Offline observations or saved DMARC/simulation metadata; no delivery or collection |
 | `social-review-catalog` | Show two offline social-engineering assurance contracts |

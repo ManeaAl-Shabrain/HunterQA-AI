@@ -1,6 +1,6 @@
 # Shared quotas for native assessment commands
 
-The optional local ledger now covers the four native commands below as well as
+The optional local ledger now covers the five native commands below as well as
 the existing workflow coordinator. Cooperating processes on one trusted host
 reserve from the same request budget and active-run limit before target traffic.
 This does not add tenant isolation, verified owner grants, OS isolation or
@@ -27,6 +27,7 @@ budget checks remain required.
 | --- | --- | --- |
 | `workflow-run` | Existing entire protocol budget, including zero for offline work | Existing coordinator and worker supervision |
 | `tls-service-inspect` | 1 connection/handshake operation | Before/after DNS, before TCP and TLS |
+| `ssh-service-inspect` | 1 connection/identification observation | Before TCP and each bounded read; unchanged expiring endpoint contract |
 | `udp-dns-inspect` | 1 DNS question | Before UDP connect and immediately before send |
 | `azure-resource-inventory` | `1 + max_pages` GET operations | Before calls, after DNS/TLS before bearer transmission |
 | `gcp-resource-inventory` | `1 + max_pages` GET operations | Before calls, after DNS/TLS before bearer transmission |
