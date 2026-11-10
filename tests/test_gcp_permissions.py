@@ -259,6 +259,8 @@ def test_post_wire_bounds_fixed_body_and_connection_cleanup(monkeypatch, encodin
     monkeypatch.setattr(module, "resolve_pinned", lambda *a: "8.8.8.8")
     class Response:
         status = 200
+        def close(self):
+            pass
         def getheader(self, key, default=None):
             return encoding
         def read(self, cap):

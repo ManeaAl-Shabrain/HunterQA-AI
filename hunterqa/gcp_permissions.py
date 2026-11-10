@@ -8,6 +8,7 @@ import math
 import time
 
 from . import shared_quota
+from . import cloud_transport
 from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
 from .cloud_inventory_common import bounded_json, live_window, temporary_credentials
 from .engagement import digest, utcnow
@@ -68,18 +69,13 @@ def _permission_post(number, permissions, token, *, before_send):
     before_send()
     connection = _GCPConnection(CONTEXT_HOST, ip)
     try:
+        before_send()  # Recheck after local trust setup, immediately before TCP.
         connection.connect()
         before_send()
         connection.request("POST", path, body=body, headers={
             "Authorization": "Bearer " + token, "Accept": "application/json", "Accept-Encoding": "identity",
             "Content-Type": "application/json", "Connection": "close", "User-Agent": "HunterQA-AI scoped-gcp-permissions"})
-        response = connection.getresponse()
-        if response.getheader("Content-Encoding", "identity").lower() != "identity":
-            raise ValueError("Unsupported GCP permission response encoding")
-        raw = response.read(16385)
-        if len(raw) > 16384:
-            raise ValueError("GCP permission response size rejected")
-        return {"status": response.status, "body": raw}
+        return cloud_transport.read_response(connection.getresponse(), 16384)
     finally:
         connection.close()
 
@@ -123,7 +119,7 @@ def check_permissions(input_file, credential_file, *, authorized=False, context_
             "No complete effective-access calculation, deny/condition/org-policy analysis, identity introspection, data-plane access or other-principal evaluation",
             "Failure, rejected response or unmatched project context leaves all permission values unknown; no redirects, retries, API enablement or fallback",
             "Context and permission query are sequential, not an atomic authorization snapshot; in-flight results can complete after stop",
-            "Five-second socket inactivity timeout, one-MiB context and 16-KiB permission response cap; no independent process-wide deadline",
+            "Native HTTPS: five-second shared post-DNS TCP/TLS/send/header/body I/O deadline per request, one-MiB context and 16-KiB permission body caps; no DNS or process-wide deadline",
             "Optional trusted host-local quota and local operator attestation; no verified owner grant, tenant/OS isolation or cross-host enforcement",
             "Hashes do not authenticate provenance or anonymize guessable project values; representative live GCP field effectiveness is unverified"]}
     context_target = "https://" + CONTEXT_HOST + "/v3/projects/" + contract["project_number"] + "?fields=name%2CprojectId%2Cparent%2Cstate"

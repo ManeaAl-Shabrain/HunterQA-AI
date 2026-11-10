@@ -235,6 +235,8 @@ prevent simultaneous coordinators from overspending this ledger.
 The same optional ledger now covers native TLS, SSH identification, UDP DNS, Azure and GCP commands;
 see [native shared quotas](NATIVE_SHARED_QUOTAS.md) for their reservations and
 receipts. Other entry points are not automatically metered by that extension.
+Native Azure/GCP HTTPS calls also have [post-DNS per-request I/O deadlines](CLOUD_TRANSPORT_DEADLINES.md).
+These do not supervise custom Python transports or impose process-wide deadlines.
 Use a local filesystem on one host; UNC/share paths are rejected and network
 mounts do not provide supported distributed enforcement.
 

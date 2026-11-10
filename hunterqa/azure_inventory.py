@@ -16,6 +16,7 @@ from .engagement import digest, utcnow
 from .cloud_inventory_common import live_window as _live, temporary_credentials as _credentials, bounded_json as _json
 from .source_files import read_bounded
 from . import shared_quota
+from . import cloud_transport
 
 HOST = "management.azure.com"
 ORIGIN = "https://" + HOST
@@ -80,7 +81,7 @@ def _next_target(value, contract):
 def _dial(ip):
     channel = socket.socket(socket.AF_INET6 if ipaddress.ip_address(ip).version == 6 else socket.AF_INET, socket.SOCK_STREAM)
     try:
-        channel.settimeout(5)
+        channel.settimeout(cloud_transport.REQUEST_TIMEOUT)
         channel.connect((ip, 443))
         return channel
     except BaseException:
@@ -99,12 +100,9 @@ class _ARMConnection(http.client.HTTPSConnection):
         self.debuglevel = 0  # Never inherit HTTP debug printing of bearer headers.
 
     def connect(self):
+        end = cloud_transport.deadline()
         channel = _dial(self.ip)
-        try:
-            self.sock = self._context.wrap_socket(channel, server_hostname=HOST)
-        except BaseException:
-            channel.close()
-            raise
+        self.sock = cloud_transport.finish_tls(channel, self._context, HOST, end)
 
 
 def _arm_get(target, token, *, before_send):
@@ -119,18 +117,13 @@ def _arm_get(target, token, *, before_send):
     before_send()  # DNS delays cannot extend authorization for a new connection.
     connection = _ARMConnection(ip)
     try:
+        before_send()  # Trust-context setup must not extend admission for TCP.
         connection.connect()
         before_send()  # Check again after TLS, before sending the bearer token.
         connection.request("GET", parts.path + "?" + parts.query,
             headers={"Authorization": "Bearer " + token, "Accept": "application/json",
                      "Accept-Encoding": "identity", "Connection": "close", "User-Agent": "HunterQA-AI scoped-azure-inventory"})
-        response = connection.getresponse()
-        if response.getheader("Content-Encoding", "identity").lower() != "identity":
-            raise ValueError("Unsupported Azure response encoding")
-        body = response.read(1048577)
-        if len(body) > 1048576:
-            raise ValueError("Azure response size rejected")
-        return {"status": response.status, "body": body}
+        return cloud_transport.read_response(connection.getresponse(), 1048576)
     finally:
         connection.close()
 
@@ -189,7 +182,7 @@ def inventory(input_file, credential_file, *, authorized=False, transport=None, 
             "Strict continuation host/path/API/query checks; unknown formats stop collection rather than expanding scope",
             "No RBAC, deny/condition/PIM evaluation, data-plane access, configuration review or general tenant isolation assessment",
             "Pagination exhaustion is not inventory completeness: permissions, API omissions, service behavior and concurrent changes can hide resources",
-            "Five-second socket inactivity timeout, one-MiB response cap; no independent process-wide wall-clock deadline",
+            "Native HTTPS: five-second shared post-DNS TCP/TLS/send/header/body I/O deadline per request and one-MiB body cap; no DNS or process-wide deadline",
             "Optional cooperating host-local quota and operator attestation only; hashes do not authenticate provenance or anonymize guessable data",
             "Runtime adapter has owned/synthetic transport controls; representative Azure field effectiveness remains unverified"]}
     with shared_quota.invocation(1 + contract["max_pages"]) as admission:

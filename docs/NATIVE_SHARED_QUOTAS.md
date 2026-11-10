@@ -34,6 +34,9 @@ budget checks remain required.
 | `gcp-permission-check` | 2 operations: context GET and fixed permission-query POST | Before calls, after DNS/TLS before bearer transmission |
 
 These are reserved operations, not delivered requests, packets or bytes. DNS
+and TCP/TLS/HTTP I/O remain subject to their individual command controls. Native
+Azure/GCP calls now use [shared per-request I/O deadlines](CLOUD_TRANSPORT_DEADLINES.md);
+these do not impose a DNS or independently supervised process deadline. DNS
 resolution, TLS messages and local database I/O are not separate units. Legacy
 `bounty-*`, `engagement-*`, separate labs and custom caller code are not
 automatically covered by this extension. This is not a universal network firewall.
