@@ -10,7 +10,7 @@ assets are unchanged.
 | Vulnerability validation | Fixed owned-endpoint SQL canary differentials, Chromium reflected-XSS execution controls and a six-endpoint HTTP baseline | General validation across input/SQL/HTML contexts, representative datasets and broader vulnerability classes |
 | Identity and authorization | Explicit role contracts, optional signed ID-token verification, owned OIDC/PKCE/code/session/tenant/logout controls | External interactive SSO, production sessions/federation, stateful business logic and general tenant boundaries |
 | Internal infrastructure | Exact TCP reachability, scoped verified TLS handshake, bounded server-first SSH identification claims, one expiring exact-endpoint UDP DNS A question with expected-answer comparison, and selected saved evidence review | Authenticated/general service and OS identification, protocol/cipher enumeration, revocation, broader UDP protocols, live directory/effective-access and attack-path assessment |
-| Cloud | Narrow AWS APIs, bounded Azure subscription and GCP project visible-resource GETs with explicit temporary tokens, and saved AWS/Azure/GCP policy readers | Complete resource inventory, effective permissions, broader AWS/Azure/GCP coverage and representative cloud evaluations |
+| Cloud | Narrow AWS APIs, bounded Azure/GCP visible-resource GETs, selected GCP caller permission-query responses with explicit temporary tokens, and saved AWS/Azure/GCP policy readers | Complete resource inventory, independently confirmed effective permissions, broader AWS/Azure/GCP coverage and representative cloud evaluations |
 | Production and users | Local roles, per-run controls and optional shared host-local reservations across workflows and native TLS/SSH/UDP/Azure/GCP commands | Verified grants, tenant isolation, OS sandboxing, distributed workers, cross-host quotas and coverage of other entry points |
 | Effectiveness evidence | Endpoint-reference recall, separate HTTP runtime labels, per-class confusion/miss metrics and bounded WSTG mapping | Representative independent field evaluation, broader per-class coverage and a complete standards map |
 
@@ -23,6 +23,7 @@ Sixth implementation: [bounded Azure resource inventory](SCOPED_AZURE_INVENTORY.
 Seventh implementation: [bounded GCP project asset inventory](SCOPED_GCP_INVENTORY.md).
 Eighth implementation: [shared host-local quotas for native commands](NATIVE_SHARED_QUOTAS.md).
 Ninth implementation: [bounded SSH identification observation](SCOPED_SSH_IDENTIFICATION.md).
+Tenth implementation: [selected GCP caller permission query](SCOPED_GCP_PERMISSIONS.md).
 These remain bounded source-development capabilities. Multi-user
 production changes require a separate deployment architecture and threat model;
 local roles alone do not provide tenant isolation.

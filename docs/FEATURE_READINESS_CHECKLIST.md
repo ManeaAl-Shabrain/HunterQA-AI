@@ -58,6 +58,7 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Optional read-only AWS identity and account-summary adapter
 - [x] Separate bounded Azure subscription context and visible-resource GET inventory (azure-resource-inventory)
 - [x] Separate bounded GCP project context, ancestry and snapshot-time-pinned asset GET inventory (gcp-resource-inventory)
+- [x] Selected GCP caller permission-query responses after exact project-context match (gcp-permission-check)
 - [x] Selected local configuration/dependency patterns
 - [x] Offline normalized AWS/Azure/GCP posture and selected native policy readers
 - [ ] Complete resource and effective-permission inventory

@@ -106,6 +106,7 @@ an engagement. Authorization does not enable missing functionality.
 | One approved UDP DNS question and expected-answer comparison | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
 | Bounded Azure resource inventory with an explicit temporary token | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
 | Bounded GCP project asset inventory with an explicit temporary token | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
+| Query selected permissions reported for a supplied GCP caller token | [GCP permission check](docs/SCOPED_GCP_PERMISSIONS.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
 | Shared local limits for workflows and native TLS/SSH/DNS/cloud commands | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |

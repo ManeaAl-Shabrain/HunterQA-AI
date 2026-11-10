@@ -1,6 +1,6 @@
 # Shared quotas for native assessment commands
 
-The optional local ledger now covers the five native commands below as well as
+The optional local ledger now covers the six native commands below as well as
 the existing workflow coordinator. Cooperating processes on one trusted host
 reserve from the same request budget and active-run limit before target traffic.
 This does not add tenant isolation, verified owner grants, OS isolation or
@@ -31,6 +31,7 @@ budget checks remain required.
 | `udp-dns-inspect` | 1 DNS question | Before UDP connect and immediately before send |
 | `azure-resource-inventory` | `1 + max_pages` GET operations | Before calls, after DNS/TLS before bearer transmission |
 | `gcp-resource-inventory` | `1 + max_pages` GET operations | Before calls, after DNS/TLS before bearer transmission |
+| `gcp-permission-check` | 2 operations: context GET and fixed permission-query POST | Before calls, after DNS/TLS before bearer transmission |
 
 These are reserved operations, not delivered requests, packets or bytes. DNS
 resolution, TLS messages and local database I/O are not separate units. Legacy
