@@ -6,6 +6,10 @@ an explicit temporary token and exports hashed asset references with selected
 public kind labels. It does not calculate effective permissions or establish a
 complete inventory. No Google SDK or optional extra is required.
 
+For a separate selected caller permission query, see
+[GCP permission check](SCOPED_GCP_PERMISSIONS.md). It does not change this
+command's GET-only inventory behavior or establish complete effective access.
+
 ## Private inputs
 
 Obtain written permission for the exact project and an appropriate temporary

@@ -14,7 +14,7 @@ benchmark. None changes the immutable published v1.3.0 release. See
 | P1 | Active vulnerability validation | Fixed SQL canary differential and reflected-HTML Chromium witnesses with owned positive/negative controls | General context-specific validation; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
 | P1 | Authentication/authorization | Multi-role/anonymous GET contracts, optional offline signed ID-token verification and owned OIDC/session controls | External SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
 | P2 | Infrastructure/network | Exact TCP reachability, verified TLS handshake, bounded SSH identification claims, one expiring UDP DNS question and offline evidence import | Authenticated/general service and OS assessment, broader UDP, isolated AD fixtures and internal attack-path testing |
-| P2 | Cloud runtime | Fixed AWS identity/account counters and bounded Azure/GCP resource metadata GETs with explicit temporary tokens | Representative sandbox-account validation, complete resource/effective-permission inventory and broader provider coverage |
+| P2 | Cloud runtime | Fixed AWS identity/account counters, bounded Azure/GCP resource metadata GETs and selected GCP caller permission-query responses with explicit temporary tokens | Representative sandbox-account validation, complete resource and independently confirmed effective-permission inventory, and broader provider coverage |
 
 ## Implementation sequence
 

@@ -585,6 +585,11 @@ def main(argv=None):
     gcp_inventory.add_argument("--credentials", required=True)
     gcp_inventory.add_argument("--out", required=True)
     gcp_inventory.add_argument("--authorized", action="store_true")
+    gcp_permissions = sub.add_parser("gcp-permission-check", help="Query supplied caller's selected GCP project permissions; no permission exercise or IAM write")
+    gcp_permissions.add_argument("--input", required=True)
+    gcp_permissions.add_argument("--credentials", required=True)
+    gcp_permissions.add_argument("--out", required=True)
+    gcp_permissions.add_argument("--authorized", action="store_true")
     signed_token = sub.add_parser("signed-id-token-verify", help="Offline RS256 ID-token signature and explicit policy verification")
     signed_token.add_argument("--input", required=True)
     signed_token.add_argument("--out", required=True)
@@ -871,7 +876,7 @@ def main(argv=None):
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
         return
-    if args.command in ("tls-service-inspect", "ssh-service-inspect", "udp-dns-inspect", "azure-resource-inventory", "gcp-resource-inventory"):
+    if args.command in ("tls-service-inspect", "ssh-service-inspect", "udp-dns-inspect", "azure-resource-inventory", "gcp-resource-inventory", "gcp-permission-check"):
         from .workflow_store import approved_directory
         # Reserve a private create-only destination before any target traffic.
         output = Path(args.out).expanduser()
@@ -890,6 +895,9 @@ def main(argv=None):
             elif args.command == "azure-resource-inventory":
                 from .azure_inventory import inventory as azure_resources
                 report = azure_resources(args.input, args.credentials, authorized=args.authorized)
+            elif args.command == "gcp-permission-check":
+                from .gcp_permissions import check_permissions
+                report = check_permissions(args.input, args.credentials, authorized=args.authorized)
             else:
                 from .gcp_inventory import inventory as gcp_resources
                 report = gcp_resources(args.input, args.credentials, authorized=args.authorized)
