@@ -6,6 +6,10 @@ anchors and follows admitted links in a bounded breadth-first traversal. An
 optional dedicated-account form login supplies an ephemeral cookie session.
 It does not establish successful authentication or complete endpoint coverage.
 
+An explicit reviewed list can now retain and visit slash hash routes on the start
+document. See [selected SPA hash routes](SCOPED_SPA_HASH_DISCOVERY.md) for
+`--hash-route`, state limits and separate discovery/visit reference metrics.
+
 This mode is separate from the owned-loopback lab and the existing
 JavaScript-disabled `browser` mode. It is a post-v1.3.0 source addition.
 
@@ -98,7 +102,9 @@ To measure recall on a known application, prepare an independent reference JSON:
 {"schema_version": 1, "expected_url_sha256": ["REPLACE_WITH_64_LOWERCASE_HEX_CHARACTERS"]}
 ```
 
-Hash each full expected URL with SHA-256, UTF-8 encoding, without a fragment.
+Hash each full expected URL with SHA-256, UTF-8 encoding. Ordinary document URLs
+remain fragment-free; explicitly selected SPA hash routes include their exact
+fragment, as described in [the hash-route guide](SCOPED_SPA_HASH_DISCOVERY.md).
 Use the application's independently maintained route list rather than copying
 the discovered output. Then compare offline:
 
@@ -108,7 +114,10 @@ hunterqa engagement-discovery-coverage --report "$CASE/rendered-result-001.json"
 ```
 
 The result shows reference matches/missing routes, unlabelled discovered routes
-and `reference_discovery_recall`. Unlabelled routes are not automatically false
+and `reference_discovery_recall`. Separate `reference_visit_recall` and visit
+match/missing counts use retained page/state observations, not merely exposed
+links; visit metrics are null for old inventories without those rows.
+Unlabelled routes are not automatically false
 positives. A supplied or incomplete reference is not independent field evidence.
 This is endpoint inventory recall, not vulnerability detection accuracy.
 

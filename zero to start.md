@@ -154,6 +154,7 @@ for commands and their execution modes.
 | Prepare an approved organization assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | Run selected adapters with reviewed approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) and [adapters](docs/ASSESSMENT_ADAPTERS.md) |
 | Try fixed HTTP SQL/XSS controls with Chromium | [Controlled runtime validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
+| Discover selected SPA hash routes and compare discovered/visited coverage | [SPA hash-route guide](docs/SCOPED_SPA_HASH_DISCOVERY.md) |
 | Verify a saved signed ID token or run owned OIDC/session controls | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Inspect TLS on one explicitly permitted host/port | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
 | Observe one approved SSH endpoint without sending client application data | [Scoped SSH identification](docs/SCOPED_SSH_IDENTIFICATION.md) |

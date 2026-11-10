@@ -6,7 +6,7 @@ assets are unchanged.
 
 | Area | Delivered so far | Remaining work |
 | --- | --- | --- |
-| Web discovery | Opt-in scoped HTTPS rendered-anchor crawl, bounded same-origin resources and ephemeral conventional-login cookie reuse | SSO, complex sessions, general SPA actions, representative compatibility evaluation, complete endpoint discovery |
+| Web discovery | Opt-in scoped HTTPS rendered anchors and explicitly selected slash hash routes, separate discovered/visited reference recall, bounded same-origin resources and ephemeral conventional-login cookie reuse | SSO, complex sessions, general SPA actions, representative compatibility evaluation, complete endpoint discovery |
 | Vulnerability validation | Fixed owned-endpoint SQL canary differentials, Chromium reflected-XSS execution controls and a six-endpoint HTTP baseline | General validation across input/SQL/HTML contexts, representative datasets and broader vulnerability classes |
 | Identity and authorization | Explicit role contracts, optional signed ID-token verification, owned OIDC/PKCE/code/session/tenant/logout controls | External interactive SSO, production sessions/federation, stateful business logic and general tenant boundaries |
 | Internal infrastructure | Exact TCP reachability, scoped verified TLS handshake, bounded server-first SSH identification claims, one expiring exact-endpoint UDP DNS A question with expected-answer comparison, and selected saved evidence review | Authenticated/general service and OS identification, protocol/cipher enumeration, revocation, broader UDP protocols, live directory/effective-access and attack-path assessment |
@@ -25,6 +25,7 @@ Eighth implementation: [shared host-local quotas for native commands](NATIVE_SHA
 Ninth implementation: [bounded SSH identification observation](SCOPED_SSH_IDENTIFICATION.md).
 Tenth implementation: [selected GCP caller permission query](SCOPED_GCP_PERMISSIONS.md).
 Eleventh implementation: [native cloud transport deadlines and slow-response controls](CLOUD_TRANSPORT_DEADLINES.md).
+Twelfth implementation: [selected SPA hash routes and separate visit coverage](SCOPED_SPA_HASH_DISCOVERY.md).
 These remain bounded source-development capabilities. Multi-user
 production changes require a separate deployment architecture and threat model;
 local roles alone do not provide tenant isolation.

@@ -8,7 +8,7 @@ benchmark. None changes the immutable published v1.3.0 release. See
 
 | Priority | Area | Current delivery | Next acceptance gate |
 | --- | --- | --- | --- |
-| P0 | Website discovery | Bounded HTML and scoped rendered-anchor discovery, ephemeral conventional login and reference-route recall | General SPA actions, complex sessions/SSO and representative route-coverage evaluation |
+| P0 | Website discovery | Bounded HTML/rendered anchors and explicitly selected SPA slash hash routes, ephemeral conventional login and separate discovered/visited reference recall | General SPA actions, complex sessions/SSO and representative route-coverage evaluation |
 | P0 | Platform hardening | Supervised fixed workers, per-run controls, shared host-local quotas and optional authenticated local dashboard roles with revocable sessions | Independently verified owner grants, hosted multi-user/tenant isolation, OS sandbox with denied-egress tests, enforced cross-host quotas and distributed workers |
 | P0 | Detection effectiveness | Eight versioned owned application cases, retained evidence, source/label hashes and per-class metrics; existing source/header/cookie controls | Externally reviewed ground truth, representative real-world datasets, detection rates across remaining classes and standards coverage |
 | P1 | Active vulnerability validation | Fixed SQL canary differential and reflected-HTML Chromium witnesses with owned positive/negative controls | General context-specific validation; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
