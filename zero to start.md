@@ -156,10 +156,11 @@ for commands and their execution modes.
 | Try fixed HTTP SQL/XSS controls with Chromium | [Controlled runtime validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Verify a saved signed ID token or run owned OIDC/session controls | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Inspect TLS on one explicitly permitted host/port | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
+| Observe one approved SSH endpoint without sending client application data | [Scoped SSH identification](docs/SCOPED_SSH_IDENTIFICATION.md) |
 | Check one approved UDP DNS endpoint against an expected A answer | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
 | Inventory visible resources in one approved Azure subscription | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
 | Inventory visible assets in one approved GCP project | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
-| Coordinate workflow and native TLS/DNS/cloud limits on one host | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
+| Coordinate workflow and native TLS/SSH/DNS/cloud limits on one host | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
 | Review report quality or CVSS 3.1 Base | [Utility guide](docs/UTILITY_REVIEW.md) |
 
 A customer assessment is separate. It needs written permission, exact targets,

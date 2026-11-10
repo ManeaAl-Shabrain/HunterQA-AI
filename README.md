@@ -102,11 +102,12 @@ an engagement. Authorization does not enable missing functionality.
 | Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
 | Signed tokens and OIDC/session fixtures | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
 | Certificate and hostname verification on one approved endpoint | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
+| Observe one approved SSH endpoint's advertised identification | [Scoped SSH identification](docs/SCOPED_SSH_IDENTIFICATION.md) |
 | One approved UDP DNS question and expected-answer comparison | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
 | Bounded Azure resource inventory with an explicit temporary token | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
 | Bounded GCP project asset inventory with an explicit temporary token | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
 | Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
-| Shared local limits for workflows and native TLS/DNS/cloud commands | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
+| Shared local limits for workflows and native TLS/SSH/DNS/cloud commands | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |

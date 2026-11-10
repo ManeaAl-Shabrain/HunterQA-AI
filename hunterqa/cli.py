@@ -567,6 +567,10 @@ def main(argv=None):
     tls_inspect.add_argument("--ca-file")
     tls_inspect.add_argument("--out", required=True)
     tls_inspect.add_argument("--authorized", action="store_true")
+    ssh_inspect = sub.add_parser("ssh-service-inspect", help="Observe one approved numeric endpoint's SSH identification; no client data or authentication")
+    ssh_inspect.add_argument("--input", required=True)
+    ssh_inspect.add_argument("--out", required=True)
+    ssh_inspect.add_argument("--authorized", action="store_true")
     udp_inspect = sub.add_parser("udp-dns-inspect", help="One expiring exact-endpoint UDP DNS A question; no recursion or retries")
     udp_inspect.add_argument("--input", required=True)
     udp_inspect.add_argument("--out", required=True)
@@ -867,7 +871,7 @@ def main(argv=None):
         from .assessment_benchmark import benchmark_assessments
         print(json.dumps(benchmark_assessments(args.out_dir, authorized=args.authorized), indent=2))
         return
-    if args.command in ("tls-service-inspect", "udp-dns-inspect", "azure-resource-inventory", "gcp-resource-inventory"):
+    if args.command in ("tls-service-inspect", "ssh-service-inspect", "udp-dns-inspect", "azure-resource-inventory", "gcp-resource-inventory"):
         from .workflow_store import approved_directory
         # Reserve a private create-only destination before any target traffic.
         output = Path(args.out).expanduser()
@@ -877,6 +881,9 @@ def main(argv=None):
             if args.command == "tls-service-inspect":
                 from .tls_inspection import inspect_service
                 report = inspect_service(args.profile, args.target, authorized=args.authorized, ca_file=args.ca_file)
+            elif args.command == "ssh-service-inspect":
+                from .ssh_inspection import inspect_ssh
+                report = inspect_ssh(args.input, authorized=args.authorized)
             elif args.command == "udp-dns-inspect":
                 from .udp_dns_inspection import inspect_dns
                 report = inspect_dns(args.input, authorized=args.authorized)
