@@ -18,6 +18,10 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+class ScanCapacityError(RuntimeError):
+    pass
+
+
 class ScanService:
     def __init__(self, app: Flask):
         self.app = app
@@ -29,9 +33,16 @@ class ScanService:
         with self._lock:
             if scan_id in self._active:
                 return
+            if self.app.config.get("WORKSPACE_ID") and len(self._active) >= 4:
+                raise ScanCapacityError("Workspace scan capacity reached")
             self._active.add(scan_id)
         thread = threading.Thread(target=self._run_guarded, args=(scan_id,), daemon=True)
-        thread.start()
+        try:
+            thread.start()
+        except RuntimeError:
+            with self._lock:
+                self._active.discard(scan_id)
+            raise ScanCapacityError("Workspace worker unavailable") from None
 
     def _run_guarded(self, scan_id: int) -> None:
         try:
@@ -99,6 +110,10 @@ class ScanService:
     _normalize_semgrep = staticmethod(normalize_semgrep)
 
     def _create_report(self, findings: list[dict[str, Any]]) -> str:
+        if not self.app.config.get("LOCAL_AI_ENABLED", True):
+            return ("# Workspace analysis summary\n\n"
+                f"Static analysis produced **{len(findings)} unverified findings**. "
+                "Shared local AI is disabled for workspace separation. Review source evidence before confirming impact.")
         summary = [
             {key: finding[key] for key in ("rule_id", "severity", "cwe", "file_path", "line_start", "message")}
             for finding in findings[:100]

@@ -11,7 +11,7 @@ assets are unchanged.
 | Identity and authorization | Explicit role contracts, optional signed ID-token verification, owned OIDC/PKCE/code/session/tenant/logout controls | External interactive SSO, production sessions/federation, stateful business logic and general tenant boundaries |
 | Internal infrastructure | Exact TCP reachability, scoped verified TLS handshake, bounded server-first SSH identification claims, one expiring exact-endpoint UDP DNS A question with expected-answer comparison, and selected saved evidence review | Authenticated/general service and OS identification, protocol/cipher enumeration, revocation, broader UDP protocols, live directory/effective-access and attack-path assessment |
 | Cloud | Narrow AWS APIs, bounded Azure/GCP visible-resource GETs, selected GCP caller permission-query responses with explicit temporary tokens, and saved AWS/Azure/GCP policy readers | Complete resource inventory, independently confirmed effective permissions, broader AWS/Azure/GCP coverage and representative cloud evaluations |
-| Production and users | Local roles, per-run controls, post-DNS native Azure/GCP I/O deadlines and optional shared host-local reservations across workflows and native TLS/SSH/UDP/Azure/GCP commands | Verified grants, tenant isolation, OS sandboxing, distributed workers, cross-host quotas and coverage of other entry points |
+| Production and users | Local roles or explicit operator OIDC, separate process/workspace stores and secrets, authenticated HTTPS edge admission, bounded WSGI/scan queue, host-local lease/recovery, per-run controls and selected shared host-local quotas | Real provider/deployment acceptance, independently validated OS/tenant isolation, verified owner grants, distributed workers, cross-host quotas and coverage of other entry points |
 | Effectiveness evidence | Endpoint-reference recall, separate HTTP runtime labels, per-class confusion/miss metrics and bounded WSTG mapping | Representative independent field evaluation, broader per-class coverage and a complete standards map |
 
 First implementation: [scoped rendered discovery](SCOPED_RENDERED_DISCOVERY.md).
@@ -26,6 +26,8 @@ Ninth implementation: [bounded SSH identification observation](SCOPED_SSH_IDENTI
 Tenth implementation: [selected GCP caller permission query](SCOPED_GCP_PERMISSIONS.md).
 Eleventh implementation: [native cloud transport deadlines and slow-response controls](CLOUD_TRANSPORT_DEADLINES.md).
 Twelfth implementation: [selected SPA hash routes and separate visit coverage](SCOPED_SPA_HASH_DISCOVERY.md).
+Operator/workspace foundation: [separate workspaces](PRODUCTION_WORKSPACES.md),
+[operator OIDC](OPERATOR_SSO.md) and [remaining completion gates](PRODUCTION_COMPLETION.md).
 These remain bounded source-development capabilities. Multi-user
 production changes require a separate deployment architecture and threat model;
 local roles alone do not provide tenant isolation.

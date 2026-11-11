@@ -150,6 +150,8 @@ for commands and their execution modes.
 | Task | Guide |
 | --- | --- |
 | Check implemented and missing features | [Feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) |
+| Separate operator groups and configure dashboard SSO | [Workspaces](docs/PRODUCTION_WORKSPACES.md) and [OIDC](docs/OPERATOR_SSO.md) |
+| Check production acceptance requirements | [Completion gates](docs/PRODUCTION_COMPLETION.md) |
 | Choose a category/evidence reader | [23-category index](docs/CATEGORY_REVIEW_INDEX.md) |
 | Prepare an approved organization assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
 | Run selected adapters with reviewed approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) and [adapters](docs/ASSESSMENT_ADAPTERS.md) |

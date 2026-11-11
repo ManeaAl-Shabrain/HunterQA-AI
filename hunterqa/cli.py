@@ -540,6 +540,17 @@ def main(argv=None):
     operator_secret = sub.add_parser("operator-secret", help="Create a private persistent session-key file without displaying its value")
     operator_secret.add_argument("--out", required=True)
     operator_secret.add_argument("--authorized", action="store_true")
+    workspace_init = sub.add_parser("workspace-init", help="Create separate private dashboard, operator and evidence stores for one process")
+    workspace_init.add_argument("--workspace-id", required=True)
+    workspace_init.add_argument("--root", required=True)
+    workspace_init.add_argument("--username", required=True)
+    workspace_init.add_argument("--authorized", action="store_true")
+    workspace_serve = sub.add_parser("workspace-serve", help="Serve one private workspace on bounded loopback WSGI with a local process lease")
+    workspace_serve.add_argument("--config", required=True)
+    workspace_serve.add_argument("--port", required=True, type=int)
+    workspace_check = sub.add_parser("workspace-check", help="Validate workspace startup and report unverified production gates; no target traffic")
+    workspace_check.add_argument("--config", required=True)
+    workspace_check.add_argument("--require-production", action="store_true")
     for name in ("operator-init", "operator-add", "operator-update", "operator-status", "operator-audit"):
         operator = sub.add_parser(name, help="Manage opt-in local dashboard operators; not target assessment permission")
         operator.add_argument("--database", required=True)
@@ -834,6 +845,28 @@ def main(argv=None):
         from .web_review import review_project
         root = _approved_root(args.project)
         _write_bounty_output(args.out, json.dumps(review_project(root), indent=2, ensure_ascii=False) + "\n")
+        return
+    if args.command in ("workspace-serve", "workspace-check"):
+        from .workspace_server import serve, readiness
+        if args.command == "workspace-serve":
+            serve(args.config, args.port)
+        else:
+            result = readiness(args.config)
+            print(json.dumps(result, indent=2))
+            if args.require_production and not result["production_ready"]:
+                raise SystemExit(2)
+        return
+    if args.command == "workspace-init":
+        if not args.authorized:
+            raise PermissionError("Workspace administration requires --authorized")
+        from .workspace import initialize
+        password = os.environ.get("HUNTERQA_OPERATOR_PASSWORD")
+        if password is None:
+            import getpass
+            password = getpass.getpass("New workspace administrator password: ")
+            if password != getpass.getpass("Confirm password: "):
+                raise ValueError("Passwords did not match")
+        print(json.dumps(initialize(args.workspace_id, args.root, args.username, password, authorized=True), indent=2))
         return
     if args.command.startswith("operator-"):
         from . import operator_store

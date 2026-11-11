@@ -37,6 +37,11 @@ optional identity extra; see [identity assurance](OIDC_SESSION_ASSURANCE.md).
 
 ## Commands
 
+For per-process dashboard data/identity separation, explicit operator OIDC and
+an authenticated HTTPS gateway profile, use [workspace setup](PRODUCTION_WORKSPACES.md).
+`workspace-check --require-production` exits 2 while independent deployment
+acceptance gates remain unverified. Operator SSO is separate from assessed-target SSO.
+
 Descriptions below match CLI help. Category aliases are listed by `--help` and
 are not additional implementations. See the [category index](CATEGORY_REVIEW_INDEX.md).
 
@@ -191,3 +196,6 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `workflow-status` | Inspect a durable run or request emergency stop |
 | `workflow-stop` | Inspect a durable run or request emergency stop |
 | `workflow-tools` | List planning adapter declarations; launches no tools |
+| `workspace-check` | Validate workspace startup and report unverified production gates; no target traffic |
+| `workspace-init` | Create separate private dashboard, operator and evidence stores for one process |
+| `workspace-serve` | Serve one private workspace on bounded loopback WSGI with a local process lease |

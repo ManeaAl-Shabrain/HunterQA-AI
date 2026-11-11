@@ -52,7 +52,7 @@
       <div class="content">
         {% if config.OPERATOR_DATABASE and g.operator %}
         <section class="operator-bar" aria-label="Signed-in operator">
-          <p>Signed in as <strong>{{ g.operator.username }}</strong> · {{ g.operator.role }}</p>
+          <p>{% if config.WORKSPACE_ID %}Workspace <strong>{{ config.WORKSPACE_ID }}</strong> · {% endif %}Signed in as <strong>{{ g.operator.username }}</strong> · {{ g.operator.role }}</p>
           <div class="operator-bar-actions">
             {% if g.operator.role == 'admin' %}<a class="button small" href="{{ url_for('operators.operators') }}">Operator access</a>{% endif %}
             <form method="post" action="{{ url_for('operators.logout') }}" data-operator-logout>

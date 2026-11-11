@@ -5,12 +5,14 @@ dashboard, with viewer, analyst and administrator roles and server-side revocabl
 sessions. These accounts control **HunterQA access**. They are separate from target
 test accounts and do not grant permission to assess an organization or website.
 
-This is one shared organization workspace on a trusted local host. Loopback peer
-and Host checks remain enforced, and proxy headers are not trusted. There is no
-hosted deployment, SSO, tenant/project segregation, verified owner grant, OS sandbox
-or distributed RBAC enforcement. The CLI and filesystem OS owner remain trusted.
-Do not expose this dashboard through a reverse proxy or use a shared OS account
-with untrusted people. Production multi-user readiness remains false.
+The legacy dashboard is one shared workspace on a trusted local host. Direct
+loopback peer/Host checks remain enforced and arbitrary proxy headers are not
+trusted. New [separate process workspaces](PRODUCTION_WORKSPACES.md) provide
+independent identity/data/evidence stores, [explicit operator OIDC](OPERATOR_SSO.md)
+and an optional authenticated HTTPS edge profile. Do not expose the legacy mode
+through a proxy or share an OS account with untrusted groups. Independently
+validated OS/tenant isolation, owner grants and distributed enforcement remain
+unfinished; CLI and filesystem OS owners remain trusted. See [completion gates](PRODUCTION_COMPLETION.md).
 
 Optional [native shared quotas](NATIVE_SHARED_QUOTAS.md) coordinate selected
 commands on this host; they do not change permissions or add tenant isolation.
