@@ -152,7 +152,9 @@ def verify_http(data, *, restored):
             scan = json.loads(raw)
             if scan["status"] == "completed":
                 break
-            assert scan["status"] != "failed" and time.monotonic() < end
+            if scan["status"] == "failed":
+                raise RuntimeError("Owned source worker failed: " + str(scan.get("error", ""))[:2000])
+            assert time.monotonic() < end
             time.sleep(0.5)
     assert request("/scans/1/export.json")[0] == 200
     assert request("/scans/1/report")[0] == 200
