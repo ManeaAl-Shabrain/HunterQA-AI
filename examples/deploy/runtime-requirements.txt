@@ -1,0 +1,2 @@
+# Shared by the Docker build and native installer, in addition to project extras.
+semgrep>=1.185.0,<2
