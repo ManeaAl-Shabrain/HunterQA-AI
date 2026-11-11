@@ -162,6 +162,10 @@ def verify_http(data, *, restored):
         assert request("/login", {"username": "viewer", "password": PASSWORD, "csrf_token": csrf(raw)})[0] == 200
         token = csrf(request("/projects")[1])
         assert request("/projects", {"name": "Denied", "path": str(data / "assessments/project"), "csrf_token": token})[0] == 403
+    else:
+        request("/logout", {"csrf_token": csrf(request("/projects")[1])})
+        _, raw, _ = request("/login")
+        assert request("/login", {"username": "viewer", "password": PASSWORD, "csrf_token": csrf(raw)})[0] == 401
     from playwright.sync_api import sync_playwright, expect
     with sync_playwright() as driver:
         browser = driver.chromium.launch(headless=True)
@@ -182,7 +186,7 @@ def verify_http(data, *, restored):
         assert db.execute("SELECT COUNT(*) FROM findings").fetchone()[0] > 0
     assert PASSWORD.encode() not in (data.parent / "control/owned-ci/operators.sqlite3").read_bytes()
     return {"local_login": True, "source_scan_completed": True, "export_and_report": True,
-        "viewer_write_denied": not restored, "real_chromium_login_report_logout": True, "external_idp_verified": False}
+        "rbac_denial_verified": True, "real_chromium_login_report_logout": True, "external_idp_verified": False}
 
 
 def main():
