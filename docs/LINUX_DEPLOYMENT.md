@@ -85,6 +85,25 @@ Chromium; it is not a fully offline installer. For upgrades, install a new prefi
 back up state, regenerate the unit, and test before switching. Do not overwrite a
 running virtual environment.
 
+### Temporary Semgrep dependency repair
+
+The current supplier release pins `mcp` and OpenTelemetry versions for which our
+installed-package audit reported advisories. The shared installer prepares
+`semgrep==1.185.0+hunterqa.1` from the official 1.185.0 wheel after checking its
+PyPI SHA-256. It changes six dependency requirements and distribution version,
+rebuilds RECORD, and retains vendor payload bytes, executable modes and licenses.
+Its provenance records the original digest and replacements. This is a local
+compatibility patch, **not an upstream-supported release**. Do not replace it with
+an arbitrary wheel or silently ignore the supplier's dependency constraints.
+
+Both deployment jobs require dependency consistency, real Semgrep findings and
+an advisory audit of their actual installed Python inventories. The audit maps
+the unchanged Semgrep code to its published base release; it does not skip that
+component. Only the local HunterQA application is checked separately by source
+QA. Review/remove this policy when a compatible supplier release adopts the
+fixed dependencies. The manifests do not independently certify OS packages or
+all unused upstream Semgrep subcommands.
+
 ## Docker Compose
 
 Docker Engine and Compose v2 are required. Use the same specification and the

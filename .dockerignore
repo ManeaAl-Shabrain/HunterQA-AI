@@ -6,6 +6,7 @@
 !zeroscope/**
 !tools/
 !tools/install_linux_runtime.sh
+!tools/prepare_semgrep.py
 !tools/verify_deployment.py
 !examples/
 !examples/deploy/

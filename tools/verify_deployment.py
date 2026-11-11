@@ -3,7 +3,7 @@ import argparse
 from contextlib import closing
 import hashlib
 from http.cookiejar import CookieJar
-from importlib.metadata import version
+from importlib.metadata import distribution, version
 import json
 import os
 import re
@@ -96,12 +96,17 @@ def acceptance(phase):
         project = data / "assessments/project"
         project.mkdir(mode=0o700)
         (project / "Dockerfile").write_text("FROM ubuntu:latest\nUSER root\n", encoding="utf-8")
+        (project / "owned_parser_fixture.py").write_text("def example(value):\n    return eval(value)\n", encoding="utf-8")
         marker.write_text('{"kind":"owned-deployment-acceptance"}', encoding="utf-8")
         packages = {name: version(name) for name in ("hunterqa-ai", "playwright", "botocore", "PyJWT", "cryptography", "dnspython", "waitress", "semgrep")}
         for name in ("semgrep", "clang", "gdb", "afl-fuzz"):
             if shutil.which(name) is None:
                 raise ValueError("Missing assessment runtime binary: " + name)
-        return {"initialized": True, "optional_packages": packages, "tool_binaries_present": True}
+        inventory = subprocess.run([sys.executable, "-m", "pip", "list", "--format=json"], capture_output=True, text=True, check=True, timeout=30)  # nosec B603
+        installed = {row["name"]: row["version"] for row in json.loads(inventory.stdout)}
+        proof = json.loads(distribution("semgrep").read_text("HUNTERQA-DEPENDENCY-PATCH.json"))
+        return {"initialized": True, "optional_packages": packages, "installed_python_packages": installed,
+            "semgrep_dependency_patch": proof, "tool_binaries_present": True}
     if not marker.is_file() or json.loads(marker.read_text()).get("kind") != "owned-deployment-acceptance":
         raise ValueError("Owned deployment marker missing")
     if phase == "archive":
@@ -186,6 +191,7 @@ def verify_http(data, *, restored):
             browser.close()
     with closing(sqlite3.connect(data / "state/dashboard.sqlite3")) as db:
         assert db.execute("SELECT COUNT(*) FROM findings").fetchone()[0] > 0
+        assert db.execute("SELECT COUNT(*) FROM findings WHERE engine='semgrep'").fetchone()[0] > 0
     assert PASSWORD.encode() not in (data.parent / "control/owned-ci/operators.sqlite3").read_bytes()
     return {"local_login": True, "source_scan_completed": True, "export_and_report": True,
         "rbac_denial_verified": True, "real_chromium_login_report_logout": True, "external_idp_verified": False}
