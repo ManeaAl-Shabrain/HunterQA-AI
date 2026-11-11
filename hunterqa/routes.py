@@ -105,7 +105,14 @@ def start_scan(project_id: int):
         scan_id = cursor.lastrowid
     with db:
         db.execute("INSERT INTO audit_events(action, subject) VALUES (?, ?)", ("scan_authorized", str(scan_id)))
-    current_app.extensions["scan_service"].submit(scan_id)
+    from .scanner import ScanCapacityError
+    try:
+        current_app.extensions["scan_service"].submit(scan_id)
+    except ScanCapacityError:
+        with db:
+            db.execute("UPDATE scans SET status='failed',progress=100,stage='Workspace capacity reached',error='Try again after an active scan finishes',finished_at=? WHERE id=?",
+                (datetime.now(timezone.utc).isoformat(timespec="seconds"), scan_id))
+        return "Workspace scan capacity reached. Try again after an active scan finishes.", 429, {"Retry-After": "30"}
     return redirect(url_for("main.scan_detail", scan_id=scan_id))
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import closing
 import json
 import threading
 import urllib.error
@@ -18,6 +19,10 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+class ScanCapacityError(RuntimeError):
+    pass
+
+
 class ScanService:
     def __init__(self, app: Flask):
         self.app = app
@@ -29,9 +34,16 @@ class ScanService:
         with self._lock:
             if scan_id in self._active:
                 return
+            if self.app.config.get("WORKSPACE_ID") and len(self._active) >= 4:
+                raise ScanCapacityError("Workspace scan capacity reached")
             self._active.add(scan_id)
         thread = threading.Thread(target=self._run_guarded, args=(scan_id,), daemon=True)
-        thread.start()
+        try:
+            thread.start()
+        except RuntimeError:
+            with self._lock:
+                self._active.discard(scan_id)
+            raise ScanCapacityError("Workspace worker unavailable") from None
 
     def _run_guarded(self, scan_id: int) -> None:
         try:
@@ -47,12 +59,12 @@ class ScanService:
         allowed = {"status", "stage", "error", "progress", "started_at", "finished_at"}
         safe = {key: value for key, value in values.items() if key in allowed}
         assignments = ", ".join(f"{key} = ?" for key in safe)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             # Column names come exclusively from the fixed allowlist above; values are bound.
             db.execute(f"UPDATE scans SET {assignments} WHERE id = ?", (*safe.values(), scan_id))  # nosec B608
 
     def run(self, scan_id: int) -> None:
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             row = db.execute(
                 "SELECT scans.id, projects.path FROM scans JOIN projects ON projects.id = scans.project_id WHERE scans.id = ?",
                 (scan_id,),
@@ -72,7 +84,7 @@ class ScanService:
         self._update(scan_id, stage="Inventorying dependencies", progress=54)
         dependencies = scanned["dependencies"]
         self._update(scan_id, stage="Saving normalized findings", progress=58)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             db.executemany("INSERT INTO dependency_items(scan_id, ecosystem, name, version, source) VALUES (?, ?, ?, ?, ?)",
                            [(scan_id, d["ecosystem"], d["name"], d["version"], d["source"]) for d in dependencies])
             db.executemany(
@@ -88,7 +100,7 @@ class ScanService:
 
         self._update(scan_id, stage="Generating local AI report", progress=72)
         report = self._create_report(findings)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             db.execute(
                 "INSERT OR REPLACE INTO reports (scan_id, model, content) VALUES (?, ?, ?)",
                 (scan_id, self.app.config["OLLAMA_MODEL"], report),
@@ -99,6 +111,10 @@ class ScanService:
     _normalize_semgrep = staticmethod(normalize_semgrep)
 
     def _create_report(self, findings: list[dict[str, Any]]) -> str:
+        if not self.app.config.get("LOCAL_AI_ENABLED", True):
+            return ("# Workspace analysis summary\n\n"
+                f"Static analysis produced **{len(findings)} unverified findings**. "
+                "Shared local AI is disabled for workspace separation. Review source evidence before confirming impact.")
         summary = [
             {key: finding[key] for key in ("rule_id", "severity", "cwe", "file_path", "line_start", "message")}
             for finding in findings[:100]

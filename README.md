@@ -4,7 +4,8 @@
 
 HunterQA is a local workspace for authorized security assessments. Review code
 and saved evidence, run selected checks within an approved scope, and produce
-reports you can review and retest. It is designed for a single operator.
+reports you can review and retest. It starts locally; separate workspace profiles
+add explicit operator access and OIDC sign-in.
 
 **Python 3.11+ · Kali/Linux recommended · CLI and local dashboard**
 
@@ -35,7 +36,8 @@ the version number alone does not identify the installed features.
 | Controlled validation | Fixed owned-endpoint SQL canary differentials and Chromium XSS witnesses; baseline/negative/repeat controls |
 | Validation cues | Fixed inert-markup/SQL-error comparisons and explicit role/anonymous access contracts |
 | Identity assurance | Optional offline RS256 ID-token verification; owned OIDC/PKCE/session/tenant HTTP fixtures |
-| Infrastructure/cloud | Exact TCP connectivity; selected read-only AWS account checks with the cloud extra |
+| Infrastructure/cloud | Scoped TCP/TLS, SSH identification and UDP DNS; selected AWS/Azure/GCP queries |
+| Workspace access | Separate identity/data stores per process, local roles or explicit OIDC, and a controlled HTTPS gateway profile |
 | Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
 | Category packs | 23 categories and 79 catalog entries, with implemented modes in the category index |
 | Workflow controls | Scope checks, approvals, budgets, timeouts, stop requests and optional host-local shared quotas |
@@ -81,9 +83,9 @@ troubleshooting. Use a fresh output directory for each run.
 
 All seven broad assessment areas remain **partial**. Rendered discovery supports
 bounded same-origin anchors, selected slash hash routes and conventional cookie login.
-General authenticated crawling, comprehensive active vulnerability validation, SSO and
+General authenticated target crawling, comprehensive active vulnerability validation, target SSO and
 business workflows, OS/AD attack paths, broad multi-cloud permissions, hosted
-tenant isolation, independently verified owner grants, OS isolation and
+independently validated tenant isolation, independently verified owner grants, OS isolation and
 distributed enforcement remain unfinished. Real-world detection effectiveness is **unverified**.
 
 The SQL lab is a separate in-memory fixture; it does not validate the HTTP
@@ -113,7 +115,8 @@ an engagement. Authorization does not enable missing functionality.
 | Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |
-| Dashboard accounts | [Operator access](docs/OPERATOR_ACCESS.md) |
+| Workspace accounts, SSO and controlled serving | [Workspaces](docs/PRODUCTION_WORKSPACES.md) and [OIDC](docs/OPERATOR_SSO.md) |
+| Production acceptance and remaining gaps | [Completion gates](docs/PRODUCTION_COMPLETION.md) |
 | All category guides | [Category index](docs/CATEGORY_REVIEW_INDEX.md) |
 | Report quality/scoring | [Utility guide](docs/UTILITY_REVIEW.md) |
 | Release packaging/version policy | [Versioning](docs/VERSIONING.md) |

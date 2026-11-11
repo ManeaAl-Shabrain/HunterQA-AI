@@ -1,4 +1,4 @@
-"""Opt-in authenticated local dashboard roles; loopback restrictions stay active."""
+"""Dashboard roles and revocable sessions, behind explicit request admission."""
 from __future__ import annotations
 
 import sqlite3
@@ -34,6 +34,8 @@ def login():
             return redirect(url_for("main.dashboard"))
         return render_template("operator_login.html", error=None)
     _csrf()
+    if current_app.config.get("OIDC_ENABLED") and not current_app.config.get("OIDC_LOCAL_PASSWORD"):
+        abort(403, "Use single sign-on for this workspace.")
     try:
         user, status, instance, token = store.authenticate(_database(), request.form.get("username", ""),
             request.form.get("password", ""), request.remote_addr or "")
@@ -87,11 +89,16 @@ def init_operator_auth(app, *, persistent_secret):
         raise ValueError("Operator cookies must remain host-only")
     store.validate_separation(app.config.get("APPROVED_ROOTS", ""))
     store.status(app.config["OPERATOR_DATABASE"])  # Missing/invalid identity configuration fails closed at startup.
+    with store.database(app.config["OPERATOR_DATABASE"]) as identities:
+        if identities.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='operator_workspace'").fetchone():
+            binding = identities.execute("SELECT workspace_id FROM operator_workspace WHERE id=1").fetchone()
+            if not binding or binding[0] != app.config.get("WORKSPACE_ID"):
+                raise ValueError("Operator database belongs to a different workspace")
     store.dummy_hash()
     with app.app_context():
         with get_db() as db:
             db.execute("UPDATE dashboard_security SET operator_required=1 WHERE id=1")
-    app.config.update(SESSION_COOKIE_NAME="hunterqa_operator", SESSION_COOKIE_HTTPONLY=True,
+    app.config.update(SESSION_COOKIE_NAME="hunterqa_operator" + ("_" + app.config["WORKSPACE_ID"] if app.config.get("WORKSPACE_ID") else ""), SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Strict", SESSION_REFRESH_EACH_REQUEST=False,
         PERMANENT_SESSION_LIFETIME=timedelta(seconds=store.SESSION_SECONDS))
     app.register_blueprint(bp)
@@ -107,7 +114,7 @@ def init_operator_auth(app, *, persistent_secret):
                     session.clear()
         except (OSError, ValueError, TypeError, sqlite3.Error):
             return _unavailable()
-        if request.endpoint in ("static", "operators.login"):
+        if request.endpoint in ("static", "operators.login", "operator_oidc.start", "operator_oidc.callback"):
             return None
         if g.operator is None:
             if request.path.startswith("/api/") or request.method not in ("GET", "HEAD"):

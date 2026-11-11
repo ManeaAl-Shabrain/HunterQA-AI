@@ -71,7 +71,11 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Shared post-DNS TCP/TLS/HTTP I/O deadline per native Azure/GCP request
 - [x] Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation
 - [x] Opt-in authenticated local dashboard roles and revocable sessions
-- [ ] Hosted multi-user deployment and tenant isolation
+- [x] Explicit operator OIDC code/S256 sign-in with verified subject/local role binding
+- [x] Separate process/workspace identity, data, evidence and session stores
+- [x] Authenticated single-hop HTTPS gateway and bounded loopback WSGI profile
+- [x] Host-local server lease, bounded scan admission and interrupted-work recovery
+- [ ] Independently validated hosted deployment and OS-level tenant isolation
 - [ ] Independently verified owner grants
 - [ ] OS sandbox
 - [ ] Distributed workers

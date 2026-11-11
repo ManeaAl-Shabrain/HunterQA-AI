@@ -1,0 +1,29 @@
+# Template only. Use a distinct OS account/control root for each untrusted group.
+[Unit]
+Description=HunterQA alpha workspace
+After=network-online.target
+
+[Service]
+Type=simple
+User=hunterqa-alpha
+Group=hunterqa-alpha
+UMask=0077
+Environment=HUNTERQA_OPERATOR_ROOT=/var/lib/hunterqa/alpha-control
+ExecStart=/opt/hunterqa-venv/bin/hunterqa workspace-serve --config /var/lib/hunterqa/alpha-control/alpha/workspace.json --port 8081
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+ReadWritePaths=/srv/hunterqa/alpha /var/lib/hunterqa/alpha-control
+MemoryMax=1G
+TasksMax=64
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

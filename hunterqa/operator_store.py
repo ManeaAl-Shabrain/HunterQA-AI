@@ -1,6 +1,7 @@
 """Local dashboard identities. The control-directory OS owner is trusted.
 
-No remote identity provider, assessment permission grant or tenant isolation.
+External OIDC may authenticate an explicitly bound account; roles/revocation
+stay local. This store alone is not an OS sandbox or target-owner grant.
 """
 from __future__ import annotations
 
@@ -294,6 +295,29 @@ def revoke_session(path, token):
         db.execute("DELETE FROM operator_sessions WHERE token_hash=?", (token_hash,))
         if row:
             _event(db, "logged-out", row[0])
+
+
+def federated_session(path, username, *, max_seconds):
+    """Issue a local revocable session only after verified external authentication."""
+    _name(username)
+    if type(max_seconds) is not int or not 1 <= max_seconds <= SESSION_SECONDS:
+        raise ValueError("Invalid federated session lifetime")
+    now = time.time()
+    with database(path, write=True) as db:
+        row = db.execute("SELECT * FROM operators WHERE username=?", (username,)).fetchone()
+        if row is None or not row["active"]:
+            _event(db, "oidc-login-denied", username)
+            return None, "failed", None, None
+        user = _public(row)
+        instance = db.execute("SELECT instance FROM identity").fetchone()[0]
+        db.execute("DELETE FROM operator_sessions WHERE expires<=?", (now,))
+        old = db.execute("SELECT token_hash FROM operator_sessions WHERE user_id=? ORDER BY issued DESC LIMIT -1 OFFSET 7", (user["id"],)).fetchall()
+        for record in old:
+            db.execute("DELETE FROM operator_sessions WHERE token_hash=?", (record[0],))
+        token = secrets.token_urlsafe(32)
+        db.execute("INSERT INTO operator_sessions VALUES(?,?,?,?,?)", (_token_hash(token), user["id"], user["version"], now, now + max_seconds))
+        _event(db, "oidc-login-succeeded", username)
+        return user, "ok", instance, token
 
 
 def audit_event(path, action, subject):
