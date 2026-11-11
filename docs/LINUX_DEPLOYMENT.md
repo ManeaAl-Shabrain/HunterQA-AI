@@ -191,6 +191,10 @@ systemd unit and Compose: dependency inventory, local login/RBAC, a real source
 worker, reports/export, Chromium login/logout, offline backup/restore and renewed
 login. It does not prove every optional module against real targets, real
 Google/Entra MFA, Windows behavior, hostile-tenant isolation or production load.
+The owned fixture UID has non-loopback IPv4/IPv6 egress rejected during these
+flows, while dependency builders and the advisory auditor retain network access.
+This simulates offline local operation; it is a test-only policy, not an egress
+firewall installed by the production profile.
 Research binaries are inventoried; debugger/fuzzer-specific sandbox capabilities
 and external cloud/AD/AI services need separate acceptance. All earlier features
 and their regression tests remain in place.
