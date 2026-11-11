@@ -3,6 +3,7 @@ import os
 import stat
 import zipfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -82,6 +83,35 @@ def test_project_enumeration_prunes_dependencies_and_is_bounded(tmp_path):
         list(project_files(tmp_path, max_entries=1))
     with pytest.raises(ValueError, match="size limit"):
         read_bounded(tmp_path / "source.py", 2)
+
+
+@pytest.mark.parametrize("kind", ["root", "ancestor", "nested", "file"])
+def test_reparse_points_cannot_expand_roots_enumeration_or_reads(tmp_path, monkeypatch, kind):
+    from hunterqa.doctor import _root_is_safe
+    project = tmp_path / "project"
+    project.mkdir()
+    nested = project / "nested"
+    nested.mkdir()
+    file = nested / "source.py"
+    file.write_text("retained")
+    marked = {"root": project, "ancestor": tmp_path, "nested": nested, "file": file}[kind]
+    original = Path.stat
+
+    def reparse(path, *, follow_symlinks=True):
+        info = original(path, follow_symlinks=follow_symlinks)
+        if path == marked and not follow_symlinks:
+            return SimpleNamespace(st_mode=info.st_mode, st_file_attributes=0x400)
+        return info
+
+    monkeypatch.setattr(Path, "stat", reparse)
+    if kind in ("root", "ancestor"):
+        assert not _root_is_safe(project)
+    elif kind == "nested":
+        assert list(project_files(project)) == []
+    else:
+        assert list(project_files(project)) == []
+        with pytest.raises(ValueError, match="non-symlink"):
+            read_bounded(file, 100)
 
 
 @pytest.mark.parametrize("member", ["HunterQA-AI/a//b", "HunterQA-AI/./x", "HunterQA-AI/C:/x", "HunterQA-AI/../x"])

@@ -6,13 +6,25 @@ against another process replacing files during an assessment.
 from __future__ import annotations
 
 import os
+import stat
 from pathlib import Path
 
 SKIP = {".git", ".venv", "venv", "node_modules", "vendor", "__pycache__",
         "instance", "secrets", ".pytest_cache", "dist", "build"}
 
 
+def is_linked(path: Path) -> bool:
+    """Include Windows junctions/reparse points, which are not always symlinks."""
+    try:
+        info = Path(path).stat(follow_symlinks=False)
+        return stat.S_ISLNK(info.st_mode) or bool(getattr(info, "st_file_attributes", 0) & 0x400)
+    except OSError:
+        return True
+
+
 def project_files(root: Path, *, max_entries=20_000):
+    if is_linked(root):
+        raise ValueError("Linked source directory rejected")
     root = Path(root).resolve(strict=True)
     if not root.is_dir():
         raise ValueError("Expected a source directory")
@@ -23,17 +35,17 @@ def project_files(root: Path, *, max_entries=20_000):
         if visited > max_entries:
             raise ValueError("Source enumeration limit exceeded; choose a smaller approved project")
         dirs[:] = sorted(name for name in dirs if name not in SKIP
-                         and not (base / name).is_symlink())
+                         and not is_linked(base / name))
         for name in sorted(files):
             path = base / name
-            if path.is_symlink() or name.startswith(".env") or not path.is_file():
+            if is_linked(path) or name.startswith(".env") or not path.is_file():
                 continue
             yield path
 
 
 def read_bounded(path: Path, maximum: int) -> bytes:
     path = Path(path)
-    if path.is_symlink() or not path.is_file():
+    if is_linked(path) or not path.is_file():
         raise ValueError("Expected a regular non-symlink file")
     with path.open("rb") as stream:
         raw = stream.read(maximum + 1)

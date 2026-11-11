@@ -9,7 +9,7 @@ deployment assumptions. Historical release assets remain unchanged.
 | --- | --- | --- |
 | Dashboard SSO | Explicit OIDC code/S256, verified issuer/subject, local role binding, one-use browser state, native TLS and real Chromium owned provider controls | Real selected provider registration/consent/MFA, intended callback/TLS deployment, outage and operational validation; SAML/global provider logout are unsupported |
 | Workspace access | Separate process, identity store, secret, data/evidence roots, sticky database identity, cross-process session/data/worker denial controls | Real OS identities/containers, denied filesystem and egress tests, Windows ACL validation, storage quotas and independent isolation review |
-| Hosted entry point | Authenticated single-hop HTTPS edge admission, exact Host, Secure cookies, stripped forwarding data, bounded Waitress and queue, host-local lease | Real TLS proxy, firewall/key/log policy, load/failure/restore exercises, operational monitoring and independent deployment review |
+| Hosted entry point | Authenticated single-hop HTTPS edge admission, exact Host, Secure cookies, stripped forwarding data, bounded Waitress and queue, host-local lease; bounded offline backup/restore with revoked sessions and forced credential renewal | Real TLS proxy, firewall/key/log policy, independent load/failure/restore exercises, operational monitoring and independent deployment review |
 | Assessed application identity | Fixed role matrices, optional token verification, owned OIDC/session fixtures | General external target SSO, complex session federation, stateful business workflows and broader tenant-boundary discovery |
 | General browser interactions | Bounded rendered links and explicitly reviewed slash hash states | App-specific reviewed interaction contracts, state/impact oracles, general forms/actions and representative compatibility; no claim of universal automatic interaction |
 | Active vulnerability validation | Fixed owned SQL canary and reflected-XSS controls with negative labels | Broader contexts/classes, blind/OOB/DOM/stored variants, representative independently labeled datasets and per-class error rates |
@@ -28,3 +28,8 @@ Next deployment inputs are the intended IdP/issuer and registered client/callbac
 authorized test targets, and an independent evaluation protocol/data owner.
 Implementation and owned testing can proceed without those secrets; real-world
 acceptance cannot be honestly reported until those environments are exercised.
+
+Owned recovery controls and CLI procedures are documented in
+[workspace recovery](WORKSPACE_RECOVERY.md). Windows reparse points/junctions are
+also rejected by shared root and source-file checks; this is not independent
+validation of Windows ACLs or an OS sandbox.

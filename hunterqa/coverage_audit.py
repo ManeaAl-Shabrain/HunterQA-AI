@@ -41,7 +41,7 @@ AREAS = (
      "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, selected GCP caller permission-query responses, and offline AWS/Azure/GCP policy review",
      ["Complete resource and effective-permission inventory", "Broader AWS/Azure/GCP and representative cloud assessment"]),
     ("production-hardening", "Production platform hardening", [],
-     "Local or explicitly bound operator OIDC roles, separate per-process workspace stores, authenticated HTTPS edge/WSGI and bounded scan admission, local lease/recovery and selected host-local quotas",
+     "Local or explicitly bound operator OIDC roles, separate per-process workspace stores, authenticated HTTPS edge/WSGI, bounded scans, offline private backup/recovery with credential renewal, and selected host-local quotas",
      ["Independently validated hosted deployment and OS-level tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
      "Owned application and six-endpoint HTTP/Chromium baselines, per-class metrics, inconclusive counts and retained evidence",
@@ -57,6 +57,13 @@ FEATURES = {
     "production-hardening": [("Per-run budgets, approvals, deadlines and emergency stop", None), ("Shared post-DNS TCP/TLS/HTTP I/O deadline per native Azure/GCP request", None), ("Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation", None), ("Opt-in authenticated local dashboard roles and revocable sessions", None), ("Explicit operator OIDC code/S256 sign-in with verified subject/local role binding", None), ("Separate process/workspace identity, data, evidence and session stores", None), ("Authenticated single-hop HTTPS gateway and bounded loopback WSGI profile", None), ("Host-local server lease, bounded scan admission and interrupted-work recovery", None)],
     "detection-effectiveness": [("Versioned owned application cases with positive/negative controls", None), ("Retained run evidence, per-class metrics and current-runtime consistency checks", None), ("Six-endpoint HTTP/Chromium baseline with per-class confusion metrics and inconclusive counts", None), ("Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2", None)],
 }
+
+
+FEATURES["production-hardening"] += [
+    ("Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials", None),
+    ("Explicit offline interrupted-scan recovery without job replay", None),
+    ("Shared root/source checks reject Windows reparse points as well as symlinks", None),
+]
 
 
 def coverage_audit():

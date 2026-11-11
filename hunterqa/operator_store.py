@@ -199,6 +199,12 @@ def update_operator(path, username, *, role=None, active=None, password=None, au
         if row is None:
             raise ValueError("Unknown operator")
         new_role, new_active = role if role is not None else row["role"], int(active) if active is not None else row["active"]
+        recovery_table = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='operator_recovery_pending'").fetchone()
+        recovery_pending = recovery_table and db.execute("SELECT user_id FROM operator_recovery_pending WHERE user_id=?", (row["id"],)).fetchone()
+        if recovery_pending and new_active:
+            if password is None or check_password_hash(row["password_hash"], password):
+                raise ValueError("Enable a restored account with a different password using --reset-password")
+            db.execute("DELETE FROM operator_recovery_pending WHERE user_id=?", (row["id"],))
         if row["role"] == "admin" and row["active"] and (new_role != "admin" or not new_active):
             if db.execute("SELECT COUNT(*) FROM operators WHERE role='admin' AND active=1").fetchone()[0] <= 1:
                 raise ValueError("Cannot disable or demote the last active administrator")

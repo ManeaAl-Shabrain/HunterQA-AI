@@ -98,12 +98,12 @@ It reports unverified production gates. `--require-production` exits 2 while
 those gates remain unverified; configuration or a template does not self-certify
 the deployment. See [the completion gates](PRODUCTION_COMPLETION.md).
 
-Back up the workspace data directory and its separate control directory with
-owner-only access and a reviewed retention policy. Restore them together: copying
-an unrelated operator database changes its instance binding and fails startup.
-Preserve operator audit history, rotate secrets under OS administration and
-restart the workspace after changes. Existing server-side sessions are revocable
-through local account updates/logout; provider-global logout is separate.
+Use [offline workspace recovery](WORKSPACE_RECOVERY.md) to snapshot both stores
+and evidence privately, verify the archive and restore only the original empty
+paths. Recovery disables accounts, requires renewed credentials, revokes sessions
+and rotates local/gateway keys. Review restored roles/provider settings, re-enable
+the intended administrator and update the gateway key before restarting. This
+does not rotate the provider's client secret or end its global sessions.
 
 The bounded queue is not a durable distributed worker system. Process failure,
 disk exhaustion and independent job deadlines still need deployment-level

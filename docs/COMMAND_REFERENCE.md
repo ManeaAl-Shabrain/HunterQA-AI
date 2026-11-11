@@ -41,6 +41,8 @@ For per-process dashboard data/identity separation, explicit operator OIDC and
 an authenticated HTTPS gateway profile, use [workspace setup](PRODUCTION_WORKSPACES.md).
 `workspace-check --require-production` exits 2 while independent deployment
 acceptance gates remain unverified. Operator SSO is separate from assessed-target SSO.
+For private offline snapshots, interrupted-work recovery and original-path
+restoration with revoked sessions and renewed credentials, see [workspace recovery](WORKSPACE_RECOVERY.md).
 
 Descriptions below match CLI help. Category aliases are listed by `--help` and
 are not additional implementations. See the [category index](CATEGORY_REVIEW_INDEX.md).
@@ -196,6 +198,10 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `workflow-status` | Inspect a durable run or request emergency stop |
 | `workflow-stop` | Inspect a durable run or request emergency stop |
 | `workflow-tools` | List planning adapter declarations; launches no tools |
+| `workspace-backup` | Create a bounded private offline workspace recovery archive; contains secrets |
+| `workspace-backup-check` | Verify a private backup against its separately retained SHA-256; no extraction |
 | `workspace-check` | Validate workspace startup and report unverified production gates; no target traffic |
 | `workspace-init` | Create separate private dashboard, operator and evidence stores for one process |
+| `workspace-recover` | Mark interrupted scans failed under the offline server lease; never replay jobs |
+| `workspace-restore` | Restore original empty workspace paths; disables accounts and rotates local keys |
 | `workspace-serve` | Serve one private workspace on bounded loopback WSGI with a local process lease |
