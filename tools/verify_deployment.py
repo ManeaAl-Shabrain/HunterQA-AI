@@ -98,7 +98,7 @@ def acceptance(phase):
         (project / "Dockerfile").write_text("FROM ubuntu:latest\nUSER root\n", encoding="utf-8")
         marker.write_text('{"kind":"owned-deployment-acceptance"}', encoding="utf-8")
         packages = {name: version(name) for name in ("hunterqa-ai", "playwright", "botocore", "PyJWT", "cryptography", "dnspython", "waitress", "semgrep")}
-        for name in ("clang", "gdb", "afl-fuzz"):
+        for name in ("semgrep", "clang", "gdb", "afl-fuzz"):
             if shutil.which(name) is None:
                 raise ValueError("Missing assessment runtime binary: " + name)
         return {"initialized": True, "optional_packages": packages, "tool_binaries_present": True}

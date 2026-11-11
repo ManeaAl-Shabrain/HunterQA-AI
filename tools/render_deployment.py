@@ -40,6 +40,7 @@ def render(data):
     common = {"HUNTERQA_OPERATOR_ROOT": home + "/control", "HUNTERQA_WORKSPACE_CONFIG": home + "/control/" + workspace_id + "/workspace.json",
         "HUNTERQA_PORT": str(data["port"]), "HUNTERQA_RUNTIME_PREFIX": prefix, "HUNTERQA_HOME": home,
         "PLAYWRIGHT_BROWSERS_PATH": prefix + "/browsers", "HOME": home + "/runtime-home",
+        "PATH": prefix + "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         "PYTHONDONTWRITEBYTECODE": "1", "PYTHONUNBUFFERED": "1", "SEMGREP_SEND_METRICS": "off", "SEMGREP_ENABLE_VERSION_CHECK": "0"}
     unit = ["[Unit]", "Description=HunterQA " + workspace_id + " workspace", "After=network.target", "", "[Service]", "Type=exec",
         "User=" + data["user"], "Group=" + str(data["gid"]), "UMask=0077", "WorkingDirectory=" + home]
