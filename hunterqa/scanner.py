@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import closing
 import json
 import threading
 import urllib.error
@@ -58,12 +59,12 @@ class ScanService:
         allowed = {"status", "stage", "error", "progress", "started_at", "finished_at"}
         safe = {key: value for key, value in values.items() if key in allowed}
         assignments = ", ".join(f"{key} = ?" for key in safe)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             # Column names come exclusively from the fixed allowlist above; values are bound.
             db.execute(f"UPDATE scans SET {assignments} WHERE id = ?", (*safe.values(), scan_id))  # nosec B608
 
     def run(self, scan_id: int) -> None:
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             row = db.execute(
                 "SELECT scans.id, projects.path FROM scans JOIN projects ON projects.id = scans.project_id WHERE scans.id = ?",
                 (scan_id,),
@@ -83,7 +84,7 @@ class ScanService:
         self._update(scan_id, stage="Inventorying dependencies", progress=54)
         dependencies = scanned["dependencies"]
         self._update(scan_id, stage="Saving normalized findings", progress=58)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             db.executemany("INSERT INTO dependency_items(scan_id, ecosystem, name, version, source) VALUES (?, ?, ?, ?, ?)",
                            [(scan_id, d["ecosystem"], d["name"], d["version"], d["source"]) for d in dependencies])
             db.executemany(
@@ -99,7 +100,7 @@ class ScanService:
 
         self._update(scan_id, stage="Generating local AI report", progress=72)
         report = self._create_report(findings)
-        with connect(self.app.config["DATABASE"]) as db:
+        with closing(connect(self.app.config["DATABASE"])) as db, db:
             db.execute(
                 "INSERT OR REPLACE INTO reports (scan_id, model, content) VALUES (?, ?, ?)",
                 (scan_id, self.app.config["OLLAMA_MODEL"], report),

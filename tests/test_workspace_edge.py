@@ -6,6 +6,7 @@ import sqlite3
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing
 from types import SimpleNamespace
 
 import pytest
@@ -57,6 +58,36 @@ def test_startup_database_connections_close_on_success_and_failure(tmp_path, mon
 @pytest.fixture
 def spaces(tmp_path, monkeypatch):
     return workspace_tests.spaces.__wrapped__(tmp_path, monkeypatch)
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_worker_closes_database_handles_and_preserves_outcome(spaces, monkeypatch, fail):
+    from hunterqa import scanner
+    app = create_app({"WORKSPACE_CONFIG": str(spaces[2][0]), "TESTING": True})
+    original, opened = scanner.connect, []
+    with closing(original(app.config["DATABASE"])) as db, db:
+        db.execute("INSERT INTO projects(id,name,path) VALUES(1,'owned',?)", (app.config["APPROVED_ROOTS"][0],))
+        db.execute("INSERT INTO scans(id,project_id) VALUES(1,1)")
+
+    def tracked(path):
+        connection = original(path)
+        opened.append(connection)
+        return connection
+
+    def engine(*args, **kwargs):
+        if fail:
+            raise RuntimeError("Owned synthetic engine failure")
+        return {"findings": [], "dependencies": []}
+
+    monkeypatch.setattr(scanner, "connect", tracked)
+    monkeypatch.setattr(scanner, "scan_local_source", engine)
+    app.extensions["scan_service"]._run_guarded(1)
+    assert len(opened) >= 2
+    for connection in opened:
+        with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+            connection.execute("SELECT 1")
+    with closing(original(app.config["DATABASE"])) as db:
+        assert db.execute("SELECT status FROM scans WHERE id=1").fetchone()[0] == ("failed" if fail else "completed")
 
 
 def configured(spaces):
