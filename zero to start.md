@@ -174,6 +174,10 @@ this repository. A URL or `--authorized` flag alone is not permission or a test 
 
 ## Troubleshooting
 
+For a configured multi-account workspace, follow [backup and recovery](docs/WORKSPACE_RECOVERY.md)
+before upgrades or a recovery drill. Backups stay private and restored accounts
+require deliberate review and credential renewal.
+
 | Problem | Action |
 | --- | --- |
 | Command not found | Activate `.venv` on Linux; use the full executable path on Windows |

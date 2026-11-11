@@ -551,6 +551,22 @@ def main(argv=None):
     workspace_check = sub.add_parser("workspace-check", help="Validate workspace startup and report unverified production gates; no target traffic")
     workspace_check.add_argument("--config", required=True)
     workspace_check.add_argument("--require-production", action="store_true")
+    workspace_recover = sub.add_parser("workspace-recover", help="Mark interrupted scans failed under the offline server lease; never replay jobs")
+    workspace_recover.add_argument("--config", required=True)
+    workspace_recover.add_argument("--authorized", action="store_true")
+    workspace_backup = sub.add_parser("workspace-backup", help="Create a bounded private offline workspace recovery archive; contains secrets")
+    workspace_backup.add_argument("--config", required=True)
+    workspace_backup.add_argument("--out", required=True)
+    workspace_backup.add_argument("--authorized", action="store_true")
+    workspace_backup_check = sub.add_parser("workspace-backup-check", help="Verify a private backup against its separately retained SHA-256; no extraction")
+    workspace_backup_check.add_argument("--backup", required=True)
+    workspace_backup_check.add_argument("--sha256", required=True)
+    workspace_restore = sub.add_parser("workspace-restore", help="Restore original empty workspace paths; disables accounts and rotates local keys")
+    workspace_restore.add_argument("--backup", required=True)
+    workspace_restore.add_argument("--sha256", required=True)
+    workspace_restore.add_argument("--workspace-id", required=True)
+    workspace_restore.add_argument("--root", required=True)
+    workspace_restore.add_argument("--authorized", action="store_true")
     for name in ("operator-init", "operator-add", "operator-update", "operator-status", "operator-audit"):
         operator = sub.add_parser(name, help="Manage opt-in local dashboard operators; not target assessment permission")
         operator.add_argument("--database", required=True)
@@ -845,6 +861,20 @@ def main(argv=None):
         from .web_review import review_project
         root = _approved_root(args.project)
         _write_bounty_output(args.out, json.dumps(review_project(root), indent=2, ensure_ascii=False) + "\n")
+        return
+    if args.command == "workspace-recover":
+        from .workspace_server import recover
+        print(json.dumps(recover(args.config, authorized=args.authorized), indent=2))
+        return
+    if args.command in ("workspace-backup", "workspace-backup-check", "workspace-restore"):
+        from .workspace_backup import backup, check, restore
+        if args.command == "workspace-backup":
+            result = backup(args.config, args.out, authorized=args.authorized)
+        elif args.command == "workspace-restore":
+            result = restore(args.backup, args.sha256, args.workspace_id, args.root, authorized=args.authorized)
+        else:
+            result = check(args.backup, args.sha256)
+        print(json.dumps(result, indent=2))
         return
     if args.command in ("workspace-serve", "workspace-check"):
         from .workspace_server import serve, readiness

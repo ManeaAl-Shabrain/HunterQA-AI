@@ -48,6 +48,20 @@ def recover_interrupted(app):
         return cursor.rowcount
 
 
+def recover(config, *, authorized=False):
+    if authorized is not True:
+        raise PermissionError("Offline workspace recovery requires --authorized")
+    settings = workspace.load(config)
+    with lease(settings["WORKSPACE_ROOT"]):
+        from . import create_app
+        from .operator_store import audit_event
+        app = create_app({"WORKSPACE_CONFIG": str(config)})
+        audit_event(settings["OPERATOR_DATABASE"], "os-admin-recover-interrupted-scans", settings["WORKSPACE_ID"])
+        count = recover_interrupted(app)
+    return {"engine": "workspace-offline-recovery", "workspace_id": settings["WORKSPACE_ID"],
+        "scans_marked_failed": count, "scans_replayed": 0, "network_requests": 0, "production_ready": False}
+
+
 def server_options(port):
     if type(port) is not int or not 1 <= port <= 65535:
         raise ValueError("Choose an explicit local WSGI port from 1..65535")

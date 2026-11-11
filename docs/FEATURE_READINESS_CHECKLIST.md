@@ -75,6 +75,9 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Separate process/workspace identity, data, evidence and session stores
 - [x] Authenticated single-hop HTTPS gateway and bounded loopback WSGI profile
 - [x] Host-local server lease, bounded scan admission and interrupted-work recovery
+- [x] Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials
+- [x] Explicit offline interrupted-scan recovery without job replay
+- [x] Shared root/source checks reject Windows reparse points as well as symlinks
 - [ ] Independently validated hosted deployment and OS-level tenant isolation
 - [ ] Independently verified owner grants
 - [ ] OS sandbox

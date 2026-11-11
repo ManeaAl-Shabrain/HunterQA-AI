@@ -16,6 +16,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Mapping
+from .source_files import is_linked
 
 
 OLLAMA_TAGS_URL = "http://127.0.0.1:11434/api/tags"
@@ -64,7 +65,7 @@ def _root_is_safe(directory: Path) -> bool:
     try:
         for piece in directory.parts[1:]:
             current /= piece
-            if current.is_symlink():
+            if is_linked(current):
                 return False
         return directory.is_dir()
     except OSError:
