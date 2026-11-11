@@ -68,7 +68,8 @@ def load_config(path):
                 or not isinstance(row["username"], str) or not store.NAME.fullmatch(row["username"]) or row["subject"] in subjects):
             raise ValueError("Invalid or duplicate OIDC subject binding")
         subjects.add(row["subject"])
-    secret = ""  # nosec B105: absence of a client secret for an explicit public PKCE client
+    # No credential is present for an explicitly configured public PKCE client.
+    secret = ""  # nosec B105
     if data["client_secret_file"] is not None:
         selected = store._path(data["client_secret_file"])
         if selected.parent != store._path(path).parent:
