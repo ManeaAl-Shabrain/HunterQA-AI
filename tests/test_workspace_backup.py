@@ -298,6 +298,46 @@ def test_bad_sqlite_content_fails_before_publication(prepared, monkeypatch):
     assert not private.exists() and not list(root.iterdir())
 
 
+@pytest.mark.parametrize("kind", ["identity-trigger", "dashboard-trigger", "view"])
+@pytest.mark.parametrize("phase", ["backup", "restore"])
+def test_active_database_schema_is_rejected_before_restore_publication(prepared, monkeypatch, tmp_path, kind, phase):
+    make_backup(prepared)
+    sql = {"identity-trigger": "CREATE TRIGGER revive AFTER UPDATE ON operators BEGIN UPDATE operators SET active=1; END",
+        "dashboard-trigger": "CREATE TRIGGER revive AFTER UPDATE ON dashboard_workspace BEGIN UPDATE scans SET status='queued'; END",
+        "view": "CREATE VIEW unexpected AS SELECT * FROM scans"}[kind]
+    if phase == "backup":
+        spaces, app, _, private, archive = prepared
+        source = private / "operators.sqlite3" if kind == "identity-trigger" else Path(app.config["DATABASE"])
+        with closing(sqlite3.connect(source)) as db, db:
+            db.execute(sql)
+        output = archive.with_name("rejected.zip")
+        with pytest.raises(ValueError, match="triggers or views"):
+            recovery.backup(str(spaces[2][0]), output, authorized=True)
+        assert not output.exists()
+        return
+
+    def mutate(rows):
+        name = "control/operators.sqlite3" if kind == "identity-trigger" else "data/state/dashboard.sqlite3"
+        altered = tmp_path / "altered.sqlite3"
+        altered.write_bytes(rows[name])
+        with closing(sqlite3.connect(altered)) as db, db:
+            db.execute(sql)
+        raw = altered.read_bytes()
+        rows[name] = raw
+        manifest = json.loads(rows["manifest.json"])
+        for row in manifest["files"]:
+            if row["name"] == name:
+                row.update(size=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+        rows["manifest.json"] = json.dumps(manifest).encode()
+
+    sha = rewrite(prepared, mutate)
+    retire(prepared, monkeypatch)
+    _, _, root, private, archive = prepared
+    with pytest.raises(ValueError, match="triggers or views"):
+        recovery.restore(archive, sha, "alpha", root, authorized=True)
+    assert not private.exists() and not list(root.iterdir())
+
+
 def test_real_cli_backup_check_restore_and_reenable(prepared, monkeypatch):
     spaces, _, root, private, archive = prepared
     command = [sys.executable, "-m", "hunterqa"]

@@ -170,6 +170,7 @@ def backup(config, output, *, authorized=False):
                     snapshots = {"data/state/dashboard.sqlite3": stage / "dashboard.sqlite3", "control/operators.sqlite3": stage / "operators.sqlite3"}
                     for member, destination in snapshots.items():
                         _snapshot(dict(entries)[member], destination)
+                        _check_database(destination)
                     manifest = {"schema_version": 1, "kind": "hunterqa-private-workspace-backup", "created_at": utcnow().isoformat(),
                         "workspace_id": settings["WORKSPACE_ID"], "root": str(root), "control": str(private),
                         "identity": settings["WORKSPACE_IDENTITY"], "directories": sorted(directories), "files": []}
@@ -400,6 +401,8 @@ def _reset_recovered_identity(stages, manifest, source_sha256):
     identity_file = stages["control"] / "operators.sqlite3"
     dashboard = stages["data"] / "state" / "dashboard.sqlite3"
     instance = uuid.uuid4().hex
+    for selected in (identity_file, dashboard):
+        _check_database(selected)
     operators.status(identity_file)
     operators.audit_status(identity_file)
     with operators.database(identity_file, write=True) as db:
@@ -435,3 +438,15 @@ def _reset_recovered_identity(stages, manifest, source_sha256):
             stream.write(secrets.token_hex(32).encode("ascii") + b"\n")
             stream.flush()
             os.fsync(stream.fileno())
+
+
+def _check_database(path):
+    with closing(sqlite3.connect(path.as_uri() + "?mode=ro", uri=True, timeout=5)) as db:
+        db.execute("PRAGMA trusted_schema=OFF")
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type IN ('trigger','view') LIMIT 1").fetchone():
+            raise ValueError("Recovery does not accept database triggers or views")
+        tables = db.execute("SELECT sql FROM sqlite_master WHERE type='table' LIMIT 65").fetchall()
+        if len(tables) > 64 or any(re.search(r"\bVIRTUAL\b", row[0] or "", re.IGNORECASE) for row in tables):
+            raise ValueError("Recovery does not accept virtual or excessive database tables")
+        if db.execute("PRAGMA quick_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchone():
+            raise ValueError("Recovered database integrity or references differ")

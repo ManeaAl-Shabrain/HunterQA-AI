@@ -44,6 +44,8 @@ database semantics, confidentiality or production readiness. A database/backup
 owner can forge the files and their digests. Use only backups from a trusted
 custodian; database integrity and workspace bindings are also checked before
 restored data is published.
+Custom triggers, views and virtual tables are unsupported and rejected before
+account or identity changes; they cannot undo the recovery safeguards.
 
 The format is intentionally bounded: 2,000 source entries, 64 MB per file,
 256 MB of file content, and a 1 MB manifest. ZIP compression, ZIP64/multi-volume
