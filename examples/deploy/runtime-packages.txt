@@ -1,0 +1,10 @@
+ca-certificates
+git
+python3-venv
+build-essential
+clang
+llvm
+afl++
+gdb
+libffi-dev
+libssl-dev

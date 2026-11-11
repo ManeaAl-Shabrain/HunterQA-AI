@@ -116,6 +116,7 @@ an engagement. Authorization does not enable missing functionality.
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |
 | Workspace accounts, SSO and controlled serving | [Workspaces](docs/PRODUCTION_WORKSPACES.md) and [OIDC](docs/OPERATOR_SSO.md) |
+| Linux Compose/systemd profile and WSL2 setup | [Deployment guide](docs/LINUX_DEPLOYMENT.md), [accepted requirements and gaps](docs/ACCEPTED_PLATFORM_REQUIREMENTS.md) |
 | Private workspace backup, recovery and credential renewal | [Recovery guide](docs/WORKSPACE_RECOVERY.md) |
 | Production acceptance and remaining gaps | [Completion gates](docs/PRODUCTION_COMPLETION.md) |
 | All category guides | [Category index](docs/CATEGORY_REVIEW_INDEX.md) |

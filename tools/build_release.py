@@ -54,6 +54,7 @@ PUBLIC_TEMPLATES = {
     "HunterQA-container-review-template.json", "17-container-kubernetes-review.md",
 }
 ALLOW_FILES = {
+    ".dockerignore", ".gitattributes",
     ".gitignore", "README.md", "RELEASE_NOTES.md", "LICENSE", "SECURITY.md", "pyproject.toml", "action.yml",
     "requirements.txt", "requirements-dev.txt", "run.py", "scripts-migrate.sh", "zero to start.md",
 }

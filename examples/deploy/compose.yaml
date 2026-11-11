@@ -1,0 +1,45 @@
+services:
+  app:
+    image: hunterqa-runtime:local
+    build:
+      context: ../..
+      dockerfile: examples/deploy/Dockerfile
+      args:
+        PYTHON_IMAGE: ${HUNTERQA_PYTHON_IMAGE:-python:3.13-slim-bookworm}
+        HUNTERQA_UID: ${HUNTERQA_UID:?Render the deployment specification first}
+        HUNTERQA_GID: ${HUNTERQA_GID:?Render the deployment specification first}
+        HUNTERQA_RUNTIME_PREFIX: ${HUNTERQA_RUNTIME_PREFIX:?Render the deployment specification first}
+    user: "${HUNTERQA_UID}:${HUNTERQA_GID}"
+    # Preserve the application's existing loopback-only admission in both modes.
+    # This shares host networking; it is not an egress/tenant network boundary.
+    network_mode: host
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:rw,nosuid,nodev,size=268435456"]
+    pids_limit: 128
+    mem_limit: 1g
+    cpus: 1.0
+    ulimits:
+      nofile: {soft: 4096, hard: 4096}
+    stop_grace_period: 30s
+    restart: unless-stopped
+    environment:
+      HOME: ${HUNTERQA_HOME}/runtime-home
+      HUNTERQA_HOME: ${HUNTERQA_HOME:?Render the deployment specification first}
+      HUNTERQA_OPERATOR_ROOT: ${HUNTERQA_HOME}/control
+      HUNTERQA_WORKSPACE_CONFIG: ${HUNTERQA_HOME}/control/${HUNTERQA_WORKSPACE_ID}/workspace.json
+      HUNTERQA_PORT: ${HUNTERQA_PORT}
+    volumes:
+      - type: bind
+        source: ${HUNTERQA_HOME}
+        target: ${HUNTERQA_HOME}
+        bind: {create_host_path: false}
+    command: ["workspace-serve", "--config", "${HUNTERQA_HOME}/control/${HUNTERQA_WORKSPACE_ID}/workspace.json", "--port", "${HUNTERQA_PORT}"]
+    healthcheck:
+      test: ["CMD", "hunterqa-health"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3

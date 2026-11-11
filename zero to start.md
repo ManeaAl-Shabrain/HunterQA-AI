@@ -174,6 +174,10 @@ this repository. A URL or `--authorized` flag alone is not permission or a test 
 
 ## Troubleshooting
 
+For the shared Docker Compose/systemd layout and Windows through WSL2, see the
+[Linux deployment guide](docs/LINUX_DEPLOYMENT.md). The approved multi-provider
+and administrator-MFA requirements are tracked there as incomplete work.
+
 For a configured multi-account workspace, follow [backup and recovery](docs/WORKSPACE_RECOVERY.md)
 before upgrades or a recovery drill. Backups stay private and restored accounts
 require deliberate review and credential renewal.

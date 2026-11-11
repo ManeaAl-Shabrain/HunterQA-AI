@@ -1,0 +1,3 @@
+# Shared by the Docker build and native installer, in addition to project extras.
+# Prepared from the verified supplier wheel by tools/prepare_semgrep.py.
+semgrep==1.185.0+hunterqa.1
