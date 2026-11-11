@@ -2,6 +2,7 @@
 import json
 import multiprocessing
 import os
+import sqlite3
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -17,6 +18,40 @@ from hunterqa.trusted_edge import public_origin
 from tests import test_workspaces as workspace_tests
 
 Service = workspace_tests.Service
+
+
+@pytest.mark.parametrize("operation", ["initialize", "recover"])
+@pytest.mark.parametrize("fail", [False, True])
+def test_startup_database_connections_close_on_success_and_failure(tmp_path, monkeypatch, operation, fail):
+    from hunterqa import db as database
+    path = str(tmp_path / "owned.sqlite3")
+    if operation == "recover" and not fail:
+        database.init_database(path)
+    original, opened = database.connect, []
+
+    def tracked(selected):
+        connection = original(selected)
+        opened.append(connection)
+        return connection
+
+    monkeypatch.setattr(database, "connect", tracked)
+    if operation == "initialize" and fail:
+        monkeypatch.setattr(database, "SCHEMA", "INVALID SQL")
+
+    def run():
+        if operation == "initialize":
+            database.init_database(path)
+        else:
+            serving.recover_interrupted(SimpleNamespace(config={"DATABASE": path}))
+
+    if fail:
+        with pytest.raises(sqlite3.OperationalError):
+            run()
+    else:
+        run()
+    assert len(opened) == 1
+    with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+        opened[0].execute("SELECT 1")
 
 
 @pytest.fixture

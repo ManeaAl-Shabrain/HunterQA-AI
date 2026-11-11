@@ -1,5 +1,5 @@
 """Bounded loopback WSGI serving with a single-host workspace lease."""
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 import os
 from pathlib import Path
 
@@ -43,7 +43,7 @@ def lease(root):
 
 def recover_interrupted(app):
     from .db import connect
-    with connect(app.config["DATABASE"]) as db:
+    with closing(connect(app.config["DATABASE"])) as db, db:
         cursor = db.execute("UPDATE scans SET status='failed',progress=100,stage='Interrupted by restart',error='Review evidence and explicitly authorize a new scan',finished_at=? WHERE status IN ('queued','running')", (utcnow().isoformat(),))
         return cursor.rowcount
 

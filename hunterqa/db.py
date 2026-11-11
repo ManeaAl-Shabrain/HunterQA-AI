@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 import sqlite3
 from pathlib import Path
 import click
@@ -98,7 +99,7 @@ def close_db(_error=None) -> None:
 
 def init_database(path: str) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    with connect(path) as db:
+    with closing(connect(path)) as db, db:
         db.executescript(SCHEMA)
         # Incremental, non-destructive migration of existing user's ZeroScope DB.
         cols = {row["name"] for row in db.execute("PRAGMA table_info(findings)")}
