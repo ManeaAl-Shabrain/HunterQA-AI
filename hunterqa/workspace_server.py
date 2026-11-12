@@ -101,6 +101,10 @@ def readiness(config):
         "sso_configured": bool(app.config.get("OIDC_ENABLED") or app.config.get("AUTH_PROVIDERS")),
         "unified_authentication_configured": bool(app.config.get("AUTH_POLICY_ENABLED")),
         "administrator_mfa_required": bool(app.config.get("AUTH_POLICY_ENABLED")),
+        "local_configuration_ready": bool(app.config.get("AUTH_POLICY_ENABLED") and app.config.get("AUTH_LOCAL_ENABLED")
+            and not app.config.get("WORKSPACE_PUBLIC_ORIGIN")),
+        "normal_local_operation_requires_public_https": False,
+        "optional_sso_providers_enabled": app.config.get("AUTH_PROVIDERS", []),
         "authenticated_https_edge_configured": bool(app.config.get("WORKSPACE_PUBLIC_ORIGIN")),
         "network_requests": 0, "production_ready": False,
         "unverified": ["Real provider registration, MFA/session policy and end-to-end login in the intended deployment",

@@ -71,6 +71,8 @@ def schema(db):
     db.execute("""CREATE TABLE IF NOT EXISTS identity_attempts(state_hash TEXT PRIMARY KEY,browser_hash TEXT NOT NULL,
         provider TEXT NOT NULL,nonce_cipher TEXT NOT NULL,verifier_cipher TEXT NOT NULL,created REAL NOT NULL,
         expires REAL NOT NULL,fingerprint TEXT NOT NULL)""")
+    db.execute("""CREATE TABLE IF NOT EXISTS identity_candidates(reference_hash TEXT PRIMARY KEY,provider TEXT NOT NULL,
+        subject_cipher TEXT NOT NULL,created REAL NOT NULL,expires REAL NOT NULL,fingerprint TEXT NOT NULL)""")
 
 
 def enroll(database, key_file, username, secret, *, authorized=False, confirmed_step=-1):
@@ -142,7 +144,7 @@ def load(path):
         if set(value) != fields or not isinstance(value["client_id"], str) or not re.fullmatch(r"[A-Za-z0-9._-]{1,256}", value["client_id"]):
             raise ValueError("Invalid provider client configuration")
         bindings = value["bindings"]
-        if not isinstance(bindings, list) or not 1 <= len(bindings) <= 256:
+        if not isinstance(bindings, list) or not 0 <= len(bindings) <= 256:
             raise ValueError("Use explicit approved subject bindings")
         subjects = set()
         for row in bindings:
@@ -177,6 +179,86 @@ def load(path):
         raise ValueError("Enable at least one authentication method")
     fingerprint = hashlib.sha256(raw + key.encode() + json.dumps(secret_hashes).encode()).hexdigest()
     return {"data": data, "providers": providers, "key": key, "fingerprint": fingerprint}
+
+
+def candidate(database, selected, name, subject, expires):
+    """Retain a verified unbound subject for OS-admin review; never grant access."""
+    if name not in selected["providers"] or not isinstance(subject, str) or not re.fullmatch(r"[!-~]{1,256}", subject):
+        raise ValueError("Unsupported verified subject")
+    now, reference = time.time(), secrets.token_urlsafe(32)
+    hashed = store._token_hash(reference)
+    with store.database(database, write=True) as db:
+        db.execute("DELETE FROM identity_candidates WHERE expires<=?", (now,))
+        if db.execute("SELECT COUNT(*) FROM identity_candidates").fetchone()[0] >= 32:
+            store._event(db, "identity-subject-review-capacity", name)
+            return None
+        db.execute("INSERT INTO identity_candidates VALUES(?,?,?,?,?,?)", (hashed, name,
+            seal(selected["key"], "subject:" + selected["fingerprint"] + ":" + hashed, subject), now,
+            min(now + 300, expires), selected["fingerprint"]))
+        store._event(db, "identity-subject-verified-awaiting-os-approval", name)
+    return reference
+
+
+def approve(workspace_config, name, username, reference, *, authorized=False):
+    if authorized is not True:
+        raise PermissionError("Identity approval requires --authorized")
+    from . import workspace
+    store._name(username)
+    hashed = store._token_hash(reference)
+    if hashed is None or name not in {"google", "entra"}:
+        raise ValueError("Invalid subject approval reference")
+    settings = workspace.load(workspace_config)
+    path = store._path(settings.get("AUTH_CONFIG") or "")
+    with store.database(settings["OPERATOR_DATABASE"], write=True) as db:
+        selected = load(path)
+        schema(db)
+        row = db.execute("SELECT * FROM identity_candidates WHERE reference_hash=?", (hashed,)).fetchone()
+        now = time.time()
+        if (not row or row["provider"] != name or name not in selected["providers"]
+                or row["fingerprint"] != selected["fingerprint"] or not row["created"] <= now < row["expires"]):
+            raise ValueError("Subject approval is expired, changed or unavailable; repeat provider verification")
+        user = db.execute("SELECT * FROM operators WHERE username=?", (username,)).fetchone()
+        if not user or not user["active"]:
+            raise ValueError("Approve only an existing active local account")
+        if user["role"] in selected["data"]["mfa_roles"] and not db.execute("SELECT 1 FROM operator_factors WHERE user_id=?", (user["id"],)).fetchone():
+            raise ValueError("Enroll this approved account's MFA before binding an identity")
+        subject = unseal(selected["key"], "subject:" + selected["fingerprint"] + ":" + hashed, row["subject_cipher"])
+        if not isinstance(subject, str) or not re.fullmatch(r"[!-~]{1,256}", subject):
+            raise ValueError("Invalid verified subject")
+        data = selected["data"]
+        bindings = data["providers"][name]["bindings"]
+        if len(bindings) >= 256 or any(binding["subject"] == subject for binding in bindings):
+            raise ValueError("Subject is already bound or the binding limit is reached")
+        bindings.append({"subject": subject, "username": username})
+        # Audit failure must happen before publishing a new identity binding.
+        store._event(db, "os-admin-approved-provider-subject", username, provider=name)
+        temporary = path.parent / ("identity-approval-" + secrets.token_hex(12) + ".tmp")
+        fd = os.open(temporary, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(json.dumps(data, indent=2) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        db.execute("DELETE FROM identity_candidates")
+        db.execute("DELETE FROM operator_sessions")
+        db.execute("DELETE FROM identity_grants")
+        db.execute("DELETE FROM identity_attempts")
+    return {"provider": name, "username": username, "subject": subject, "approved": True,
+        "restart_required": True, "account_created": False, "role_changed": False}
+
+
+def approve_cli(workspace_config, name, username, *, reference_stdin=False, authorized=False):
+    import getpass
+    import sys
+    if authorized is not True:
+        raise PermissionError("Identity approval requires --authorized")
+    if reference_stdin:
+        reference = sys.stdin.read(129).strip()
+    else:
+        if not sys.stdin.isatty():
+            raise ValueError("Use a private terminal or explicitly select --reference-stdin")
+        reference = getpass.getpass("Verified browser enrollment reference: ")
+    return approve(workspace_config, name, username, reference, authorized=True)
 
 
 def begin(database, policy, username, source, *, expected_version=None, expires=None):

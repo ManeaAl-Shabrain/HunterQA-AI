@@ -13,6 +13,10 @@ add approved accounts, Local/Google/Entra sign-in and administrator MFA.
 [Beginner’s assessment guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) ·
 [Templates](templates/README.md) · [Category index](docs/CATEGORY_REVIEW_INDEX.md)
 
+For your own computer, use [localhost setup](docs/PERSONAL_LOCALHOST_SETUP.md):
+Local + MFA works offline; Google and Entra stay optional. No public domain or
+hosting is required.
+
 ## Is it ready?
 
 **Ready for supported local review workflows and the built-in owned lab.** It is

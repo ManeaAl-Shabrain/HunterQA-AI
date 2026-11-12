@@ -1,5 +1,12 @@
 # Completion gates and remaining scope
 
+The owner's normal deployment is a personal computer on localhost, with offline
+Local + MFA and optional Google/Entra. It does **not** require a purchased domain,
+public HTTPS, a VPS or hosted multi-user certification. Use
+[personal-computer setup](PERSONAL_LOCALHOST_SETUP.md). The broad production
+gates below remain explicit limits of the preserved advanced/hosted features;
+they must not be presented as prerequisites for normal local operation.
+
 An implemented control, local fixture or successful CI run is evidence about
 that control. It is not independent proof that the whole assessment platform is
 complete. `workspace-check --require-production` must not pass through unchecked

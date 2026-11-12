@@ -4,6 +4,13 @@ Owner-approved baseline: 12 November 2026. Requested capabilities below are
 requirements, not claims that they are already implemented or validated.
 Existing functionality and the historical 1.3.0 release must be preserved.
 
+Owner clarification, same day: normal operation is exclusively on the personal
+computer, bound to localhost. No purchased domain, public HTTPS endpoint, VPS or
+cloud hosting is required. Keep Compose, native systemd and Windows WSL2 support;
+Local + MFA works offline, Google/Entra remain optional until real credentials
+are configured. Hosted TLS gates apply only to the preserved optional hosted
+profile. See [personal setup](PERSONAL_LOCALHOST_SETUP.md).
+
 | ID | Required outcome | Current gap / acceptance evidence required |
 | --- | --- | --- |
 | DEP-01 | Independent Linux Docker Compose and native systemd deployments, same application and API/security configuration | Common runtime manifests, actual service/container acceptance and module compatibility evidence |

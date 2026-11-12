@@ -455,7 +455,8 @@ def _reset_recovered_identity(stages, manifest, source_sha256):
         db.execute("DELETE FROM login_limits")
         for table, statement in (("operator_oidc_attempts", "DELETE FROM operator_oidc_attempts"),
                 ("operator_factors", "DELETE FROM operator_factors"), ("identity_grants", "DELETE FROM identity_grants"),
-                ("identity_attempts", "DELETE FROM identity_attempts"), ("identity_policy_state", "DELETE FROM identity_policy_state")):
+                ("identity_attempts", "DELETE FROM identity_attempts"), ("identity_candidates", "DELETE FROM identity_candidates"),
+                ("identity_policy_state", "DELETE FROM identity_policy_state")):
             if db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
                 db.execute(statement)
         operators._event(db, "workspace-restored-accounts-disabled", manifest["workspace_id"], backup_sha256=source_sha256)

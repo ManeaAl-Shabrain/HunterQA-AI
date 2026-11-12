@@ -67,7 +67,7 @@ sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
   --root /srv/hunterqa-alpha/data --username admin --authorized
 sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
   /opt/hunterqa-runtime/bin/hunterqa identity-setup \
-  --config /srv/hunterqa-alpha/control/alpha/workspace.json --origin http://127.0.0.1:8081 --authorized
+  --config /srv/hunterqa-alpha/control/alpha/workspace.json --origin http://localhost:8081 --authorized
 sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
   /opt/hunterqa-runtime/bin/hunterqa operator-mfa-enroll \
   --database /srv/hunterqa-alpha/control/alpha/operators.sqlite3 \
@@ -126,7 +126,7 @@ docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
 docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
   -f examples/deploy/compose.yaml -p hunterqa-alpha run --rm app \
   identity-setup --config /srv/hunterqa-alpha/control/alpha/workspace.json \
-  --origin http://127.0.0.1:8081 --authorized
+  --origin http://localhost:8081 --authorized
 docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
   -f examples/deploy/compose.yaml -p hunterqa-alpha run --rm app \
   operator-mfa-enroll --database /srv/hunterqa-alpha/control/alpha/operators.sqlite3 \

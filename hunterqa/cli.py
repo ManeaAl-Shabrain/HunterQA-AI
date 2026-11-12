@@ -553,6 +553,12 @@ def main(argv=None):
     identity_setup.add_argument("--config", required=True)
     identity_setup.add_argument("--origin", required=True)
     identity_setup.add_argument("--authorized", action="store_true")
+    identity_approve = sub.add_parser("identity-provider-approve", help="Bind a verified five-minute provider reference to an existing approved local account")
+    identity_approve.add_argument("--config", required=True)
+    identity_approve.add_argument("--provider", choices=("google", "entra"), required=True)
+    identity_approve.add_argument("--username", required=True)
+    identity_approve.add_argument("--reference-stdin", action="store_true")
+    identity_approve.add_argument("--authorized", action="store_true")
     mfa_enroll = sub.add_parser("operator-mfa-enroll", help="Enroll an approved operator's encrypted TOTP factor and revoke existing sessions")
     mfa_enroll.add_argument("--database", required=True)
     mfa_enroll.add_argument("--key-file", required=True)
@@ -876,6 +882,11 @@ def main(argv=None):
     if args.command == "identity-setup":
         from .identity_policy import setup
         print(json.dumps(setup(args.config, args.origin, authorized=args.authorized), indent=2))
+        return
+    if args.command == "identity-provider-approve":
+        from .identity_policy import approve_cli
+        print(json.dumps(approve_cli(args.config, args.provider, args.username,
+            reference_stdin=args.reference_stdin, authorized=args.authorized), indent=2))
         return
     if args.command == "operator-mfa-enroll":
         from .identity_policy import enroll_cli

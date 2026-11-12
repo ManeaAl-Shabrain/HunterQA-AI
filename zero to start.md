@@ -3,6 +3,11 @@
 Get from installation to a working local lab with retained evidence. You do not
 need a website, customer credentials, an AI model or a cloud account.
 
+For personal-computer service deployment and optional Google/Entra login, follow
+[the localhost setup guide](docs/PERSONAL_LOCALHOST_SETUP.md). It covers Linux
+Compose, native systemd, WSL2, offline Local + MFA and provider registration;
+no public server or purchased domain is needed.
+
 Use **current source**: the package reports `1.3.0`, but the original v1.3.0
 archive lacks later lab/review commands. This is a bounded owned-fixture
 benchmark, not a full attack or proof of complete coverage.

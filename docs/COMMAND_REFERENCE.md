@@ -138,6 +138,7 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `operator-add` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-mfa-enroll` | Enroll an approved account's encrypted TOTP factor from a private terminal or explicit stdin; revokes sessions |
 | `identity-setup` | Initialize the unified Local/Google/Entra policy with mandatory administrator MFA; requires enrollment before startup |
+| `identity-provider-approve` | Bind a five-minute verified OIDC reference to an existing approved local account through trusted OS administration; no signup or role change |
 | `operator-audit` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-init` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-secret` | Create a private persistent session-key file without displaying its value |

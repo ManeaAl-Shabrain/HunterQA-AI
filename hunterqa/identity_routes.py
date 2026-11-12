@@ -210,7 +210,11 @@ def provider_callback(name):
                 raise ValueError("Access-token binding rejected")
         username = next((row["username"] for row in config["bindings"] if row["subject"] == claims.get("sub")), None)
         if username is None:
-            raise ValueError("Identity was not approved")
+            reference = policy.candidate(current_app.config["OPERATOR_DATABASE"], selected, name, claims["sub"], claims["exp"])
+            if reference is None:
+                return denied(source)
+            return render_template("operator_login.html", error="Identity verified, but access is not approved. "
+                "Give this five-minute reference only to your local OS administrator: " + reference), 401
         return enter(selected, username, name, expires=claims["exp"])
     except ERRORS:
         return denied(source)
@@ -257,6 +261,7 @@ def init_identity(app):
             db.execute("DELETE FROM operator_sessions")
             db.execute("DELETE FROM identity_grants")
             db.execute("DELETE FROM identity_attempts")
+            db.execute("DELETE FROM identity_candidates")
             if db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='operator_oidc_attempts'").fetchone():
                 db.execute("DELETE FROM operator_oidc_attempts")
             db.execute("INSERT INTO identity_policy_state VALUES(1,?) ON CONFLICT(id) DO UPDATE SET fingerprint=excluded.fingerprint", (selected["fingerprint"],))

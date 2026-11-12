@@ -3,6 +3,7 @@ import base64
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
+import re
 from types import SimpleNamespace
 import time
 from urllib.parse import parse_qs, urlencode, urlsplit
@@ -296,6 +297,95 @@ def test_shared_deployment_guard_rejects_legacy_policy(tmp_path, monkeypatch):
         serve(str(spaces[2][0]), 8081, require_auth_policy=True)
 
 
+@pytest.mark.parametrize("name", ["google", "entra"])
+def test_verified_subject_enrollment_requires_explicit_os_approval_and_existing_account(identity, name):
+    identity.data["providers"][name]["bindings"] = []
+    identity.path.write_text(json.dumps(identity.data))
+    app = create_app(identity.options)
+    client = app.test_client()
+    state = start(identity, client, name)
+    response = callback(client, name, state)
+    assert response.status_code == 401
+    reference = re.search(rb"administrator: ([A-Za-z0-9_-]{43})", response.data).group(1).decode()
+    assert client.get("/api/scans/1/status", base_url=BASE).status_code == 401
+    with store.database(identity.database) as db:
+        row = db.execute("SELECT * FROM identity_candidates").fetchone()
+        assert reference not in str(tuple(row)) and "approved-" + name not in row["subject_cipher"]
+        assert db.execute("SELECT COUNT(*) FROM operators").fetchone()[0] == 2
+        assert db.execute("SELECT COUNT(*) FROM operator_sessions").fetchone()[0] == 0
+    with pytest.raises(PermissionError):
+        policy.approve(identity.config, name, "admin", reference)
+    with pytest.raises(ValueError, match="existing active"):
+        policy.approve(identity.config, name, "new-account", reference, authorized=True)
+    result = policy.approve(identity.config, name, "admin", reference, authorized=True)
+    assert result["approved"] and not result["account_created"] and not result["role_changed"]
+    assert result["subject"] == "approved-" + name
+    assert client.get("/login", base_url=BASE).status_code == 503
+    with pytest.raises(ValueError):
+        policy.approve(identity.config, name, "admin", reference, authorized=True)
+    client = create_app(identity.options).test_client()
+    assert callback(client, name, start(identity, client, name)).location.endswith("/auth/mfa")
+    assert factor(client).status_code == 302
+
+
+@pytest.mark.parametrize("invalid", ["expired", "policy", "provider", "random"])
+def test_unbound_subject_review_cannot_bypass_context_or_expiry(identity, invalid):
+    reference = policy.candidate(identity.database, identity.selected, "google", "new-subject", time.time() + 300)
+    name = "google"
+    if invalid == "expired":
+        with store.database(identity.database, write=True) as db:
+            db.execute("UPDATE identity_candidates SET expires=0")
+    elif invalid == "policy":
+        identity.data["local_enabled"] = False
+        identity.path.write_text(json.dumps(identity.data))
+    elif invalid == "provider":
+        name = "entra"
+    else:
+        reference = "a" * 43
+    before = identity.path.read_bytes()
+    with pytest.raises(ValueError):
+        policy.approve(identity.config, name, "admin", reference, authorized=True)
+    assert identity.path.read_bytes() == before
+
+
+def test_subject_approval_audit_failure_never_changes_policy(identity, monkeypatch):
+    reference = policy.candidate(identity.database, identity.selected, "google", "new-subject", time.time() + 300)
+    before = identity.path.read_bytes()
+
+    def unavailable(*args, **kwargs):
+        raise ValueError("Owned audit failure")
+
+    monkeypatch.setattr(store, "_event", unavailable)
+    with pytest.raises(ValueError, match="audit failure"):
+        policy.approve(identity.config, "google", "admin", reference, authorized=True)
+    assert identity.path.read_bytes() == before
+
+
+def test_private_approval_cli_preserves_local_role_and_does_not_print_reference(identity, monkeypatch, capsys):
+    import io
+    import sys
+    from hunterqa.cli import main
+    reference = policy.candidate(identity.database, identity.selected, "google", "new-viewer-subject", time.time() + 300)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(reference))
+    main(["identity-provider-approve", "--config", str(identity.config), "--provider", "google",
+        "--username", "viewer", "--reference-stdin", "--authorized"])
+    result = capsys.readouterr().out
+    assert reference not in result
+    assert json.loads(result)["username"] == "viewer"
+    assert not json.loads(result)["role_changed"]
+    assert next(row for row in store.status(identity.database)["operators"] if row["username"] == "viewer")["role"] == "viewer"
+
+
+def test_subject_review_capacity_and_local_configuration_readiness(identity):
+    for index in range(32):
+        assert policy.candidate(identity.database, identity.selected, "google", "subject-" + str(index), time.time() + 300)
+    assert policy.candidate(identity.database, identity.selected, "google", "overflow", time.time() + 300) is None
+    from hunterqa.workspace_server import readiness
+    result = readiness(str(identity.config))
+    assert result["local_configuration_ready"] and not result["normal_local_operation_requires_public_https"]
+    assert set(result["optional_sso_providers_enabled"]) == {"google", "entra"}
+
+
 @pytest.mark.parametrize("change", ["disable", "password", "role", "expiry", "policy", "instance"])
 def test_pending_factor_invalidated_by_identity_changes(identity, change):
     grant = policy.begin(identity.database, identity.selected, "admin", "local")[0]
@@ -393,6 +483,7 @@ def test_unified_backup_restores_dependencies_rotates_key_and_requires_reenrollm
     directory.mkdir(mode=0o700)
     archive = directory / "private.zip"
     old_key = identity.key.read_bytes()
+    assert policy.candidate(identity.database, identity.selected, "google", "unbound-backup-subject", time.time() + 300)
     old_session = policy.finish(identity.database, identity.selected,
         policy.begin(identity.database, identity.selected, "admin", "local")[0], policy.totp(SEED))
     result = recovery.backup(str(identity.config), archive, authorized=True)
@@ -409,7 +500,7 @@ def test_unified_backup_restores_dependencies_rotates_key_and_requires_reenrollm
     assert identity.key.read_bytes() != old_key
     assert store.session_operator(identity.database, *old_session) is None
     with store.database(identity.database) as db:
-        for table in ("operator_factors", "identity_grants", "identity_attempts", "identity_policy_state"):
+        for table in ("operator_factors", "identity_grants", "identity_attempts", "identity_candidates", "identity_policy_state"):
             assert db.execute("SELECT COUNT(*) FROM " + table).fetchone()[0] == 0
     store.update_operator(identity.database, "admin", active=True, password="Renewed-authentication-password-123!", authorized=True)
     with pytest.raises(ValueError, match="Enroll MFA"):

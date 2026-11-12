@@ -5,6 +5,11 @@ subject bindings. Each method has its own switch. Providers prove identity;
 the local account controls roles, activation and revocation. There is no public
 registration, automatic email linking or provider-supplied Admin role.
 
+Normal personal operation needs only localhost. Follow the
+[personal-computer walkthrough](PERSONAL_LOCALHOST_SETUP.md) for supported local
+redirect registrations and OS-approved first-subject enrollment. A domain,
+public HTTPS endpoint and hosted server are not required.
+
 This is dashboard authentication. It does not implement federation into an
 assessed application's accounts, SAML, universal business interactions or global
 provider logout. Owned signed-token tests are distinct from live-provider acceptance.
@@ -18,7 +23,7 @@ terminal, not a recorded CI console. The unchanged deployment example uses:
 
 ```bash
 hunterqa identity-setup --config /srv/hunterqa-alpha/control/alpha/workspace.json \
-  --origin http://127.0.0.1:8081 --authorized
+  --origin http://localhost:8081 --authorized
 hunterqa operator-mfa-enroll --database /srv/hunterqa-alpha/control/alpha/operators.sqlite3 \
   --key-file /srv/hunterqa-alpha/control/alpha/auth.key --username admin --authorized
 hunterqa workspace-check --config /srv/hunterqa-alpha/control/alpha/workspace.json
@@ -154,6 +159,6 @@ restarting; old authenticator seeds are not retained as working factors.
 | HTTP 503 after configuration edit | Review the private change and restart; do not remove the policy |
 
 Live Google/Entra registration, MFA enrollment on real devices and the intended
-TLS/WSL2 deployment still require acceptance in those environments. The test
+local WSL2 deployment still require acceptance in those environments. The test
 suite uses owned credentials and signed fixtures; it does not claim external
 consent or real-provider availability.
