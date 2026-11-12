@@ -49,7 +49,7 @@ def assess():
     approval = ad_directory.preflight(source, vault, key)["approval_sha256"]
     snapshot, receipt = ad_directory.collect(source, vault, key, approval, authorized=True)
     if receipt["error_type"]:
-        raise RuntimeError("Owned LDAPS collection failed: " + receipt["error_type"])
+        raise RuntimeError("Owned LDAPS collection failed: " + json.dumps(receipt, sort_keys=True))
     report = ad_directory.analyze(snapshot)
     assert report["inventory"]["accounts"] >= 2 and report["inventory"]["groups"] > 0 and report["inventory"]["domains"] == 1
     rules = {r["rule_id"] for r in report["findings"]}

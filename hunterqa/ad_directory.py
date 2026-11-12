@@ -211,7 +211,7 @@ def collect(path, session_file, session_key, approval, *, authorized=False, stop
     end = time.monotonic() + min(data["timeout_seconds"], (_expiry(data["expires_at"]) - utcnow()).total_seconds())
     stop = _approved_file(path).parent / stop_file
     response = {"source": "ldaps-read-only", "execution_source": data["mode"], "started_at": utcnow().isoformat(), "endpoint_sha256": digest([data["server_ip"], data["server_port"]]),
-        "operations": 0, "pages": 0, "complete": False, "error_type": None, "real_provider_verified": False}
+        "operations": 0, "pages": 0, "phase": "admission", "complete": False, "error_type": None, "real_provider_verified": False}
     entries = []
     with shared_quota.invocation(data["max_pages"] + 3) as admission:
         response["shared_quota"] = admission.receipt
@@ -241,13 +241,16 @@ def collect(path, session_file, session_key, approval, *, authorized=False, stop
                 client_strategy=SYNC, auto_referrals=False, auto_range=False, read_only=True, check_names=False,
                 raise_exceptions=True, receive_timeout=5, auto_bind=False, lazy=False, use_referral_cache=False)
             response["operations"] += 1
+            response["phase"] = "tls-connect"
             connection.open(read_server_info=False)
             gate()
             response["operations"] += 1
+            response["phase"] = "reader-bind"
             if not connection.bind():
                 raise PermissionError("Directory bind rejected")
             gate()
             response["operations"] += 1
+            response["phase"] = "naming-context"
             connection.search("", "(objectClass=*)", BASE, dereference_aliases=DEREF_NEVER,
                 attributes=["defaultNamingContext"], size_limit=1, time_limit=max(1, math.ceil(end - time.monotonic())))
             naming = [{k.lower(): v for k, v in r.get("raw_attributes", {}).items()}.get("defaultnamingcontext", []) for r in connection.response if r.get("type") == "searchResEntry"]
@@ -258,9 +261,11 @@ def collect(path, session_file, session_key, approval, *, authorized=False, stop
             for _ in range(data["max_pages"]):
                 gate()
                 response["operations"] += 1
+                response["phase"] = "domain-search"
                 connection.search(data["base_dn"], FILTER, SUBTREE, dereference_aliases=DEREF_NEVER, attributes=list(ATTRIBUTES),
                     size_limit=data["page_size"], time_limit=max(1, math.ceil(end - time.monotonic())),
-                    paged_size=data["page_size"], paged_criticality=True, paged_cookie=cookie)
+                    paged_size=data["page_size"], paged_criticality=True, paged_cookie=cookie,
+                    controls=[("1.2.840.113556.1.4.1339", True, None)])
                 if connection.result.get("result") not in {0, 4}:
                     raise ValueError("Directory search unavailable")
                 if any(r.get("type") != "searchResEntry" for r in connection.response):

@@ -57,6 +57,10 @@ alias dereference, schema query, automatic ranged-membership expansion or retry.
 The RootDSE naming context must match the declared domain base before subtree
 collection. Filters and attribute names are fixed in code; no passwords, hashes,
 tickets or security descriptors are requested.
+Subtree searches require the critical domain-scope control to suppress referrals
+and stay within one naming context. Unsupported servers fail closed; there is no
+fallback to broader searching. This follows the
+[Microsoft domain-scope control contract](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/ldap-server-domain-scope-oid).
 
 ```bash
 hunterqa ad-directory-preflight --input /absolute/contract.json \

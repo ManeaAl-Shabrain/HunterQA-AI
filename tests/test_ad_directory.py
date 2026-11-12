@@ -114,6 +114,7 @@ def test_mock_collection_refuses_referrals_and_automatic_queries(owned, monkeypa
     assert len(snapshot["entries"]) == 2
     assert options["read_only"] and not options["auto_referrals"] and not options["auto_range"] and not options["use_referral_cache"]
     assert all(call[2]["dereference_aliases"] == ldap3.DEREF_NEVER for call in calls if isinstance(call, tuple))
+    assert calls[-2][2]["controls"] == [("1.2.840.113556.1.4.1339", True, None)]
     assert calls[-1] == "close" and not receipt["real_provider_verified"]
 
 
