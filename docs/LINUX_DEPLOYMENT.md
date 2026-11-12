@@ -173,7 +173,8 @@ Actual Desktop/WSL2 validation remains required; Linux CI is not that evidence.
 
 ## Authentication, TLS and offline behavior
 
-The baseline is `http://127.0.0.1:8081`. Existing local login and offline source,
+Open `http://localhost:8081`; the service listens on `127.0.0.1:8081`. Use the
+registered hostname consistently for SSO. Existing local login and offline source,
 evidence and recovery functions do not depend on Google, Microsoft or an AI
 provider. Downloaded tools/models and provider-dependent assessments have their
 own requirements. An Ollama service/model is external and is not silently

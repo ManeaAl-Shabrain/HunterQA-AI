@@ -1,5 +1,22 @@
 # HunterQA development and release notes
 
+## Current source · personal localhost edition
+
+- Added one private-workspace runtime for Linux systemd and Docker Compose,
+  with Local authentication, mandatory Admin TOTP and optional Google/Entra OIDC.
+- Added verified-subject approval by the trusted OS administrator, encrypted
+  factors/pending identity state, revocable sessions and fail-closed audit/policy
+  handling. No public signup or provider-supplied Admin role is accepted.
+- Extended offline backup/restore to rotate keys, revoke credentials and require
+  reviewed account renewal and fresh MFA enrollment.
+- Added [personal localhost setup](docs/PERSONAL_LOCALHOST_SETUP.md) and
+  [release handoff](docs/LOCAL_RELEASE_HANDOFF.md). Real-provider and WSL2/Desktop
+  acceptance are owner-run checks; normal local use needs no public hosting.
+- The package and original release assets remain 1.3.0. Earlier entries below
+  describe features and limits at their introduction; current guides identify
+  later extensions. Broader assessment and distributed-production scope remains
+  tracked separately in [expansion progress](docs/EXPANSION_PROGRESS.md).
+
 ## Unreleased · authenticated local operator roles
 
 - Added opt-in viewer/analyst/admin dashboard identities with salted password

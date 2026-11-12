@@ -4,6 +4,10 @@ Checked items are implemented bounded capabilities. Unchecked items remain unfin
 Every broad area is still partial. A source checkmark is not a live test, production approval or security certification.
 These are post-v1.3.0 development capabilities; the immutable release archive is unchanged.
 
+This is the broader assessment/production inventory. The personal localhost
+runtime has a separate [engineering handoff and owner acceptance](LOCAL_RELEASE_HANDOFF.md);
+an unfinished broad category does not require public hosting for local use.
+
 ## 1. Website discovery — partial
 
 - [x] Bounded automatic HTML crawling
@@ -72,6 +76,10 @@ These are post-v1.3.0 development capabilities; the immutable release archive is
 - [x] Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation
 - [x] Opt-in authenticated local dashboard roles and revocable sessions
 - [x] Explicit operator OIDC code/S256 sign-in with verified subject/local role binding
+- [x] Independent Local/Google/Entra switches and mandatory encrypted Admin TOTP
+- [x] OS-approved first-subject binding without signup or role elevation
+- [x] Shared systemd/Compose runtime with actual offline lifecycle acceptance
+- [ ] Owner-run real Google/Entra and Windows WSL2/Desktop acceptance
 - [x] Separate process/workspace identity, data, evidence and session stores
 - [x] Authenticated single-hop HTTPS gateway and bounded loopback WSGI profile
 - [x] Host-local server lease, bounded scan admission and interrupted-work recovery

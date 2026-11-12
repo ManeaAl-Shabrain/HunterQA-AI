@@ -11,25 +11,27 @@ Local + MFA works offline, Google/Entra remain optional until real credentials
 are configured. Hosted TLS gates apply only to the preserved optional hosted
 profile. See [personal setup](PERSONAL_LOCALHOST_SETUP.md).
 
-| ID | Required outcome | Current gap / acceptance evidence required |
+| ID | Required outcome | Implementation / acceptance status |
 | --- | --- | --- |
-| DEP-01 | Independent Linux Docker Compose and native systemd deployments, same application and API/security configuration | Common runtime manifests, actual service/container acceptance and module compatibility evidence |
-| DEP-02 | Windows development/run through WSL2 and Docker Desktop | Document prerequisites, filesystem/UID/network behavior; actual Desktop/WSL2 acceptance remains necessary |
+| DEP-01 | Independent Linux Docker Compose and native systemd deployments, same application and API/security configuration | Shared runtime implemented; both actual Linux lifecycle jobs passed |
+| DEP-02 | Windows development/run through WSL2 and Docker Desktop | Prerequisites, filesystem/UID/network behavior documented; actual acceptance assigned to the owner |
 | AUTH-01 | Independently switchable local, Google OIDC and Entra OIDC | Unified policy and three-way selection implemented; owned signed-provider and browser tests; real registrations remain external acceptance |
-| AUTH-02 | Verified identities map to one pre-approved local account | Preserve exact issuer/subject bindings, local RBAC/revocation and no automatic email linking or signup |
+| AUTH-02 | Verified identities map to one pre-approved local account | Exact signed subject/local role binding and explicit OS approval implemented; no automatic email linking, signup or role change |
 | AUTH-03 | MFA according to policy, mandatory for administrators | Encrypted local TOTP, mandatory Admin challenge across all methods, replay/attempt limits and recovery reenrollment implemented; real-device operational acceptance remains |
-| SEC-01 | No public signup, approved users only, no automatic Admin grants | Preserve OS-admin provisioning and local roles; test unknown identities and escalation denial |
-| SEC-02 | Protected credentials, sessions and tokens; code/S256 PKCE | Preserve hashed passwords/session tokens and strict OIDC; encrypt any future stored MFA secrets and protect provisioning keys |
-| SEC-03 | Audit every authentication attempt and sensitive operation | Extend existing local audit to provider selection/failure/MFA and deployment maintenance without logging secrets |
-| OFF-01 | Offline operation for local functions and local authentication | Verify local login, source/evidence workflows and recovery without an external IdP or AI service |
-| OFF-02 | Google/Entra contact identity services during authentication | Test provider outages and no fallback that bypasses configured authentication policy |
-| VAL-01 | Real integration, security and operational tests | Distinguish owned fixtures from real Google/Entra registrations and deployed OS/network validation |
-| DOC-01 | Installation, settings, operation and troubleshooting for every environment | Keep one configuration contract; clearly mark unsupported or unverified scenarios |
+| SEC-01 | No public signup, approved users only, no automatic Admin grants | OS-admin provisioning and local roles implemented; unknown identity and escalation-denial tests passed |
+| SEC-02 | Protected credentials, sessions and tokens; code/S256 PKCE | Password/session hashes, encrypted TOTP/pending OIDC state, private keys/secrets and code/S256 checks implemented |
+| SEC-03 | Audit authentication attempts and sensitive operations | Provider/MFA/approval/policy events and sensitive mutations audited without credential values; audit failure blocks authentication |
+| OFF-01 | Offline operation for local functions and local authentication | Actual Linux Local/MFA/source/report/recovery lifecycle passed with non-loopback egress denied for the fixture UID |
+| OFF-02 | Google/Entra contact identity services during authentication | Owned outage and no-bypass contracts passed; real-provider acceptance assigned to the owner |
+| VAL-01 | Integration, security and operational tests with real evidence | Automated source/browser and actual Linux runtime checks passed; live-provider and desktop results remain unrun until owner acceptance |
+| DOC-01 | Installation, settings, operation and troubleshooting for every environment | Shared deployment, personal setup, authentication and recovery guides provided; [handoff](LOCAL_RELEASE_HANDOFF.md) records remaining manual acceptance |
 
 Implementation order: common runtime/deployment acceptance, multi-provider
 authentication and policy, MFA enrollment/enforcement/recovery, then real
 provider/platform acceptance. No stage may mark the whole platform complete
 using template presence, an untested configuration or CI alone.
 
-No provider client IDs, secrets or real deployment registrations were supplied.
-Those values must be provisioned privately; do not send secrets in chat.
+The owner has taken responsibility for real Google/Entra and WSL2/Desktop tests.
+Those results remain pending, not failed or automatically approved. Provider
+secrets are provisioned privately; do not send them in chat. Normal Local/MFA
+operation does not depend on enabling either external provider.

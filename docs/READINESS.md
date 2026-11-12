@@ -1,5 +1,10 @@
 # Establish HunterQA for supported owned-lab use
 
+This page validates the owned lab. For the personal application/service release,
+use [localhost setup](PERSONAL_LOCALHOST_SETUP.md) and
+[the engineering handoff](LOCAL_RELEASE_HANDOFF.md). Lab readiness, local service
+readiness and broad hosted-production certification are separate decisions.
+
 **Scope:** current development source, local single operator, explicitly owned
 loopback fixtures. Real-world effectiveness remains **unverified**, as requested.
 The [checked feature list](FEATURE_READINESS_CHECKLIST.md) marks individual

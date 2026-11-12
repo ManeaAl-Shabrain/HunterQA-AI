@@ -1,5 +1,10 @@
 # Authenticated local operator access
 
+For a new installation, start with [the private localhost workspace](PERSONAL_LOCALHOST_SETUP.md),
+which requires Admin MFA and supports optional Google/Entra. The shared local
+dashboard setup below is a compatibility profile. See [release handoff](LOCAL_RELEASE_HANDOFF.md)
+for the tested local scope and owner-run acceptance.
+
 **Post-v1.3.0 development.** HunterQA can require named accounts for its local
 dashboard, with viewer, analyst and administrator roles and server-side revocable
 sessions. These accounts control **HunterQA access**. They are separate from target

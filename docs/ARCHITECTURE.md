@@ -1,9 +1,26 @@
 # HunterQA AI — Architecture and Evidence Lifecycle
 
-**Release documented:** v1.2.0 Stable. One Python/Flask codebase with separate
-local research, optional network assessment, and human-review trust boundaries.
+One Python/Flask codebase separates local research, optional network assessment
+and human review. The component map below retains the v1.2.0 baseline; current
+source adds the private-workspace runtime described here.
 
-## Main components
+## Current personal runtime
+
+| Component | Responsibility |
+| --- | --- |
+| `workspace.py`, `workspace_server.py` | Private identity/data roots, process binding, loopback Waitress, bounded worker admission and startup checks |
+| `operator_store.py`, `operator_auth.py` | Local roles, password/session hashes, revocation, CSRF and mutation checks |
+| `identity_policy.py`, `identity_routes.py`, `oidc_tokens.py` | Local/Google/Entra policy, encrypted TOTP and pending state, verified-subject approval, code/PKCE and signed-token checks |
+| `workspace_backup.py` | Offline bounded backup and original-path restore with credential/factor renewal |
+| Shared deployment installer, renderer and Compose profile | The same installed application under native systemd or a non-root container |
+
+Normal access is `http://localhost:8081`, served on 127.0.0.1. Optional provider
+sign-in needs internet; Local/TOTP and supported local workflows do not.
+The older `run.py` development dashboard and explicit single-provider OIDC
+profile remain for compatibility. See [personal setup](PERSONAL_LOCALHOST_SETUP.md),
+[deployment](LINUX_DEPLOYMENT.md) and [release handoff](LOCAL_RELEASE_HANDOFF.md).
+
+## Main components — v1.2.0 baseline
 
 - **Flask UI (`hunterqa/__init__.py`, `hunterqa/routes.py`):**
   - Listens on `127.0.0.1:5000` by default from `run.py`; this is a local
@@ -106,8 +123,9 @@ Explicit owner/program permission + approved local files
 
 - **Semgrep:** installed separately for source scanning.
 - **Ollama:** local Qwen inference; entirely optional for core offline QA.
-- **Playwright/Chromium:** optional browser dependencies; only owned
-  loopback browser laboratory is implemented.
+- **Playwright/Chromium:** optional browser dependencies. The original v1.2
+  mode is the owned-loopback lab; current scoped rendered discovery and runtime
+  controls have separate [contracts](SCOPED_RENDERED_DISCOVERY.md).
 - **Clang, AFL++ and sanitizers:** optional, isolated local executable
   research tools.
 - **CodeQL/Ghidra:** not automatically executed; import supported local
