@@ -130,6 +130,21 @@
         "skipped": 58
       },
       "scope": "Seven CI jobs passed: Python 3.11/3.13 source regression, bundled rules, source action, actual Compose/native lifecycle and isolated Samba. No real cloud/Google/Entra/WSL2 acceptance. Later changes require their own results."
+    },
+    "E81-AADF": {
+      "source_commit": "aadf2179da660389ad7f98e2c4f8f91e1e635d3b",
+      "workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560463",
+      "deployment_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560434",
+      "samba_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560464",
+      "local_regression": {
+        "passed": 3542,
+        "skipped": 59
+      },
+      "linux_regression_per_run": {
+        "passed": 3543,
+        "skipped": 58
+      },
+      "scope": "All seven CI jobs passed: Python 3.11/3.13 source regression and separate browser/CLI acceptance, bundled rules, source action, actual Compose/native lifecycle and isolated Samba. Includes encrypted token synthetic tests and source receipt repair. No real cloud/Google/Entra/WSL2 acceptance; broad domain limits remain open."
     }
   },
   "requirements": [
@@ -532,7 +547,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -562,7 +578,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -592,7 +609,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -622,7 +640,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -652,7 +671,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -682,7 +702,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -712,7 +733,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -742,7 +764,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -772,7 +795,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -802,7 +826,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1040,7 +1065,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1071,7 +1097,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1102,7 +1129,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1133,7 +1161,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1164,7 +1193,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1193,7 +1223,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Missing"
     },
@@ -1224,7 +1255,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1255,7 +1287,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1286,7 +1319,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1317,7 +1351,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1348,7 +1383,8 @@
       ],
       "increment_evidence": [
         "E81-SAMBA",
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1391,7 +1427,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1431,7 +1468,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1473,7 +1511,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1513,7 +1552,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1555,7 +1595,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1597,7 +1638,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1639,7 +1681,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1681,7 +1724,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1723,7 +1767,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1765,7 +1810,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1807,7 +1853,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1849,7 +1896,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -1891,7 +1939,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2320,7 +2369,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2353,7 +2403,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2386,7 +2437,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2419,7 +2471,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2452,7 +2505,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2485,7 +2539,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2518,7 +2573,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2551,7 +2607,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2584,7 +2641,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2617,7 +2675,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2650,7 +2709,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2683,7 +2743,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2716,7 +2777,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2750,7 +2812,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2784,7 +2847,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2818,7 +2882,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2852,7 +2917,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2886,7 +2952,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2920,7 +2987,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2954,7 +3022,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -2988,7 +3057,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -3022,7 +3092,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -3056,7 +3127,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -3090,7 +3162,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -3192,7 +3265,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -3462,7 +3536,8 @@
         "tests/test_cloud_token_vault.py"
       ],
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4024,7 +4099,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4689,7 +4765,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4723,7 +4800,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4767,7 +4845,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4801,7 +4880,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4835,7 +4915,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4869,7 +4950,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4903,7 +4985,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4937,7 +5020,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -4971,7 +5055,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5015,7 +5100,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5059,7 +5145,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5103,7 +5190,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5147,7 +5235,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5191,7 +5280,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5235,7 +5325,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5279,7 +5370,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -5323,7 +5415,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6393,7 +6486,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6437,7 +6531,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6481,7 +6576,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6523,7 +6619,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6567,7 +6664,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6611,7 +6709,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6655,7 +6754,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6699,7 +6799,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6743,7 +6844,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6787,7 +6889,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -6831,7 +6934,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7278,7 +7382,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7311,7 +7416,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7342,7 +7448,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7375,7 +7482,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7408,7 +7516,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7441,7 +7550,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7474,7 +7584,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7507,7 +7618,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7540,7 +7652,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7573,7 +7686,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7606,7 +7720,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7639,7 +7754,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7672,7 +7788,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7705,7 +7822,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7738,7 +7856,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7771,7 +7890,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7805,7 +7925,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7839,7 +7960,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7873,7 +7995,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7907,7 +8030,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7941,7 +8065,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -7975,7 +8100,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8009,7 +8135,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8043,7 +8170,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8077,7 +8205,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8111,7 +8240,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8145,7 +8275,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8179,7 +8310,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8213,7 +8345,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8247,7 +8380,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8281,7 +8415,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8315,7 +8450,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8349,7 +8485,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8383,7 +8520,8 @@
       ],
       "current_status": "Partially Implemented",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8426,7 +8564,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8469,7 +8608,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8512,7 +8652,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8555,7 +8696,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8598,7 +8740,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -8641,7 +8784,8 @@
       ],
       "current_status": "Implemented but Requires Improvement",
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -9256,7 +9400,8 @@
         "tests/test_cloud_token_vault.py"
       ],
       "increment_evidence": [
-        "E81-28AA"
+        "E81-28AA",
+        "E81-AADF"
       ]
     },
     {
@@ -10220,12 +10365,23 @@
     }
   ],
   "increment_verification": {
-    "scope": "See E81-28AA for actual current committed CI evidence; new token-source tests are synthetic, not actual provider tests",
+    "scope": "Shared modes, original collector delegates, source evidence repair, actual owned HTTP/TCP/TLS, actual isolated Samba and Linux lifecycle. Cloud token tests use synthetic responses; real providers unverified.",
     "actual_samba_ad": "E81-SAMBA",
     "external_providers": "not verified",
     "cloud_native_transport_tests": "Mocks only, outputs labeled DEMO",
     "actual_owned_native_facade": "HTTP and Redis TCP tested locally; actual providers unverified",
     "shared_collection_scope": "Existing native delegates reused; actual owned HTTP/TCP tested, real provider validation unverified",
-    "previous_targeted_tests": 75
+    "previous_targeted_tests": 75,
+    "current_committed_implementation": "aadf2179da660389ad7f98e2c4f8f91e1e635d3b",
+    "current_evidence": "E81-AADF",
+    "local_full_regression": {
+      "passed": 3542,
+      "skipped": 59
+    },
+    "linux_full_regression_per_run": {
+      "passed": 3543,
+      "skipped": 58
+    },
+    "all_seven_ci_jobs_passed": true
   }
 }

@@ -27,8 +27,8 @@ controls. The new business-event reviewer evaluates explicit typed rules and
 observations; it does not evaluate arbitrary expressions or execute transactions.
 
 Credential encryption reuses the existing private store and authenticated
-encryption, with distinct protected purposes for web sessions, LDAP readers and
-AWS signing. A purpose cannot be changed by editing wrapper metadata. Legacy
+encryption, with distinct protected purposes for web sessions, LDAP readers,
+AWS signing and Azure/GCP temporary tokens. A purpose cannot be changed by editing wrapper metadata. Legacy
 web-session files remain compatible. No personal account or secret is embedded.
 
 ## Keep network execution behind the existing local operator boundary
