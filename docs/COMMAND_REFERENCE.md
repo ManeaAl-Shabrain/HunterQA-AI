@@ -136,6 +136,8 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `oidc-session-benchmark` | Run an owned HTTP OIDC/PKCE/session/tenant fixture; no external issuer |
 | `oidc-session-verify` | Offline consistency of retained owned OIDC/session evidence |
 | `operator-add` | Manage opt-in local dashboard operators; not target assessment permission |
+| `operator-mfa-enroll` | Enroll an approved account's encrypted TOTP factor from a private terminal or explicit stdin; revokes sessions |
+| `identity-setup` | Initialize the unified Local/Google/Entra policy with mandatory administrator MFA; requires enrollment before startup |
 | `operator-audit` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-init` | Manage opt-in local dashboard operators; not target assessment permission |
 | `operator-secret` | Create a private persistent session-key file without displaying its value |

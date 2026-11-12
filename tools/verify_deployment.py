@@ -19,6 +19,8 @@ import urllib.request
 # Public synthetic fixture credentials, never credentials for a real deployment.
 PASSWORD = "Owned-deployment-fixture-2026!"  # nosec B105
 RENEWED = "Renewed-owned-deployment-2026!"
+FACTOR = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP"  # public synthetic fixture only
+RENEWED_FACTOR = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"
 
 
 class LocalRedirect(urllib.request.HTTPRedirectHandler):
@@ -62,13 +64,13 @@ def health(wait=0):
         time.sleep(0.2)
 
 
-def call(*args, password=None):
+def call(*args, password=None, input_text=None):
     env = dict(os.environ)
     if password is not None:
         env["HUNTERQA_OPERATOR_PASSWORD"] = password
     result = subprocess.run([sys.executable, "-m", "hunterqa", *map(str, args)], env=env,
-        capture_output=True, text=True, timeout=90, check=True)  # nosec B603
-    if PASSWORD in result.stdout or RENEWED in result.stdout:
+        input=input_text, capture_output=True, text=True, timeout=90, check=True)  # nosec B603
+    if any(secret in result.stdout for secret in (PASSWORD, RENEWED, FACTOR, RENEWED_FACTOR)):
         raise ValueError("Fixture credential appeared in command output")
     return json.loads(result.stdout)
 
@@ -93,6 +95,9 @@ def acceptance(phase):
             path.mkdir(mode=0o700)
         call("workspace-init", "--workspace-id", "owned-ci", "--root", data, "--username", "admin", "--authorized", password=PASSWORD)
         call("operator-add", "--database", control / "owned-ci/operators.sqlite3", "--username", "viewer", "--role", "viewer", "--authorized", password=PASSWORD)
+        call("operator-add", "--database", control / "owned-ci/operators.sqlite3", "--username", "analyst", "--role", "analyst", "--authorized", password=PASSWORD)
+        call("identity-setup", "--config", config, "--origin", "http://127.0.0.1:" + os.environ["HUNTERQA_PORT"], "--authorized")
+        call("operator-mfa-enroll", "--database", control / "owned-ci/operators.sqlite3", "--key-file", control / "owned-ci/auth.key", "--username", "admin", "--secret-stdin", "--authorized", input_text=FACTOR)
         project = data / "assessments/project"
         project.mkdir(mode=0o700)
         (project / "Dockerfile").write_text("FROM ubuntu:latest\nUSER root\n", encoding="utf-8")
@@ -122,6 +127,8 @@ def acceptance(phase):
         assert result["accounts_disabled"] and result["sessions_revoked"]
         assert hashlib.sha256((control / "owned-ci/session.key").read_bytes()).hexdigest() != old_key_digest
         call("operator-update", "--database", control / "owned-ci/operators.sqlite3", "--username", "admin", "--enable", "--reset-password", "--authorized", password=RENEWED)
+        call("operator-update", "--database", control / "owned-ci/operators.sqlite3", "--username", "analyst", "--enable", "--reset-password", "--authorized", password=RENEWED)
+        call("operator-mfa-enroll", "--database", control / "owned-ci/operators.sqlite3", "--key-file", control / "owned-ci/auth.key", "--username", "admin", "--secret-stdin", "--authorized", input_text=RENEWED_FACTOR)
         assert call("operator-status", "--database", control / "owned-ci/operators.sqlite3")["instance"] != before
         call("workspace-check", "--config", config)
         return {"archive_verified": True, "restored_original_paths": True, "keys_rotated": True, "credentials_renewed": True}
@@ -144,7 +151,7 @@ def verify_http(data, *, restored):
         return re.search(rb'name="csrf_token" value="([A-Za-z0-9_-]+)"', raw).group(1).decode()
 
     _, raw, _ = request("/login")
-    status, _, _ = request("/login", {"username": "admin", "password": RENEWED if restored else PASSWORD, "csrf_token": csrf(raw)})
+    status, _, _ = request("/login", {"username": "analyst", "password": RENEWED if restored else PASSWORD, "csrf_token": csrf(raw)})
     assert status == 200
     if not restored:
         _, raw, _ = request("/projects")
@@ -183,6 +190,12 @@ def verify_http(data, *, restored):
             page.get_by_label("Username", exact=True).fill("admin")
             page.get_by_label("Password", exact=True).fill(RENEWED if restored else PASSWORD)
             page.get_by_role("button", name="Sign in", exact=True).click()
+            expect(page.get_by_role("heading", name="Verify your sign-in")).to_be_visible()
+            # A correct password still grants no API access before the second factor.
+            assert page.request.get(base + "/api/scans/1/status").status == 401
+            from hunterqa.identity_policy import totp
+            page.get_by_label("Verification code", exact=True).fill(totp(RENEWED_FACTOR if restored else FACTOR))
+            page.get_by_role("button", name="Verify sign-in", exact=True).click()
             page.goto(base + "/scans/1/report")
             expect(page.get_by_text("Workspace analysis summary", exact=False)).to_be_visible()
             page.get_by_role("button", name="Sign out", exact=True).click()
@@ -193,7 +206,7 @@ def verify_http(data, *, restored):
         assert db.execute("SELECT COUNT(*) FROM findings").fetchone()[0] > 0
         assert db.execute("SELECT COUNT(*) FROM findings WHERE engine='semgrep'").fetchone()[0] > 0
     assert PASSWORD.encode() not in (data.parent / "control/owned-ci/operators.sqlite3").read_bytes()
-    return {"local_login": True, "source_scan_completed": True, "export_and_report": True,
+    return {"local_login": True, "admin_mfa_verified": True, "pre_mfa_api_denied": True, "source_scan_completed": True, "export_and_report": True,
         "rbac_denial_verified": True, "real_chromium_login_report_logout": True, "external_idp_verified": False}
 
 

@@ -28,6 +28,10 @@ Eleventh implementation: [native cloud transport deadlines and slow-response con
 Twelfth implementation: [selected SPA hash routes and separate visit coverage](SCOPED_SPA_HASH_DISCOVERY.md).
 Operator/workspace foundation: [separate workspaces](PRODUCTION_WORKSPACES.md),
 [operator OIDC](OPERATOR_SSO.md) and [remaining completion gates](PRODUCTION_COMPLETION.md).
+The shared runtime now includes [unified Local/Google/Entra authentication](UNIFIED_AUTHENTICATION.md)
+and encrypted, enforced administrator TOTP, with recovery reenrollment. This
+dashboard control does not complete general assessed-target federation or
+independently validate multi-tenant production isolation.
 These remain bounded source-development capabilities. Multi-user
 production changes require a separate deployment architecture and threat model;
 local roles alone do not provide tenant isolation.

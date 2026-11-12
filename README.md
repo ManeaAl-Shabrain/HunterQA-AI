@@ -5,7 +5,7 @@
 HunterQA is a local workspace for authorized security assessments. Review code
 and saved evidence, run selected checks within an approved scope, and produce
 reports you can review and retest. It starts locally; separate workspace profiles
-add explicit operator access and OIDC sign-in.
+add approved accounts, Local/Google/Entra sign-in and administrator MFA.
 
 **Python 3.11+ · Kali/Linux recommended · CLI and local dashboard**
 
@@ -37,7 +37,7 @@ the version number alone does not identify the installed features.
 | Validation cues | Fixed inert-markup/SQL-error comparisons and explicit role/anonymous access contracts |
 | Identity assurance | Optional offline RS256 ID-token verification; owned OIDC/PKCE/session/tenant HTTP fixtures |
 | Infrastructure/cloud | Scoped TCP/TLS, SSH identification and UDP DNS; selected AWS/Azure/GCP queries |
-| Workspace access | Separate identity/data stores per process, local roles or explicit OIDC, and a controlled HTTPS gateway profile |
+| Workspace access | Separate identity/data stores, local roles, independent Local/Google/Entra login, encrypted admin TOTP and a controlled HTTPS gateway |
 | Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
 | Category packs | 23 categories and 79 catalog entries, with implemented modes in the category index |
 | Workflow controls | Scope checks, approvals, budgets, timeouts, stop requests and optional host-local shared quotas |
@@ -116,6 +116,7 @@ an engagement. Authorization does not enable missing functionality.
 | Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
 | Lab evidence and readiness | [Readiness](docs/READINESS.md) |
 | Workspace accounts, SSO and controlled serving | [Workspaces](docs/PRODUCTION_WORKSPACES.md) and [OIDC](docs/OPERATOR_SSO.md) |
+| Local, Google and Entra login with mandatory Admin MFA | [Unified authentication](docs/UNIFIED_AUTHENTICATION.md) |
 | Linux Compose/systemd profile and WSL2 setup | [Deployment guide](docs/LINUX_DEPLOYMENT.md), [accepted requirements and gaps](docs/ACCEPTED_PLATFORM_REQUIREMENTS.md) |
 | Private workspace backup, recovery and credential renewal | [Recovery guide](docs/WORKSPACE_RECOVERY.md) |
 | Production acceptance and remaining gaps | [Completion gates](docs/PRODUCTION_COMPLETION.md) |

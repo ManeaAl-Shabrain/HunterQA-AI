@@ -259,7 +259,7 @@ def session_operator(path, token, instance):
         return _public(row)
 
 
-def authenticate(path, username, password, peer):
+def authenticate(path, username, password, peer, *, verify_only=False):
     name = username if isinstance(username, str) and NAME.fullmatch(username) else "<invalid>"
     bounded = isinstance(password, str) and len(password) <= 256 and "\x00" not in password
     now = time.time()
@@ -281,6 +281,9 @@ def authenticate(path, username, password, peer):
             return None, "failed", None, None
         user = _public(row)
         instance = db.execute("SELECT instance FROM identity").fetchone()[0]
+        if verify_only:
+            _event(db, "password-verified-awaiting-policy", user["username"])
+            return user, "verified", instance, None
         db.execute("DELETE FROM operator_sessions WHERE expires<=?", (now,))
         old = db.execute("SELECT token_hash FROM operator_sessions WHERE user_id=? ORDER BY issued DESC LIMIT -1 OFFSET 7", (user["id"],)).fetchall()
         for record in old:

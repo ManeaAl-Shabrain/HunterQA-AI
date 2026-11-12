@@ -1,11 +1,10 @@
 # Shared Linux deployment profile
 
-This first deployment stage uses one application, one dependency/tool manifest
-and one private workspace layout for Docker Compose and native systemd. It does
-not complete the [accepted authentication/MFA requirements](ACCEPTED_PLATFORM_REQUIREMENTS.md).
-The current application still supports local accounts or one explicitly bound
-OIDC provider. Simultaneous Google/Entra selection and enforced administrator MFA
-remain open. Do not treat this profile as production acceptance.
+The two deployment modes use one application, one dependency/tool manifest and
+one private workspace layout. Both require the [unified authentication policy](UNIFIED_AUTHENTICATION.md):
+independent Local, Google and Entra switches, with administrator TOTP enforcement.
+Live-provider, Desktop/WSL2 and independent production acceptance remain separate
+[completion gates](PRODUCTION_COMPLETION.md).
 
 The initial profile targets Debian 12 / Ubuntu 24.04 and Linux containers.
 Install Python 3.11+ for rendering the non-secret specification. Source must be
@@ -66,6 +65,13 @@ sudo sh tools/install_linux_runtime.sh --system-deps /opt/hunterqa-runtime
 sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
   /opt/hunterqa-runtime/bin/hunterqa workspace-init --workspace-id alpha \
   --root /srv/hunterqa-alpha/data --username admin --authorized
+sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
+  /opt/hunterqa-runtime/bin/hunterqa identity-setup \
+  --config /srv/hunterqa-alpha/control/alpha/workspace.json --origin http://127.0.0.1:8081 --authorized
+sudo -u hunterqa-alpha env HUNTERQA_OPERATOR_ROOT=/srv/hunterqa-alpha/control \
+  /opt/hunterqa-runtime/bin/hunterqa operator-mfa-enroll \
+  --database /srv/hunterqa-alpha/control/alpha/operators.sqlite3 \
+  --key-file /srv/hunterqa-alpha/control/alpha/auth.key --username admin --authorized
 sudo cp "$HOME/hunterqa-deployment/rendered/hunterqa-alpha.service" /etc/systemd/system/
 sudo systemd-analyze verify /etc/systemd/system/hunterqa-alpha.service
 sudo systemctl daemon-reload
@@ -116,6 +122,15 @@ docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
 docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
   -f examples/deploy/compose.yaml -p hunterqa-alpha run --rm app \
   workspace-init --workspace-id alpha --root /srv/hunterqa-alpha/data --username admin --authorized
+
+docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
+  -f examples/deploy/compose.yaml -p hunterqa-alpha run --rm app \
+  identity-setup --config /srv/hunterqa-alpha/control/alpha/workspace.json \
+  --origin http://127.0.0.1:8081 --authorized
+docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
+  -f examples/deploy/compose.yaml -p hunterqa-alpha run --rm app \
+  operator-mfa-enroll --database /srv/hunterqa-alpha/control/alpha/operators.sqlite3 \
+  --key-file /srv/hunterqa-alpha/control/alpha/auth.key --username admin --authorized
 docker compose --env-file "$HOME/hunterqa-deployment/rendered/runtime.env" \
   -f examples/deploy/compose.yaml -p hunterqa-alpha up -d --wait
 ```
@@ -164,13 +179,13 @@ provider. Downloaded tools/models and provider-dependent assessments have their
 own requirements. An Ollama service/model is external and is not silently
 downloaded or contacted by workspace mode, which keeps shared local AI disabled.
 
-For the existing hosted OIDC profile, follow [operator SSO](OPERATOR_SSO.md) and
-[the authenticated TLS edge](PRODUCTION_WORKSPACES.md). Both runtime modes use
-that same private workspace configuration. A real certificate/proxy and registered
-client remain necessary. This stage does not relax the current SSO-only hosted
-restriction to expose password-only administrator access. Multi-provider/local
-switches and administrator MFA must be completed before claiming the requested
-production authentication policy.
+Configure [unified sign-in](UNIFIED_AUTHENTICATION.md) and
+[the authenticated TLS edge](PRODUCTION_WORKSPACES.md) for hosted access. Both
+runtime modes use the same private configuration. A real certificate/proxy and
+registered clients remain necessary. Active administrators must enroll in TOTP;
+a verified password or provider identity alone cannot open their workspace.
+The legacy single-provider profile remains available for compatibility through
+the original serving commands, but does not satisfy the new deployment guard.
 
 ## Operations and troubleshooting
 

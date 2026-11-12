@@ -1,5 +1,11 @@
 # Separate workspaces and controlled serving
 
+For new deployments, use [the shared Linux profile](LINUX_DEPLOYMENT.md) and
+[unified Local/Google/Entra authentication with Admin MFA](UNIFIED_AUTHENTICATION.md).
+The single-provider setup below remains a compatibility profile. The new
+`auth_config` replaces its `oidc_config`, and `--require-auth-policy` prevents
+accidentally serving the new deployment without the unified policy.
+
 Use a separate workspace for each group allowed to share projects, findings and
 evidence. Each workspace has its own operator database, session key, dashboard
 database, approved source/evidence root and process. Accounts within one workspace
