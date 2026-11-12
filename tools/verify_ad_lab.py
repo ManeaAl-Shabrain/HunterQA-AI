@@ -102,7 +102,7 @@ def provision():
     shutil.copyfile(pki / "ca.pem", LAB_ROOT / "assessments/ca.pem")
     os.chown(LAB_ROOT / "assessments/ca.pem", 10001, 10001)
     with (LAB_ROOT / "samba.log").open("w") as log:
-        process = subprocess.Popen(["samba", "--foreground", "--no-process-group", "--configfile=" + str(config)], stdout=log, stderr=log)  # nosec B603
+        process = subprocess.Popen(["samba", "--foreground", "--no-process-group", "--debug-stdout", "--debuglevel=1", "--configfile=" + str(config)], stdout=log, stderr=log)  # nosec B603
         try:
             end = time.monotonic() + 30
             while True:
