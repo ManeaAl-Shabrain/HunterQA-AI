@@ -47,7 +47,11 @@ def entries():
 
 
 def test_normalized_actual_attribute_analysis_reuses_existing_account_rules():
-    snapshot = {"schema_version": 1, "collected_at": utcnow().isoformat(), "entries": ad.normalize(entries()), "minimum_password_length": 14}
+    from ldap3.utils.ciDict import CaseInsensitiveDict
+    actual_shape = entries()
+    for row in actual_shape:
+        row["raw_attributes"] = CaseInsensitiveDict(row["raw_attributes"])
+    snapshot = {"schema_version": 1, "collected_at": utcnow().isoformat(), "entries": ad.normalize(actual_shape), "minimum_password_length": 14}
     report = ad.analyze(snapshot)
     rules = {r["rule_id"] for r in report["findings"]}
     assert rules >= {"ad-review.password-not-required", "ad-directory.password-length-policy", "ad-directory.lockout-policy-review", "ad-directory.protected-account-review"}

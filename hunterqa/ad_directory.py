@@ -6,6 +6,7 @@ import math
 import re
 import ssl
 import time
+from collections.abc import Mapping
 
 from . import ad_review, assessment_sessions, shared_quota
 from .bounty import _approved_file, _decode_json
@@ -70,10 +71,10 @@ def normalize(entries):
         raise ValueError("Directory entry bound exceeded")
     result = []
     for entry in entries:
-        if not isinstance(entry, dict) or entry.get("type") != "searchResEntry":
+        if not isinstance(entry, Mapping) or entry.get("type") != "searchResEntry":
             continue
         dn, attributes = entry.get("dn"), entry.get("raw_attributes")
-        if not isinstance(dn, str) or not 1 <= len(dn) <= 2048 or not isinstance(attributes, dict):
+        if not isinstance(dn, str) or not 1 <= len(dn) <= 2048 or not isinstance(attributes, Mapping):
             raise ValueError("Malformed directory entry")
         values = {}
         for key, raw_values in attributes.items():
