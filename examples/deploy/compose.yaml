@@ -36,7 +36,7 @@ services:
         source: ${HUNTERQA_HOME}
         target: ${HUNTERQA_HOME}
         bind: {create_host_path: false}
-    command: ["workspace-serve", "--config", "${HUNTERQA_HOME}/control/${HUNTERQA_WORKSPACE_ID}/workspace.json", "--port", "${HUNTERQA_PORT}"]
+    command: ["workspace-serve", "--require-auth-policy", "--config", "${HUNTERQA_HOME}/control/${HUNTERQA_WORKSPACE_ID}/workspace.json", "--port", "${HUNTERQA_PORT}"]
     healthcheck:
       test: ["CMD", "hunterqa-health"]
       interval: 15s

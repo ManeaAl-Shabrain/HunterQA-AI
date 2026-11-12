@@ -73,7 +73,7 @@ def server_options(port):
         "trusted_proxy": None, "clear_untrusted_proxy_headers": False}
 
 
-def serve(config, port):
+def serve(config, port, *, require_auth_policy=False):
     from importlib.metadata import version
     from packaging.version import Version
     try:
@@ -83,6 +83,8 @@ def serve(config, port):
     except ImportError:
         raise RuntimeError("Install .[production] before workspace serving") from None
     settings = workspace.load(config)
+    if require_auth_policy and not settings.get("AUTH_CONFIG"):
+        raise ValueError("Configure unified authentication and enroll administrator MFA before serving this profile")
     options = server_options(port)
     with lease(settings["WORKSPACE_ROOT"]):
         from . import create_app
@@ -96,7 +98,14 @@ def readiness(config):
     app = create_app({"WORKSPACE_CONFIG": config})
     return {"engine": "workspace-startup-readiness", "schema_version": 1, "workspace_id": app.config["WORKSPACE_ID"],
         "startup_configuration_valid": True, "separate_data_and_identity_stores": True,
-        "sso_configured": bool(app.config.get("OIDC_ENABLED")), "authenticated_https_edge_configured": bool(app.config.get("WORKSPACE_PUBLIC_ORIGIN")),
+        "sso_configured": bool(app.config.get("OIDC_ENABLED") or app.config.get("AUTH_PROVIDERS")),
+        "unified_authentication_configured": bool(app.config.get("AUTH_POLICY_ENABLED")),
+        "administrator_mfa_required": bool(app.config.get("AUTH_POLICY_ENABLED")),
+        "local_configuration_ready": bool(app.config.get("AUTH_POLICY_ENABLED") and app.config.get("AUTH_LOCAL_ENABLED")
+            and not app.config.get("WORKSPACE_PUBLIC_ORIGIN")),
+        "normal_local_operation_requires_public_https": False,
+        "optional_sso_providers_enabled": app.config.get("AUTH_PROVIDERS", []),
+        "authenticated_https_edge_configured": bool(app.config.get("WORKSPACE_PUBLIC_ORIGIN")),
         "network_requests": 0, "production_ready": False,
         "unverified": ["Real provider registration, MFA/session policy and end-to-end login in the intended deployment",
             "OS account/container isolation, denied-egress validation and real TLS edge deployment",

@@ -5,13 +5,17 @@
 <section class="page-head"><div><p class="eyebrow">WORKSPACE ACCESS</p><h1>Sign in to HunterQA</h1><p>Use the sign-in option provided by your administrator. Workspace access does not authorize a target assessment.</p></div></section>
 <section class="panel"><div class="research-details">
 {% if error %}<p class="flash error" role="alert">{{ error }}</p>{% endif %}
-{% if config.OIDC_ENABLED %}
+{% if config.AUTH_POLICY_ENABLED %}
+{% for provider in config.AUTH_PROVIDERS %}
+<form method="post" action="{{ url_for('identity.provider_start', name=provider) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Continue with {{ 'Google' if provider == 'google' else 'Microsoft Entra ID' }}</button></form>
+{% endfor %}
+{% elif config.OIDC_ENABLED %}
 <form method="post" action="{{ url_for('operator_oidc.start') }}">
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 <button type="submit">Continue with single sign-on</button>
 </form>
 {% endif %}
-{% if not config.OIDC_ENABLED or config.OIDC_LOCAL_PASSWORD %}
+{% if (config.AUTH_POLICY_ENABLED and config.AUTH_LOCAL_ENABLED) or (not config.AUTH_POLICY_ENABLED and (not config.OIDC_ENABLED or config.OIDC_LOCAL_PASSWORD)) %}
 <form class="operator-login-form" method="post" action="{{ url_for('operators.login') }}">
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 <label for="operator-name">Username</label><input id="operator-name" name="username" autocomplete="username" maxlength="64" required>

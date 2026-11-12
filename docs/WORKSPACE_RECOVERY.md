@@ -1,5 +1,13 @@
 # Offline workspace backup and recovery
 
+Unified-authentication backups include the private policy, encryption key and
+enabled provider client-secret files. Restore clears all enrolled MFA factors
+and pending authentication state, rotates the MFA key, and keeps accounts
+disabled. Renew credentials, explicitly enable reviewed accounts, then
+[enroll fresh factors](UNIFIED_AUTHENTICATION.md) before startup. An old backup
+cannot restore a usable authenticator or session. Archives contain private keys
+and secrets; keep them encrypted in your backup system with restricted custody.
+
 Use these commands for one private workspace at its **original absolute paths**.
 They do not migrate tenants or merge databases. Stop its server and every CLI or
 external process that can write its evidence before starting. The server lease

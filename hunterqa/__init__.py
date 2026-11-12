@@ -55,6 +55,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         WORKFLOW_RUN_PATH=os.environ.get("HUNTERQA_WORKFLOW_RUN", ""),
         OPERATOR_DATABASE=os.environ.get("HUNTERQA_OPERATOR_DB", ""),
         OIDC_CONFIG=os.environ.get("HUNTERQA_OIDC_CONFIG", ""),
+        AUTH_CONFIG=os.environ.get("HUNTERQA_AUTH_CONFIG", ""),
         CAMPAIGN_HISTORY_ROOT=os.environ.get("HUNTERQA_CAMPAIGN_HISTORY_ROOT", ""),
         HYPOTHESES_REPORT_PATH=os.environ.get("HUNTERQA_HYPOTHESES_REPORT", ""),
         FUZZ_STATS_PATH=os.environ.get("HUNTERQA_FUZZ_STATS", ""),
@@ -108,8 +109,11 @@ def create_app(test_config: dict | None = None) -> Flask:
     from .operator_auth import init_operator_auth
     init_operator_auth(app, persistent_secret=bool(persistent_key
         or (test_config and test_config.get("SECRET_KEY"))))
-    from .operator_oidc import init_oidc
-    init_oidc(app)
+    from .identity_routes import init_identity
+    init_identity(app)
+    if not app.config.get("AUTH_POLICY_ENABLED"):
+        from .operator_oidc import init_oidc
+        init_oidc(app)
 
     @app.context_processor
     def browser_policy_context():

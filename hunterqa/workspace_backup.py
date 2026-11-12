@@ -136,6 +136,14 @@ def _control_names(config, private):
         selected.add(oidc.name)
         if data["client_secret_file"] is not None:
             selected.add(operators._path(data["client_secret_file"]).name)
+    if config.get("auth_config") is not None:
+        from .identity_policy import load
+        policy = operators._path(config["auth_config"])
+        if policy.parent != private:
+            raise ValueError("Authentication policy belongs to another workspace")
+        data = load(policy)["data"]
+        selected.update({policy.name, Path(data["key_file"]).name})
+        selected.update(Path(provider["client_secret_file"]).name for provider in data["providers"].values() if provider["enabled"])
     return selected
 
 
@@ -301,7 +309,7 @@ def _inspect(archive):
         raise ValueError("Backup directory parent missing")
     config = _decode_json(archive.read("control/workspace.json"))
     required = {"schema_version", "workspace_id", "root", "reports", "oidc_config"}
-    if (not isinstance(config, dict) or not required <= set(config) or set(config) - required - {"public_origin", "edge_key_file"}
+    if (not isinstance(config, dict) or not required <= set(config) or set(config) - required - {"public_origin", "edge_key_file", "auth_config"}
             or type(config["schema_version"]) is not int or config["schema_version"] != 1
             or config.get("workspace_id") != manifest["workspace_id"] or config.get("root") != manifest["root"]
             or not isinstance(config["reports"], dict) or set(config["reports"]) - set(workspace.REPORTS)
@@ -329,6 +337,34 @@ def _inspect(archive):
             if secret.parent != private:
                 raise ValueError("Backup client secret escapes its workspace")
             allowed.add("control/" + secret.name)
+    if config.get("auth_config") is not None:
+        if config.get("oidc_config") is not None or not isinstance(config["auth_config"], str):
+            raise ValueError("Backup cannot combine authentication policies")
+        policy = Path(config["auth_config"])
+        if policy.parent != private or "control/" + policy.name not in expected:
+            raise ValueError("Backup authentication policy escapes or is missing")
+        settings = _decode_json(archive.read("control/" + policy.name))
+        from .identity_policy import POLICY_FIELDS
+        if not isinstance(settings, dict) or set(settings) != POLICY_FIELDS or not isinstance(settings["providers"], dict):
+            raise ValueError("Invalid backup authentication policy")
+        if policy.name in CONTROL_FILES:
+            raise ValueError("Backup authentication policy collides with control files")
+        allowed.add("control/" + policy.name)
+        dependencies = [settings["key_file"]]
+        for provider in settings["providers"].values():
+            if not isinstance(provider, dict) or type(provider.get("enabled")) is not bool:
+                raise ValueError("Invalid backup provider settings")
+            if provider["enabled"] and isinstance(provider.get("client_secret_file"), str):
+                dependencies.append(provider["client_secret_file"])
+            elif provider["enabled"]:
+                raise ValueError("Backup provider secret path is missing")
+        for value in dependencies:
+            if not isinstance(value, str):
+                raise ValueError("Invalid backup authentication dependency")
+            dependency = Path(value)
+            if dependency.parent != private or "control/" + dependency.name in allowed:
+                raise ValueError("Backup authentication dependency escapes its workspace")
+            allowed.add("control/" + dependency.name)
     if {name for name in expected if name.startswith("control/")} != allowed:
         raise ValueError("Backup control dependency set differs")
     return manifest
@@ -417,8 +453,12 @@ def _reset_recovered_identity(stages, manifest, source_sha256):
         db.execute("INSERT OR IGNORE INTO operator_recovery_pending SELECT id FROM operators")
         db.execute("DELETE FROM operator_sessions")
         db.execute("DELETE FROM login_limits")
-        if db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='operator_oidc_attempts'").fetchone():
-            db.execute("DELETE FROM operator_oidc_attempts")
+        for table, statement in (("operator_oidc_attempts", "DELETE FROM operator_oidc_attempts"),
+                ("operator_factors", "DELETE FROM operator_factors"), ("identity_grants", "DELETE FROM identity_grants"),
+                ("identity_attempts", "DELETE FROM identity_attempts"), ("identity_candidates", "DELETE FROM identity_candidates"),
+                ("identity_policy_state", "DELETE FROM identity_policy_state")):
+            if db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+                db.execute(statement)
         operators._event(db, "workspace-restored-accounts-disabled", manifest["workspace_id"], backup_sha256=source_sha256)
     with closing(sqlite3.connect(dashboard)) as db, db:
         db.execute("PRAGMA trusted_schema=OFF")
@@ -432,6 +472,9 @@ def _reset_recovered_identity(stages, manifest, source_sha256):
     rotate = {"session.key", "edge.key"}
     if recovered_config.get("edge_key_file") is not None:
         rotate.add(Path(recovered_config["edge_key_file"]).name)
+    if recovered_config.get("auth_config") is not None:
+        policy = _decode_json(read_bounded(stages["control"] / Path(recovered_config["auth_config"]).name, 65536))
+        rotate.add(Path(policy["key_file"]).name)
     for name in sorted(rotate):
         selected = stages["control"] / name
         with selected.open("wb") as stream:

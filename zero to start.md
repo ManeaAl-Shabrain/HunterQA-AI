@@ -3,6 +3,11 @@
 Get from installation to a working local lab with retained evidence. You do not
 need a website, customer credentials, an AI model or a cloud account.
 
+For personal-computer service deployment and optional Google/Entra login, follow
+[the localhost setup guide](docs/PERSONAL_LOCALHOST_SETUP.md). It covers Linux
+Compose, native systemd, WSL2, offline Local + MFA and provider registration;
+no public server or purchased domain is needed.
+
 Use **current source**: the package reports `1.3.0`, but the original v1.3.0
 archive lacks later lab/review commands. This is a bounded owned-fixture
 benchmark, not a full attack or proof of complete coverage.
@@ -139,6 +144,14 @@ $env:HUNTERQA_WORKFLOW_RUN = Join-Path $env:HUNTERQA_LAB 'web-canary-check-run'
 
 Open `http://127.0.0.1:5000/workflows`. Stop the server with Ctrl+C. Optional local
 accounts are described in [operator access](docs/OPERATOR_ACCESS.md).
+
+For the shared Linux service or Compose deployment, follow the
+[deployment guide](docs/LINUX_DEPLOYMENT.md) and
+[unified authentication setup](docs/UNIFIED_AUTHENTICATION.md). Set up the
+administrator's authenticator before starting the service. Local, Google and
+Microsoft Entra login have separate switches; all use the approved local account
+and administrator MFA. Windows service deployment uses WSL2/Docker Desktop;
+the PowerShell lab above is a separate local development path.
 
 Export or print `report.html` from your browser to save a PDF. After recording
 analyst decisions, use `workflow-export` to create an updated report; the original

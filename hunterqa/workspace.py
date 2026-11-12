@@ -105,7 +105,7 @@ def _load(path):
     config_path = operators._path(path)
     data = _decode_json(read_bounded(config_path, 32768))
     required = {"schema_version", "workspace_id", "root", "reports", "oidc_config"}
-    if (not isinstance(data, dict) or not required <= set(data) or set(data) - required - {"public_origin", "edge_key_file"}
+    if (not isinstance(data, dict) or not required <= set(data) or set(data) - required - {"public_origin", "edge_key_file", "auth_config"}
             or type(data["schema_version"]) is not int or data["schema_version"] != 1
             or not isinstance(data["workspace_id"], str) or not ID.fullmatch(data["workspace_id"])):
         raise ValueError("Invalid private workspace configuration")
@@ -137,7 +137,12 @@ def _load(path):
         APPROVED_ROOTS=[str(root / "assessments")], OPERATOR_DATABASE=str(private / "operators.sqlite3"),
         SECRET_KEY=operators.read_session_key(private / "session.key"),
         WORKFLOW_RUN_PATH=str(root / "assessments" / "workflow"), CAMPAIGN_HISTORY_ROOT=str(root / "assessments" / "history"),
-        LOCAL_AI_ENABLED=False, OIDC_CONFIG="", WORKSPACE_PUBLIC_ORIGIN=None, DEBUG=False)
+        LOCAL_AI_ENABLED=False, OIDC_CONFIG="", AUTH_CONFIG="", WORKSPACE_PUBLIC_ORIGIN=None, DEBUG=False)
+    if data.get("auth_config") is not None:
+        selected = operators._path(data["auth_config"])
+        if selected.parent != private or data["oidc_config"] is not None:
+            raise ValueError("Unified authentication policy must belong to this workspace and replace legacy OIDC")
+        settings["AUTH_CONFIG"] = str(selected)
     if data["oidc_config"] is not None:
         selected = operators._path(data["oidc_config"])
         if selected.parent != private:
@@ -147,7 +152,7 @@ def _load(path):
         from .trusted_edge import public_origin
         settings["WORKSPACE_PUBLIC_ORIGIN"] = public_origin(data["public_origin"])
         selected = operators._path(data.get("edge_key_file") or "")
-        if selected.parent != private or not settings["OIDC_CONFIG"]:
+        if selected.parent != private or not (settings["OIDC_CONFIG"] or settings["AUTH_CONFIG"]):
             raise ValueError("HTTPS edge requires this workspace's private key and OIDC configuration")
         settings.update(WORKSPACE_EDGE_KEY=operators.read_session_key(selected), SESSION_COOKIE_SECURE=True)
     elif data.get("edge_key_file") is not None:

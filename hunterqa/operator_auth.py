@@ -33,6 +33,9 @@ def login():
         if g.operator:
             return redirect(url_for("main.dashboard"))
         return render_template("operator_login.html", error=None)
+    if current_app.config.get("AUTH_POLICY_ENABLED"):
+        from .identity_routes import local_login
+        return local_login()
     _csrf()
     if current_app.config.get("OIDC_ENABLED") and not current_app.config.get("OIDC_LOCAL_PASSWORD"):
         abort(403, "Use single sign-on for this workspace.")
@@ -114,7 +117,8 @@ def init_operator_auth(app, *, persistent_secret):
                     session.clear()
         except (OSError, ValueError, TypeError, sqlite3.Error):
             return _unavailable()
-        if request.endpoint in ("static", "operators.login", "operator_oidc.start", "operator_oidc.callback"):
+        if request.endpoint in ("static", "operators.login", "operator_oidc.start", "operator_oidc.callback",
+                "identity.provider_start", "identity.provider_callback", "identity.factor"):
             return None
         if g.operator is None:
             if request.path.startswith("/api/") or request.method not in ("GET", "HEAD"):

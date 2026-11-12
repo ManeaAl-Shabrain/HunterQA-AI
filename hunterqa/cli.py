@@ -548,6 +548,23 @@ def main(argv=None):
     workspace_serve = sub.add_parser("workspace-serve", help="Serve one private workspace on bounded loopback WSGI with a local process lease")
     workspace_serve.add_argument("--config", required=True)
     workspace_serve.add_argument("--port", required=True, type=int)
+    workspace_serve.add_argument("--require-auth-policy", action="store_true")
+    identity_setup = sub.add_parser("identity-setup", help="Configure local/Google/Entra policy with mandatory administrator MFA; no provider contact")
+    identity_setup.add_argument("--config", required=True)
+    identity_setup.add_argument("--origin", required=True)
+    identity_setup.add_argument("--authorized", action="store_true")
+    identity_approve = sub.add_parser("identity-provider-approve", help="Bind a verified five-minute provider reference to an existing approved local account")
+    identity_approve.add_argument("--config", required=True)
+    identity_approve.add_argument("--provider", choices=("google", "entra"), required=True)
+    identity_approve.add_argument("--username", required=True)
+    identity_approve.add_argument("--reference-stdin", action="store_true")
+    identity_approve.add_argument("--authorized", action="store_true")
+    mfa_enroll = sub.add_parser("operator-mfa-enroll", help="Enroll an approved operator's encrypted TOTP factor and revoke existing sessions")
+    mfa_enroll.add_argument("--database", required=True)
+    mfa_enroll.add_argument("--key-file", required=True)
+    mfa_enroll.add_argument("--username", required=True)
+    mfa_enroll.add_argument("--secret-stdin", action="store_true")
+    mfa_enroll.add_argument("--authorized", action="store_true")
     workspace_check = sub.add_parser("workspace-check", help="Validate workspace startup and report unverified production gates; no target traffic")
     workspace_check.add_argument("--config", required=True)
     workspace_check.add_argument("--require-production", action="store_true")
@@ -862,6 +879,20 @@ def main(argv=None):
         root = _approved_root(args.project)
         _write_bounty_output(args.out, json.dumps(review_project(root), indent=2, ensure_ascii=False) + "\n")
         return
+    if args.command == "identity-setup":
+        from .identity_policy import setup
+        print(json.dumps(setup(args.config, args.origin, authorized=args.authorized), indent=2))
+        return
+    if args.command == "identity-provider-approve":
+        from .identity_policy import approve_cli
+        print(json.dumps(approve_cli(args.config, args.provider, args.username,
+            reference_stdin=args.reference_stdin, authorized=args.authorized), indent=2))
+        return
+    if args.command == "operator-mfa-enroll":
+        from .identity_policy import enroll_cli
+        result = enroll_cli(args.database, args.key_file, args.username, secret_stdin=args.secret_stdin, authorized=args.authorized)
+        print(json.dumps(result, indent=2))
+        return
     if args.command == "workspace-recover":
         from .workspace_server import recover
         print(json.dumps(recover(args.config, authorized=args.authorized), indent=2))
@@ -879,7 +910,7 @@ def main(argv=None):
     if args.command in ("workspace-serve", "workspace-check"):
         from .workspace_server import serve, readiness
         if args.command == "workspace-serve":
-            serve(args.config, args.port)
+            serve(args.config, args.port, require_auth_policy=args.require_auth_policy)
         else:
             result = readiness(args.config)
             print(json.dumps(result, indent=2))

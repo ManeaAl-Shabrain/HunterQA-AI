@@ -85,8 +85,11 @@ def _keys(jwks, jwt):
     return keys
 
 
-def verify_id_token(token, jwks, policy):
+def verify_id_token(token, jwks, policy, *, google_issuer_alias=False):
     validate_policy(policy)
+    if type(google_issuer_alias) is not bool or (google_issuer_alias and policy["issuer"] != "https://accounts.google.com"):
+        raise ValueError("Google's documented issuer alias is restricted to its canonical policy")
+    expected_issuer = "accounts.google.com" if google_issuer_alias else policy["issuer"]
     jwt = _engine()
     keys = _keys(jwks, jwt)
     if not isinstance(token, str) or not 1 <= len(token) <= 16384 or not token.isascii():
@@ -96,6 +99,8 @@ def verify_id_token(token, jwks, policy):
         "policy_sha256": digest(policy), "accepted": False, "signature_and_policy_verified": False,
         "key_anchor_trust": "owner_supplied_unverified", "server_acceptance_verified": False,
         "tenant_isolation_verified": False, "network_requests": 0, "review_required": True}
+    if google_issuer_alias:
+        result["documented_google_issuer_alias"] = True
     try:
         segments = token.split(".")
         if len(segments) != 3:
@@ -128,10 +133,10 @@ def verify_id_token(token, jwks, policy):
                 or ("azp" in claims and claims["azp"] != policy["client_id"])):
             raise ValueError("Audience or authorized party differs")
         verified = jwt.decode(token, keys[header["kid"]], algorithms=["RS256"],
-            issuer=policy["issuer"], audience=policy["client_id"], leeway=0,
+            issuer=expected_issuer, audience=policy["client_id"], leeway=0,
             options={"require": ["iss", "sub", "aud", "iat", "exp", "nonce"]})
         now = int(time.time())
-        if (verified != claims or claims.get("iss") != policy["issuer"]
+        if (verified != claims or claims.get("iss") != expected_issuer
                 or not isinstance(claims["nonce"], str) or not claims["nonce"].isascii()
                 or not hmac.compare_digest(claims["nonce"], policy["expected_nonce"])
                 or not 0 < claims["exp"] - claims["iat"] <= policy["max_lifetime_seconds"]

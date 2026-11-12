@@ -46,7 +46,7 @@ def render(data):
         "User=" + data["user"], "Group=" + str(data["gid"]), "UMask=0077", "WorkingDirectory=" + home]
     unit += ["Environment=" + key + "=" + value for key, value in common.items()]
     unit += [f"ExecStartPre={prefix}/bin/python -c 'import os; assert os.getuid() == {data['uid']} and os.getgid() == {data['gid']} and set(os.getgroups()) <= {{{data['gid']}}}'",
-        f"ExecStart={prefix}/bin/hunterqa workspace-serve --config {common['HUNTERQA_WORKSPACE_CONFIG']} --port {data['port']}",
+        f"ExecStart={prefix}/bin/hunterqa workspace-serve --require-auth-policy --config {common['HUNTERQA_WORKSPACE_CONFIG']} --port {data['port']}",
         f"ExecStartPost={prefix}/bin/python {prefix}/share/hunterqa/verify_deployment.py --phase health --wait 30",
         "Restart=on-failure", "RestartSec=5", "TimeoutStopSec=30", "KillMode=control-group", "NoNewPrivileges=yes",
         "PrivateTmp=yes", "PrivateDevices=yes", "ProtectSystem=strict", "ProtectHome=yes", "ProtectKernelTunables=yes",
