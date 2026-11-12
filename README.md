@@ -1,60 +1,38 @@
 # HunterQA
 
-![HunterQA cybersecurity workflow: scope, assess, evidence and report](docs/assets/hunterqa-cybersecurity-infographic.png)
+A local workspace for authorized security assessments: review source code and saved evidence, run scoped checks, and prepare reports for review and retesting.
 
-HunterQA is a local workspace for authorized security assessments. Review code
-and saved evidence, run selected checks within an approved scope, and produce
-reports you can review and retest. It starts locally; separate workspace profiles
-add approved accounts, Local/Google/Entra sign-in and administrator MFA.
+**Python 3.11+ · Linux / WSL2 · CLI and local dashboard**
 
-**Python 3.11+ · Kali/Linux recommended · CLI and local dashboard**
+[Setup guide](docs/PERSONAL_LOCALHOST_SETUP.md) · [Zero to Start](<zero to start.md>) · [Commands](docs/COMMAND_REFERENCE.md) · [Release status](docs/LOCAL_RELEASE_HANDOFF.md)
 
-[Zero to Start](<zero to start.md>) ·
-[Beginner’s assessment guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) ·
-[Templates](templates/README.md) · [Category index](docs/CATEGORY_REVIEW_INDEX.md)
+![HunterQA workflow from scope through checks to evidence and reports](docs/assets/hunterqa-cybersecurity-infographic.png)
 
-For your own computer, use [localhost setup](docs/PERSONAL_LOCALHOST_SETUP.md):
-Local + MFA works offline; Google and Entra stay optional. No public domain or
-hosting is required.
+## What it includes
 
-## Is it ready?
-
-**Ready for supported local review workflows and the built-in owned lab.** It is
-still a development platform, not a complete autonomous pentesting system or a
-production multi-user service. Giving it a URL does not run every vulnerability
-test or prove that a website is secure.
-
-The package version remains **1.3.0**. Current `main` includes later development
-features absent from the original [v1.3.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.3.0).
-Use current source for this guide. Record `git rev-parse HEAD` with your evidence;
-the version number alone does not identify the installed features.
-
-## Available capabilities
-
-| Capability | Implemented today |
+| Area | Available |
 | --- | --- |
-| Source/configuration review | Selected built-in checks; optional Semgrep and local Ollama suggestions |
-| Web observations | Scoped HEAD/GET and HTML discovery; opt-in same-origin HTTPS JavaScript/cookie-session discovery |
-| Owned browser lab | Optional JavaScript-rendered links and local login context, restricted to owned loopback |
-| Owned SQL lab | Eight fixed in-memory impact/control cases and deterministic evidence replay |
-| Controlled validation | Fixed owned-endpoint SQL canary differentials and Chromium XSS witnesses; baseline/negative/repeat controls |
-| Validation cues | Fixed inert-markup/SQL-error comparisons and explicit role/anonymous access contracts |
-| Identity assurance | Optional offline RS256 ID-token verification; owned OIDC/PKCE/session/tenant HTTP fixtures |
-| Infrastructure/cloud | Scoped TCP/TLS, SSH identification and UDP DNS; selected AWS/Azure/GCP queries |
-| Workspace access | Separate identity/data stores, local roles, independent Local/Google/Entra login, encrypted admin TOTP and a controlled HTTPS gateway |
-| Saved evidence review | Selected API, identity, cloud, container, network and other artifact readers |
-| Category packs | 23 categories and 79 catalog entries, with implemented modes in the category index |
-| Workflow controls | Scope checks, approvals, budgets, timeouts, stop requests and optional host-local shared quotas |
-| Reporting | Analyst review, HTML/JSON/SARIF exports, retest comparison, report-quality checks and CVSS 3.1 Base arithmetic |
-| Dashboard | Local workflow/evidence views; optional viewer, analyst and admin accounts |
+| Code review | Built-in checks, optional Semgrep and local Ollama suggestions |
+| Web checks | Scoped HTTP and rendered-link discovery; controlled SQL/XSS canary checks |
+| Evidence | Selected API, identity, cloud, network and configuration readers |
+| Accounts | Local login, encrypted Admin MFA, optional Google and Entra OIDC, local roles |
+| Reports | Analyst review, HTML/JSON/SARIF exports and retest comparisons |
+| Operations | Separate workspaces, Linux Compose/systemd, backup and recovery |
 
-Catalog entries include guided and declaration-based reviews. They are not 79
-automated attack modules. Saved settings and scanner candidates need independent
-review; neither confirms exploitability by itself.
+Local login and supported local workflows work offline after installation. Google, Entra and external assessments need their respective services. No public domain, VPS or cloud hosting is required.
 
-## Install and try the lab
+## 1. Choose a deployment
 
-On Kali/Linux:
+| Use | Start here |
+| --- | --- |
+| Personal Linux workspace | Follow the steps below |
+| Linux Docker Compose or native systemd with the shared tool runtime | [Deployment guide](docs/LINUX_DEPLOYMENT.md) |
+| Windows through WSL2 / Docker Desktop | [Personal setup](docs/PERSONAL_LOCALHOST_SETUP.md) |
+| A first practice run without accounts or external targets | [Owned lab walkthrough](<zero to start.md>) |
+
+## 2. Install the local application
+
+In a Linux or WSL2 terminal:
 
 ```bash
 git clone https://github.com/ManeaAl-Shabrain/HunterQA-AI.git
@@ -62,74 +40,73 @@ cd HunterQA-AI
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e .
+python -m pip install -e '.[identity,production]'
 hunterqa --version
-
-umask 077
-mkdir -p "$HOME/hunterqa-private"
-chmod 700 "$HOME/hunterqa-private"
-export HUNTERQA_APPROVED_ROOTS="$HOME/hunterqa-private"
-export HUNTERQA_LAB="$HOME/hunterqa-private/lab-$(date +%Y%m%d-%H%M%S)"
-hunterqa assessment-benchmark --out-dir "$HUNTERQA_LAB" --authorized
-hunterqa assessment-readiness --benchmark-dir "$HUNTERQA_LAB" --require-owned-lab
 ```
 
-The lab starts and closes its own `127.0.0.1` service. It tests eight labeled
-application cases and three discovery/TCP controls across four workflows, keeping
-evidence in your private directory. It accepts no external target. A normal run
-records 18 network operations. Passing establishes only this fixture baseline,
-not general exploitability or real-world effectiveness.
+This installs the application and sign-in/server dependencies. The [shared deployment runtime](docs/LINUX_DEPLOYMENT.md) adds the optional assessment tools.
 
-[Zero to Start](<zero to start.md>) covers Windows, expected results, reports and
-troubleshooting. Use a fresh output directory for each run.
+## 3. Create a private workspace
 
-## What remains incomplete
+Use a new, empty data directory outside the repository:
 
-All seven broad assessment areas remain **partial**. Rendered discovery supports
-bounded same-origin anchors, selected slash hash routes and conventional cookie login.
-General authenticated target crawling, comprehensive active vulnerability validation, target SSO and
-business workflows, OS/AD attack paths, broad multi-cloud permissions, hosted
-independently validated tenant isolation, independently verified owner grants, OS isolation and
-distributed enforcement remain unfinished. Real-world detection effectiveness is **unverified**.
+```bash
+umask 077
+export HUNTERQA_OPERATOR_ROOT="$HOME/.local/share/hunterqa/control"
+mkdir -p "$HUNTERQA_OPERATOR_ROOT"
+chmod 700 "$HUNTERQA_OPERATOR_ROOT"
+mkdir -m 700 "$HOME/hunterqa-local"
 
-The SQL lab is a separate in-memory fixture; it does not validate the HTTP
-SQL-error scanner or establish customer findings. See the [SQL lab guide](docs/OWNED_SQL_VALIDATION.md).
+hunterqa workspace-init --workspace-id personal --root "$HOME/hunterqa-local" \
+  --username admin --authorized
+export HUNTERQA_WORKSPACE_CONFIG="$HUNTERQA_OPERATOR_ROOT/personal/workspace.json"
+```
 
-See the [feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) before choosing
-an engagement. Authorization does not enable missing functionality.
+Enter a password of at least 14 characters when prompted. Existing workspaces should be opened with their saved configuration, not initialized again.
 
-## Guides
+## 4. Enable login and MFA
 
-| Need | Read |
+```bash
+hunterqa identity-setup --config "$HUNTERQA_WORKSPACE_CONFIG" \
+  --origin http://localhost:8081 --authorized
+hunterqa operator-mfa-enroll --database "$HUNTERQA_OPERATOR_ROOT/personal/operators.sqlite3" \
+  --key-file "$HUNTERQA_OPERATOR_ROOT/personal/auth.key" --username admin --authorized
+```
+
+Add the private setup URI to your authenticator and confirm its code. Keep it out of screenshots, logs and Git. Google and Entra remain disabled until you configure them.
+
+## 5. Start and use HunterQA
+
+```bash
+hunterqa workspace-check --config "$HUNTERQA_WORKSPACE_CONFIG"
+hunterqa workspace-serve --require-auth-policy --config "$HUNTERQA_WORKSPACE_CONFIG" --port 8081
+```
+
+1. Open **http://localhost:8081** and sign in with your password and a fresh MFA code.
+2. Place an approved project under `$HOME/hunterqa-local/assessments`.
+3. Add its path in **Projects**, confirm authorization and start a scan.
+4. Review the findings, then open the report or export the results.
+
+Stop the foreground server with **Ctrl+C**. It listens on **127.0.0.1**. Use the Compose/systemd guide for a managed service. Standalone assessment commands use `HUNTERQA_APPROVED_ROOTS`; workspace serving sets its own approved assessment root.
+
+## Important files
+
+| File or guide | Purpose |
 | --- | --- |
-| First approved assessment | [Beginner’s guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) and [templates](templates/README.md) |
-| CLI commands and execution modes | [Command reference](docs/COMMAND_REFERENCE.md) |
-| Rendered links, selected SPA routes and reference coverage | [Scoped browser guide](docs/SCOPED_RENDERED_DISCOVERY.md) |
-| Runtime checks and per-class metrics | [Controlled validation](docs/CONTROLLED_RUNTIME_VALIDATION.md) |
-| Signed tokens and OIDC/session fixtures | [Identity assurance](docs/OIDC_SESSION_ASSURANCE.md) |
-| Certificate and hostname verification on one approved endpoint | [Scoped TLS inspection](docs/SCOPED_TLS_INSPECTION.md) |
-| Observe one approved SSH endpoint's advertised identification | [Scoped SSH identification](docs/SCOPED_SSH_IDENTIFICATION.md) |
-| One approved UDP DNS question and expected-answer comparison | [Scoped UDP DNS inspection](docs/SCOPED_UDP_DNS_INSPECTION.md) |
-| Bounded Azure resource inventory with an explicit temporary token | [Azure inventory](docs/SCOPED_AZURE_INVENTORY.md) |
-| Bounded GCP project asset inventory with an explicit temporary token | [GCP inventory](docs/SCOPED_GCP_INVENTORY.md) |
-| Query selected permissions reported for a supplied GCP caller token | [GCP permission check](docs/SCOPED_GCP_PERMISSIONS.md) |
-| Understand Azure/GCP request time bounds and slow-response handling | [Cloud transport deadlines](docs/CLOUD_TRANSPORT_DEADLINES.md) |
-| Expansion status | [Seven-area progress](docs/EXPANSION_PROGRESS.md) |
-| Shared local limits for workflows and native TLS/SSH/DNS/cloud commands | [Native shared quotas](docs/NATIVE_SHARED_QUOTAS.md) |
-| Workflow planning/approvals | [Workflow runner](docs/WORKFLOW_RUNNER.md) |
-| Adapters and shared quotas | [Adapter guide](docs/ASSESSMENT_ADAPTERS.md) |
-| Lab evidence and readiness | [Readiness](docs/READINESS.md) |
-| Workspace accounts, SSO and controlled serving | [Workspaces](docs/PRODUCTION_WORKSPACES.md) and [OIDC](docs/OPERATOR_SSO.md) |
-| Local, Google and Entra login with mandatory Admin MFA | [Unified authentication](docs/UNIFIED_AUTHENTICATION.md) |
-| Linux Compose/systemd profile and WSL2 setup | [Deployment guide](docs/LINUX_DEPLOYMENT.md), [accepted requirements and gaps](docs/ACCEPTED_PLATFORM_REQUIREMENTS.md) |
-| Private workspace backup, recovery and credential renewal | [Recovery guide](docs/WORKSPACE_RECOVERY.md) |
-| Production acceptance and remaining gaps | [Completion gates](docs/PRODUCTION_COMPLETION.md) |
-| All category guides | [Category index](docs/CATEGORY_REVIEW_INDEX.md) |
-| Report quality/scoring | [Utility guide](docs/UTILITY_REVIEW.md) |
-| Release packaging/version policy | [Versioning](docs/VERSIONING.md) |
-| Releases/security reports | [Releases](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases) and [security policy](SECURITY.md) |
+| [Personal setup](docs/PERSONAL_LOCALHOST_SETUP.md) | Local installation, Google/Entra registration and troubleshooting |
+| [Deployment specification](examples/deploy/deployment.example.json) · [Compose](examples/deploy/compose.yaml) · [Installer](tools/install_linux_runtime.sh) | Shared Linux deployment files |
+| [Authentication](docs/UNIFIED_AUTHENTICATION.md) · [Recovery](docs/WORKSPACE_RECOVERY.md) | Accounts, MFA, secrets, backup and restore |
+| [Assessment guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) · [Templates](templates/README.md) | Scope, evidence and reporting |
+| [Category index](docs/CATEGORY_REVIEW_INDEX.md) · [Feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) | Implemented checks and remaining coverage |
+| [Handoff and manual acceptance](docs/LOCAL_RELEASE_HANDOFF.md) | Tested release scope and owner-run checks |
+| [Security policy](SECURITY.md) · [Versioning](docs/VERSIONING.md) | Reporting issues and identifying source builds |
 
-Use only systems you own or have explicit written permission to assess, within
-the agreed scope. Keep completed templates, credentials and client evidence
-outside this repository. `--authorized` records your acknowledgement; it does not
-verify ownership or replace written approval.
+## Status and scope
+
+The personal localhost implementation has passed automated application and Linux deployment checks. Real Google/Entra sign-in and Windows WSL2/Desktop acceptance are owner-run checks. See the [handoff](docs/LOCAL_RELEASE_HANDOFF.md) for evidence and completion criteria.
+
+- Findings are review candidates; coverage and real-world effectiveness are not guaranteed.
+- Broader target SSO, AD/cloud coverage and distributed multi-user features remain [separate expansion work](docs/EXPANSION_PROGRESS.md).
+- Use only systems you own or have explicit **written permission** to assess. `--authorized` records acknowledgement; it does not verify ownership.
+
+The package still reports **1.3.0**. Current source includes changes beyond the original [v1.3.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.3.0); record `git rev-parse HEAD` with your installation.

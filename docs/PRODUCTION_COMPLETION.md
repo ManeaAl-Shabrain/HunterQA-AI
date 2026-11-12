@@ -6,6 +6,8 @@ public HTTPS, a VPS or hosted multi-user certification. Use
 [personal-computer setup](PERSONAL_LOCALHOST_SETUP.md). The broad production
 gates below remain explicit limits of the preserved advanced/hosted features;
 they must not be presented as prerequisites for normal local operation.
+The personal engineering scope and owner-assigned Google/Entra/WSL2 acceptance
+are recorded in [release handoff](LOCAL_RELEASE_HANDOFF.md).
 
 An implemented control, local fixture or successful CI run is evidence about
 that control. It is not independent proof that the whole assessment platform is
@@ -31,11 +33,11 @@ test accounts, an intended TLS edge, a working local Desktop/WSL2 runtime or an
 independently reviewed representative dataset. Do not replace these gates with an operator
 checkbox or mark production complete from configuration alone.
 
-Next deployment inputs are the intended IdP/issuer and registered client/callback
-(secrets provisioned privately), deployment topology/OS identities, test tenant and
-authorized test targets, and an independent evaluation protocol/data owner.
-Implementation and owned testing can proceed without those secrets; real-world
-acceptance cannot be honestly reported until those environments are exercised.
+The owner will configure real provider registrations privately and test them,
+together with WSL2/Desktop. These tests are pending manual acceptance and are
+not blockers for offline Local/MFA. Real hosted/target-assessment acceptance
+separately needs its own topology, authorized test accounts/targets and an
+independent evaluation protocol; those broader gates are not localhost setup.
 
 The approved providers are Google and a tenant-scoped Microsoft Entra ID, and
 the approved operating modes are Linux Compose, native systemd and WSL2/Desktop.

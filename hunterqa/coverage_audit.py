@@ -41,8 +41,8 @@ AREAS = (
      "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, selected GCP caller permission-query responses, and offline AWS/Azure/GCP policy review",
      ["Complete resource and effective-permission inventory", "Broader AWS/Azure/GCP and representative cloud assessment"]),
     ("production-hardening", "Production platform hardening", [],
-     "Local or explicitly bound operator OIDC roles, separate per-process workspace stores, authenticated HTTPS edge/WSGI, bounded scans, offline private backup/recovery with credential renewal, and selected host-local quotas",
-     ["Independently validated hosted deployment and OS-level tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
+     "Local/Google/Entra policy and encrypted Admin TOTP, OS-approved subject binding, shared systemd/Compose runtime, separate workspace stores, optional HTTPS edge, offline recovery and host-local quotas",
+     ["Owner-run real Google/Entra and Windows WSL2/Desktop acceptance", "Independently validated hosted deployment and OS-level tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
      "Owned application and six-endpoint HTTP/Chromium baselines, per-class metrics, inconclusive counts and retained evidence",
      ["Independent real-world evaluation", "Representative per-class false-negative rates", "Complete standards coverage"]),
@@ -60,6 +60,9 @@ FEATURES = {
 
 
 FEATURES["production-hardening"] += [
+    ("Independent Local/Google/Entra switches and mandatory encrypted Admin TOTP", None),
+    ("OS-approved first-subject binding without signup or role elevation", None),
+    ("Shared systemd/Compose runtime with actual offline lifecycle acceptance", None),
     ("Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials", None),
     ("Explicit offline interrupted-scan recovery without job replay", None),
     ("Shared root/source checks reject Windows reparse points as well as symlinks", None),
@@ -129,7 +132,10 @@ def render_checklist():
     lines = ["# HunterQA feature readiness checklist", "",
         "Checked items are implemented bounded capabilities. Unchecked items remain unfinished.",
         "Every broad area is still partial. A source checkmark is not a live test, production approval or security certification.",
-        "These are post-v1.3.0 development capabilities; the immutable release archive is unchanged.", ""]
+        "These are post-v1.3.0 development capabilities; the immutable release archive is unchanged.", "",
+        "This is the broader assessment/production inventory. The personal localhost",
+        "runtime has a separate [engineering handoff and owner acceptance](LOCAL_RELEASE_HANDOFF.md);",
+        "an unfinished broad category does not require public hosting for local use.", ""]
     for index, (key, name, _, _, missing) in enumerate(AREAS, start=1):
         lines.extend([f"## {index}. {name} — partial", ""])
         lines.extend(f"- [x] {label}" for label, _ in FEATURES[key])

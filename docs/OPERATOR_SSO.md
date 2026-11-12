@@ -1,5 +1,9 @@
 # Operator single sign-on
 
+This guide describes the preserved single-provider compatibility profile.
+For new personal deployments use [Local/Google/Entra with Admin MFA](UNIFIED_AUTHENTICATION.md)
+and [the localhost walkthrough](PERSONAL_LOCALHOST_SETUP.md).
+
 HunterQA can sign an operator into its dashboard using OIDC Authorization Code
 with S256 PKCE. It maps the exact configured issuer and verified subject to an
 existing local operator. Local roles and revocation stay authoritative. Email,
