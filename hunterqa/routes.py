@@ -246,6 +246,19 @@ def capabilities():
     return render_template("capabilities.html", categories=checklist())
 
 
+@bp.get("/scenarios")
+def scenarios_dashboard():
+    from .scenario_reports import summary
+    from .assessment_history import history
+    return render_template("scenarios.html", evidence=summary(current_app.config.get("SCENARIO_REPORT_PATH")), runs=history(current_app.config["DATABASE"]))
+
+
+@bp.get("/scenarios/<int:run_id>")
+def scenario_result(run_id):
+    from .assessment_history import saved, history
+    return render_template("scenarios.html", evidence=saved(current_app.config["DATABASE"], run_id), runs=history(current_app.config["DATABASE"]))
+
+
 @bp.get("/assessments")
 def assessments_dashboard():
     """Administrator-selected, read-only evidence; visiting never executes a plan."""

@@ -64,15 +64,16 @@ def health(wait=0):
         time.sleep(0.2)
 
 
-def call(*args, password=None, input_text=None):
+def call(*args, password=None, input_text=None, extra_env=None, json_output=True):
     env = dict(os.environ)
+    env.update(extra_env or {})
     if password is not None:
         env["HUNTERQA_OPERATOR_PASSWORD"] = password
     result = subprocess.run([sys.executable, "-m", "hunterqa", *map(str, args)], env=env,
         input=input_text, capture_output=True, text=True, timeout=90, check=True)  # nosec B603
     if any(secret in result.stdout for secret in (PASSWORD, RENEWED, FACTOR, RENEWED_FACTOR)):
         raise ValueError("Fixture credential appeared in command output")
-    return json.loads(result.stdout)
+    return json.loads(result.stdout) if json_output else {"exit_success": True}
 
 
 def acceptance(phase):
@@ -180,6 +181,15 @@ def verify_http(data, *, restored):
         request("/logout", {"csrf_token": csrf(request("/projects")[1])})
         _, raw, _ = request("/login")
         assert request("/login", {"username": "viewer", "password": PASSWORD, "csrf_token": csrf(raw)})[0] == 401
+    if not restored:
+        private_sessions = data.parent / "assessment-secrets"
+        private_sessions.mkdir(mode=0o700)
+        expansion = data / "assessments/expansion-benchmark"
+        proof = call("expansion-benchmark", "--out-dir", expansion, "--browser", "--authorized", extra_env={
+            "HUNTERQA_APPROVED_ROOTS": str(data / "assessments"), "HUNTERQA_ASSESSMENT_SECRET_ROOT": str(private_sessions)})
+        assert proof["all_cases_matched"] and proof["cases"] == 20 and not proof["real_providers_verified"]
+        call("access-graph-review", "--input", expansion / "aws-model.json", "--out", data / "assessments/evidence/access-model.json",
+            "--workspace-config", os.environ["HUNTERQA_WORKSPACE_CONFIG"], "--project-id", "1", "--authorized", json_output=False)
     from playwright.sync_api import sync_playwright, expect
     with sync_playwright() as driver:
         browser = driver.chromium.launch(headless=True)
@@ -196,6 +206,10 @@ def verify_http(data, *, restored):
             from hunterqa.identity_policy import totp
             page.get_by_label("Verification code", exact=True).fill(totp(RENEWED_FACTOR if restored else FACTOR))
             page.get_by_role("button", name="Verify sign-in", exact=True).click()
+            page.goto(base + "/scenarios")
+            expect(page.get_by_text("normalized-access-graph", exact=True)).to_be_visible()
+            page.locator("tbody a").first.click()
+            expect(page.get_by_role("heading", name="normalized-access-graph", exact=True)).to_be_visible()
             page.goto(base + "/scans/1/report")
             expect(page.get_by_text("Workspace analysis summary", exact=False)).to_be_visible()
             page.get_by_role("button", name="Sign out", exact=True).click()
@@ -207,6 +221,7 @@ def verify_http(data, *, restored):
         assert db.execute("SELECT COUNT(*) FROM findings WHERE engine='semgrep'").fetchone()[0] > 0
     assert PASSWORD.encode() not in (data.parent / "control/owned-ci/operators.sqlite3").read_bytes()
     return {"local_login": True, "admin_mfa_verified": True, "pre_mfa_api_denied": True, "source_scan_completed": True, "export_and_report": True,
+        "expansion_owned_fixture_cases": 20, "expansion_history_view_verified": True,
         "rbac_denial_verified": True, "real_chromium_login_report_logout": True, "external_idp_verified": False}
 
 

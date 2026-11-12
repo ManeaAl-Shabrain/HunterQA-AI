@@ -16,8 +16,9 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Scoped HTTPS rendered-anchor discovery with ephemeral cookie login
 - [x] Explicit start-document SPA slash hash-route states within reviewed page/depth bounds
 - [x] Separate offline discovered/visited recall against supplied route references
-- [ ] General action-driven SPA discovery
-- [ ] Complex sessions and SSO
+- [x] Reviewed same-origin browser actions with imported cookies/local storage and dynamic link hashes
+- [ ] General autonomous SPA discovery
+- [ ] Automatic target SSO negotiation and broader session compatibility
 - [ ] Comprehensive endpoint discovery
 
 ## 2. Active vulnerability testing — partial
@@ -27,11 +28,14 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Separate in-memory SQL cross-owner impact fixture and deterministic evidence replay
 - [x] Fixed owned-endpoint SQL canary differential with negative/repeat controls
 - [x] Fixed reflected-HTML XSS canary execution in isolated Chromium
-- [ ] General SQLi/XSS validation across contexts
-- [ ] SSRF
-- [ ] File upload
+- [x] Owned SQL boolean checks in single-quoted, double-quoted and numeric contexts with negative/repeat controls
+- [x] Chromium HTML, attribute and DOM-fragment canaries respecting owner CSP
+- [x] Separately scoped owned SSRF nonce callback and inert text upload/fetch/cleanup
+- [x] Fixed single-row timing signals explicitly distinguished from SQL proof
+- [ ] General SQLi/XSS validation across contexts and database engines
+- [ ] General SSRF and executable upload validation
 - [ ] Traversal
-- [ ] Blind/OOB and application-specific validation
+- [ ] Blind SQL/OOB and application-specific validation
 
 ## 3. Authentication and authorization — partial
 
@@ -39,9 +43,11 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Origin-bound per-request credentials and optional body-hash checks
 - [x] Offline RS256 ID-token signature and explicit issuer/audience/nonce/time policy
 - [x] Owned OIDC PKCE/code/session/tenant/logout HTTP controls
+- [x] Encrypted expiring origin-bound target actor vault and explicit workflow response contracts
+- [x] Named-actor cookie continuity, stateless anonymous HTTP controls and synthetic tenant boundaries
 - [ ] External interactive SSO negotiation
 - [ ] Complex session handling
-- [ ] Stateful business logic
+- [ ] General business-rule discovery
 - [ ] General tenant-boundary discovery
 
 ## 4. Network and infrastructure — partial
@@ -52,6 +58,8 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Expiring one-endpoint UDP DNS A question and expected-answer comparison (udp-dns-inspect)
 - [x] Scoped service-evidence import
 - [x] Selected offline normalized AD/SMB/LDAP policy review
+- [x] One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints
+- [x] Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths
 - [ ] OS fingerprinting
 - [ ] Broad service/version assessment
 - [ ] Live Active Directory assessment
@@ -66,6 +74,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Selected GCP caller permission-query responses after exact project-context match (gcp-permission-check)
 - [x] Selected local configuration/dependency patterns
 - [x] Offline normalized AWS/Azure/GCP posture and selected native policy readers
+- [x] Offline AWS/Azure/GCP exact-action permission models with deny/unknown handling and tenant labels
 - [ ] Complete resource and effective-permission inventory
 - [ ] Broader AWS/Azure/GCP and representative cloud assessment
 
@@ -85,6 +94,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials
 - [x] Explicit offline interrupted-scan recovery without job replay
 - [x] Shared root/source checks reject Windows reparse points as well as symlinks
+- [x] Completed CLI assessment history linked to workspace projects with protected digest-checked summaries
 - [ ] Owner-run real Google/Entra and Windows WSL2/Desktop acceptance
 - [ ] Independently validated hosted deployment and OS-level tenant isolation
 - [ ] Independently verified owner grants
@@ -98,6 +108,8 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Retained run evidence, per-class metrics and current-runtime consistency checks
 - [x] Six-endpoint HTTP/Chromium baseline with per-class confusion metrics and inconclusive counts
 - [x] Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2
+- [x] Repeatable 20-check owned expansion benchmark separating actual IO from synthetic models
+- [x] Saved evidence digest correlation without promoting findings or provenance claims
 - [ ] Independent real-world evaluation
 - [ ] Representative per-class false-negative rates
 - [ ] Complete standards coverage

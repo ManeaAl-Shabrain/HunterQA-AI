@@ -4,6 +4,24 @@ This tracks implementation against the requested seven-area expansion. Passing
 a bounded fixture does not mark an entire area complete. Historical release
 assets are unchanged.
 
+## Owned scenario expansion
+
+The [scenario assessment guide](SCENARIO_ASSESSMENTS.md) adds a repeatable local
+acceptance lab across the requested areas. Its 20 checks with Chromium separate
+actual HTTP/SQLite/browser/TCP operations from synthetic AD/cloud models.
+
+| Addition | Delivered | Still outside the verified scope |
+| --- | --- | --- |
+| Application interactions | Reviewed browser actions, dynamic route hashes, encrypted expiring origin-bound cookies/local storage | Autonomous application exploration and automatic target SSO negotiation |
+| Validation | Three SQL boolean contexts, four XSS contexts, owned SSRF callback, inert upload/deletion and timing signals | General vulnerability coverage, stored XSS and real DBMS timing proof |
+| Identity/business logic | Explicit GET/POST role/workflow contracts, named cookie sessions and anonymous controls | General business-rule discovery and arbitrary tenant models |
+| Internal/AD | Fixed one-endpoint service observations and normalized memberships/grants/candidate paths | Verified OS/version identification, live LDAP collection and executed paths |
+| Cloud/IAM | Offline AWS/Azure/GCP exact-action models with deny/unknown/tenant handling | Native policy completeness, broad inventory and live effective-access confirmation |
+| Evidence/UI | Completed CLI history associated with projects, protected digest-checked summaries and correlation | Asynchronous scenario scheduling, independent evidence provenance and distributed execution |
+
+This is a local-fixture delivery milestone, separate from the earlier personal
+localhost runtime handoff. It does not mark all seven broad areas complete.
+
 | Area | Delivered so far | Remaining work |
 | --- | --- | --- |
 | Web discovery | Opt-in scoped HTTPS rendered anchors and explicitly selected slash hash routes, separate discovered/visited reference recall, bounded same-origin resources and ephemeral conventional-login cookie reuse | SSO, complex sessions, general SPA actions, representative compatibility evaluation, complete endpoint discovery |

@@ -47,6 +47,16 @@ def _write_bounty_output(path: str, content: str) -> None:
     print("Saved:", output)
 
 
+def _assessment_output(path):
+    """Reject unusable destinations before starting a new assessment."""
+    output = Path(path).expanduser()
+    if not output.is_absolute() or ".." in output.parts:
+        raise ValueError("Use an absolute assessment output path")
+    _approved_root(str(output.parent))
+    if output.exists() or output.is_symlink():
+        raise FileExistsError("Choose a new assessment report output")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="hunterqa", description="Local-only authorized vulnerability research")
     try:
@@ -537,6 +547,40 @@ def main(argv=None):
     readiness.add_argument("--profile")
     readiness.add_argument("--benchmark-dir")
     readiness.add_argument("--require-owned-lab", action="store_true")
+    session_create = sub.add_parser("assessment-session-create", help="Encrypt designated app-origin session JSON from private stdin; no credentials printed")
+    session_create.add_argument("--out", required=True)
+    session_create.add_argument("--key-file", required=True)
+    session_create.add_argument("--authorized", action="store_true")
+    for name in ("scenario-preflight", "scenario-run"):
+        scenario = sub.add_parser(name, help="Review or execute bounded owned-endpoint workflows and controlled probes")
+        scenario.add_argument("--profile", required=True)
+        scenario.add_argument("--plan", required=True)
+        scenario.add_argument("--session-file")
+        scenario.add_argument("--session-key")
+        scenario.add_argument("--workspace-config")
+        scenario.add_argument("--project-id", type=int)
+        if name == "scenario-run":
+            scenario.add_argument("--approval", required=True)
+            scenario.add_argument("--stop-file", default="stop")
+            scenario.add_argument("--out", required=True)
+            scenario.add_argument("--authorized", action="store_true")
+    for name in ("access-graph-review", "service-fingerprint"):
+        extended = sub.add_parser(name, help="Review normalized AD/cloud authorization evidence or identify one admitted service")
+        extended.add_argument("--input", required=True)
+        extended.add_argument("--out", required=True)
+        extended.add_argument("--authorized", action="store_true")
+        extended.add_argument("--workspace-config")
+        extended.add_argument("--project-id", type=int)
+    expanded_lab = sub.add_parser("expansion-benchmark", help="Run reproducible owned expansion fixtures; no external target or account")
+    expanded_lab.add_argument("--out-dir", required=True)
+    expanded_lab.add_argument("--browser", action="store_true")
+    expanded_lab.add_argument("--authorized", action="store_true")
+    correlate = sub.add_parser("assessment-correlate", help="Link saved assessment evidence digests; never confirm vulnerabilities")
+    correlate.add_argument("--input", action="append", required=True)
+    correlate.add_argument("--out", required=True)
+    correlate.add_argument("--authorized", action="store_true")
+    correlate.add_argument("--workspace-config")
+    correlate.add_argument("--project-id", type=int)
     operator_secret = sub.add_parser("operator-secret", help="Create a private persistent session-key file without displaying its value")
     operator_secret.add_argument("--out", required=True)
     operator_secret.add_argument("--authorized", action="store_true")
@@ -878,6 +922,84 @@ def main(argv=None):
         from .web_review import review_project
         root = _approved_root(args.project)
         _write_bounty_output(args.out, json.dumps(review_project(root), indent=2, ensure_ascii=False) + "\n")
+        return
+    if args.command == "assessment-session-create":
+        from .assessment_sessions import create_cli
+        print(json.dumps(create_cli(args.out, args.key_file, authorized=args.authorized), indent=2))
+        return
+    if args.command == "expansion-benchmark":
+        from .expansion_benchmark import benchmark
+        result = benchmark(args.out_dir, authorized=args.authorized, browser=args.browser)
+        print(json.dumps({"all_cases_matched": result["all_cases_matched"], "cases": len(result["checks"]),
+            "real_providers_verified": False}, indent=2))
+        if not result["all_cases_matched"]:
+            raise SystemExit(2)
+        return
+    if args.command == "assessment-correlate":
+        if not args.authorized:
+            raise PermissionError("Correlation requires --authorized")
+        if not args.workspace_config:
+            _assessment_output(args.out)
+        from .assessment_correlation import correlate as correlate_assessments
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires a workspace")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        result = correlate_assessments(args.input, authorized=True)
+        _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, result)
+        return
+    if args.command in ("scenario-preflight", "scenario-run"):
+        if args.command == "scenario-run" and not args.authorized:
+            raise PermissionError("Scenario execution requires --authorized")
+        if args.command == "scenario-run" and not args.workspace_config:
+            _assessment_output(args.out)
+        from .scenario_assessment import preflight, run as run_scenarios
+        sessions = {"session_file": args.session_file, "session_key": args.session_key}
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires a workspace configuration")
+        binding = None
+        if args.workspace_config:
+            if args.command == "scenario-preflight":
+                from .workspace import load as load_scenario_workspace
+                load_scenario_workspace(args.workspace_config)
+            else:
+                from .assessment_history import prepare
+                binding = prepare(args.workspace_config, args.out, args.project_id)
+        if args.command == "scenario-preflight":
+            print(json.dumps(preflight(args.profile, args.plan, **sessions), indent=2))
+        else:
+            result = run_scenarios(args.profile, args.plan, args.approval, authorized=args.authorized,
+                stop_file=args.stop_file, **sessions)
+            _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+            if binding:
+                from .assessment_history import record
+                record(binding, args.out, result)
+        return
+    if args.command in ("access-graph-review", "service-fingerprint"):
+        if not args.authorized:
+            raise PermissionError("Assessment requires --authorized")
+        if not args.workspace_config:
+            _assessment_output(args.out)
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires a workspace configuration")
+        binding = None
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        if args.command == "access-graph-review":
+            from .access_graph import review as expanded_review
+        else:
+            from .service_fingerprints import inspect as expanded_review
+        result = expanded_review(args.input, authorized=args.authorized)
+        _write_bounty_output(args.out, json.dumps(result, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, result)
         return
     if args.command == "identity-setup":
         from .identity_policy import setup

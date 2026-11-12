@@ -6,14 +6,21 @@ assessment adapters, shared host-local quotas and a versioned owned application
 benchmark. None changes the immutable published v1.3.0 release. See
 [setup and boundaries](ASSESSMENT_ADAPTERS.md), or run `hunterqa coverage-audit`.
 
+The newer [owned scenario milestone](SCENARIO_ASSESSMENTS.md) implements reviewed
+actions, encrypted target sessions, explicit workflow contracts, SQL/XSS context
+fixtures, SSRF callback/upload cleanup, service observations and normalized
+AD/cloud permission models. Completed CLI evidence now links to projects in the
+dashboard. The original sequencing table below remains a broad acceptance
+roadmap; general coverage and live AD/cloud validation remain open.
+
 | Priority | Area | Current delivery | Next acceptance gate |
 | --- | --- | --- | --- |
 | P0 | Website discovery | Bounded HTML/rendered anchors and explicitly selected SPA slash hash routes, ephemeral conventional login and separate discovered/visited reference recall | General SPA actions, complex sessions/SSO and representative route-coverage evaluation |
 | P0 | Platform hardening | Separate process/workspace stores, explicit operator OIDC/local roles, authenticated HTTPS edge, bounded WSGI/scan admission, local lease/recovery and selected host-local quotas | Real provider/deployment acceptance, independently verified owner grants, independently validated OS/tenant isolation and denied egress, cross-host quotas and distributed workers |
 | P0 | Detection effectiveness | Eight versioned owned application cases, retained evidence, source/label hashes and per-class metrics; existing source/header/cookie controls | Externally reviewed ground truth, representative real-world datasets, detection rates across remaining classes and standards coverage |
-| P1 | Active vulnerability validation | Fixed SQL canary differential and reflected-HTML Chromium witnesses with owned positive/negative controls | General context-specific validation; blind/OOB SQLi, DOM/stored XSS, SSRF, upload and traversal coverage remain absent |
+| P1 | Active vulnerability validation | SQL boolean contexts, HTML/attribute/DOM Chromium witnesses, owned SSRF callback, inert upload cleanup and timing signals | General context-specific validation, real DBMS blind SQL, stored XSS, broad SSRF/upload and traversal coverage |
 | P1 | Authentication/authorization | Multi-role/anonymous GET contracts, optional offline signed ID-token verification and owned OIDC/session controls | External SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
-| P2 | Infrastructure/network | Exact TCP reachability, verified TLS handshake, bounded SSH identification claims, one expiring UDP DNS question and offline evidence import | Authenticated/general service and OS assessment, broader UDP, isolated AD fixtures and internal attack-path testing |
+| P2 | Infrastructure/network | Exact TCP/TLS/UDP tools, fixed service observations and offline normalized AD candidate-path fixtures | Authenticated/general service and OS assessment, broader UDP, live directory collection and executed access-path testing |
 | P2 | Cloud runtime | Fixed AWS identity/account counters, bounded Azure/GCP resource metadata GETs and selected GCP caller permission-query responses with explicit temporary tokens | Representative sandbox-account validation, complete resource and independently confirmed effective-permission inventory, and broader provider coverage |
 
 ## Implementation sequence

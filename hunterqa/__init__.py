@@ -51,6 +51,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         REVIEW_DOSSIER_PATH=os.environ.get("HUNTERQA_REVIEW_DOSSIER", ""),
         BENCHMARK_REPORT_PATH=os.environ.get("HUNTERQA_BENCHMARK_REPORT", ""),
         ENGAGEMENT_REPORT_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_REPORT", ""),
+        SCENARIO_REPORT_PATH=os.environ.get("HUNTERQA_SCENARIO_REPORT", ""),
         ENGAGEMENT_BASELINE_PATH=os.environ.get("HUNTERQA_ENGAGEMENT_BASELINE", ""),
         WORKFLOW_RUN_PATH=os.environ.get("HUNTERQA_WORKFLOW_RUN", ""),
         OPERATOR_DATABASE=os.environ.get("HUNTERQA_OPERATOR_DB", ""),
