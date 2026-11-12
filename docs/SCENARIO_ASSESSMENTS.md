@@ -30,8 +30,9 @@ the [deployment guide](LINUX_DEPLOYMENT.md).
 
 The full lab produces **20 checks**; omit `--browser` for 15. Inspect
 `run-1/benchmark.json` and individual `*-report.json` files. `all_cases_matched`
-must be true and `uploads_remaining` zero. The lab starts temporary numeric
-loopback servers and closes them on exit. Saved plans contain temporary ports
+must be true and `uploads_remaining` zero. Each check records its report filename
+and SHA-256 of the saved file bytes. The lab starts temporary numeric loopback
+servers and closes them on exit. Saved plans contain temporary ports
 and expire: repeat the benchmark to generate fresh plans rather than replaying
 old lab URLs. Encrypted synthetic session files remain in the private secret
 directory; retain or remove that run's files according to your evidence policy.
@@ -189,7 +190,10 @@ For `scenario-run`, `access-graph-review`, `service-fingerprint` and
 ```
 
 Choose an existing project in that workspace and a new output under its
-`assessments` directory. Run as the trusted local assessment identity. Open
+`assessments` directory. Keep input profiles, plans and models under that root
+as well; copy a reviewed lab model there before associating it with a project.
+Session vaults and keys remain outside it and outside workspace backups; recreate
+short-lived target sessions after recovery. Run as the trusted local assessment identity. Open
 **Scenario results** in the signed-in dashboard to see completed CLI evidence
 and project links. The view verifies saved report SHA-256 and shows allowlisted
 summaries. A changed report becomes unavailable. Existing scans/reports are

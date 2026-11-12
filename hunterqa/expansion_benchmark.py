@@ -7,7 +7,6 @@ import secrets
 from . import access_graph, assessment_sessions, scenario_assessment, scenario_lab
 from .bounty import _approved_file
 from .cli import _approved_root
-from .engagement import digest
 
 
 def _save(path, text):
@@ -61,10 +60,12 @@ def benchmark(out_dir, *, authorized=False, browser=False):
             sessions = {"session_file": str(vault), "session_key": str(key)}
             approval = scenario_assessment.preflight(profile, plan_file, **sessions)["approval_sha256"]
             report = scenario_assessment.run(profile, plan_file, approval, authorized=True, **sessions)
-            save(destination / (name + "-report.json"), report)
+            report_path = destination / (name + "-report.json")
+            save(report_path, report)
             state = report["cases"][0]["state"]
             result["checks"].append({"case": name, "expected": expected, "observed": state, "matched": state == expected,
-                "evidence_type": evidence_type, "report_sha256": digest(report)})
+                "evidence_type": evidence_type, "report_file": report_path.name,
+                "report_sha256": hashlib.sha256(_approved_file(report_path).read_bytes()).hexdigest()})
             result["network_requests"] += report["requests"]
         result["owned_callback_requests"] = sum(path == "/receive" for _, path in lab["requests"])
         result["uploads_remaining"] = len(lab["uploads"])
@@ -76,7 +77,7 @@ def benchmark(out_dir, *, authorized=False, browser=False):
         save(destination / (domain + "-report.json"), report)
         result["checks"].append({"case": domain + "-entitlements", "expected": "matched", "observed": "matched" if all(row["contract_state"] == "matched" for row in report["queries"]) else "different",
             "matched": all(row["contract_state"] == "matched" for row in report["queries"]), "evidence_type": "synthetic-normalized-permission-model",
-            "report_sha256": hashlib.sha256(_approved_file(destination / (domain + "-report.json")).read_bytes()).hexdigest()})
+            "report_file": domain + "-report.json", "report_sha256": hashlib.sha256(_approved_file(destination / (domain + "-report.json")).read_bytes()).hexdigest()})
     from .service_fingerprints import inspect
     result["tcp_connections"] = 0
     with scenario_lab.services() as endpoints:
@@ -91,7 +92,8 @@ def benchmark(out_dir, *, authorized=False, browser=False):
             save(destination / (protocol + "-report.json"), report)
             result["tcp_connections"] += report["connection_attempts"]
             result["checks"].append({"case": protocol + "-identification", "expected": "observed", "observed": report["outcome"],
-                "matched": report["outcome"] == "observed", "evidence_type": "actual-loopback-tcp", "report_sha256": digest(report)})
+                "matched": report["outcome"] == "observed", "evidence_type": "actual-loopback-tcp", "report_file": protocol + "-report.json",
+                "report_sha256": hashlib.sha256(_approved_file(destination / (protocol + "-report.json")).read_bytes()).hexdigest()})
     result["all_cases_matched"] = all(row["matched"] for row in result["checks"]) and result["uploads_remaining"] == 0
     save(destination / "benchmark.json", result)
     return result

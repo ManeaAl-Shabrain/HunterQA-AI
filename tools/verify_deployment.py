@@ -188,6 +188,11 @@ def verify_http(data, *, restored):
         proof = call("expansion-benchmark", "--out-dir", expansion, "--browser", "--authorized", extra_env={
             "HUNTERQA_APPROVED_ROOTS": str(data / "assessments"), "HUNTERQA_ASSESSMENT_SECRET_ROOT": str(private_sessions)})
         assert proof["all_cases_matched"] and proof["cases"] == 20 and not proof["real_providers_verified"]
+        benchmark = json.loads((expansion / "benchmark.json").read_text())
+        for check in benchmark["checks"]:
+            report = expansion / check["report_file"]
+            assert report.parent == expansion and report.name.endswith("-report.json")
+            assert hashlib.sha256(report.read_bytes()).hexdigest() == check["report_sha256"]
         call("access-graph-review", "--input", expansion / "aws-model.json", "--out", data / "assessments/evidence/access-model.json",
             "--workspace-config", os.environ["HUNTERQA_WORKSPACE_CONFIG"], "--project-id", "1", "--authorized", json_output=False)
     from playwright.sync_api import sync_playwright, expect
