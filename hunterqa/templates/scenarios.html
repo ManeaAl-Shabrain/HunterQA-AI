@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Assessment scenarios · HunterQA{% endblock %}
+{% block section %}Assessment scenarios{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">SAVED ASSESSMENT RESULTS</p><h1>Assessment scenarios</h1><p>Reviewed application workflows, controlled probes and authorization models.</p></div></section>
+{% if runs %}<section class="panel"><div class="panel-head"><h2>Completed CLI assessment runs</h2></div><div class="table-wrap"><table><thead><tr><th>Run</th><th>Project</th><th>Kind</th><th>Status</th><th>Report fingerprint</th></tr></thead><tbody>
+{% for run in runs %}<tr><td><a href="{{ url_for('main.scenario_result', run_id=run.id) }}">{{ run.id }}</a></td><td>{{ run.project_name or 'Workspace' }}</td><td>{{ run.kind }}</td><td>{{ run.status }}</td><td><code>{{ run.report_sha256[:16] }}</code></td></tr>{% endfor %}
+</tbody></table></div></section>{% endif %}
+{% if evidence.status == 'ready' %}
+<section class="panel"><div class="panel-head"><h2>{{ evidence.engine }}</h2></div><div class="table-wrap"><table>
+<thead><tr><th>Case</th><th>Check</th><th>Saved result</th></tr></thead><tbody>
+{% for row in evidence.rows %}<tr><td>{{ row.id }}</td><td>{{ row.kind }}</td><td>{{ row.state }}</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% else %}<section class="panel"><div class="research-details"><h2>No supported report available</h2><p>Select a saved scenario, service or access-graph report in the workspace settings. Run assessments from the CLI after reviewing their scope.</p></div></section>{% endif %}
+<p class="callout warn">These are saved result claims. This page does not rerun or independently verify them. A matched contract or modeled permission does not confirm a customer vulnerability or live effective access.</p>
+{% endblock %}

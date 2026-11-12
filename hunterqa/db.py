@@ -28,6 +28,16 @@ CREATE TABLE IF NOT EXISTS scans (
     started_at TEXT, finished_at TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS assessment_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+    kind TEXT NOT NULL,
+    status TEXT NOT NULL,
+    report_file TEXT NOT NULL,
+    report_sha256 TEXT NOT NULL,
+    approval_sha256 TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE IF NOT EXISTS findings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     scan_id INTEGER NOT NULL REFERENCES scans(id) ON DELETE CASCADE,

@@ -208,3 +208,12 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `workspace-recover` | Mark interrupted scans failed under the offline server lease; never replay jobs |
 | `workspace-restore` | Restore original empty workspace paths; disables accounts and rotates local keys |
 | `workspace-serve` | Serve one private workspace on bounded loopback WSGI with a local process lease |
+| `assessment-session-create` | Encrypt bounded origin-bound actor sessions from stdin into a separate private vault |
+| `scenario-preflight` | Review exact scenario/scope/session/runtime fingerprint without traffic |
+| `scenario-run` | Execute approved bounded workflow/browser/canary scenarios and save redacted receipts |
+| `access-graph-review` | Evaluate exact-action normalized AD/AWS/Azure/GCP models offline; not live effective access |
+| `service-fingerprint` | Observe one explicitly authorized numeric TCP endpoint with fixed protocol exchanges |
+| `assessment-correlate` | Link matching saved evidence digests without promoting findings |
+| `expansion-benchmark` | Run repeatable owned HTTP/SQLite/TCP fixtures and synthetic permission models; optional Chromium |
+
+See [scenario assessments](SCENARIO_ASSESSMENTS.md) for the new contracts and a runnable local lab.

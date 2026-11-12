@@ -26,25 +26,25 @@ from .container_review import catalog as container_review_catalog
 
 AREAS = (
     ("website-discovery", "Website discovery", ["web-discovery"],
-     "Bounded HTML and opt-in same-origin HTTPS rendered anchors/selected slash hash states with ephemeral dedicated-account cookie login",
-     ["General action-driven SPA discovery", "Complex sessions and SSO", "Comprehensive endpoint discovery"]),
+     "Bounded HTML/rendered discovery plus reviewed browser actions, dynamic link hashes and encrypted origin-bound target session reuse",
+     ["General autonomous SPA discovery", "Automatic target SSO negotiation and broader session compatibility", "Comprehensive endpoint discovery"]),
     ("active-vulnerability-testing", "Active vulnerability testing", ["web-canary-check"],
-     "Fixed inert markup/SQL error cues, owned-endpoint SQL canary differentials and reflected-HTML Chromium execution witnesses",
-     ["General SQLi/XSS validation across contexts", "SSRF", "File upload", "Traversal", "Blind/OOB and application-specific validation"]),
+     "Fixed SQL context differentials, HTML/attribute/DOM Chromium markers, owned SSRF callbacks, inert upload cleanup and timing signals with controls",
+     ["General SQLi/XSS validation across contexts and database engines", "General SSRF and executable upload validation", "Traversal", "Blind SQL/OOB and application-specific validation"]),
     ("authentication-authorization", "Authentication and authorization", ["authorization-matrix"],
-     "Dedicated-role GET contracts, optional offline RS256 ID-token verification and owned OIDC/session guard fixtures",
-     ["External interactive SSO negotiation", "Complex session handling", "Stateful business logic", "General tenant-boundary discovery"]),
+     "Dedicated-role GET and explicit GET/POST workflow contracts, encrypted actor sessions, normalized tenant models and optional signed-token/owned OIDC controls",
+     ["External interactive SSO negotiation", "Complex session handling", "General business-rule discovery", "General tenant-boundary discovery"]),
     ("network-infrastructure", "Network and infrastructure", ["service-enumeration", "service-evidence"],
-     "Exact TCP reachability, separate scoped TLS, server-first SSH identification and expiring UDP DNS inspections, service-evidence import and selected offline AD policy review",
+     "Exact TCP reachability, separate scoped TLS, server-first SSH identification and expiring UDP DNS inspections, service-evidence import and selected offline AD policy review, exact service-protocol observations and bounded normalized AD candidate control paths",
      ["OS fingerprinting", "Broad service/version assessment", "Live Active Directory assessment", "Internal attack-path testing", "Broader UDP protocol assessment"]),
     ("cloud-runtime", "Cloud runtime", ["aws-account-audit", "source-review"],
-     "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, selected GCP caller permission-query responses, and offline AWS/Azure/GCP policy review",
+     "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, selected GCP caller permission-query responses, offline AWS/Azure/GCP policy review and exact-action normalized entitlement models",
      ["Complete resource and effective-permission inventory", "Broader AWS/Azure/GCP and representative cloud assessment"]),
     ("production-hardening", "Production platform hardening", [],
      "Local/Google/Entra policy and encrypted Admin TOTP, OS-approved subject binding, shared systemd/Compose runtime, separate workspace stores, optional HTTPS edge, offline recovery and host-local quotas",
      ["Owner-run real Google/Entra and Windows WSL2/Desktop acceptance", "Independently validated hosted deployment and OS-level tenant isolation", "Independently verified owner grants", "OS sandbox", "Distributed workers", "Enforced cross-host organization quotas"]),
     ("detection-effectiveness", "Demonstrated detection effectiveness", [],
-     "Owned application and six-endpoint HTTP/Chromium baselines, per-class metrics, inconclusive counts and retained evidence",
+     "Owned application/HTTP baselines plus a 20-check expansion fixture separating real HTTP/SQLite/Chromium/TCP from synthetic permission models, retained evidence and digest correlation",
      ["Independent real-world evaluation", "Representative per-class false-negative rates", "Complete standards coverage"]),
 )
 
@@ -66,6 +66,29 @@ FEATURES["production-hardening"] += [
     ("Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials", None),
     ("Explicit offline interrupted-scan recovery without job replay", None),
     ("Shared root/source checks reject Windows reparse points as well as symlinks", None),
+]
+
+
+FEATURES["website-discovery"] += [("Reviewed same-origin browser actions with imported cookies/local storage and dynamic link hashes", None)]
+FEATURES["active-vulnerability-testing"] += [
+    ("Owned SQL boolean checks in single-quoted, double-quoted and numeric contexts with negative/repeat controls", None),
+    ("Chromium HTML, attribute and DOM-fragment canaries respecting owner CSP", None),
+    ("Separately scoped owned SSRF nonce callback and inert text upload/fetch/cleanup", None),
+    ("Fixed single-row timing signals explicitly distinguished from SQL proof", None),
+]
+FEATURES["authentication-authorization"] += [
+    ("Encrypted expiring origin-bound target actor vault and explicit workflow response contracts", None),
+    ("Named-actor cookie continuity, stateless anonymous HTTP controls and synthetic tenant boundaries", None),
+]
+FEATURES["network-infrastructure"] += [
+    ("One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints", None),
+    ("Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths", None),
+]
+FEATURES["cloud-runtime"] += [("Offline AWS/Azure/GCP exact-action permission models with deny/unknown handling and tenant labels", None)]
+FEATURES["production-hardening"] += [("Completed CLI assessment history linked to workspace projects with protected digest-checked summaries", None)]
+FEATURES["detection-effectiveness"] += [
+    ("Repeatable 20-check owned expansion benchmark separating actual IO from synthetic models", None),
+    ("Saved evidence digest correlation without promoting findings or provenance claims", None),
 ]
 
 

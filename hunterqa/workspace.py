@@ -15,7 +15,7 @@ from .engagement import digest
 from .source_files import read_bounded
 
 ID = re.compile(r"[a-z][a-z0-9-]{2,47}\Z")
-REPORTS = ("RESEARCH_REPORT_PATH", "TRIAGE_REPORT_PATH", "CVE_REPORT_PATH", "BOUNTY_REPORT_PATH",
+REPORTS = ("SCENARIO_REPORT_PATH", "RESEARCH_REPORT_PATH", "TRIAGE_REPORT_PATH", "CVE_REPORT_PATH", "BOUNTY_REPORT_PATH",
     "AGENT_PLAN_PATH", "API_SURFACE_REPORT_PATH", "AGENT_CORRELATION_REPORT_PATH", "BROWSER_LAB_REPORT_PATH",
     "HEAD_REPLAY_REPORT_PATH", "REVIEW_DOSSIER_PATH", "BENCHMARK_REPORT_PATH", "ENGAGEMENT_REPORT_PATH",
     "ENGAGEMENT_BASELINE_PATH", "HYPOTHESES_REPORT_PATH", "FUZZ_STATS_PATH")
@@ -190,7 +190,7 @@ def bind_database(app):
                 if tuple(row) != expected:
                     raise ValueError("Dashboard database belongs to a different workspace or identity store")
             elif expected[0]:
-                tables = ("projects", "scans", "findings", "reports", "triage_reviews", "audit_events")
+                tables = ("projects", "scans", "findings", "reports", "triage_reviews", "audit_events", "assessment_runs")
                 # Table names come only from the fixed schema allowlist above.
                 if any(db.execute("SELECT COUNT(*) FROM " + table).fetchone()[0] for table in tables):  # nosec B608
                     raise ValueError("Do not silently adopt populated legacy data into a workspace")

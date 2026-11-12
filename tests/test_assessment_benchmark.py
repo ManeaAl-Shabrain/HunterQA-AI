@@ -83,4 +83,4 @@ def test_coverage_contract_never_equates_adapters_with_complete_areas():
     report = coverage_audit()
     assert len(report["areas"]) == 7 and not report["all_seven_areas_complete"]
     assert all(area["status"] == "partial" and area["missing"] for area in report["areas"])
-    assert any("SSRF" in area["missing"] for area in report["areas"])
+    assert any("SSRF" in missing for area in report["areas"] for missing in area["missing"])
