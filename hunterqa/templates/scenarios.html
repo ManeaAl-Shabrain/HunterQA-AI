@@ -9,6 +9,7 @@
 {% if evidence.status == 'ready' %}
 {% if evidence.assessment %}<section class="panel"><h2>{{ evidence.assessment.execution_source }} · {{ evidence.assessment.module }}</h2><p>{{ evidence.assessment.verification_status }} · {{ evidence.assessment.collector }}</p>
 {% if evidence.assessment.synthetic %}<p class="callout warn">DEMO: generated synthetic evidence. No real infrastructure was scanned.</p>{% endif %}
+{% with report=evidence.assessment %}{% include 'assessment_gpo_limits.html' %}{% endwith %}
 {% if selected_run %}<p>{% for kind in ['json','html','sarif'] %}<a class="button small" href="{{ url_for('main.assessment_export', run_id=selected_run, kind=kind) }}">Export {{ kind }}</a> {% endfor %}</p>{% endif %}
 {% for row in evidence.assessment.findings %}<article><h3>{{ row.execution_source }} · {{ row.title }}</h3><p>{{ row.risk }} · {{ row.rule_id }} · {{ row.verification_status }}</p><p>{{ row.remediation }}</p><p>Evidence: {{ row.evidence_ids|join(', ') }}</p></article>{% endfor %}
 <details><summary>Evidence integrity and source</summary>{% for row in evidence.assessment.evidence %}<p>{{ row.execution_source }} · {{ row.origin }} · SHA-256 {{ row.sha256 }}</p>{% endfor %}</details></section>{% endif %}

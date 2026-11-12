@@ -145,6 +145,13 @@
         "skipped": 58
       },
       "scope": "All seven CI jobs passed: Python 3.11/3.13 source regression and separate browser/CLI acceptance, bundled rules, source action, actual Compose/native lifecycle and isolated Samba. Includes encrypted token synthetic tests and source receipt repair. No real cloud/Google/Entra/WSL2 acceptance; broad domain limits remain open."
+    },
+    "E82-GPO": {
+      "source_commit": "253c8e064225a73d5a69560e273702aca5bedc52",
+      "workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728774",
+      "deployment_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728760",
+      "samba_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728771",
+      "scope": "All seven jobs passed. Native-file parsing, UI/history/HTML/SARIF coverage and anti-overclaim tests; 3564 local passes/59 skips and 3565 Linux passes/58 skips per run on Python 3.11/3.13. Actual Windows secedit syntax validation used synthetic files without applying policy; this does not verify resultant GPO or SYSVOL collection."
     }
   },
   "requirements": [
@@ -1213,20 +1220,21 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Native machine GptTmpl.inf/Registry.pol selected directive analysis, uncertainty-preserving dashboard/HTML/SARIF and verification-claim validation passed all current CI jobs. Actual Windows syntax validation used synthetic files only. SYSVOL acquisition and effective/resultant GPO remain incomplete.",
       "increment_files": [
-        "hunterqa/ad_directory.py",
-        "tools/verify_ad_lab.py"
+        "hunterqa/gpo_review.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/sarif_export.py",
+        "hunterqa/templates/assessment_gpo_limits.html"
       ],
       "increment_tests": [
-        "tests/test_ad_directory.py"
+        "tests/test_gpo_review.py",
+        "tests/test_assessment_modes.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA",
-        "E81-28AA",
-        "E81-AADF"
+        "E82-GPO"
       ],
-      "current_status": "Missing"
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.7",
@@ -10383,5 +10391,24 @@
       "skipped": 58
     },
     "all_seven_ci_jobs_passed": true
+  },
+  "gpo_increment": {
+    "inspected_main": "63644d1",
+    "review_date": "2026-11-13",
+    "preimplementation_audit": "docs/GPO_POLICY_REVIEW.md",
+    "native_file_tests": 22,
+    "real_windows_policy_application_verified": false,
+    "current_ci": "E82-GPO",
+    "implementation_commit": "253c8e064225a73d5a69560e273702aca5bedc52",
+    "local_full_regression": {
+      "passed": 3564,
+      "skipped": 59
+    },
+    "linux_full_regression_per_run": {
+      "passed": 3565,
+      "skipped": 58
+    },
+    "actual_windows_syntax_validation": true,
+    "synthetic_control_cases": 20
   }
 }

@@ -1,0 +1,10 @@
+{% if report.analysis_engine == 'native-gpo-file-review' and report.analysis_limits %}
+<section class="panel"><h2>GPO analysis coverage</h2>
+<p>Selected directives assessed: {{ report.analysis_limits.selected_directives_reviewed }}.</p>
+<p>Unassessed directives: {{ report.analysis_limits.unsupported_directives }}. Unresolved identity references: {{ report.analysis_limits.unresolved_identity_references }}.</p>
+{% if not report.analysis_limits.selected_directives_reviewed %}<p class="callout warn">No selected GPO directive was assessed. This is not a secure result.</p>{% endif %}
+{% if report.analysis_limits.registry_program_requires_review %}<p class="callout warn">Registry operations were not evaluated because the file contains a special or deletion program.</p>{% endif %}
+<p>Effective Windows policy has not been verified. Missing directives are not secure defaults.</p>
+<details><summary>Policy analysis limits</summary>{% for item in report.analysis_limits.limitations %}<p>{{ item }}</p>{% endfor %}</details>
+</section>
+{% endif %}
