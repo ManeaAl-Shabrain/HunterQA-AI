@@ -127,6 +127,11 @@ def test_shared_cli_history_schema_export_and_authorization(tmp_path, monkeypatc
     assert report['findings'][0]['evidence_ids'] and not report['real_provider_verified']
     for kind in ('json', 'html', 'sarif'):
         assert 'LAB' in assessment_modes.export(output, kind)
+    forged = tmp_path / 'forged.json'
+    report['analysis_limits']['effective_policy_verified'] = True
+    forged.write_text(json.dumps(report))
+    with pytest.raises(ValueError, match='GPO coverage or verification'):
+        assessment_modes.load_report(forged)
     with pytest.raises(ValueError):
         assessment_modes.analyze('ad', source, mode='LIVE', input_mode='unsupported', authorized=True)
 
@@ -148,7 +153,7 @@ def test_gpo_result_is_recorded_in_existing_protected_dashboard_history(tmp_path
     spaces = ws.spaces.__wrapped__(tmp_path, monkeypatch)
     root = spaces[1][0] / 'assessments'
     source, output = root / 'GptTmpl.inf', root / 'gpo-result.json'
-    original = inf('[System Access]\r\nClearTextPassword=1\r\n')
+    original = inf('[System Access]\r\nClearTextPassword=1\r\n[Event Audit]\r\nAuditSystemEvents=0\r\n')
     source.write_bytes(original)
     main(['assessment-review', '--module', 'ad', '--mode', 'LAB', '--input-mode', 'gpo-security-template',
         '--input', str(source), '--out', str(output), '--workspace-config', str(spaces[2][0]), '--authorized'])
@@ -161,6 +166,18 @@ def test_gpo_result_is_recorded_in_existing_protected_dashboard_history(tmp_path
     assert client.get(target).status_code == 302
     ws._login(client)
     assert b'reversible password storage' in client.get(target).data
+    assert b'Unassessed directives: 1' in client.get(target).data
+    assert b'Effective Windows policy has not been verified' in client.get(target + '/export.html').data
     assert client.get(target + '/export.sarif').status_code == 200
+    binary_source, binary_output = root / 'Registry.pol', root / 'registry-result.json'
+    binary_source.write_bytes(pol(('Unselected', '**DelVals', 1, b'\0\0')))
+    main(['assessment-review', '--module', 'ad', '--mode', 'LAB', '--input-mode', 'gpo-machine-registry',
+        '--input', str(binary_source), '--out', str(binary_output), '--workspace-config', str(spaces[2][0]), '--authorized'])
+    second = assessment_history.history(app.config['DATABASE'])[0]['id']
+    page = client.get('/scenarios/' + str(second)).data
+    assert b'No selected GPO directive was assessed' in page and b'Registry operations were not evaluated' in page
+    sarif = client.get('/scenarios/' + str(second) + '/export.sarif').json
+    assert sarif['runs'][0]['properties']['gpoCoverage']['registry_program_requires_review']
+    assert sarif['runs'][0]['properties']['gpoCoverage']['selected_directives_reviewed'] == 0
     output.write_text('{}')
     assert client.get(target + '/export.json').status_code == 404

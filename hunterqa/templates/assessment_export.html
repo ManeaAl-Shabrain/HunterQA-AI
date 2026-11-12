@@ -3,6 +3,7 @@
 <p>{{ report.generated_at }} · {{ report.verification_status }} · {{ report.collector }}</p>
 {% if report.synthetic %}<p><strong>DEMO: generated synthetic evidence. No real infrastructure was scanned.</strong></p>{% endif %}
 <p>Review candidates, not confirmed vulnerabilities. Priority is not verified impact.</p>
+{% include 'assessment_gpo_limits.html' %}
 <table><thead><tr><th>Source</th><th>Rule</th><th>Finding</th><th>Priority</th><th>Remediation</th><th>Evidence</th></tr></thead><tbody>
 {% for row in report.findings %}<tr><td>{{ row.execution_source }}</td><td>{{ row.rule_id }}</td><td>{{ row.title }}</td><td>{{ row.risk }}</td><td>{{ row.remediation }}</td><td>{{ row.evidence_ids|join(', ') }}</td></tr>{% endfor %}
 </tbody></table><h2>Evidence references</h2>

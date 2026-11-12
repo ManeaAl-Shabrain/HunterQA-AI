@@ -68,8 +68,6 @@ def analyze(module, path, *, mode, authorized=False, input_mode="normalized"):
         if read_bounded(_approved_file(path), 1048576) != source:
             raise ValueError("Source changed during native policy analysis")
         report = envelope(module, mode, result, [{"sha256": hashlib.sha256(source).hexdigest()}], origin="operator-supplied-evidence")
-        if module == "ad":
-            report["analysis_limits"] = {key: result[key] for key in ("rule_version", "selected_directives_reviewed", "unsupported_directives", "unresolved_identity_references", "overwritten_registry_assignments", "registry_program_requires_review", "effective_policy_verified", "limitations")}
         return bounded_report(report)
     if module in {"web", "vulnerability"}:
         from .cli import _approved_root
@@ -177,6 +175,8 @@ def envelope(module, mode, result, receipts, *, origin):
         "limitations": ["Source labels describe execution intent; supplied evidence is not authenticated live collection",
             "Triage priority is not independently verified impact or a calibrated probability",
             "Existing collectors, scopes, reports and analyst decisions remain separate and are not overwritten"]}
+    if result.get("engine") == "native-gpo-file-review":
+        report["analysis_limits"] = {key: result[key] for key in ("rule_version", "selected_directives_reviewed", "unsupported_directives", "unresolved_identity_references", "overwritten_registry_assignments", "registry_program_requires_review", "effective_policy_verified", "limitations")}
     return bounded_report(report)
 
 
@@ -199,6 +199,15 @@ def load_report(path):
         raise ValueError("Unsupported provenance or verification claim")
     if not isinstance(data.get("findings"), list) or len(data["findings"]) > 1000 or not isinstance(data.get("evidence"), list) or len(data["evidence"]) > 1502:
         raise ValueError("Bounded shared report required")
+    if data.get("analysis_engine") == "native-gpo-file-review":
+        limits = data.get("analysis_limits")
+        counts = ("selected_directives_reviewed", "unsupported_directives", "unresolved_identity_references", "overwritten_registry_assignments")
+        if (not isinstance(limits, dict) or limits.get("effective_policy_verified") is not False
+                or type(limits.get("registry_program_requires_review")) is not bool
+                or any(type(limits.get(key)) is not int or not 0 <= limits[key] <= 20000 for key in counts)
+                or not isinstance(limits.get("limitations"), list) or len(limits["limitations"]) > 20
+                or any(not isinstance(item, str) or len(item) > 1000 for item in limits["limitations"])):
+            raise ValueError("Unsupported GPO coverage or verification claim")
     evidence_ids = set()
     for row in data["evidence"]:
         if (not isinstance(row, dict) or row.get("execution_source") != data["execution_source"]

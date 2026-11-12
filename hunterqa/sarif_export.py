@@ -81,4 +81,9 @@ def export_sarif(file_path):
     if shared_source:
         output["runs"][0]["properties"].update(executionSource=shared_source, synthetic=shared_source == "DEMO",
             moduleVerification=data["verification_status"])
+        if data.get("analysis_engine") == "native-gpo-file-review":
+            limits = data["analysis_limits"]
+            output["runs"][0]["properties"]["gpoCoverage"] = {key: limits[key] for key in (
+                "selected_directives_reviewed", "unsupported_directives", "unresolved_identity_references",
+                "overwritten_registry_assignments", "registry_program_requires_review", "effective_policy_verified")}
     return output
