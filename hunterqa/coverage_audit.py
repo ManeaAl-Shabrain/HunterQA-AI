@@ -85,6 +85,7 @@ FEATURES["network-infrastructure"] += [
     ("One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints", None),
     ("Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths", None),
     ("Purpose-bound directory credentials, critical single-domain LDAPS and actual isolated Samba acceptance", None),
+    ("Native machine GptTmpl.inf/Registry.pol selected directives, ordered scalar assignments and unsupported-operation uncertainty", None),
 ]
 FEATURES["cloud-runtime"] += [("Offline AWS/Azure/GCP exact-action permission models with deny/unknown handling and tenant labels", None)]
 FEATURES["cloud-runtime"] += [("Bounded read-only AWS inventory with fixed APIs, explicit STS signing and retained response hashes", None),

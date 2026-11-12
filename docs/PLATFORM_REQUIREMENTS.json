@@ -1213,20 +1213,17 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected native UTF-16LE security-template and binary machine Registry.pol analysis implemented; synthetic native-file, protected history and export tests passed. SYSVOL collection and resultant/effective policy remain unimplemented.",
       "increment_files": [
-        "hunterqa/ad_directory.py",
-        "tools/verify_ad_lab.py"
+        "hunterqa/gpo_review.py",
+        "hunterqa/assessment_modes.py"
       ],
       "increment_tests": [
-        "tests/test_ad_directory.py"
+        "tests/test_gpo_review.py",
+        "tests/test_assessment_modes.py"
       ],
-      "increment_evidence": [
-        "E81-SAMBA",
-        "E81-28AA",
-        "E81-AADF"
-      ],
-      "current_status": "Missing"
+      "increment_evidence": [],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.7",
@@ -10383,5 +10380,13 @@
       "skipped": 58
     },
     "all_seven_ci_jobs_passed": true
+  },
+  "gpo_increment": {
+    "inspected_main": "63644d1",
+    "review_date": "2026-11-13",
+    "preimplementation_audit": "docs/GPO_POLICY_REVIEW.md",
+    "native_file_tests": 22,
+    "real_windows_policy_application_verified": false,
+    "current_ci": "pending"
   }
 }

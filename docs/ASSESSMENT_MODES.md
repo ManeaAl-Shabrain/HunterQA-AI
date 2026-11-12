@@ -101,6 +101,9 @@ Azure/GCP also accept encrypted temporary tokens through `--session-file` and
 `--session-key` instead of `--credentials`. See [token vault setup](CLOUD_TOKEN_VAULT.md).
 The shared LAB facade accepts numeric private network/web targets only; original
 scoped commands continue to support their documented DNS-based lab contracts.
+Offline AD reviews also accept `--input-mode gpo-security-template` and
+`gpo-machine-registry` for selected native machine-policy directives. See
+[GPO format, safety and verification limits](GPO_POLICY_REVIEW.md).
 Successful inert uploads and matched authorization-denial contracts are not
 converted into vulnerability findings. Timing signals remain informational.
 Reports count actual HTTP attempts, TCP connections and LDAP operations separately

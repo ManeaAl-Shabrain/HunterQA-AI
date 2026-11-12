@@ -4,6 +4,13 @@ This tracks implementation against the requested seven-area expansion. Passing
 a bounded fixture does not mark an entire area complete. Historical release
 assets are unchanged.
 
+## Native GPO file analysis
+
+The [GPO reader](GPO_POLICY_REVIEW.md) adds selected native machine security-template
+and binary registry-policy checks to existing AD history/reports. It runs offline,
+retains evidence hashes and unknown counts, and has native-format fixture tests.
+SYSVOL acquisition and effective/resultant Windows policy remain incomplete.
+
 ## Unified assessment increment
 
 [Eight-domain modes](ASSESSMENT_MODES.md) reuse existing analyzers with common

@@ -58,14 +58,19 @@ def analyze(module, path, *, mode, authorized=False, input_mode="normalized"):
         raise ValueError("Use a supported module and explicit LAB/LIVE source intent")
     _reject_demo_source(path)
     if input_mode != "normalized":
-        from . import cloud_review, network_review
+        from . import cloud_review, network_review, gpo_review
         supported = {"cloud": (cloud_review, {"aws-iam", "gcp-iam", "azure-nsg"}),
-            "network": (network_review, {"sysctl-text", "resolved-conf"})}
+            "network": (network_review, {"sysctl-text", "resolved-conf"}), "ad": (gpo_review, gpo_review.MODES)}
         if module not in supported or input_mode not in supported[module][1]:
             raise ValueError("Input mode is not supported by this module")
         source = read_bounded(_approved_file(path), 1048576)
         result = supported[module][0].review_file(path, authorized=True, mode=input_mode)
-        return envelope(module, mode, result, [{"sha256": hashlib.sha256(source).hexdigest()}], origin="operator-supplied-evidence")
+        if read_bounded(_approved_file(path), 1048576) != source:
+            raise ValueError("Source changed during native policy analysis")
+        report = envelope(module, mode, result, [{"sha256": hashlib.sha256(source).hexdigest()}], origin="operator-supplied-evidence")
+        if module == "ad":
+            report["analysis_limits"] = {key: result[key] for key in ("rule_version", "selected_directives_reviewed", "unsupported_directives", "unresolved_identity_references", "overwritten_registry_assignments", "registry_program_requires_review", "effective_policy_verified", "limitations")}
+        return bounded_report(report)
     if module in {"web", "vulnerability"}:
         from .cli import _approved_root
         root = _approved_root(str(path))

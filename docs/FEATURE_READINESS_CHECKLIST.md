@@ -62,6 +62,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints
 - [x] Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths
 - [x] Purpose-bound directory credentials, critical single-domain LDAPS and actual isolated Samba acceptance
+- [x] Native machine GptTmpl.inf/Registry.pol selected directives, ordered scalar assignments and unsupported-operation uncertainty
 - [ ] OS fingerprinting
 - [ ] Broad service/version assessment
 - [ ] Effective AD ACL/GPO/trust analysis and enterprise directory acceptance
