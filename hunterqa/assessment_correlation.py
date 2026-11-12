@@ -22,13 +22,20 @@ def correlate(inputs, *, authorized=False):
             raise ValueError("Use unique supported saved reports")
         seen.add(source)
         report = bounded_json(raw)
-        sources.append({"report_sha256": source, "engine": report["engine"]})
+        context = report.get("execution_source", "UNCLASSIFIED")
+        if context not in {"DEMO", "LAB", "LIVE"}:
+            context = "UNCLASSIFIED"
+        sources.append({"report_sha256": source, "engine": report["engine"], "execution_source": context})
         witnesses = {source}
         if report["engine"] == "approved-scenario-suite":
             for case in report["cases"]:
                 for row in case.get("receipts", []):
                     if isinstance(row, dict) and isinstance(row.get("body_sha256"), str) and re.fullmatch(r"[a-f0-9]{64}", row["body_sha256"]):
                         witnesses.add(row["body_sha256"])
+        elif report["engine"] == "unified-assessment-review":
+            # load_report, via summary above, checks per-finding/source integrity.
+            for row in report["evidence"]:
+                witnesses.add(row["sha256"])
         elif report["engine"] == "normalized-access-graph":
             for row in report["queries"]:
                 values = row.get("evidence_sha256", [])
@@ -43,5 +50,6 @@ def correlate(inputs, *, authorized=False):
     links = [{"evidence_sha256": key, "report_sha256": sorted(values), "meaning": "matching-digest-only"}
         for key, values in sorted(evidence.items()) if len(values) > 1]
     return {"engine": "assessment-evidence-index", "schema_version": 1, "sources": sources, "links": links[:200],
+        "mixed_execution_sources": len({row["execution_source"] for row in sources}) > 1,
         "truncated": len(links) > 200, "network_requests": 0, "customer_vulnerabilities_confirmed": 0,
         "limitations": ["A matching hash links saved bytes/claims, not author identity, permission, exploitability or independent confirmation"]}

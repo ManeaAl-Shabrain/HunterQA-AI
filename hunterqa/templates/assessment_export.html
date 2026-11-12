@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ report.execution_source }} · HunterQA assessment</title></head><body>
+<h1>{{ report.execution_source }} · {{ report.module }} assessment</h1>
+<p>{{ report.generated_at }} · {{ report.verification_status }} · {{ report.collector }}</p>
+{% if report.synthetic %}<p><strong>DEMO: generated synthetic evidence. No real infrastructure was scanned.</strong></p>{% endif %}
+<p>Review candidates, not confirmed vulnerabilities. Priority is not verified impact.</p>
+<table><thead><tr><th>Source</th><th>Rule</th><th>Finding</th><th>Priority</th><th>Remediation</th><th>Evidence</th></tr></thead><tbody>
+{% for row in report.findings %}<tr><td>{{ row.execution_source }}</td><td>{{ row.rule_id }}</td><td>{{ row.title }}</td><td>{{ row.risk }}</td><td>{{ row.remediation }}</td><td>{{ row.evidence_ids|join(', ') }}</td></tr>{% endfor %}
+</tbody></table><h2>Evidence references</h2>
+{% for row in report.evidence %}<p>{{ row.id }} · {{ row.origin }} · SHA-256 {{ row.sha256 }}</p>{% endfor %}
+{% for item in report.limitations %}<p>{{ item }}</p>{% endfor %}
+</body></html>

@@ -13,6 +13,9 @@ from .engagement import _expiry, utcnow
 from .identity_policy import seal, unseal
 from .source_files import is_linked, read_bounded
 
+PURPOSES = {"web-session": "assessment-sessions-v1", "directory-reader": "assessment-directory-reader-v1", "aws-signing": "assessment-aws-signing-v1",
+    "azure-token": "assessment-azure-token-v1", "gcp-token": "assessment-gcp-token-v1"}
+
 
 def private_path(value, *, existing=True):
     root = Path(os.environ.get("HUNTERQA_ASSESSMENT_SECRET_ROOT", "")).expanduser()
@@ -104,9 +107,11 @@ def validate(data):
     return data
 
 
-def create(output, key_file, raw, *, authorized=False):
+def create(output, key_file, raw, *, authorized=False, purpose="web-session"):
     if authorized is not True:
         raise PermissionError("Session creation requires --authorized")
+    if purpose not in PURPOSES:
+        raise ValueError("Unsupported assessment credential purpose")
     if not isinstance(raw, bytes) or len(raw) > 262144:
         raise ValueError("Bounded session JSON required through stdin")
     data = validate(_decode_json(raw))
@@ -124,7 +129,9 @@ def create(output, key_file, raw, *, authorized=False):
             os.fsync(stream.fileno())
     if not re.fullmatch(r"[a-f0-9]{64}", key):
         raise ValueError("Invalid session encryption key")
-    encrypted = {"schema_version": 1, "ciphertext": seal(key, "assessment-sessions-v1", data)}
+    encrypted = {"schema_version": 1, "ciphertext": seal(key, PURPOSES[purpose], data)}
+    if purpose != "web-session":
+        encrypted["purpose"] = purpose
     fd = os.open(destination, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
     with os.fdopen(fd, "w", encoding="utf-8") as stream:
         stream.write(json.dumps(encrypted) + "\n")
@@ -133,7 +140,9 @@ def create(output, key_file, raw, *, authorized=False):
     return {"created": True, "actors": sorted(data["actors"]), "secrets_displayed": False}
 
 
-def load(input_file, key_file):
+def load_document(input_file, key_file, *, purpose="web-session"):
+    if purpose not in PURPOSES:
+        raise ValueError("Unsupported assessment credential purpose")
     path, key_path = private_path(input_file), private_path(key_file)
     if path == key_path:
         raise ValueError("Use separate session and key files")
@@ -142,15 +151,21 @@ def load(input_file, key_file):
     if not re.fullmatch(r"[a-f0-9]{64}", key):
         raise ValueError("Invalid session key")
     wrapper = _decode_json(raw)
-    if (not isinstance(wrapper, dict) or set(wrapper) != {"schema_version", "ciphertext"} or type(wrapper["schema_version"]) is not int
+    expected = {"schema_version", "ciphertext"} | ({"purpose"} if purpose != "web-session" else set())
+    if (not isinstance(wrapper, dict) or set(wrapper) != expected or wrapper.get("purpose", "web-session") != purpose or type(wrapper["schema_version"]) is not int
             or wrapper["schema_version"] != 1 or not isinstance(wrapper["ciphertext"], str)):
         raise ValueError("Invalid encrypted session wrapper")
-    data = validate(unseal(key, "assessment-sessions-v1", wrapper["ciphertext"]))
-    return data["actors"], hashlib.sha256(raw + hashlib.sha256(key.encode()).digest()).hexdigest()
+    data = validate(unseal(key, PURPOSES[purpose], wrapper["ciphertext"]))
+    return data, hashlib.sha256(raw + hashlib.sha256(key.encode()).digest()).hexdigest()
 
 
-def create_cli(output, key_file, *, authorized=False):
+def load(input_file, key_file, *, purpose="web-session"):
+    data, fingerprint = load_document(input_file, key_file, purpose=purpose)
+    return data["actors"], fingerprint
+
+
+def create_cli(output, key_file, *, authorized=False, purpose="web-session"):
     import sys
     if authorized is not True:
         raise PermissionError("Session creation requires --authorized")
-    return create(output, key_file, sys.stdin.buffer.read(262145), authorized=True)
+    return create(output, key_file, sys.stdin.buffer.read(262145), authorized=True, purpose=purpose)

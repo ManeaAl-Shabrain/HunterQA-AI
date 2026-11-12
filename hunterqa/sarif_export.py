@@ -27,6 +27,11 @@ def _relative_uri(value):
 
 def export_sarif(file_path):
     data = _read_json(file_path, 2_000_000)
+    shared_source = None
+    if isinstance(data, dict) and data.get("engine") == "unified-assessment-review":
+        from .assessment_modes import load_report
+        data = load_report(file_path)
+        shared_source = data["execution_source"]
     rows = data.get("findings") if isinstance(data, dict) else None
     if not isinstance(rows, list) or len(rows) > 1000:
         raise ValueError("Expected a bounded normalized HunterQA findings array")
@@ -43,6 +48,10 @@ def export_sarif(file_path):
         result = {"ruleId": rule_id, "level": {"ERROR": "error", "WARNING": "warning", "INFO": "note"}.get(severity, "note"),
                   "message": {"text": "Unverified review candidate. Inspect the private HunterQA evidence and independently validate impact."},
                   "properties": {"verificationStatus": "unverified", "humanReviewRequired": True}}
+        if shared_source:
+            result["properties"].update(executionSource=shared_source, synthetic=shared_source == "DEMO",
+                evidenceIds=row.get("evidence_ids", []))
+            result["message"]["text"] = shared_source + ": " + result["message"]["text"]
         uri = _relative_uri(row.get("file_path"))
         if uri:
             line = positive_line(row.get("line_start"))
@@ -60,10 +69,16 @@ def export_sarif(file_path):
             result["properties"]["assessmentCase"] = case
             if role is not None:
                 result["properties"]["assessmentRole"] = role
+        if shared_source:
+            identity = rule_id + "\0" + row["id"]
         result["partialFingerprints"] = {"hunterqaCandidate/v1": hashlib.sha256(identity.encode()).hexdigest()}
         results.append(result)
-    return {"version": "2.1.0", "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+    output = {"version": "2.1.0", "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
             "runs": [{"tool": {"driver": {"name": "HunterQA AI", "informationUri": "https://github.com/ManeaAl-Shabrain/HunterQA-AI",
                                           "rules": list(rules.values())}}, "results": results,
                       "properties": {"humanReviewRequired": True, "omittedUnsafeOrExternalLocations": omitted,
                                      "claims": "Scanner levels are triage labels; impact and exploitability are unverified."}}]}
+    if shared_source:
+        output["runs"][0]["properties"].update(executionSource=shared_source, synthetic=shared_source == "DEMO",
+            moduleVerification=data["verification_status"])
+    return output

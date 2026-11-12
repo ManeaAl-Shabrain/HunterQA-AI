@@ -65,6 +65,63 @@ def main(argv=None):
         installed_version = "development (not installed)"
     parser.add_argument("--version", action="version", version="HunterQA AI " + installed_version)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("assessment-modules", help="Show shared analysis modules, source modes and truthful validation limits")
+    demo_modes = sub.add_parser("assessment-demo", help="Run existing analyzers on versioned synthetic inputs without network traffic")
+    demo_modes.add_argument("--module", default="all")
+    demo_modes.add_argument("--out-dir", required=True)
+    demo_modes.add_argument("--authorized", action="store_true")
+    mode_review = sub.add_parser("assessment-review", help="Review supplied LAB/LIVE evidence; does not collect from a provider")
+    mode_review.add_argument("--module", required=True)
+    mode_review.add_argument("--mode", choices=("LAB", "LIVE"), required=True)
+    mode_review.add_argument("--input", required=True)
+    mode_review.add_argument("--input-mode", default="normalized")
+    mode_review.add_argument("--out", required=True)
+    mode_review.add_argument("--workspace-config")
+    mode_review.add_argument("--project-id", type=int)
+    mode_review.add_argument("--authorized", action="store_true")
+    mode_export = sub.add_parser("assessment-export", help="Export a shared assessment with source labels retained")
+    mode_export.add_argument("--input", required=True)
+    mode_export.add_argument("--out", required=True)
+    mode_export.add_argument("--format", choices=("json", "sarif", "html"), required=True)
+    mode_collect = sub.add_parser("assessment-collect", help="Run an existing typed scoped collector and retain shared provenance/history")
+    mode_collect.add_argument("--connector", required=True, choices=("azure-inventory", "gcp-inventory", "gcp-permissions", "aws-inventory", "ad-directory", "network-service", "web-scenarios"))
+    mode_collect.add_argument("--mode", required=True, choices=("LAB", "LIVE"))
+    mode_collect.add_argument("--input", required=True)
+    mode_collect.add_argument("--native-out", required=True)
+    mode_collect.add_argument("--out", required=True)
+    mode_collect.add_argument("--credentials")
+    mode_collect.add_argument("--profile")
+    mode_collect.add_argument("--session-file")
+    mode_collect.add_argument("--session-key")
+    mode_collect.add_argument("--approval")
+    mode_collect.add_argument("--workspace-config")
+    mode_collect.add_argument("--project-id", type=int)
+    mode_collect.add_argument("--authorized", action="store_true")
+    for name in ("ad-directory-preflight", "ad-directory-collect"):
+        directory = sub.add_parser(name, help="Review or collect selected read-only scoped LDAPS attributes")
+        directory.add_argument("--input", required=True)
+        directory.add_argument("--session-file", required=True)
+        directory.add_argument("--session-key", required=True)
+        if name.endswith("collect"):
+            directory.add_argument("--approval", required=True)
+            directory.add_argument("--snapshot-out", required=True)
+            directory.add_argument("--out", required=True)
+            directory.add_argument("--stop-file", default="stop")
+            directory.add_argument("--workspace-config")
+            directory.add_argument("--project-id", type=int)
+            directory.add_argument("--authorized", action="store_true")
+    for name in ("aws-resource-preflight", "aws-resource-inventory"):
+        aws_resources = sub.add_parser(name, help="Review or run bounded STS/EC2/S3 read-only inventory with encrypted credentials")
+        aws_resources.add_argument("--input", required=True)
+        aws_resources.add_argument("--session-file", required=True)
+        aws_resources.add_argument("--session-key", required=True)
+        if name.endswith("inventory"):
+            aws_resources.add_argument("--approval", required=True)
+            aws_resources.add_argument("--out", required=True)
+            aws_resources.add_argument("--evidence-dir")
+            aws_resources.add_argument("--workspace-config")
+            aws_resources.add_argument("--project-id", type=int)
+            aws_resources.add_argument("--authorized", action="store_true")
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
     doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
     doctor.add_argument("--project")
@@ -550,6 +607,7 @@ def main(argv=None):
     session_create = sub.add_parser("assessment-session-create", help="Encrypt designated app-origin session JSON from private stdin; no credentials printed")
     session_create.add_argument("--out", required=True)
     session_create.add_argument("--key-file", required=True)
+    session_create.add_argument("--purpose", choices=("web-session", "directory-reader", "aws-signing", "azure-token", "gcp-token"), default="web-session")
     session_create.add_argument("--authorized", action="store_true")
     for name in ("scenario-preflight", "scenario-run"):
         scenario = sub.add_parser(name, help="Review or execute bounded owned-endpoint workflows and controlled probes")
@@ -706,6 +764,135 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "assessment-collect":
+        if not args.authorized:
+            raise PermissionError("Actual collection requires --authorized")
+        from .assessment_collect import execute as native_collect, normalized as normalize_collection
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        _assessment_output(args.native_out)
+        if Path(args.out).resolve() == Path(args.native_out).resolve():
+            raise ValueError("Preserve separate original and shared report outputs")
+        native = native_collect(args.connector, args.input, mode=args.mode, authorized=True,
+            credentials=args.credentials, profile=args.profile, session_file=args.session_file,
+            session_key=args.session_key, approval=args.approval)
+        _write_bounty_output(args.native_out, json.dumps(native, indent=2) + "\n")
+        from hashlib import sha256 as collected_sha256
+        from .source_files import read_bounded as read_collected_report
+        native_hash = collected_sha256(read_collected_report(Path(args.native_out), 1048576)).hexdigest()
+        report = normalize_collection(args.connector, args.mode, native, native_hash)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        return
+    if args.command == "aws-resource-preflight":
+        from .aws_inventory import preflight as aws_preflight
+        print(json.dumps(aws_preflight(args.input, args.session_file, args.session_key), indent=2))
+        return
+    if args.command == "aws-resource-inventory":
+        if not args.authorized:
+            raise PermissionError("AWS collection requires --authorized")
+        from .aws_inventory import inventory as aws_inventory
+        from .assessment_modes import envelope as aws_envelope, collection_counts as aws_counts
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        native = aws_inventory(args.input, args.session_file, args.session_key, args.approval,
+            authorized=True, evidence_dir=args.evidence_dir)
+        report = aws_envelope("cloud", native["execution_source"], native,
+            [{"sha256": row["body_sha256"]} for row in native["receipts"] if row.get("body_sha256")],
+            origin="generated-synthetic" if native["synthetic"] else "operator-supplied-evidence")
+        report.update(collector=native["collector"], approval_sha256=native["approval_sha256"], collection={key: value for key, value in native.items() if key != "findings"}, stopped=native["stopped"])
+        aws_counts(report, native, "aws-inventory")
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        if native["stopped"]:
+            raise SystemExit(2)
+        return
+    if args.command == "ad-directory-preflight":
+        from .ad_directory import preflight as directory_preflight
+        print(json.dumps(directory_preflight(args.input, args.session_file, args.session_key), indent=2))
+        return
+    if args.command == "ad-directory-collect":
+        if not args.authorized:
+            raise PermissionError("Directory collection requires --authorized")
+        from .ad_directory import collect as directory_collect, analyze as directory_analyze
+        from .assessment_modes import envelope as assessment_envelope, collection_counts as directory_counts
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        _assessment_output(args.snapshot_out)
+        if Path(args.out).resolve() == Path(args.snapshot_out).resolve():
+            raise ValueError("Separate the snapshot and report outputs")
+        snapshot, receipt = directory_collect(args.input, args.session_file, args.session_key, args.approval,
+            authorized=True, stop_file=args.stop_file)
+        _write_bounty_output(args.snapshot_out, json.dumps(snapshot, indent=2) + "\n")
+        from .source_files import read_bounded as read_directory_snapshot
+        from hashlib import sha256 as directory_sha256
+        report = assessment_envelope("ad", receipt["execution_source"], directory_analyze(snapshot),
+            [{"sha256": directory_sha256(read_directory_snapshot(Path(args.snapshot_out), 1048576)).hexdigest()}], origin="operator-supplied-evidence")
+        report.update(collector="ldaps-read-only", approval_sha256=receipt["approval_sha256"], collection=receipt, stopped=receipt["error_type"] is not None)
+        directory_counts(report, receipt, "ad-directory")
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        if receipt["error_type"]:
+            raise SystemExit(2)
+        return
+    if args.command == "assessment-modules":
+        from .assessment_modes import catalog as mode_catalog
+        print(json.dumps(mode_catalog(), indent=2))
+        return
+    if args.command == "assessment-demo":
+        from .assessment_demo import run as run_demo
+        result = run_demo(args.out_dir, module=args.module, authorized=args.authorized)
+        print(json.dumps({"execution_source": "DEMO", "modules": len(result["controls"]), "all_cases_matched": result["all_cases_matched"]}, indent=2))
+        if not result["all_cases_matched"]:
+            raise SystemExit(2)
+        return
+    if args.command == "assessment-review":
+        if not args.authorized:
+            raise PermissionError("Evidence review requires --authorized")
+        from .assessment_modes import analyze
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        report = analyze(args.module, args.input, mode=args.mode, authorized=True, input_mode=args.input_mode)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        return
+    if args.command == "assessment-export":
+        from .assessment_modes import export as mode_export
+        _assessment_output(args.out)
+        _write_bounty_output(args.out, mode_export(args.input, args.format))
+        return
     if args.command == "utility-review-catalog":
         from .utility_review import catalog
         print(json.dumps({"category": "Utility", "skills": catalog(), "all_skills_automated": False}, indent=2))
@@ -925,7 +1112,7 @@ def main(argv=None):
         return
     if args.command == "assessment-session-create":
         from .assessment_sessions import create_cli
-        print(json.dumps(create_cli(args.out, args.key_file, authorized=args.authorized), indent=2))
+        print(json.dumps(create_cli(args.out, args.key_file, authorized=args.authorized, purpose=args.purpose), indent=2))
         return
     if args.command == "expansion-benchmark":
         from .expansion_benchmark import benchmark

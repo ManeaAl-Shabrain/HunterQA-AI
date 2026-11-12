@@ -35,10 +35,10 @@ AREAS = (
      "Dedicated-role GET and explicit GET/POST workflow contracts, encrypted actor sessions, normalized tenant models and optional signed-token/owned OIDC controls",
      ["External interactive SSO negotiation", "Complex session handling", "General business-rule discovery", "General tenant-boundary discovery"]),
     ("network-infrastructure", "Network and infrastructure", ["service-enumeration", "service-evidence"],
-     "Exact TCP reachability, separate scoped TLS, server-first SSH identification and expiring UDP DNS inspections, service-evidence import and selected offline AD policy review, exact service-protocol observations and bounded normalized AD candidate control paths",
-     ["OS fingerprinting", "Broad service/version assessment", "Live Active Directory assessment", "Internal attack-path testing", "Broader UDP protocol assessment"]),
+     "Exact TCP/TLS/SSH/UDP DNS and selected service observations, normalized AD candidate paths, plus bounded read-only verified LDAPS collection validated against owned Samba AD",
+     ["OS fingerprinting", "Broad service/version assessment", "Effective AD ACL/GPO/trust analysis and enterprise directory acceptance", "Internal attack-path testing", "Broader UDP protocol assessment"]),
     ("cloud-runtime", "Cloud runtime", ["aws-account-audit", "source-review"],
-     "Fixed AWS identity/account-summary APIs, separate bounded Azure subscription and GCP project asset inventories, selected GCP caller permission-query responses, offline AWS/Azure/GCP policy review and exact-action normalized entitlement models",
+     "Fixed AWS identity/account-summary APIs plus bounded EC2/security-group/S3 inventory and selected configuration checks, Azure/GCP asset inventories, selected GCP caller permission queries, native policy readers and normalized entitlement models",
      ["Complete resource and effective-permission inventory", "Broader AWS/Azure/GCP and representative cloud assessment"]),
     ("production-hardening", "Production platform hardening", [],
      "Local/Google/Entra policy and encrypted Admin TOTP, OS-approved subject binding, shared systemd/Compose runtime, separate workspace stores, optional HTTPS edge, offline recovery and host-local quotas",
@@ -79,16 +79,22 @@ FEATURES["active-vulnerability-testing"] += [
 FEATURES["authentication-authorization"] += [
     ("Encrypted expiring origin-bound target actor vault and explicit workflow response contracts", None),
     ("Named-actor cookie continuity, stateless anonymous HTTP controls and synthetic tenant boundaries", None),
+    ("Owner-defined process states, role/tenant/amount constraints and trace continuity analysis", None),
 ]
 FEATURES["network-infrastructure"] += [
     ("One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints", None),
     ("Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths", None),
+    ("Purpose-bound directory credentials, critical single-domain LDAPS and actual isolated Samba acceptance", None),
 ]
 FEATURES["cloud-runtime"] += [("Offline AWS/Azure/GCP exact-action permission models with deny/unknown handling and tenant labels", None)]
+FEATURES["cloud-runtime"] += [("Bounded read-only AWS inventory with fixed APIs, explicit STS signing and retained response hashes", None),
+    ("Optional encrypted Azure/GCP short-lived token sources isolated from web-session credentials", None)]
 FEATURES["production-hardening"] += [("Completed CLI assessment history linked to workspace projects with protected digest-checked summaries", None)]
+FEATURES["production-hardening"] += [("Shared DEMO/LAB/LIVE reports, protected offline demo dashboard and digest-checked JSON/HTML/SARIF export", None)]
 FEATURES["detection-effectiveness"] += [
     ("Repeatable 20-check owned expansion benchmark separating actual IO from synthetic models", None),
     ("Saved evidence digest correlation without promoting findings or provenance claims", None),
+    ("Versioned eight-domain offline demos exercising existing detectors and labeled positive/negative fixtures", None),
 ]
 
 
@@ -101,7 +107,7 @@ def coverage_audit():
             {"name": "Auth & Identity", "skills": identity_review_catalog(),
              "all_skills_automated": False, "mode": "offline JWT samples/configuration; separate optional RS256 ID-token verification and owned OIDC/session fixtures"},
             {"name": "Active Directory", "skills": ad_review_catalog(),
-             "all_skills_automated": False, "mode": "offline selected normalized directory and SMB/LDAP declarations"},
+             "all_skills_automated": False, "mode": "offline declarations plus separately scoped read-only LDAPS inventory; effective ACL/GPO/trust coverage incomplete"},
             {"name": "Wireless", "skills": wireless_review_catalog(),
              "all_skills_automated": False, "mode": "offline selected policy declarations and single-BSS hostapd source cues"},
             {"name": "Cloud", "skills": cloud_review_catalog(),

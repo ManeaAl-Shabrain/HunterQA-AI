@@ -22,7 +22,7 @@ fi
 python3 -m venv "$INSTALL_PREFIX"
 "$INSTALL_PREFIX/bin/python" -m pip install --disable-pip-version-check --no-cache-dir --upgrade pip setuptools wheel
 "$INSTALL_PREFIX/bin/python" "$SOURCE_ROOT/tools/prepare_semgrep.py" --out-dir "$INSTALL_PREFIX/security-wheels"
-"$INSTALL_PREFIX/bin/python" -m pip install --disable-pip-version-check --no-cache-dir --find-links "$INSTALL_PREFIX/security-wheels" "$SOURCE_ROOT[browser,cloud,identity,network,production]" -r "$SOURCE_ROOT/examples/deploy/runtime-requirements.txt"
+"$INSTALL_PREFIX/bin/python" -m pip install --disable-pip-version-check --no-cache-dir --find-links "$INSTALL_PREFIX/security-wheels" "$SOURCE_ROOT[browser,cloud,identity,network,directory,production]" -r "$SOURCE_ROOT/examples/deploy/runtime-requirements.txt"
 "$INSTALL_PREFIX/bin/python" -m pip check
 export PLAYWRIGHT_BROWSERS_PATH="$INSTALL_PREFIX/browsers"
 if [ "$1" = --system-deps ]; then

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "source_commit": "aadf2179da660389ad7f98e2c4f8f91e1e635d3b",
+  "review_date": "2026-11-12",
+  "assessment_runtime_sha256": "e4c3fa3424df834238539d482445eebf7c1e32aad580197162fa4fe6abb7c4f0",
+  "local_regression": {
+    "passed": 3542,
+    "skipped": 59,
+    "seconds": 412.35,
+    "command": "python -m pytest -q --tb=short"
+  },
+  "linux_source_workflow": {
+    "url": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560463",
+    "status": "passed",
+    "python_versions": [
+      "3.11",
+      "3.13"
+    ],
+    "regression_per_run": {
+      "passed": 3543,
+      "skipped": 58
+    },
+    "full_regression_runs_per_python": 3,
+    "separate_browser_and_cli_acceptance": "passed"
+  },
+  "linux_deployment": {
+    "url": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560434",
+    "compose": "passed",
+    "native_systemd": "passed",
+    "actual_local_login_mfa_rbac_scan_export_demo_history_restore": true,
+    "real_external_idp_verified": false
+  },
+  "samba_lab": {
+    "url": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43276560464",
+    "status": "passed",
+    "network": "none",
+    "actual_ldaps": true,
+    "enterprise_windows_ad_verified": false,
+    "inventory": {
+      "accounts": 5,
+      "groups": 38,
+      "domains": 1,
+      "gpo_metadata": 2,
+      "trusts": 0
+    },
+    "reader_uid": 10001,
+    "tls_verified": true,
+    "normal_directory_reader": true,
+    "pages": 1,
+    "bounded_collection_complete": true
+  },
+  "demo": {
+    "dataset_version": "platform-demo-1",
+    "report_count": 16,
+    "network_requests": 0,
+    "all_cases_matched": true,
+    "fixture_metrics": {
+      "true_positives": 10,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 10,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_positive_rate": 0.0,
+      "scope": "Ten selected rule labels in original synthetic positive/negative fixtures; evidence links excluded; not independent or representative field accuracy"
+    },
+    "demo_manifest_sha256": "d108b6cb4e1241055743d5e2d1eeb1fd2d043b2c3a01b7f2afca9ea6be478910",
+    "representative_real_world_accuracy_verified": false
+  },
+  "source_archive": {
+    "file": "HunterQA-AI-aadf217-source.zip",
+    "files": 523,
+    "manifest_verified": true,
+    "sha256": "988421e8b2aec7e8b94f5aa3ce83e706374033a1340d4e55b94ca0450274b481"
+  },
+  "local_document_links": {
+    "markdown_files_checked": 135,
+    "missing_local_files": 0,
+    "external_links_verified": false
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "bandit": {
+      "medium": 0,
+      "high": 0,
+      "low": 64
+    }
+  },
+  "dependency_audit": "No known vulnerabilities reported; editable project excluded",
+  "real_provider_validation": {
+    "aws": false,
+    "azure": false,
+    "gcp": false,
+    "google_sso": false,
+    "entra_sso": false
+  },
+  "wsl2_docker_desktop_verified": false,
+  "complete_platform_specification_achieved": false,
+  "production_ready_claim": false,
+  "all_seven_ci_jobs_passed": true
+}

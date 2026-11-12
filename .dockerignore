@@ -9,6 +9,7 @@
 !tools/install_linux_runtime.sh
 !tools/prepare_semgrep.py
 !tools/verify_deployment.py
+!tools/verify_ad_lab.py
 !examples/
 !examples/deploy/
 !examples/deploy/runtime-packages.txt

@@ -11,7 +11,10 @@ actions, encrypted target sessions, explicit workflow contracts, SQL/XSS context
 fixtures, SSRF callback/upload cleanup, service observations and normalized
 AD/cloud permission models. Completed CLI evidence now links to projects in the
 dashboard. The original sequencing table below remains a broad acceptance
-roadmap; general coverage and live AD/cloud validation remain open.
+roadmap; general coverage and external enterprise/cloud validation remain open.
+The newer [unified increment](ASSESSMENT_MODES.md) adds actual isolated Samba
+LDAPS acceptance and bounded AWS inventory; these do not complete broad AD/IAM
+coverage. Current item-level status is in the [traceability matrix](PLATFORM_GAP_ANALYSIS.md).
 
 | Priority | Area | Current delivery | Next acceptance gate |
 | --- | --- | --- | --- |
@@ -20,8 +23,8 @@ roadmap; general coverage and live AD/cloud validation remain open.
 | P0 | Detection effectiveness | Eight versioned owned application cases, retained evidence, source/label hashes and per-class metrics; existing source/header/cookie controls | Externally reviewed ground truth, representative real-world datasets, detection rates across remaining classes and standards coverage |
 | P1 | Active vulnerability validation | SQL boolean contexts, HTML/attribute/DOM Chromium witnesses, owned SSRF callback, inert upload cleanup and timing signals | General context-specific validation, real DBMS blind SQL, stored XSS, broad SSRF/upload and traversal coverage |
 | P1 | Authentication/authorization | Multi-role/anonymous GET contracts, optional offline signed ID-token verification and owned OIDC/session controls | External SSO, complex sessions, stateful business workflows and general tenant-boundary discovery; status matches alone are insufficient |
-| P2 | Infrastructure/network | Exact TCP/TLS/UDP tools, fixed service observations and offline normalized AD candidate-path fixtures | Authenticated/general service and OS assessment, broader UDP, live directory collection and executed access-path testing |
-| P2 | Cloud runtime | Fixed AWS identity/account counters, bounded Azure/GCP resource metadata GETs and selected GCP caller permission-query responses with explicit temporary tokens | Representative sandbox-account validation, complete resource and independently confirmed effective-permission inventory, and broader provider coverage |
+| P2 | Infrastructure/network | Exact TCP/TLS/UDP tools, fixed service observations, normalized candidate paths and bounded Samba-tested LDAPS | General service/OS assessment, broader UDP, effective AD ACL/GPO/trusts and executed access-path testing |
+| P2 | Cloud runtime | AWS identity/account counters and bounded EC2/security-group/S3 metadata, Azure/GCP inventories and selected GCP permission queries | Representative sandbox-account validation, complete resource and independently confirmed effective-permission inventory, and broader provider coverage |
 
 ## Implementation sequence
 

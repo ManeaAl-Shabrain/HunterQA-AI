@@ -14,6 +14,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
 from .engagement import digest, utcnow
 from .cloud_inventory_common import live_window as _live, temporary_credentials as _credentials, bounded_json as _json
+from .cloud_inventory_common import read_credentials
 from .source_files import read_bounded
 from . import shared_quota
 from . import cloud_transport
@@ -150,27 +151,29 @@ def _resource(row, contract):
             "type_ref": digest(kind.lower()), "kind": KINDS.get(kind.lower(), "other")}
 
 
-def inventory(input_file, credential_file, *, authorized=False, transport=None, sleeper=time.sleep):
+def inventory(input_file, credential_file, *, authorized=False, transport=None, sleeper=time.sleep, credential_provider=None):
     if authorized is not True:
         raise PermissionError("Azure inventory requires --authorized and written subscription permission")
     raw = read_bounded(_approved_file(input_file), 16384)
-    secret = read_bounded(_approved_file(credential_file), 32768)
+    secret, credential_binding = read_credentials(credential_file, credential_provider)
     try:
         contract = validate_contract(_decode_json(raw))
     except (ValueError, UnicodeError, TypeError, RecursionError):
         raise ValueError("Invalid Azure inventory contract; private values withheld") from None
     keys = _credentials(secret)
+    synthetic = transport is not None
     transport = transport or _arm_get
     def gate():
         admission.ensure_active()
         try:
-            if read_bounded(_approved_file(input_file), 16384) != raw or read_bounded(_approved_file(credential_file), 32768) != secret:
+            if read_bounded(_approved_file(input_file), 16384) != raw or read_credentials(credential_file, credential_provider) != (secret, credential_binding):
                 raise ValueError
             validate_contract(contract)
             _live(keys["expires_at"])
         except (ValueError, OSError):
             raise PermissionError("Azure authorization changed or expired") from None
     report = {"engine": "scoped-azure-inventory", "schema_version": 1, "observed_at": utcnow().isoformat(),
+        "execution_source": "DEMO" if synthetic else "LIVE", "synthetic": synthetic, "real_provider_verified": False, "credential_binding_sha256": credential_binding,
         "input_sha256": hashlib.sha256(raw).hexdigest(), "subscription_ref": digest(contract["subscription_id"]),
         "tenant_ref": digest(contract["tenant_id"]), "request_budget": 1 + contract["max_pages"],
         "requests_attempted": 0, "requests_completed": 0, "subscription_context_matched": False,

@@ -11,7 +11,7 @@ from .security import valid_csrf
 from .db import get_db
 
 bp = Blueprint("operators", __name__)
-WRITE_ENDPOINTS = {"main.create_project", "main.start_scan", "main.update_triage_review"}
+WRITE_ENDPOINTS = {"main.create_project", "main.start_scan", "main.update_triage_review", "main.assessment_demo_start"}
 
 
 def _database():

@@ -10,7 +10,7 @@ import time
 from . import shared_quota
 from . import cloud_transport
 from .bounty import BountyPolicy, _approved_file, _decode_json, resolve_pinned
-from .cloud_inventory_common import bounded_json, live_window, temporary_credentials
+from .cloud_inventory_common import bounded_json, live_window, temporary_credentials, read_credentials
 from .engagement import digest, utcnow
 from .gcp_inventory import CONTEXT_HOST, NUMBER, PARENT, PROJECT_ID, _GCPConnection, _gcp_get
 from .source_files import read_bounded
@@ -81,23 +81,24 @@ def _permission_post(number, permissions, token, *, before_send):
 
 
 def check_permissions(input_file, credential_file, *, authorized=False, context_transport=None,
-                      permission_transport=None, sleeper=time.sleep):
+                      permission_transport=None, sleeper=time.sleep, credential_provider=None):
     if authorized is not True:
         raise PermissionError("GCP permission query requires --authorized and written exact-project permission")
     raw = read_bounded(_approved_file(input_file), 16384)
-    secret = read_bounded(_approved_file(credential_file), 32768)
+    secret, credential_binding = read_credentials(credential_file, credential_provider)
     try:
         contract = validate_contract(_decode_json(raw))
     except (ValueError, TypeError, UnicodeError, RecursionError):
         raise ValueError("Invalid GCP permission contract; private values withheld") from None
     keys = temporary_credentials(secret)
+    synthetic = context_transport is not None or permission_transport is not None
     context_transport = context_transport or _gcp_get
     permission_transport = permission_transport or _permission_post
 
     def gate():
         admission.ensure_active()
         try:
-            if read_bounded(_approved_file(input_file), 16384) != raw or read_bounded(_approved_file(credential_file), 32768) != secret:
+            if read_bounded(_approved_file(input_file), 16384) != raw or read_credentials(credential_file, credential_provider) != (secret, credential_binding):
                 raise ValueError
             validate_contract(contract)
             live_window(keys["expires_at"])
@@ -105,6 +106,8 @@ def check_permissions(input_file, credential_file, *, authorized=False, context_
             raise PermissionError("GCP permission authorization changed or expired") from None
 
     report = {"engine": "scoped-gcp-permission-check", "schema_version": 1, "observed_at": utcnow().isoformat(),
+        "execution_source": "DEMO" if synthetic else "LIVE", "synthetic": synthetic,
+        "real_provider_verified": False, "credential_binding_sha256": credential_binding,
         "input_sha256": hashlib.sha256(raw).hexdigest(), "project_ref": digest(contract["project_id"]),
         "project_number_ref": digest(contract["project_number"]),
         "parent_ref": digest(contract["expected_parent"]) if contract["expected_parent"] is not None else None,

@@ -4,6 +4,11 @@
 selected, owner-normalized evidence. It is not a full AD penetration test or
 an implementation of the upstream offensive techniques.
 
+The separate [LDAPS collector](AD_DIRECTORY_COLLECTION.md) collects selected
+accounts, groups and domain-policy attributes over verified TLS. Its owned Samba
+lab is an actual directory test, separate from this offline pack. It does not
+collect effective DACLs, GPO security content or complete trust semantics.
+
 The [reference category](https://github.com/SnailSploit/Claude-Red/tree/main/Skills/active-directory)
 contains both `offensive-active-directory` and `offensive-netexec`; the latter
 is present even though the upstream README category count omits it. HunterQA's

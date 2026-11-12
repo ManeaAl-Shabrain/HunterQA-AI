@@ -100,6 +100,10 @@ Stop the foreground server with **Ctrl+C**. It listens on **127.0.0.1**. Use the
 | [Assessment guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) · [Templates](templates/README.md) | Scope, evidence and reporting |
 | [Category index](docs/CATEGORY_REVIEW_INDEX.md) · [Feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) | Implemented checks and remaining coverage |
 | [Scenario lab and evidence](docs/SCENARIO_ASSESSMENTS.md) | Repeatable local tests, session vault, permission models and dashboard history |
+| [Assessment modes](docs/ASSESSMENT_MODES.md) · [AD collection](docs/AD_DIRECTORY_COLLECTION.md) | Labeled offline demos, shared reviews/exports and scoped read-only LDAPS |
+| [AWS inventory](docs/SCOPED_AWS_INVENTORY.md) · [Encrypted cloud tokens](docs/CLOUD_TOKEN_VAULT.md) | Bounded collection and private credentials |
+| [Validation report](docs/PLATFORM_INCREMENT_VALIDATION.md) · [Requirement matrix](docs/PLATFORM_GAP_ANALYSIS.md) | Actual results, implementation gaps and unverified integrations |
+| [Platform gap analysis](docs/PLATFORM_GAP_ANALYSIS.md) | Requirement-by-requirement implementation, tests and remaining limits |
 | [Handoff and manual acceptance](docs/LOCAL_RELEASE_HANDOFF.md) | Tested release scope and owner-run checks |
 | [Security policy](SECURITY.md) · [Versioning](docs/VERSIONING.md) | Reporting issues and identifying source builds |
 
@@ -108,7 +112,7 @@ Stop the foreground server with **Ctrl+C**. It listens on **127.0.0.1**. Use the
 The personal localhost implementation has passed automated application and Linux deployment checks. Real Google/Entra sign-in and Windows WSL2/Desktop acceptance are owner-run checks. See the [handoff](docs/LOCAL_RELEASE_HANDOFF.md) for evidence and completion criteria.
 
 - Findings are review candidates; coverage and real-world effectiveness are not guaranteed.
-- The [local expansion lab](docs/SCENARIO_ASSESSMENTS.md) separates real HTTP/SQLite/Chromium checks from synthetic AD/cloud models. Live directory collection, complete cloud permissions, general target SSO and distributed execution remain [expansion work](docs/EXPANSION_PROGRESS.md).
+- The [local expansion lab](docs/SCENARIO_ASSESSMENTS.md) separates real HTTP/SQLite/Chromium checks from synthetic permission models. A separate [Samba AD lab](docs/AD_DIRECTORY_COLLECTION.md) validates selected read-only LDAPS collection. Complete cloud permissions, effective AD access, general target SSO and distributed execution remain [expansion work](docs/EXPANSION_PROGRESS.md).
 - Use only systems you own or have explicit **written permission** to assess. `--authorized` records acknowledgement; it does not verify ownership.
 
 The package still reports **1.3.0**. Current source includes changes beyond the original [v1.3.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.3.0); record `git rev-parse HEAD` with your installation.

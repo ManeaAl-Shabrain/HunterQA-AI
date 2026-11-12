@@ -4,6 +4,10 @@ Review date: 12 November 2026. Normal use is one personal computer, with private
 workspaces on localhost. The package version remains 1.3.0; historical release
 archives are unchanged. Identify the installed source with `git rev-parse HEAD`.
 
+This earlier handoff covers the personal runtime scope below. It does not close
+the later complete-platform specification; see the [current increment report](PLATFORM_INCREMENT_VALIDATION.md)
+and [requirement matrix](PLATFORM_GAP_ANALYSIS.md) for that work.
+
 ## Release decision
 
 | Scope | Status |

@@ -15,6 +15,7 @@ browser = ["playwright>=1.48,<2"]
 cloud = ["botocore>=1.35,<2"]
 identity = ["PyJWT[crypto]>=2.15.1,<3", "cryptography>=50.0.2,<51"]
 network = ["dnspython>=2.9.1,<3"]
+directory = ["ldap3==2.9.1", "pyasn1>=0.6.5,<0.7"]
 production = ["waitress>=3.0.2,<4"]
 quality = ["ruff>=0.14,<1", "bandit>=1.9,<2", "pip-audit>=2.10,<3"]
 
