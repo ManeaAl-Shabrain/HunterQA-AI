@@ -168,9 +168,11 @@ hash links supplied evidence; it does not establish its authenticity. Real
 read-only collection remains separately configured: existing
 [AWS/cloud readers](CLOUD_REVIEW.md), [Azure inventory](SCOPED_AZURE_INVENTORY.md),
 [GCP inventory](SCOPED_GCP_INVENTORY.md) and
-[GCP permission queries](SCOPED_GCP_PERMISSIONS.md) retain their limits. No new
-live LDAP collector or comprehensive multi-cloud effective-access engine is
-claimed. Later real integrations require exact approved resources, minimum
+[GCP permission queries](SCOPED_GCP_PERMISSIONS.md) retain their limits. A separate
+[bounded LDAPS collector](AD_DIRECTORY_COLLECTION.md) now has actual isolated
+Samba acceptance; it does not implement effective ACL/GPO/trust analysis. The
+[AWS resource collector](SCOPED_AWS_INVENTORY.md) also remains deliberately bounded.
+Later real integrations require exact approved resources, minimum
 read-only grants and private local credentials, followed by real-provider tests.
 
 `service-fingerprint --input /absolute/contract.json --out /absolute/report.json --authorized`
@@ -218,7 +220,7 @@ bytes, not proven provenance, effective permission or a confirmed vulnerability.
 
 The repository's tests and Linux deployment jobs exercise owned fixtures.
 Real Google/Entra dashboard authentication and WSL2/Desktop acceptance remain
-owner-run checks. General target SSO, representative business logic, live AD,
+owner-run checks. General target SSO, representative business logic, effective AD access,
 complete cloud inventory/effective access and independent detection-rate
 evaluation remain unverified. See [expansion progress](EXPANSION_PROGRESS.md)
 and [the local runtime handoff](LOCAL_RELEASE_HANDOFF.md).

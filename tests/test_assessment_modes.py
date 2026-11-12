@@ -164,3 +164,33 @@ def test_traceability_is_complete_classified_and_points_to_real_code_and_tests()
     for row in rows:
         assert row["remaining_limitations"]
         assert all((root / p).is_file() for p in row["implementation_files"] + row["test_files"])
+
+
+def test_source_evidence_after_many_unrelated_files_uses_analyzer_receipts(approved):
+    project = approved / "many-files"
+    project.mkdir()
+    for number in range(1501):
+        (project / f"a{number:04d}.txt").write_text("Unrelated fixture")
+    (project / "z.py").write_text("def run(db,value):\n    db.execute(f'SELECT {value}')\n")
+    report = modes.analyze("web", project, mode="LAB", authorized=True)
+    assert report["findings"] and all(row["evidence_ids"] for row in report["findings"])
+    assert len(report["evidence"]) == 1
+
+
+def test_large_openapi_source_has_exact_hash_link_and_changes_fail_closed(approved, monkeypatch):
+    import hashlib
+    from hunterqa.engines import config_audit
+    project = approved / "api-project"
+    project.mkdir()
+    source = project / "openapi.json"
+    source.write_text(json.dumps({"paths": {"/owned": {"get": {}}}, "info": {"description": "x" * 300000}}))
+    report = modes.analyze("vulnerability", project, mode="LAB", authorized=True)
+    assert report["findings"][0]["evidence_ids"]
+    assert report["evidence"][0]["sha256"] == hashlib.sha256(source.read_bytes()).hexdigest()
+    original = config_audit.audit_project
+    def changing(root):
+        source.write_text(json.dumps({"paths": {"/changed": {"get": {}}}}))
+        return original(root)
+    monkeypatch.setattr(config_audit, "audit_project", changing)
+    with pytest.raises(ValueError, match="changed"):
+        modes.analyze("vulnerability", project, mode="LAB", authorized=True)

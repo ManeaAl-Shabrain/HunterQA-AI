@@ -119,6 +119,17 @@
         "gpo_metadata": 2
       },
       "scope": "Selected actual Samba AD attributes and domain-policy rules; not Microsoft enterprise AD or effective access"
+    },
+    "E81-28AA": {
+      "source_commit": "28aa485812e3e1d6419548d57f1152e59355633a",
+      "workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43271673002",
+      "deployment_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43271673102",
+      "samba_workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43271673123",
+      "linux_regression": {
+        "passed": 3533,
+        "skipped": 58
+      },
+      "scope": "Seven CI jobs passed: Python 3.11/3.13 source regression, bundled rules, source action, actual Compose/native lifecycle and isolated Samba. No real cloud/Google/Entra/WSL2 acceptance. Later changes require their own results."
     }
   },
   "requirements": [
@@ -519,7 +530,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.2",
@@ -546,7 +560,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.3",
@@ -573,7 +590,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.4",
@@ -600,7 +620,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.5",
@@ -627,7 +650,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.6",
@@ -654,7 +680,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.7",
@@ -681,7 +710,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.8",
@@ -708,7 +740,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.9",
@@ -735,7 +770,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.2.10",
@@ -762,7 +800,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.3.1",
@@ -989,7 +1030,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -998,7 +1039,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1019,7 +1061,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1028,7 +1070,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1049,7 +1092,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1058,7 +1101,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1079,7 +1123,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1088,7 +1132,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1109,7 +1154,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1118,7 +1163,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1137,7 +1183,7 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1146,7 +1192,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Missing"
     },
@@ -1167,7 +1214,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1176,7 +1223,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1197,7 +1245,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1206,7 +1254,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1227,7 +1276,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1236,7 +1285,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1257,7 +1307,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1266,7 +1316,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1287,7 +1338,7 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials also passed actual Samba at 28aa485. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
@@ -1296,7 +1347,8 @@
         "tests/test_ad_directory.py"
       ],
       "increment_evidence": [
-        "E81-SAMBA"
+        "E81-SAMBA",
+        "E81-28AA"
       ],
       "current_status": "Partially Implemented"
     },
@@ -1321,18 +1373,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.2",
@@ -1353,18 +1413,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.3",
@@ -1387,18 +1455,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.4",
@@ -1419,18 +1495,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.5",
@@ -1453,18 +1537,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.6",
@@ -1487,18 +1579,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.7",
@@ -1521,18 +1621,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.8",
@@ -1555,18 +1663,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.9",
@@ -1589,18 +1705,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.10",
@@ -1623,18 +1747,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.11",
@@ -1657,18 +1789,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.12",
@@ -1691,18 +1831,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.5.13",
@@ -1725,18 +1873,26 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/aws_inventory.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/assessment_modes.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_aws_inventory.py",
-        "tests/test_assessment_collect.py"
+        "tests/test_assessment_collect.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.6.1",
@@ -2162,7 +2318,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.2",
@@ -2192,7 +2351,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.3",
@@ -2222,7 +2384,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.4",
@@ -2252,7 +2417,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.5",
@@ -2282,7 +2450,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.6",
@@ -2312,7 +2483,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.7",
@@ -2342,7 +2516,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.8",
@@ -2372,7 +2549,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.9",
@@ -2402,7 +2582,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.10",
@@ -2432,7 +2615,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.11",
@@ -2462,7 +2648,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.12",
@@ -2492,7 +2681,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "2.8.13",
@@ -2522,7 +2714,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.1",
@@ -2553,7 +2748,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.2",
@@ -2584,7 +2782,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.3",
@@ -2615,7 +2816,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.4",
@@ -2646,7 +2850,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.5",
@@ -2677,7 +2884,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.6",
@@ -2708,7 +2918,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.7",
@@ -2739,7 +2952,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.8",
@@ -2770,7 +2986,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.9",
@@ -2801,7 +3020,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.10",
@@ -2832,7 +3054,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3D.11",
@@ -2863,7 +3088,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3L.1",
@@ -2962,7 +3190,10 @@
       "increment_tests": [
         "tests/test_ad_directory.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "3L.5",
@@ -3214,16 +3445,24 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment",
+      "delivery_status": "Not changed in this increment; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "current_status": "Partially Implemented",
       "increment_files": [
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
+      ],
+      "increment_evidence": [
+        "E81-28AA"
       ]
     },
     {
@@ -3783,7 +4022,10 @@
       "increment_tests": [
         "tests/test_ad_directory.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "4L.4",
@@ -4426,21 +4668,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.2",
@@ -4471,7 +4721,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.3",
@@ -4493,21 +4746,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.4",
@@ -4538,7 +4799,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.5",
@@ -4569,7 +4833,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.6",
@@ -4600,7 +4867,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.7",
@@ -4631,7 +4901,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.8",
@@ -4662,7 +4935,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.9",
@@ -4693,7 +4969,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.10",
@@ -4715,21 +4994,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.11",
@@ -4751,21 +5038,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.12",
@@ -4787,21 +5082,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.13",
@@ -4823,21 +5126,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.14",
@@ -4859,21 +5170,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.15",
@@ -4895,21 +5214,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.16",
@@ -4931,21 +5258,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "5.17",
@@ -4967,21 +5302,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "6D.1",
@@ -6029,21 +6372,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.2",
@@ -6065,21 +6416,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.3",
@@ -6101,21 +6460,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.4",
@@ -6135,21 +6502,29 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.5",
@@ -6171,21 +6546,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.6",
@@ -6207,21 +6590,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.7",
@@ -6243,21 +6634,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.8",
@@ -6279,21 +6678,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.9",
@@ -6315,21 +6722,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.10",
@@ -6351,21 +6766,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "9.11",
@@ -6387,21 +6810,29 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "10.1",
@@ -6845,7 +7276,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.2",
@@ -6875,7 +7309,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.3",
@@ -6903,7 +7340,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.4",
@@ -6933,7 +7373,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.5",
@@ -6963,7 +7406,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.6",
@@ -6993,7 +7439,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.7",
@@ -7023,7 +7472,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.8",
@@ -7053,7 +7505,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.9",
@@ -7083,7 +7538,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.10",
@@ -7113,7 +7571,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.11",
@@ -7143,7 +7604,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.12",
@@ -7173,7 +7637,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.13",
@@ -7203,7 +7670,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.14",
@@ -7233,7 +7703,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.15",
@@ -7263,7 +7736,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "11.16",
@@ -7293,7 +7769,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.1",
@@ -7324,7 +7803,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.2",
@@ -7355,7 +7837,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.3",
@@ -7386,7 +7871,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.4",
@@ -7417,7 +7905,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.5",
@@ -7448,7 +7939,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.6",
@@ -7479,7 +7973,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.7",
@@ -7510,7 +8007,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.8",
@@ -7541,7 +8041,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.9",
@@ -7572,7 +8075,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.10",
@@ -7603,7 +8109,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.11",
@@ -7634,7 +8143,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.12",
@@ -7665,7 +8177,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "12.13",
@@ -7696,7 +8211,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13A.1",
@@ -7727,7 +8245,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13A.2",
@@ -7758,7 +8279,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13A.3",
@@ -7789,7 +8313,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13A.4",
@@ -7820,7 +8347,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13A.5",
@@ -7851,7 +8381,10 @@
       "increment_tests": [
         "tests/test_assessment_modes.py"
       ],
-      "current_status": "Partially Implemented"
+      "current_status": "Partially Implemented",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.1",
@@ -7872,21 +8405,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.2",
@@ -7907,21 +8448,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.3",
@@ -7942,21 +8491,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.4",
@@ -7977,21 +8534,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.5",
@@ -8012,21 +8577,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13E.6",
@@ -8047,21 +8620,29 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
         "hunterqa/assessment_ui.py",
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py",
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
       ],
-      "current_status": "Implemented but Requires Improvement"
+      "current_status": "Implemented but Requires Improvement",
+      "increment_evidence": [
+        "E81-28AA"
+      ]
     },
     {
       "id": "13R.1",
@@ -8658,16 +9239,24 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment",
+      "delivery_status": "Not changed in this increment; optional purpose-bound encrypted Azure/GCP token sources added; synthetic integration tests only",
       "current_status": "Implemented but Requires Improvement",
       "increment_files": [
         "hunterqa/assessment_collect.py",
         "hunterqa/aws_inventory.py",
-        "hunterqa/assessment_sessions.py"
+        "hunterqa/assessment_sessions.py",
+        "hunterqa/cloud_inventory_common.py",
+        "hunterqa/azure_inventory.py",
+        "hunterqa/gcp_inventory.py",
+        "hunterqa/gcp_permissions.py"
       ],
       "increment_tests": [
         "tests/test_assessment_collect.py",
-        "tests/test_aws_inventory.py"
+        "tests/test_aws_inventory.py",
+        "tests/test_cloud_token_vault.py"
+      ],
+      "increment_evidence": [
+        "E81-28AA"
       ]
     },
     {
@@ -9631,12 +10220,12 @@
     }
   ],
   "increment_verification": {
-    "local_targeted_tests": 75,
-    "scope": "Shared modes, directory mocks and actual owned TLS; not actual AD or providers",
+    "scope": "See E81-28AA for actual current committed CI evidence; new token-source tests are synthetic, not actual provider tests",
     "actual_samba_ad": "E81-SAMBA",
     "external_providers": "not verified",
     "cloud_native_transport_tests": "Mocks only, outputs labeled DEMO",
     "actual_owned_native_facade": "HTTP and Redis TCP tested locally; actual providers unverified",
-    "shared_collection_scope": "Existing native delegates reused; actual owned HTTP/TCP tested, real provider validation unverified"
+    "shared_collection_scope": "Existing native delegates reused; actual owned HTTP/TCP tested, real provider validation unverified",
+    "previous_targeted_tests": 75
   }
 }

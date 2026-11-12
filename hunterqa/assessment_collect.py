@@ -19,19 +19,27 @@ def execute(connector, input_file, *, mode, authorized=False, credentials=None, 
     if connector in {"aws-inventory", "ad-directory", "web-scenarios"}:
         if not isinstance(approval, str):
             raise ValueError("The existing collector approval fingerprint is required")
-    if connector in {"azure-inventory", "gcp-inventory", "gcp-permissions"} and credentials is None:
-        raise ValueError("Supply the existing private short-lived credential file")
+    token_options = {}
+    if connector in {"azure-inventory", "gcp-inventory", "gcp-permissions"}:
+        if credentials is not None:
+            if session_file is not None or session_key is not None:
+                raise ValueError("Choose one credential source, not both")
+        else:
+            if session_file is None or session_key is None:
+                raise ValueError("Supply a private token file or encrypted dedicated provider vault")
+            from .cloud_inventory_common import token_provider
+            token_options["credential_provider"] = token_provider("azure" if connector == "azure-inventory" else "gcp", session_file, session_key)
     if connector in {"aws-inventory", "ad-directory"} and (session_file is None or session_key is None):
         raise ValueError("Supply the existing encrypted dedicated credential vault")
     if connector == "azure-inventory":
         from .azure_inventory import inventory
-        return inventory(input_file, credentials, authorized=True)
+        return inventory(input_file, credentials, authorized=True, **token_options)
     if connector == "gcp-inventory":
         from .gcp_inventory import inventory
-        return inventory(input_file, credentials, authorized=True)
+        return inventory(input_file, credentials, authorized=True, **token_options)
     if connector == "gcp-permissions":
         from .gcp_permissions import check_permissions
-        return check_permissions(input_file, credentials, authorized=True)
+        return check_permissions(input_file, credentials, authorized=True, **token_options)
     if connector == "aws-inventory":
         from .aws_inventory import inventory
         return inventory(input_file, session_file, session_key, approval, authorized=True)
@@ -66,7 +74,7 @@ def execute(connector, input_file, *, mode, authorized=False, credentials=None, 
 
 def normalized(connector, mode, native, native_sha256):
     """Preserve original results; do not turn a canary/roundtrip into impact proof."""
-    from .assessment_modes import envelope
+    from .assessment_modes import envelope, collection_counts
     if connector not in CONNECTORS or mode not in {"LAB", "LIVE"}:
         raise ValueError("Unsupported native collection")
     source = "DEMO" if native.get("synthetic") is True else mode
@@ -91,4 +99,4 @@ def normalized(connector, mode, native, native_sha256):
     report.update(collector=connector, native_report_sha256=native_sha256, approval_sha256=native.get("approval_sha256"),
         collection={key: value for key, value in native.items() if key not in {"findings", "snapshot"}},
         stopped=native.get("stopped", False))
-    return report
+    return collection_counts(report, native, connector)

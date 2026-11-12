@@ -13,7 +13,8 @@ from .engagement import _expiry, utcnow
 from .identity_policy import seal, unseal
 from .source_files import is_linked, read_bounded
 
-PURPOSES = {"web-session": "assessment-sessions-v1", "directory-reader": "assessment-directory-reader-v1", "aws-signing": "assessment-aws-signing-v1"}
+PURPOSES = {"web-session": "assessment-sessions-v1", "directory-reader": "assessment-directory-reader-v1", "aws-signing": "assessment-aws-signing-v1",
+    "azure-token": "assessment-azure-token-v1", "gcp-token": "assessment-gcp-token-v1"}
 
 
 def private_path(value, *, existing=True):
@@ -139,7 +140,7 @@ def create(output, key_file, raw, *, authorized=False, purpose="web-session"):
     return {"created": True, "actors": sorted(data["actors"]), "secrets_displayed": False}
 
 
-def load(input_file, key_file, *, purpose="web-session"):
+def load_document(input_file, key_file, *, purpose="web-session"):
     if purpose not in PURPOSES:
         raise ValueError("Unsupported assessment credential purpose")
     path, key_path = private_path(input_file), private_path(key_file)
@@ -155,7 +156,12 @@ def load(input_file, key_file, *, purpose="web-session"):
             or wrapper["schema_version"] != 1 or not isinstance(wrapper["ciphertext"], str)):
         raise ValueError("Invalid encrypted session wrapper")
     data = validate(unseal(key, PURPOSES[purpose], wrapper["ciphertext"]))
-    return data["actors"], hashlib.sha256(raw + hashlib.sha256(key.encode()).digest()).hexdigest()
+    return data, hashlib.sha256(raw + hashlib.sha256(key.encode()).digest()).hexdigest()
+
+
+def load(input_file, key_file, *, purpose="web-session"):
+    data, fingerprint = load_document(input_file, key_file, purpose=purpose)
+    return data["actors"], fingerprint
 
 
 def create_cli(output, key_file, *, authorized=False, purpose="web-session"):

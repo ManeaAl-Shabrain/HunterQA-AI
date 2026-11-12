@@ -97,10 +97,15 @@ Connectors: `azure-inventory`, `gcp-inventory`, `gcp-permissions`, `aws-inventor
 `ad-directory`, `network-service` and `web-scenarios`. AWS/directory/scenario
 connectors still require their original approval and credential options. Cloud
 provider APIs require LIVE intent; this is not a provider-validation claim.
+Azure/GCP also accept encrypted temporary tokens through `--session-file` and
+`--session-key` instead of `--credentials`. See [token vault setup](CLOUD_TOKEN_VAULT.md).
 The shared LAB facade accepts numeric private network/web targets only; original
 scoped commands continue to support their documented DNS-based lab contracts.
 Successful inert uploads and matched authorization-denial contracts are not
 converted into vulnerability findings. Timing signals remain informational.
+Reports count actual HTTP attempts, TCP connections and LDAP operations separately
+from simulated operations. These are attempted operations, not successful requests
+or proof that a finding has been validated.
 
 ## 3. Dashboard and project history
 

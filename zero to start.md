@@ -80,6 +80,19 @@ Use a private Windows account directory with suitable access permissions. Expect
 `installation_ready: true`; lab evidence has not yet been provided. Optional
 missing packages do not prevent the built-in HTTP/TCP lab.
 
+To explore all eight domains without network requests or accounts, run the
+offline demo first:
+
+```bash
+hunterqa assessment-demo --module all --out-dir "${HUNTERQA_LAB}-demo" --authorized
+```
+
+In PowerShell, use the installed executable and
+`--out-dir "$($env:HUNTERQA_LAB)-demo"`. Expect `all_cases_matched: true` and
+DEMO-labeled reports. These are synthetic inputs analyzed by the actual rules;
+they are separate from the real loopback lab below. See [assessment modes](docs/ASSESSMENT_MODES.md)
+for review, collection, exports and dashboard history.
+
 ## 3. Run the owned lab
 
 This step authorizes testing of HunterQA’s own loopback fixture only. It starts

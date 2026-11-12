@@ -4,6 +4,22 @@ This tracks implementation against the requested seven-area expansion. Passing
 a bounded fixture does not mark an entire area complete. Historical release
 assets are unchanged.
 
+## Unified assessment increment
+
+[Eight-domain modes](ASSESSMENT_MODES.md) reuse existing analyzers with common
+DEMO/LAB/LIVE provenance, evidence hashes, JSON/HTML/SARIF export and protected
+project history. Offline demos exercise versioned positive/negative fixtures;
+their accuracy is not an independent or representative effectiveness estimate.
+
+New collection extends existing boundaries: [read-only LDAPS](AD_DIRECTORY_COLLECTION.md)
+has actual isolated Samba acceptance, [bounded AWS resources](SCOPED_AWS_INVENTORY.md)
+use explicit STS signing, and Azure/GCP optionally consume
+[encrypted temporary tokens](CLOUD_TOKEN_VAULT.md). No real cloud account has been
+tested. Effective AD ACL/GPO/trusts, complete cloud inventory/IAM and general
+dashboard-driven LAB/LIVE execution remain incomplete. See the
+[370-requirement matrix](PLATFORM_GAP_ANALYSIS.md) for baseline/current status,
+implementation files, tests and limits.
+
 ## Owned scenario expansion
 
 The [scenario assessment guide](SCENARIO_ASSESSMENTS.md) adds a repeatable local
@@ -15,7 +31,7 @@ actual HTTP/SQLite/browser/TCP operations from synthetic AD/cloud models.
 | Application interactions | Reviewed browser actions, dynamic route hashes, encrypted expiring origin-bound cookies/local storage | Autonomous application exploration and automatic target SSO negotiation |
 | Validation | Three SQL boolean contexts, four XSS contexts, owned SSRF callback, inert upload/deletion and timing signals | General vulnerability coverage, stored XSS and real DBMS timing proof |
 | Identity/business logic | Explicit GET/POST role/workflow contracts, named cookie sessions and anonymous controls | General business-rule discovery and arbitrary tenant models |
-| Internal/AD | Fixed one-endpoint service observations and normalized memberships/grants/candidate paths | Verified OS/version identification, live LDAP collection and executed paths |
+| Internal/AD | Fixed service observations, normalized candidate paths and separate actual Samba-tested bounded LDAPS | Verified OS/version identification, effective ACL/GPO/trusts and executed paths |
 | Cloud/IAM | Offline AWS/Azure/GCP exact-action models with deny/unknown/tenant handling | Native policy completeness, broad inventory and live effective-access confirmation |
 | Evidence/UI | Completed CLI history associated with projects, protected digest-checked summaries and correlation | Asynchronous scenario scheduling, independent evidence provenance and distributed execution |
 

@@ -37,6 +37,7 @@ def test_real_owned_service_collected_and_original_report_preserved(approved):
         report = modes.load_report(output)
         assert report["execution_source"] == "LAB" and report["collector"] == "network-service"
         assert report["collection"]["outcome"] == "observed" and not report["collection"]["product_verified"]
+        assert report["network_operations"]["tcp_connections_attempted"] == 1 and report["network_requests"] == 0
         assert json.loads(native.read_text())["engine"] == "scoped-service-fingerprint"
         assert report["evidence"] and not report["real_provider_verified"]
     finally:
@@ -58,6 +59,7 @@ def test_real_owned_web_contract_reuses_approval_and_does_not_turn_safe_contract
         assert native["requests"] == 1 and native["cases"][0]["state"] == "matched"
         report = collect.normalized("web-scenarios", "LAB", native, "1" * 64)
         assert not report["findings"] and report["execution_source"] == "LAB"
+        assert report["network_requests"] == 1
         assert ("GET", "/resource") in lab["requests"]
         with pytest.raises(PermissionError):
             collect.execute("web-scenarios", plan, mode="LAB", profile=profile, approval="0" * 64, authorized=True)

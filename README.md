@@ -110,7 +110,7 @@ Stop the foreground server with **Ctrl+C**. It listens on **127.0.0.1**. Use the
 The personal localhost implementation has passed automated application and Linux deployment checks. Real Google/Entra sign-in and Windows WSL2/Desktop acceptance are owner-run checks. See the [handoff](docs/LOCAL_RELEASE_HANDOFF.md) for evidence and completion criteria.
 
 - Findings are review candidates; coverage and real-world effectiveness are not guaranteed.
-- The [local expansion lab](docs/SCENARIO_ASSESSMENTS.md) separates real HTTP/SQLite/Chromium checks from synthetic AD/cloud models. Live directory collection, complete cloud permissions, general target SSO and distributed execution remain [expansion work](docs/EXPANSION_PROGRESS.md).
+- The [local expansion lab](docs/SCENARIO_ASSESSMENTS.md) separates real HTTP/SQLite/Chromium checks from synthetic permission models. A separate [Samba AD lab](docs/AD_DIRECTORY_COLLECTION.md) validates selected read-only LDAPS collection. Complete cloud permissions, effective AD access, general target SSO and distributed execution remain [expansion work](docs/EXPANSION_PROGRESS.md).
 - Use only systems you own or have explicit **written permission** to assess. `--authorized` records acknowledgement; it does not verify ownership.
 
 The package still reports **1.3.0**. Current source includes changes beyond the original [v1.3.0 release](https://github.com/ManeaAl-Shabrain/HunterQA-AI/releases/tag/v1.3.0); record `git rev-parse HEAD` with your installation.

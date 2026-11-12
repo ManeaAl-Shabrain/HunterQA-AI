@@ -26,8 +26,11 @@ def render(data):
         delivery = row["delivery_status"]
         if row.get("increment_files"):
             delivery += "; " + links(row["increment_files"]) + "; tests: " + links(row["increment_tests"])
+        evidence_ids = list(dict.fromkeys(row["verification_evidence"] + row.get("increment_evidence", [])))
+        if any(value not in data["evidence"] for value in evidence_ids):
+            raise ValueError("Undefined verification evidence")
         cells = [row["id"] + " " + row["requirement"], row["baseline_status"], row.get("current_status", row["baseline_status"]), links(row["implementation_files"]),
-            links(row["test_files"]), ", ".join(row["verification_evidence"]), row["remaining_limitations"], delivery]
+            links(row["test_files"]), ", ".join(evidence_ids), row["remaining_limitations"], delivery]
         lines.append("| " + " | ".join(cell.replace("|", "\\|").replace("\n", " ") for cell in cells) + " |")
     lines += ["", "## Evidence and execution plan", "",
         "E80: [source and browser QA](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43251307247), [actual Linux lifecycle](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43251308535). These are the previous baseline, not proof of new changes or real providers.", "",

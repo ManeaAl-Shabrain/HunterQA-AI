@@ -2,10 +2,55 @@
 from __future__ import annotations
 
 import math
+import hashlib
+import json
 import re
 
 from .bounty import _decode_json
 from .engagement import _expiry, utcnow
+
+
+def read_credentials(path, provider=None):
+    """Reuse legacy private files or a purpose-bound in-memory credential source."""
+    if provider is None:
+        from .bounty import _approved_file
+        from .source_files import read_bounded
+        raw = read_bounded(_approved_file(path), 32768)
+        return raw, hashlib.sha256(raw).hexdigest()
+    if path is not None:
+        raise ValueError("Choose either a private credential file or an encrypted source")
+    raw, binding = provider()
+    if not isinstance(raw, bytes) or len(raw) > 32768 or not isinstance(binding, str) or not re.fullmatch(r"[a-f0-9]{64}", binding):
+        raise ValueError("Invalid bounded credential source")
+    return raw, binding
+
+
+def token_provider(provider, session_file, session_key):
+    """Decrypt only into memory; never materialize bearer credentials on disk."""
+    from .assessment_sessions import load_document
+    hosts = {"azure": {"azure-arm": "https://management.azure.com"}, "gcp": {
+        "gcp-context": "https://cloudresourcemanager.googleapis.com", "gcp-assets": "https://cloudasset.googleapis.com"}}
+    if provider not in hosts:
+        raise ValueError("Unsupported token vault provider")
+    def read():
+        document, binding = load_document(session_file, session_key, purpose=provider + "-token")
+        actors = document["actors"]
+        if set(actors) != set(hosts[provider]):
+            raise ValueError("Dedicated provider-origin token actors required")
+        token = None
+        for name, origin in hosts[provider].items():
+            actor = actors[name]
+            if actor["origin"] != origin or set(actor["headers"]) != {"Authorization"} or actor["cookies"] or actor["local_storage"]:
+                raise ValueError("Token vault origin differs from the fixed provider API")
+            value = actor["headers"]["Authorization"]
+            if token is not None and token != value:
+                raise ValueError("Provider origins must use the same reviewed identity token")
+            token = value
+        payload = {"access_token": token, "expires_at": document["expires_at"]}
+        raw = json.dumps(payload, sort_keys=True).encode()
+        temporary_credentials(raw)
+        return raw, binding
+    return read
 
 
 def live_window(expiry):

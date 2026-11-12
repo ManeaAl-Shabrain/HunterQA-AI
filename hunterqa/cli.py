@@ -607,7 +607,7 @@ def main(argv=None):
     session_create = sub.add_parser("assessment-session-create", help="Encrypt designated app-origin session JSON from private stdin; no credentials printed")
     session_create.add_argument("--out", required=True)
     session_create.add_argument("--key-file", required=True)
-    session_create.add_argument("--purpose", choices=("web-session", "directory-reader", "aws-signing"), default="web-session")
+    session_create.add_argument("--purpose", choices=("web-session", "directory-reader", "aws-signing", "azure-token", "gcp-token"), default="web-session")
     session_create.add_argument("--authorized", action="store_true")
     for name in ("scenario-preflight", "scenario-run"):
         scenario = sub.add_parser(name, help="Review or execute bounded owned-endpoint workflows and controlled probes")
@@ -800,7 +800,7 @@ def main(argv=None):
         if not args.authorized:
             raise PermissionError("AWS collection requires --authorized")
         from .aws_inventory import inventory as aws_inventory
-        from .assessment_modes import envelope as aws_envelope
+        from .assessment_modes import envelope as aws_envelope, collection_counts as aws_counts
         binding = None
         if args.project_id is not None and not args.workspace_config:
             raise ValueError("Project association requires workspace configuration")
@@ -815,6 +815,7 @@ def main(argv=None):
             [{"sha256": row["body_sha256"]} for row in native["receipts"] if row.get("body_sha256")],
             origin="generated-synthetic" if native["synthetic"] else "operator-supplied-evidence")
         report.update(collector=native["collector"], approval_sha256=native["approval_sha256"], collection={key: value for key, value in native.items() if key != "findings"}, stopped=native["stopped"])
+        aws_counts(report, native, "aws-inventory")
         _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
         if binding:
             from .assessment_history import record
@@ -830,7 +831,7 @@ def main(argv=None):
         if not args.authorized:
             raise PermissionError("Directory collection requires --authorized")
         from .ad_directory import collect as directory_collect, analyze as directory_analyze
-        from .assessment_modes import envelope as assessment_envelope
+        from .assessment_modes import envelope as assessment_envelope, collection_counts as directory_counts
         binding = None
         if args.project_id is not None and not args.workspace_config:
             raise ValueError("Project association requires workspace configuration")
@@ -850,6 +851,7 @@ def main(argv=None):
         report = assessment_envelope("ad", receipt["execution_source"], directory_analyze(snapshot),
             [{"sha256": directory_sha256(read_directory_snapshot(Path(args.snapshot_out), 1048576)).hexdigest()}], origin="operator-supplied-evidence")
         report.update(collector="ldaps-read-only", approval_sha256=receipt["approval_sha256"], collection=receipt, stopped=receipt["error_type"] is not None)
+        directory_counts(report, receipt, "ad-directory")
         _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
         if binding:
             from .assessment_history import record

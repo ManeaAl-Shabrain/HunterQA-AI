@@ -45,6 +45,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Owned OIDC PKCE/code/session/tenant/logout HTTP controls
 - [x] Encrypted expiring origin-bound target actor vault and explicit workflow response contracts
 - [x] Named-actor cookie continuity, stateless anonymous HTTP controls and synthetic tenant boundaries
+- [x] Owner-defined process states, role/tenant/amount constraints and trace continuity analysis
 - [ ] External interactive SSO negotiation
 - [ ] Complex session handling
 - [ ] General business-rule discovery
@@ -60,9 +61,10 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Selected offline normalized AD/SMB/LDAP policy review
 - [x] One-endpoint SSH/SMTP/FTP/Redis/HTTP observations with advertised-only product/OS hints
 - [x] Offline normalized AD memberships, exact-action grants and bounded unexecuted candidate paths
+- [x] Purpose-bound directory credentials, critical single-domain LDAPS and actual isolated Samba acceptance
 - [ ] OS fingerprinting
 - [ ] Broad service/version assessment
-- [ ] Live Active Directory assessment
+- [ ] Effective AD ACL/GPO/trust analysis and enterprise directory acceptance
 - [ ] Internal attack-path testing
 - [ ] Broader UDP protocol assessment
 
@@ -75,6 +77,8 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Selected local configuration/dependency patterns
 - [x] Offline normalized AWS/Azure/GCP posture and selected native policy readers
 - [x] Offline AWS/Azure/GCP exact-action permission models with deny/unknown handling and tenant labels
+- [x] Bounded read-only AWS inventory with fixed APIs, explicit STS signing and retained response hashes
+- [x] Optional encrypted Azure/GCP short-lived token sources isolated from web-session credentials
 - [ ] Complete resource and effective-permission inventory
 - [ ] Broader AWS/Azure/GCP and representative cloud assessment
 
@@ -95,6 +99,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Explicit offline interrupted-scan recovery without job replay
 - [x] Shared root/source checks reject Windows reparse points as well as symlinks
 - [x] Completed CLI assessment history linked to workspace projects with protected digest-checked summaries
+- [x] Shared DEMO/LAB/LIVE reports, protected offline demo dashboard and digest-checked JSON/HTML/SARIF export
 - [ ] Owner-run real Google/Entra and Windows WSL2/Desktop acceptance
 - [ ] Independently validated hosted deployment and OS-level tenant isolation
 - [ ] Independently verified owner grants
@@ -110,6 +115,7 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Bounded SQL/reflected-XSS implementation map to OWASP WSTG 4.2
 - [x] Repeatable 20-check owned expansion benchmark separating actual IO from synthetic models
 - [x] Saved evidence digest correlation without promoting findings or provenance claims
+- [x] Versioned eight-domain offline demos exercising existing detectors and labeled positive/negative fixtures
 - [ ] Independent real-world evaluation
 - [ ] Representative per-class false-negative rates
 - [ ] Complete standards coverage

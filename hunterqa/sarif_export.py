@@ -69,6 +69,8 @@ def export_sarif(file_path):
             result["properties"]["assessmentCase"] = case
             if role is not None:
                 result["properties"]["assessmentRole"] = role
+        if shared_source:
+            identity = rule_id + "\0" + row["id"]
         result["partialFingerprints"] = {"hunterqaCandidate/v1": hashlib.sha256(identity.encode()).hexdigest()}
         results.append(result)
     output = {"version": "2.1.0", "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
