@@ -242,6 +242,60 @@ def test_cancel_challenge_and_grant_throttling(identity):
     assert policy.begin(identity.database, identity.selected, "admin", "local") is None
 
 
+def test_unified_local_mfa_behind_authenticated_https_edge(identity, monkeypatch):
+    from tests.test_workspace_edge import headers
+    base = "https://alpha.example.test"
+    data = json.loads(identity.config.read_text())
+    data.update(public_origin=base, edge_key_file=str(identity.key.parent / "edge.key"))
+    identity.config.write_text(json.dumps(data))
+    identity.data["callback_origin"] = base
+    identity.path.write_text(json.dumps(identity.data))
+    monkeypatch.setattr(workspace, "_ACTIVE", None)
+    app = create_app(identity.options)
+    client = app.test_client()
+    key = (identity.key.parent / "edge.key").read_text().strip()
+    response = client.get("/login", base_url=base, headers=headers(key))
+    assert response.status_code == 200
+    assert all(flag in response.headers["Set-Cookie"] for flag in ("Secure", "HttpOnly", "SameSite=Lax"))
+    assert response.headers["Strict-Transport-Security"] == "max-age=31536000"
+    with client.session_transaction(base_url=base) as session:
+        token = session["csrf_token"]
+    assert client.post("/login", base_url=base, headers=headers(key),
+        data={"username": "admin", "password": ws.PASSWORD, "csrf_token": token}).location.endswith("/auth/mfa")
+    assert client.get("/api/scans/1/status", base_url=base, headers=headers(key)).status_code == 401
+    client.get("/auth/mfa", base_url=base, headers=headers(key))
+    with client.session_transaction(base_url=base) as session:
+        token = session["csrf_token"]
+    assert client.post("/auth/mfa", base_url=base, headers=headers(key),
+        data={"code": policy.totp(SEED), "csrf_token": token}).status_code == 302
+    assert client.get("/operators", base_url=base, headers=headers(key)).status_code == 200
+    assert client.get("/operators", base_url=base).status_code == 403
+
+
+def test_audit_failure_rolls_back_factor_consumption_and_session(identity, monkeypatch):
+    client = identity.app.test_client()
+    local(identity, client)
+    client.get("/auth/mfa", base_url=BASE)
+    with store.database(identity.database) as db:
+        old_step = db.execute("SELECT last_step FROM operator_factors").fetchone()[0]
+
+    def unavailable(*args, **kwargs):
+        raise ValueError("Owned audit failure")
+
+    monkeypatch.setattr(store, "_event", unavailable)
+    assert factor(client).status_code == 503
+    with store.database(identity.database) as db:
+        assert db.execute("SELECT COUNT(*) FROM operator_sessions").fetchone()[0] == 0
+        assert db.execute("SELECT last_step FROM operator_factors").fetchone()[0] == old_step
+
+
+def test_shared_deployment_guard_rejects_legacy_policy(tmp_path, monkeypatch):
+    from hunterqa.workspace_server import serve
+    spaces = ws.spaces.__wrapped__(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="unified authentication"):
+        serve(str(spaces[2][0]), 8081, require_auth_policy=True)
+
+
 @pytest.mark.parametrize("change", ["disable", "password", "role", "expiry", "policy", "instance"])
 def test_pending_factor_invalidated_by_identity_changes(identity, change):
     grant = policy.begin(identity.database, identity.selected, "admin", "local")[0]
