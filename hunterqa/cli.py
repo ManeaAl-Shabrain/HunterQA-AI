@@ -65,6 +65,36 @@ def main(argv=None):
         installed_version = "development (not installed)"
     parser.add_argument("--version", action="version", version="HunterQA AI " + installed_version)
     sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("assessment-modules", help="Show shared analysis modules, source modes and truthful validation limits")
+    demo_modes = sub.add_parser("assessment-demo", help="Run existing analyzers on versioned synthetic inputs without network traffic")
+    demo_modes.add_argument("--module", default="all")
+    demo_modes.add_argument("--out-dir", required=True)
+    demo_modes.add_argument("--authorized", action="store_true")
+    mode_review = sub.add_parser("assessment-review", help="Review supplied LAB/LIVE evidence; does not collect from a provider")
+    mode_review.add_argument("--module", required=True)
+    mode_review.add_argument("--mode", choices=("LAB", "LIVE"), required=True)
+    mode_review.add_argument("--input", required=True)
+    mode_review.add_argument("--out", required=True)
+    mode_review.add_argument("--workspace-config")
+    mode_review.add_argument("--project-id", type=int)
+    mode_review.add_argument("--authorized", action="store_true")
+    mode_export = sub.add_parser("assessment-export", help="Export a shared assessment with source labels retained")
+    mode_export.add_argument("--input", required=True)
+    mode_export.add_argument("--out", required=True)
+    mode_export.add_argument("--format", choices=("json", "sarif", "html"), required=True)
+    for name in ("ad-directory-preflight", "ad-directory-collect"):
+        directory = sub.add_parser(name, help="Review or collect selected read-only scoped LDAPS attributes")
+        directory.add_argument("--input", required=True)
+        directory.add_argument("--session-file", required=True)
+        directory.add_argument("--session-key", required=True)
+        if name.endswith("collect"):
+            directory.add_argument("--approval", required=True)
+            directory.add_argument("--snapshot-out", required=True)
+            directory.add_argument("--out", required=True)
+            directory.add_argument("--stop-file", default="stop")
+            directory.add_argument("--workspace-config")
+            directory.add_argument("--project-id", type=int)
+            directory.add_argument("--authorized", action="store_true")
     sub.add_parser("capabilities", help="Show research category coverage and limitations")
     doctor = sub.add_parser("doctor", help="Read-only local release diagnostics")
     doctor.add_argument("--project")
@@ -706,6 +736,75 @@ def main(argv=None):
         if name == "quota-reconcile":
             quota_command.add_argument("--run-id", required=True)
     args = parser.parse_args(argv)
+    if args.command == "ad-directory-preflight":
+        from .ad_directory import preflight as directory_preflight
+        print(json.dumps(directory_preflight(args.input, args.session_file, args.session_key), indent=2))
+        return
+    if args.command == "ad-directory-collect":
+        if not args.authorized:
+            raise PermissionError("Directory collection requires --authorized")
+        from .ad_directory import collect as directory_collect, analyze as directory_analyze
+        from .assessment_modes import envelope as assessment_envelope
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        _assessment_output(args.snapshot_out)
+        if Path(args.out).resolve() == Path(args.snapshot_out).resolve():
+            raise ValueError("Separate the snapshot and report outputs")
+        snapshot, receipt = directory_collect(args.input, args.session_file, args.session_key, args.approval,
+            authorized=True, stop_file=args.stop_file)
+        _write_bounty_output(args.snapshot_out, json.dumps(snapshot, indent=2) + "\n")
+        from .source_files import read_bounded as read_directory_snapshot
+        from hashlib import sha256 as directory_sha256
+        report = assessment_envelope("ad", receipt["execution_source"], directory_analyze(snapshot),
+            [{"sha256": directory_sha256(read_directory_snapshot(Path(args.snapshot_out), 1048576)).hexdigest()}], origin="operator-supplied-evidence")
+        report.update(collector="ldaps-read-only", collection=receipt, stopped=receipt["error_type"] is not None)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        if receipt["error_type"]:
+            raise SystemExit(2)
+        return
+    if args.command == "assessment-modules":
+        from .assessment_modes import catalog as mode_catalog
+        print(json.dumps(mode_catalog(), indent=2))
+        return
+    if args.command == "assessment-demo":
+        from .assessment_demo import run as run_demo
+        result = run_demo(args.out_dir, module=args.module, authorized=args.authorized)
+        print(json.dumps({"execution_source": "DEMO", "modules": len(result["controls"]), "all_cases_matched": result["all_cases_matched"]}, indent=2))
+        if not result["all_cases_matched"]:
+            raise SystemExit(2)
+        return
+    if args.command == "assessment-review":
+        if not args.authorized:
+            raise PermissionError("Evidence review requires --authorized")
+        from .assessment_modes import analyze
+        binding = None
+        if args.project_id is not None and not args.workspace_config:
+            raise ValueError("Project association requires workspace configuration")
+        if args.workspace_config:
+            from .assessment_history import prepare
+            binding = prepare(args.workspace_config, args.out, args.project_id)
+        else:
+            _assessment_output(args.out)
+        report = analyze(args.module, args.input, mode=args.mode, authorized=True)
+        _write_bounty_output(args.out, json.dumps(report, indent=2) + "\n")
+        if binding:
+            from .assessment_history import record
+            record(binding, args.out, report)
+        return
+    if args.command == "assessment-export":
+        from .assessment_modes import export as mode_export
+        _assessment_output(args.out)
+        _write_bounty_output(args.out, mode_export(args.input, args.format))
+        return
     if args.command == "utility-review-catalog":
         from .utility_review import catalog
         print(json.dumps({"category": "Utility", "skills": catalog(), "all_skills_automated": False}, indent=2))

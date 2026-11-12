@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Assessment modules · HunterQA{% endblock %}
+{% block section %}Assessment modules{% endblock %}
+{% block content %}
+<section class="page-head"><div><p class="eyebrow">ASSESSMENT WORKSPACE</p><h1>Assessment modules</h1><p>Select a source mode and review the available analysis and collection boundaries.</p></div></section>
+<section class="panel"><form method="get"><label for="mode">Source mode</label><select id="mode" name="mode">{% for item in ['DEMO','LAB','LIVE'] %}<option {{ 'selected' if mode == item }}>{{ item }}</option>{% endfor %}</select><button class="button">Show modules</button></form></section>
+{% if mode == 'DEMO' %}
+<section class="panel"><h2>Offline demonstration</h2><p>Generated synthetic inputs are passed to the actual analyzers. Every report is labeled DEMO. No real infrastructure is scanned.</p>
+{% if config.WORKSPACE_ID and not operator_read_only %}<form method="post" action="{{ url_for('main.assessment_demo_start') }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label for="module">Module</label><select id="module" name="module"><option value="all">All eight modules</option>{% for row in modules %}<option value="{{ row.id }}">{{ row.name }}</option>{% endfor %}</select>
+<label for="project">Associate with project</label><select id="project" name="project_id"><option value="">Workspace</option>{% for project in projects %}<option value="{{ project.id }}">{{ project.name }}</option>{% endfor %}</select>
+<label><input type="checkbox" name="authorized" value="yes" required> Generate and retain synthetic demo evidence in this workspace</label><button class="button primary">Run demo analysis</button></form>{% else %}<p>Use an authenticated private workspace with an analyst or administrator role to retain demo results.</p>{% endif %}</section>
+{% else %}<section class="panel"><h2>{{ mode }} source intent</h2><p>Review imported source or evidence with <code>assessment-review --mode {{ mode }}</code>. This offline command does not collect from a provider or verify runtime behavior. Use the existing scoped CLI collectors for target requests. Network assessments remain subject to their existing approvals, credentials, budgets and scope restrictions.</p><p>No general network scan can be started from this page. Actual provider validation remains unverified.</p></section>{% endif %}
+{% for row in modules %}<section class="panel"><h2>{{ row.name }}</h2><p>{{ row.analysis_engine }} · {{ row.implementation_status }} · {{ row.verification_status }}</p><p>{{ row.review_kind }}</p><p>Existing commands: {% for command in row.existing_commands %}<code>{{ command }}</code> {% endfor %}</p><p>{{ row.limitations }}</p></section>{% endfor %}
+{% endblock %}

@@ -50,6 +50,8 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | Command | Purpose |
 | --- | --- |
 | `ad-review` | Review owner-normalized AD policy evidence offline without directory queries |
+| `ad-directory-preflight` | Review exact LDAPS scope, private credential binding and runtime without network traffic |
+| `ad-directory-collect` | Collect bounded selected attributes over verified LDAPS without referrals or writes |
 | `ad-review-catalog` | Show Active Directory and NetExec offline review contracts |
 | `ai-security-evidence-review` | Offline observations, owned saved cases or garak summaries; no model or tool calls |
 | `ai-security-review` | Offline observations, owned saved cases or garak summaries; no model or tool calls |
@@ -209,6 +211,10 @@ are not additional implementations. See the [category index](CATEGORY_REVIEW_IND
 | `workspace-restore` | Restore original empty workspace paths; disables accounts and rotates local keys |
 | `workspace-serve` | Serve one private workspace on bounded loopback WSGI with a local process lease |
 | `assessment-session-create` | Encrypt bounded origin-bound actor sessions from stdin into a separate private vault |
+| `assessment-modules` | Show reusable analysis modules, source modes and verification limits |
+| `assessment-demo` | Execute versioned synthetic inputs through existing analyzers; all outputs are DEMO |
+| `assessment-review` | Review supplied LAB/LIVE evidence offline without claiming live collection |
+| `assessment-export` | Export shared JSON/HTML/SARIF results while preserving provenance labels |
 | `scenario-preflight` | Review exact scenario/scope/session/runtime fingerprint without traffic |
 | `scenario-run` | Execute approved bounded workflow/browser/canary scenarios and save redacted receipts |
 | `access-graph-review` | Evaluate exact-action normalized AD/AWS/Azure/GCP models offline; not live effective access |

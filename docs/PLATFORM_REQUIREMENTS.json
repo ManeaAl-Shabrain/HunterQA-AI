@@ -497,7 +497,14 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.2",
@@ -516,7 +523,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.3",
@@ -535,7 +549,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.4",
@@ -554,7 +575,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.5",
@@ -573,7 +601,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.6",
@@ -592,7 +627,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.7",
@@ -611,7 +653,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.8",
@@ -630,7 +679,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.9",
@@ -649,7 +705,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.2.10",
@@ -668,7 +731,14 @@
         "E80"
       ],
       "remaining_limitations": "Explicit owner-written contracts, not automatic business-rule or process discovery.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Explicit supplied process/event analysis added; automatic process identification and target workflow collection remain incomplete",
+      "increment_files": [
+        "hunterqa/business_rules.py",
+        "hunterqa/assessment_modes.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.3.1",
@@ -887,7 +957,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.2",
@@ -906,7 +983,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.3",
@@ -925,7 +1009,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.4",
@@ -944,7 +1035,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.5",
@@ -963,7 +1061,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.6",
@@ -980,7 +1085,14 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.7",
@@ -999,7 +1111,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.8",
@@ -1018,7 +1137,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.9",
@@ -1037,7 +1163,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.10",
@@ -1056,7 +1189,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.4.11",
@@ -1075,7 +1215,14 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "2.5.1",
@@ -1773,7 +1920,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.2",
@@ -1794,7 +1949,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.3",
@@ -1815,7 +1978,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.4",
@@ -1836,7 +2007,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.5",
@@ -1857,7 +2036,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.6",
@@ -1878,7 +2065,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.7",
@@ -1899,7 +2094,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.8",
@@ -1920,7 +2123,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.9",
@@ -1941,7 +2152,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.10",
@@ -1962,7 +2181,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.11",
@@ -1983,7 +2210,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.12",
@@ -2004,7 +2239,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "2.8.13",
@@ -2025,7 +2268,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.1",
@@ -2047,7 +2298,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.2",
@@ -2069,7 +2328,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.3",
@@ -2091,7 +2358,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.4",
@@ -2113,7 +2388,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.5",
@@ -2135,7 +2418,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.6",
@@ -2157,7 +2448,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.7",
@@ -2179,7 +2478,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.8",
@@ -2201,7 +2508,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.9",
@@ -2223,7 +2538,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.10",
@@ -2245,7 +2568,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3D.11",
@@ -2267,7 +2598,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "3L.1",
@@ -2355,7 +2694,14 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "3L.5",
@@ -3125,7 +3471,14 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "increment_files": [
+        "hunterqa/ad_directory.py",
+        "tools/verify_ad_lab.py"
+      ],
+      "increment_tests": [
+        "tests/test_ad_directory.py"
+      ]
     },
     {
       "id": "4L.4",
@@ -3741,7 +4094,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.2",
@@ -3763,7 +4124,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.3",
@@ -3785,7 +4154,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.4",
@@ -3807,7 +4184,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.5",
@@ -3829,7 +4214,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.6",
@@ -3851,7 +4244,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.7",
@@ -3873,7 +4274,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.8",
@@ -3895,7 +4304,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.9",
@@ -3917,7 +4334,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.10",
@@ -3939,7 +4364,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.11",
@@ -3961,7 +4394,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.12",
@@ -3983,7 +4424,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.13",
@@ -4005,7 +4454,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.14",
@@ -4027,7 +4484,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.15",
@@ -4049,7 +4514,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.16",
@@ -4071,7 +4544,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "5.17",
@@ -4093,7 +4574,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "6D.1",
@@ -5095,7 +5584,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.2",
@@ -5117,7 +5614,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.3",
@@ -5139,7 +5644,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.4",
@@ -5159,7 +5672,15 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.5",
@@ -5181,7 +5702,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.6",
@@ -5203,7 +5732,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.7",
@@ -5225,7 +5762,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.8",
@@ -5247,7 +5792,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.9",
@@ -5269,7 +5822,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.10",
@@ -5291,7 +5852,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "9.11",
@@ -5313,7 +5882,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "10.1",
@@ -5730,7 +6307,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.2",
@@ -5751,7 +6336,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.3",
@@ -5770,7 +6363,15 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.4",
@@ -5791,7 +6392,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.5",
@@ -5812,7 +6421,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.6",
@@ -5833,7 +6450,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.7",
@@ -5854,7 +6479,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.8",
@@ -5875,7 +6508,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.9",
@@ -5896,7 +6537,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.10",
@@ -5917,7 +6566,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.11",
@@ -5938,7 +6595,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.12",
@@ -5959,7 +6624,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.13",
@@ -5980,7 +6653,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.14",
@@ -6001,7 +6682,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.15",
@@ -6022,7 +6711,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "11.16",
@@ -6043,7 +6740,15 @@
         "E80"
       ],
       "remaining_limitations": "Existing source scan execution and read-only CLI assessment history; no universal dashboard mode/target/execution lifecycle.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.1",
@@ -6065,7 +6770,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.2",
@@ -6087,7 +6800,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.3",
@@ -6109,7 +6830,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.4",
@@ -6131,7 +6860,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.5",
@@ -6153,7 +6890,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.6",
@@ -6175,7 +6920,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.7",
@@ -6197,7 +6950,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.8",
@@ -6219,7 +6980,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.9",
@@ -6241,7 +7010,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.10",
@@ -6263,7 +7040,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.11",
@@ -6285,7 +7070,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.12",
@@ -6307,7 +7100,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "12.13",
@@ -6329,7 +7130,15 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13A.1",
@@ -6351,7 +7160,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13A.2",
@@ -6373,7 +7190,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13A.3",
@@ -6395,7 +7220,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13A.4",
@@ -6417,7 +7250,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13A.5",
@@ -6439,7 +7280,15 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.1",
@@ -6460,7 +7309,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.2",
@@ -6481,7 +7338,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.3",
@@ -6502,7 +7367,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.4",
@@ -6523,7 +7396,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.5",
@@ -6544,7 +7425,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13E.6",
@@ -6565,7 +7454,15 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "increment_files": [
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_demo.py",
+        "hunterqa/assessment_ui.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_modes.py"
+      ]
     },
     {
       "id": "13R.1",
@@ -8055,5 +8952,11 @@
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
       "delivery_status": "Not changed in this increment"
     }
-  ]
+  ],
+  "increment_verification": {
+    "local_targeted_tests": 75,
+    "scope": "Shared modes, directory mocks and actual owned TLS; not actual AD or providers",
+    "actual_samba_ad": "pending CI",
+    "external_providers": "not verified"
+  }
 }

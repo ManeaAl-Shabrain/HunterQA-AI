@@ -1,0 +1,19 @@
+name: HunterQA Owned Samba AD Lab
+on:
+  pull_request:
+    branches: [main, 'feature/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  samba-ldaps:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Build disposable owned Samba laboratory
+        run: docker build -f labs/active-directory/Dockerfile -t hunterqa-owned-ad .
+      - name: Validate actual directory with network disabled and no host mounts
+        run: docker run --rm --network none --hostname dc.owned.lab.test --pids-limit 128 --memory 1g --cpus 2 --security-opt no-new-privileges:true -e HUNTERQA_OWNED_AD_TEST=1 hunterqa-owned-ad

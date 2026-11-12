@@ -16,7 +16,11 @@ def summary(path):
             raise ValueError
         engine = report.get("engine")
         rows = []
-        if engine == "approved-scenario-suite":
+        if engine == "unified-assessment-review":
+            from .assessment_modes import load_report
+            checked = load_report(path)
+            return {"status": "ready", "engine": engine, "rows": [], "assessment": checked}
+        elif engine == "approved-scenario-suite":
             if not isinstance(report.get("cases"), list) or len(report["cases"]) > 10:
                 raise ValueError
             for row in report["cases"]:

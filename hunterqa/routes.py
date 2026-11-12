@@ -253,10 +253,52 @@ def scenarios_dashboard():
     return render_template("scenarios.html", evidence=summary(current_app.config.get("SCENARIO_REPORT_PATH")), runs=history(current_app.config["DATABASE"]))
 
 
+@bp.get("/assessment-modules")
+def assessment_modules():
+    from .assessment_modes import catalog, MODES
+    mode = request.args.get("mode", "DEMO")
+    if mode not in MODES:
+        abort(400, "Select DEMO, LAB or LIVE")
+    return render_template("assessment_modules.html", modules=catalog(), mode=mode,
+        projects=get_db().execute("SELECT id,name FROM projects ORDER BY id LIMIT 100").fetchall())
+
+
+@bp.post("/assessment-modules/demo")
+def assessment_demo_start():
+    require_csrf()
+    if not current_app.config.get("WORKSPACE_ID") or request.form.get("authorized") != "yes":
+        abort(403, "Use an authenticated workspace and acknowledge synthetic analysis")
+    from .assessment_ui import run_demo
+    try:
+        run_id = run_demo(request.form.get("module", "all"), request.form.get("project_id", ""))
+    except BlockingIOError:
+        abort(429, "A demonstration is already running")
+    except (ValueError, OSError):
+        abort(400, "Demonstration configuration is unavailable; inspect the private workspace")
+    return redirect(url_for("main.scenario_result", run_id=run_id))
+
+
+@bp.get("/scenarios/<int:run_id>/export.<kind>")
+def assessment_export(run_id, kind):
+    from flask import make_response
+    from .assessment_history import report_file
+    from .assessment_modes import export
+    if kind not in {"json", "html", "sarif"}:
+        abort(404)
+    try:
+        content = export(report_file(current_app.config["DATABASE"], run_id), kind)
+    except (ValueError, OSError):
+        abort(404, "Saved shared assessment is unavailable")
+    response = make_response(content)
+    response.headers["Content-Type"] = "text/html; charset=utf-8" if kind == "html" else "application/json"
+    response.headers["Content-Disposition"] = f'attachment; filename="hunterqa-assessment-{run_id}.{kind}"'
+    return response
+
+
 @bp.get("/scenarios/<int:run_id>")
 def scenario_result(run_id):
     from .assessment_history import saved, history
-    return render_template("scenarios.html", evidence=saved(current_app.config["DATABASE"], run_id), runs=history(current_app.config["DATABASE"]))
+    return render_template("scenarios.html", evidence=saved(current_app.config["DATABASE"], run_id), runs=history(current_app.config["DATABASE"]), selected_run=run_id)
 
 
 @bp.get("/assessments")

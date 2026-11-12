@@ -100,6 +100,8 @@ Stop the foreground server with **Ctrl+C**. It listens on **127.0.0.1**. Use the
 | [Assessment guide](docs/AUTHORIZED_ASSESSMENT_BEGINNER_GUIDE.md) · [Templates](templates/README.md) | Scope, evidence and reporting |
 | [Category index](docs/CATEGORY_REVIEW_INDEX.md) · [Feature checklist](docs/FEATURE_READINESS_CHECKLIST.md) | Implemented checks and remaining coverage |
 | [Scenario lab and evidence](docs/SCENARIO_ASSESSMENTS.md) | Repeatable local tests, session vault, permission models and dashboard history |
+| [Assessment modes](docs/ASSESSMENT_MODES.md) · [AD collection](docs/AD_DIRECTORY_COLLECTION.md) | Labeled offline demos, shared reviews/exports and scoped read-only LDAPS |
+| [Platform gap analysis](docs/PLATFORM_GAP_ANALYSIS.md) | Requirement-by-requirement implementation, tests and remaining limits |
 | [Handoff and manual acceptance](docs/LOCAL_RELEASE_HANDOFF.md) | Tested release scope and owner-run checks |
 | [Security policy](SECURITY.md) · [Versioning](docs/VERSIONING.md) | Reporting issues and identifying source builds |
 

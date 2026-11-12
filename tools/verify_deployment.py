@@ -104,7 +104,7 @@ def acceptance(phase):
         (project / "Dockerfile").write_text("FROM ubuntu:latest\nUSER root\n", encoding="utf-8")
         (project / "owned_parser_fixture.py").write_text("def example(value):\n    return eval(value)\n", encoding="utf-8")
         marker.write_text('{"kind":"owned-deployment-acceptance"}', encoding="utf-8")
-        packages = {name: version(name) for name in ("hunterqa-ai", "playwright", "botocore", "PyJWT", "cryptography", "dnspython", "waitress", "semgrep")}
+        packages = {name: version(name) for name in ("hunterqa-ai", "playwright", "botocore", "PyJWT", "cryptography", "dnspython", "ldap3", "pyasn1", "waitress", "semgrep")}
         for name in ("semgrep", "clang", "gdb", "afl-fuzz"):
             if shutil.which(name) is None:
                 raise ValueError("Missing assessment runtime binary: " + name)
@@ -213,8 +213,22 @@ def verify_http(data, *, restored):
             page.get_by_role("button", name="Verify sign-in", exact=True).click()
             page.goto(base + "/scenarios")
             expect(page.get_by_text("normalized-access-graph", exact=True)).to_be_visible()
-            page.locator("tbody a").first.click()
+            page.locator("tbody tr").filter(has_text="normalized-access-graph").get_by_role("link").first.click()
             expect(page.get_by_role("heading", name="normalized-access-graph", exact=True)).to_be_visible()
+            if not restored:
+                page.goto(base + "/assessment-modules")
+                page.get_by_label("Module", exact=True).select_option("business")
+                page.get_by_label("Associate with project", exact=True).select_option("1")
+                page.get_by_label("Generate and retain synthetic demo evidence in this workspace", exact=True).check()
+                page.get_by_role("button", name="Run demo analysis", exact=True).click()
+            else:
+                page.goto(base + "/scenarios")
+                page.locator("tbody tr").filter(has_text="unified-assessment-review:DEMO:business").get_by_role("link").first.click()
+            expect(page.get_by_role("heading", name="DEMO · business", exact=True)).to_be_visible()
+            saved_id = page.url.rsplit("/", 1)[1]
+            exported_demo = page.request.get(base + "/scenarios/" + saved_id + "/export.json").json()
+            assert exported_demo["synthetic"] and exported_demo["execution_source"] == "DEMO"
+            assert exported_demo["findings"][0]["verification_status"] == "unverified"
             page.goto(base + "/scans/1/report")
             expect(page.get_by_text("Workspace analysis summary", exact=False)).to_be_visible()
             page.get_by_role("button", name="Sign out", exact=True).click()
@@ -226,7 +240,7 @@ def verify_http(data, *, restored):
         assert db.execute("SELECT COUNT(*) FROM findings WHERE engine='semgrep'").fetchone()[0] > 0
     assert PASSWORD.encode() not in (data.parent / "control/owned-ci/operators.sqlite3").read_bytes()
     return {"local_login": True, "admin_mfa_verified": True, "pre_mfa_api_denied": True, "source_scan_completed": True, "export_and_report": True,
-        "expansion_owned_fixture_cases": 20, "expansion_history_view_verified": True,
+        "expansion_owned_fixture_cases": 20, "expansion_history_view_verified": True, "platform_demo_history_verified": True,
         "rbac_denial_verified": True, "real_chromium_login_report_logout": True, "external_idp_verified": False}
 
 

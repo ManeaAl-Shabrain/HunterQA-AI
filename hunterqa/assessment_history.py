@@ -32,10 +32,15 @@ def record(binding, output, report):
         raise ValueError("Report escaped the workspace")
     digest = hashlib.sha256(read_bounded(path, 1048576)).hexdigest()
     status = "stopped" if report.get("stopped") else "recorded"
+    kind = report["engine"]
+    if kind == "unified-assessment-review":
+        from .assessment_modes import load_report
+        checked = load_report(path)
+        kind += ":" + checked["execution_source"] + ":" + checked["module"]
     audit_event(binding["operator_database"], "os-admin-recorded-assessment", binding["workspace_id"])
     with closing(connect(binding["database"])) as db, db:
         cursor = db.execute("INSERT INTO assessment_runs(project_id,kind,status,report_file,report_sha256,approval_sha256) VALUES(?,?,?,?,?,?)",
-            (binding["project_id"], report["engine"], status, str(path), digest, report.get("approval_sha256")))
+            (binding["project_id"], kind, status, str(path), digest, report.get("approval_sha256")))
     return cursor.lastrowid
 
 
@@ -44,16 +49,20 @@ def history(database):
         return [dict(row) for row in db.execute("SELECT r.id,r.kind,r.status,r.created_at,r.report_sha256,p.name AS project_name FROM assessment_runs r LEFT JOIN projects p ON r.project_id=p.id ORDER BY r.id DESC LIMIT 100")]
 
 
-def saved(database, run_id):
-    from .scenario_reports import summary
+def report_file(database, run_id):
     with closing(connect(database)) as db:
         row = db.execute("SELECT report_file,report_sha256 FROM assessment_runs WHERE id=?", (run_id,)).fetchone()
     if row is None:
-        return {"status": "unavailable", "rows": [], "engine": None}
+        raise ValueError("Saved assessment unavailable")
+    path = _approved_file(row["report_file"])
+    if hashlib.sha256(read_bounded(path, 1048576)).hexdigest() != row["report_sha256"]:
+        raise ValueError("Recorded report changed")
+    return path
+
+
+def saved(database, run_id):
+    from .scenario_reports import summary
     try:
-        path = _approved_file(row["report_file"])
-        if hashlib.sha256(read_bounded(path, 1048576)).hexdigest() != row["report_sha256"]:
-            raise ValueError("Recorded report changed")
-        return summary(path)
+        return summary(report_file(database, run_id))
     except (ValueError, OSError):
         return {"status": "unavailable", "rows": [], "engine": None}
