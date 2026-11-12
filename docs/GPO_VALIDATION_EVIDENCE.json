@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "source_commit": "253c8e064225a73d5a69560e273702aca5bedc52",
+  "review_date": "2026-11-13",
+  "execution_source": "DEMO",
+  "input_source": "original-synthetic-native-format-files",
+  "actual_windows_secedit_validate_only": true,
+  "policy_applied": false,
+  "windows_resultant_policy_verified": false,
+  "registry_pol_native_windows_validation": false,
+  "cases": [
+    {
+      "case": "unsafe",
+      "input_sha256": "4ce831c6a85cefbc50d5d38970f3a9986c4855985b6806fe2761ff719113e2e9",
+      "windows_validate_exit_code": 0,
+      "native_validator_log_sha256": "5aa7fbf1eeda7788fd78115a1d1feaa14314d22cdc1fb8a1a0cf991272b583cf",
+      "hunterqa_accepted": true,
+      "selected_rule_ids": [
+        "gpo.broad-sensitive-privilege",
+        "gpo.lockout-disabled-review",
+        "gpo.password-length-below-eight",
+        "gpo.reversible-password-storage",
+        "gpo.smb-signing-not-required"
+      ],
+      "shared_report_sha256": "322d0dc023d5dcbfba1a223ff52782d15f55da5ab2a0994cfcb95d093a1dcbfc",
+      "uncertainty_exported": true
+    },
+    {
+      "case": "safe",
+      "input_sha256": "9b6ea8b73838f6f45f1f25ea9e8f2910f192b6dd9deb3e810c227fbc2c0e24bd",
+      "windows_validate_exit_code": 0,
+      "native_validator_log_sha256": "1e64c1672bc2124e01d7bcc8d042ce7717011fa3b41ca9e43041db8a33004c9c",
+      "hunterqa_accepted": true,
+      "selected_rule_ids": [],
+      "shared_report_sha256": "4253896983e42afa60d56eba8fded0d0b58ad0c35ad00cc747caf7c6f6f49423",
+      "uncertainty_exported": true
+    },
+    {
+      "case": "malformed",
+      "input_sha256": "bfb6fad16cf3c26446429dc6a876c824821809ff12c0e9a3bd3c2da4161a79ea",
+      "windows_validate_exit_code": 0,
+      "native_validator_log_sha256": "87c37f87e6a03493d362ef5afdb034afebc242ecce8e44754c8bd81ae0358f68",
+      "hunterqa_accepted": false
+    }
+  ],
+  "limitations": [
+    "Native Windows validate checks template syntax and accepted the invalid integer; it is not an oracle for setting semantics",
+    "No policy import, configure, application, domain or resultant-policy test was performed",
+    "Synthetic findings stay DEMO despite actual native format validation"
+  ],
+  "targeted_tests": {
+    "passed": 22,
+    "reporting_integration_passed": 53
+  },
+  "local_full_regression": {
+    "source_commit": "253c8e064225a73d5a69560e273702aca5bedc52",
+    "passed": 3564,
+    "skipped": 59,
+    "seconds": 447.75
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "bandit_medium": 0,
+    "bandit_high": 0
+  },
+  "ci": {
+    "source": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728774",
+    "deployment": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728760",
+    "samba": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728771",
+    "status": "passed",
+    "all_seven_jobs_passed": true,
+    "linux_python_versions": [
+      "3.11",
+      "3.13"
+    ],
+    "linux_full_regression_per_run": {
+      "passed": 3565,
+      "skipped": 58
+    },
+    "separate_browser_and_cli_acceptance": "passed",
+    "actual_compose": "passed",
+    "actual_native_systemd": "passed",
+    "actual_samba": "passed"
+  },
+  "synthetic_rule_evaluation": {
+    "dataset_version": "gpo-selected-controls-1",
+    "source_commit": "253c8e064225a73d5a69560e273702aca5bedc52",
+    "execution_source": "DEMO",
+    "case_count": 20,
+    "true_positives": 10,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_negatives": 10,
+    "precision": 1.0,
+    "recall": 1.0,
+    "false_positive_rate": 0.0,
+    "scope": "Ten selected review-rule labels on twenty original synthetic native-format files; not independent or representative field effectiveness",
+    "cases": [
+      {
+        "case": "control-1-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "MinimumPasswordLength",
+          "value": "7"
+        },
+        "input_sha256": "8b77fbca7df006fc328481b7355b5bcf0e60c46803a2e2fe6567327ee6ddb916",
+        "expected_rule_ids": [
+          "gpo.password-length-below-eight"
+        ],
+        "observed_rule_ids": [
+          "gpo.password-length-below-eight"
+        ]
+      },
+      {
+        "case": "control-1-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "MinimumPasswordLength",
+          "value": "14"
+        },
+        "input_sha256": "8a0af3cc88f4f153087293e668814a1bf14577fff1abd8c36ce3706917555856",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-2-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "ClearTextPassword",
+          "value": "1"
+        },
+        "input_sha256": "a5159d084a5afe9e0498d8b8cd82d16387625f792bddeffad68d628eabc94441",
+        "expected_rule_ids": [
+          "gpo.reversible-password-storage"
+        ],
+        "observed_rule_ids": [
+          "gpo.reversible-password-storage"
+        ]
+      },
+      {
+        "case": "control-2-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "ClearTextPassword",
+          "value": "0"
+        },
+        "input_sha256": "df871684af8475d5b67cf80f2e5a14c11450f35a8f0bd8cec61069664fd85136",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-3-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "PasswordComplexity",
+          "value": "0"
+        },
+        "input_sha256": "2afe82e830bc72b9038479349d8b6f05ad9e99cfeae742336c053043558f2b7e",
+        "expected_rule_ids": [
+          "gpo.complexity-disabled-review"
+        ],
+        "observed_rule_ids": [
+          "gpo.complexity-disabled-review"
+        ]
+      },
+      {
+        "case": "control-3-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "PasswordComplexity",
+          "value": "1"
+        },
+        "input_sha256": "cefb1c7fc0927639d53bff898044babaf4e29d7510a9e7503b78159f2d38cce7",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-4-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "LockoutBadCount",
+          "value": "0"
+        },
+        "input_sha256": "dc3fab40040fbb5e627147fd8056654ceddfa9a3cbcdc9b0ad6ccb1277a7ea10",
+        "expected_rule_ids": [
+          "gpo.lockout-disabled-review"
+        ],
+        "observed_rule_ids": [
+          "gpo.lockout-disabled-review"
+        ]
+      },
+      {
+        "case": "control-4-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "LockoutBadCount",
+          "value": "10"
+        },
+        "input_sha256": "9dfecf38978fa8cb18eb80acd004107d724f440bf9ea3de54b62de527c2704a4",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-5-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "EnableGuestAccount",
+          "value": "1"
+        },
+        "input_sha256": "cfb6a462555e26eece5e1cc3fc811cf751f9f6d20150733fc7a742a0720dff8f",
+        "expected_rule_ids": [
+          "gpo.guest-enabled-review"
+        ],
+        "observed_rule_ids": [
+          "gpo.guest-enabled-review"
+        ]
+      },
+      {
+        "case": "control-5-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "System Access",
+          "key_or_value_name": "EnableGuestAccount",
+          "value": "0"
+        },
+        "input_sha256": "1e39b1a7a9a8a1b935b94cbd2854220772b4f4177d1c344055c6bd8f30bc6917",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-6-positive",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "Privilege Rights",
+          "key_or_value_name": "SeDebugPrivilege",
+          "value": "*S-1-5-11"
+        },
+        "input_sha256": "61d91785e0e108399c7c8590320f35974cb6332f9168c5a6c3ac8c953b11d705",
+        "expected_rule_ids": [
+          "gpo.broad-sensitive-privilege"
+        ],
+        "observed_rule_ids": [
+          "gpo.broad-sensitive-privilege"
+        ]
+      },
+      {
+        "case": "control-6-negative",
+        "input_mode": "gpo-security-template",
+        "fixture_parameters": {
+          "section_or_key_path": "Privilege Rights",
+          "key_or_value_name": "SeDebugPrivilege",
+          "value": "*S-1-5-32-544"
+        },
+        "input_sha256": "d3fcd344b9f319ef183661490d9caa0fc1f2f3abaa937e1da2465dd087e436e2",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-7-positive",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+          "key_or_value_name": "LmCompatibilityLevel",
+          "value": 2
+        },
+        "input_sha256": "c1cc36ea25738a0c9c728dcff1b9b1103cfdd640bfb250b93565eb519cb7617d",
+        "expected_rule_ids": [
+          "gpo.legacy-authentication"
+        ],
+        "observed_rule_ids": [
+          "gpo.legacy-authentication"
+        ]
+      },
+      {
+        "case": "control-7-negative",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Control\\Lsa",
+          "key_or_value_name": "LmCompatibilityLevel",
+          "value": 5
+        },
+        "input_sha256": "7fc218e30622abb25b147c21d113f702aea876d4487708b75b19802669da8faa",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-8-positive",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters",
+          "key_or_value_name": "RequireSecuritySignature",
+          "value": 0
+        },
+        "input_sha256": "3cf9e0d248d151693aa0065559ebb606e55cc28c33960a958fc5783990ce1cd4",
+        "expected_rule_ids": [
+          "gpo.smb-signing-not-required"
+        ],
+        "observed_rule_ids": [
+          "gpo.smb-signing-not-required"
+        ]
+      },
+      {
+        "case": "control-8-negative",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Services\\LanmanServer\\Parameters",
+          "key_or_value_name": "RequireSecuritySignature",
+          "value": 1
+        },
+        "input_sha256": "a01f6e93419709c89b3ad93aa74f046ef64dc61ac76ce6fab3e5bfa526a96e7c",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-9-positive",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Services\\LDAP",
+          "key_or_value_name": "LDAPClientIntegrity",
+          "value": 0
+        },
+        "input_sha256": "fec5f8fe3588883b41b99f8600d76facae3c93a0c9165e59240a9b7093993a2f",
+        "expected_rule_ids": [
+          "gpo.ldap-client-signing-disabled"
+        ],
+        "observed_rule_ids": [
+          "gpo.ldap-client-signing-disabled"
+        ]
+      },
+      {
+        "case": "control-9-negative",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Services\\LDAP",
+          "key_or_value_name": "LDAPClientIntegrity",
+          "value": 2
+        },
+        "input_sha256": "9ee49287a7dfa9edb3fc25c054b66f58c10a2bddd8956091d13addca60ed3c35",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      },
+      {
+        "case": "control-10-positive",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest",
+          "key_or_value_name": "UseLogonCredential",
+          "value": 1
+        },
+        "input_sha256": "2ee47b1c22953b75f83b678b3f2ffc06bdccf2748de4fe5457a5c6f4956d0d25",
+        "expected_rule_ids": [
+          "gpo.wdigest-credential-storage"
+        ],
+        "observed_rule_ids": [
+          "gpo.wdigest-credential-storage"
+        ]
+      },
+      {
+        "case": "control-10-negative",
+        "input_mode": "gpo-machine-registry",
+        "fixture_parameters": {
+          "section_or_key_path": "SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest",
+          "key_or_value_name": "UseLogonCredential",
+          "value": 0
+        },
+        "input_sha256": "2d127cc08280cb66cedac3db59532f185ae17159b5bffb80f6c57b3110bdb27f",
+        "expected_rule_ids": [],
+        "observed_rule_ids": []
+      }
+    ]
+  }
+}

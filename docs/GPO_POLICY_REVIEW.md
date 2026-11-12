@@ -47,6 +47,9 @@ the report in an existing workspace/project. Its protected Scenario results view
 evidence hashes and JSON/HTML/SARIF exports are reused. Paths and account/SID
 values are not copied into shared findings. A report records the exact input hash
 and `gpo-file-rules-1`; imported LAB/LIVE evidence remains **Not Yet Verified**.
+Dashboard/HTML reports show selected, unassessed and unresolved-identity counts;
+SARIF retains the same coverage flags even when there are no findings. Reports
+with an unsupported claim of verified effective GPO policy are rejected.
 
 ## Selected analysis
 
@@ -60,8 +63,9 @@ and `gpo-file-rules-1`; imported LAB/LIVE evidence remains **Not Yet Verified**.
 
 Ordinary registry assignments retain file order; the last matching assignment
 replaces an earlier one for that file only. Special deletion/ACL instructions
-disable scalar evaluation and require review. Unsupported types, out-of-range
-values and unknown identities are counted as unassessed, never treated as secure.
+disable scalar evaluation and require review. Known binary types unsupported by
+a selected rule, out-of-range values and unresolved names are counted as
+unassessed. Unknown binary type codes reject the input. None are treated as secure.
 Missing directives are not interpreted as secure defaults.
 
 Limits: 512 KiB per input, 1000 directives/instructions, bounded strings and
@@ -78,9 +82,30 @@ redaction, no-network parsing, CLI export and actual protected workspace history
 with digest-tamper rejection. Existing AD/mode integration tests also passed.
 These are synthetic native-file tests, not Windows GPO application validation.
 
+A separate recorded evaluation exercised ten selected review labels across 20
+original synthetic native-format files: TP=10, TN=10, FP=0, FN=0, precision=1.0,
+recall=1.0 and false-positive rate=0.0 **for those fixtures only**. The evidence
+JSON retains inputs, expected/observed labels and byte hashes for reproduction.
+It is not independent or representative field-effectiveness validation.
+
+Actual Windows `secedit /validate` also accepted the positive and negative native
+template fixtures. It accepted a template containing an invalid integer too;
+HunterQA rejected that value. This verifies limited native format compatibility,
+not an independent oracle for directive semantics. No template was imported,
+configured or applied, and no resultant/domain policy was evaluated. The files
+and their findings stay DEMO. See [recorded evidence](GPO_VALIDATION_EVIDENCE.json)
+and [Microsoft's validate command](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/secedit-validate).
+
 Ruff passed; Bandit reported no medium/high finding in the checked application
-and tools. Full regression and current CI results are recorded separately when
-complete. This changes native GPO **content analysis** from missing to partially
+and tools. The full local regression passed: **3564 passed, 59 skipped** in
+447.75 seconds on implementation `253c8e0`. All seven current CI jobs passed:
+[source/browser QA](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728774)
+recorded **3565 passed, 58 skipped** per regression run on both Python 3.11 and
+3.13; [Compose/native lifecycle](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728760)
+and [actual Samba](https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43327728771)
+also passed. Samba validates the existing selected LDAPS behavior, not GPO
+application. Documentation was finalized after observing the code verification.
+This changes native GPO **content analysis** from missing to partially
 implemented. It does not complete GPO collection or effective policy analysis.
 
 Remaining: authorized SYSVOL acquisition, registry/user policy breadth, registry
