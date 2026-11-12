@@ -76,16 +76,16 @@ an unfinished broad category does not require public hosting for local use.
 - [x] Optional shared host-local quota ledger for workflows and native TLS/SSH/UDP/Azure/GCP, with crash-slot reconciliation
 - [x] Opt-in authenticated local dashboard roles and revocable sessions
 - [x] Explicit operator OIDC code/S256 sign-in with verified subject/local role binding
-- [x] Independent Local/Google/Entra switches and mandatory encrypted Admin TOTP
-- [x] OS-approved first-subject binding without signup or role elevation
-- [x] Shared systemd/Compose runtime with actual offline lifecycle acceptance
-- [ ] Owner-run real Google/Entra and Windows WSL2/Desktop acceptance
 - [x] Separate process/workspace identity, data, evidence and session stores
 - [x] Authenticated single-hop HTTPS gateway and bounded loopback WSGI profile
 - [x] Host-local server lease, bounded scan admission and interrupted-work recovery
+- [x] Independent Local/Google/Entra switches and mandatory encrypted Admin TOTP
+- [x] OS-approved first-subject binding without signup or role elevation
+- [x] Shared systemd/Compose runtime with actual offline lifecycle acceptance
 - [x] Private bounded offline workspace snapshots and original-path restore with revoked sessions/renewed credentials
 - [x] Explicit offline interrupted-scan recovery without job replay
 - [x] Shared root/source checks reject Windows reparse points as well as symlinks
+- [ ] Owner-run real Google/Entra and Windows WSL2/Desktop acceptance
 - [ ] Independently validated hosted deployment and OS-level tenant isolation
 - [ ] Independently verified owner grants
 - [ ] OS sandbox

@@ -6,6 +6,8 @@ A local workspace for authorized security assessments: review source code and sa
 
 [Setup guide](docs/PERSONAL_LOCALHOST_SETUP.md) · [Zero to Start](<zero to start.md>) · [Commands](docs/COMMAND_REFERENCE.md) · [Release status](docs/LOCAL_RELEASE_HANDOFF.md)
 
+![HunterQA workflow from scope through checks to evidence and reports](docs/assets/hunterqa-cybersecurity-infographic.png)
+
 ## What it includes
 
 | Area | Available |
