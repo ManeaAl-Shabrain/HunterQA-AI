@@ -11,8 +11,8 @@ def render(data):
         "Baseline: `" + data["baseline_commit"] + "`; inspected before implementation on 12 November 2026. PR80 was merged; no open PRs at inspection.", "",
         "Every specification bullet has an ID, including repeated requirements. Baseline classifications are preserved separately from subsequent delivery. References identify code and relevant tests, not proof of all broad clauses. Mocks, owned TLS/protocol fixtures, real local systems and actual providers remain distinct.", "",
         "Machine-readable source: [PLATFORM_REQUIREMENTS.json](PLATFORM_REQUIREMENTS.json). See [mode contracts](ASSESSMENT_MODES.md) and [directory collection](AD_DIRECTORY_COLLECTION.md).", "",
-        "| Requirement | Baseline classification | Existing implementation | Existing tests | Evidence | Remaining baseline limitation | Incremental delivery |",
-        "| --- | --- | --- | --- | --- | --- | --- |"]
+        "| Requirement | Baseline classification | Current classification | Existing implementation | Existing tests | Evidence | Remaining baseline limitation | Incremental delivery |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     seen = set()
     for row in data["requirements"]:
         if row["id"] in seen:
@@ -26,7 +26,7 @@ def render(data):
         delivery = row["delivery_status"]
         if row.get("increment_files"):
             delivery += "; " + links(row["increment_files"]) + "; tests: " + links(row["increment_tests"])
-        cells = [row["id"] + " " + row["requirement"], row["baseline_status"], links(row["implementation_files"]),
+        cells = [row["id"] + " " + row["requirement"], row["baseline_status"], row.get("current_status", row["baseline_status"]), links(row["implementation_files"]),
             links(row["test_files"]), ", ".join(row["verification_evidence"]), row["remaining_limitations"], delivery]
         lines.append("| " + " | ".join(cell.replace("|", "\\|").replace("\n", " ") for cell in cells) + " |")
     lines += ["", "## Evidence and execution plan", "",
@@ -37,6 +37,9 @@ def render(data):
         "4. Add bounded real read-only collection; separately validate the Samba lab and external providers.",
         "5. Extend remaining domain collection/analysis incrementally, with actual tests and explicit limits.",
         "6. Run full regression and Linux lifecycle verification, then publish current evidence and remaining gaps.", ""]
+    for key, evidence in data["evidence"].items():
+        if evidence.get("workflow"):
+            lines += [key + ": [verification run](" + evidence["workflow"] + "), source `" + evidence["source_commit"] + "`. " + evidence.get("scope", ""), ""]
     return "\n".join(lines)
 
 

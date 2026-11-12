@@ -105,6 +105,20 @@
         "skipped": 58
       },
       "scope": "Previous source tests; cited test files must be inspected for each claim. Not proof of all broad requirement clauses or actual providers."
+    },
+    "E81-SAMBA": {
+      "source_commit": "656e896ac5cb201b7f97101963137e661a1d4d7c",
+      "workflow": "https://github.com/ManeaAl-Shabrain/HunterQA-AI/actions/runs/43265013467",
+      "actual_samba_ldaps": true,
+      "network": "none",
+      "reader_uid": 10001,
+      "inventory": {
+        "accounts": 5,
+        "groups": 38,
+        "domains": 1,
+        "gpo_metadata": 2
+      },
+      "scope": "Selected actual Samba AD attributes and domain-policy rules; not Microsoft enterprise AD or effective access"
     }
   },
   "requirements": [
@@ -128,7 +142,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "1.2",
@@ -150,7 +165,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "1.3",
@@ -172,7 +188,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "1.4",
@@ -194,7 +211,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "1.5",
@@ -216,7 +234,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "1.6",
@@ -238,7 +257,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "2.1.1",
@@ -246,21 +266,20 @@
       "requirement": "Application discovery and technology identification",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/web_discovery.py",
+        "hunterqa/scoped_rendered_discovery.py",
+        "hunterqa/browser_discovery.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_web_discovery.py",
+        "tests/test_scoped_rendered_discovery.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.2",
@@ -268,21 +287,19 @@
       "requirement": "Authentication and session security",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/access_matrix.py",
+        "hunterqa/oidc_tokens.py",
+        "hunterqa/oidc_session_lab.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
         "tests/test_expansion_scenarios.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.3",
@@ -290,21 +307,19 @@
       "requirement": "Authorization and access control",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/access_matrix.py",
+        "hunterqa/scenario_assessment.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
+        "tests/test_assessment_adapters.py",
         "tests/test_expansion_scenarios.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.4",
@@ -326,7 +341,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.5",
@@ -348,7 +364,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.6",
@@ -356,21 +373,19 @@
       "requirement": "Security headers and configuration",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/bounty.py",
+        "hunterqa/engagement.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_bounty_1_1.py",
+        "tests/test_engagement.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.7",
@@ -378,21 +393,20 @@
       "requirement": "API security",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
+        "hunterqa/api_review.py",
         "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/api_surface_v12.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_api_review.py",
+        "tests/test_api_surface_v12.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.8",
@@ -401,20 +415,18 @@
       "baseline_status": "Partially Implemented",
       "implementation_files": [
         "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/scenario_probes.py"
       ],
       "test_files": [
         "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
         "tests/test_expansion_scenarios.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.9",
@@ -422,21 +434,21 @@
       "requirement": "Dependency and component vulnerabilities",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/web_review.py",
-        "hunterqa/engines/openapi.py",
-        "hunterqa/scenario_assessment.py",
-        "hunterqa/runtime_validation.py"
+        "hunterqa/engines/dependencies.py",
+        "hunterqa/engines/cve_intel.py",
+        "hunterqa/engines/cve_ranges.py",
+        "hunterqa/engines/lockfiles.py"
       ],
       "test_files": [
-        "tests/test_web_review.py",
-        "tests/test_runtime_validation.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_cve_intel.py",
+        "tests/test_cve_ranges.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.10",
@@ -458,7 +470,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.1.11",
@@ -480,7 +493,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected source cues and reviewed canaries, not universal web vulnerability validation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.1",
@@ -504,7 +518,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.2",
@@ -530,7 +545,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.3",
@@ -556,7 +572,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.4",
@@ -582,7 +599,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.5",
@@ -608,7 +626,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.6",
@@ -634,7 +653,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.7",
@@ -660,7 +680,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.8",
@@ -686,7 +707,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.9",
@@ -712,7 +734,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.2.10",
@@ -738,7 +761,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.1",
@@ -746,19 +770,18 @@
       "requirement": "Network asset discovery",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/service_fingerprints.py",
-        "hunterqa/network_review.py",
-        "hunterqa/tls_inspection.py"
+        "hunterqa/service_probe.py",
+        "hunterqa/workflow_worker.py"
       ],
       "test_files": [
-        "tests/test_network_review.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_assessment_adapters.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.2",
@@ -767,18 +790,18 @@
       "baseline_status": "Partially Implemented",
       "implementation_files": [
         "hunterqa/service_fingerprints.py",
-        "hunterqa/network_review.py",
-        "hunterqa/tls_inspection.py"
+        "hunterqa/ssh_inspection.py"
       ],
       "test_files": [
-        "tests/test_network_review.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_expansion_scenarios.py",
+        "tests/test_ssh_inspection.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.3",
@@ -798,7 +821,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.4",
@@ -818,7 +842,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.5",
@@ -838,7 +863,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.6",
@@ -846,19 +872,21 @@
       "requirement": "Security protocol configuration",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/service_fingerprints.py",
-        "hunterqa/network_review.py",
-        "hunterqa/tls_inspection.py"
+        "hunterqa/tls_inspection.py",
+        "hunterqa/udp_dns_inspection.py",
+        "hunterqa/network_review.py"
       ],
       "test_files": [
-        "tests/test_network_review.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_tls_inspection.py",
+        "tests/test_udp_dns_inspection.py",
+        "tests/test_network_review.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.7",
@@ -878,7 +906,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.8",
@@ -898,7 +927,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.9",
@@ -918,7 +948,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.3.10",
@@ -938,7 +969,8 @@
         "E80"
       ],
       "remaining_limitations": "Exact endpoints, narrow protocol observations and offline declarations; topology/segmentation and broad vulnerability assessment incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.1",
@@ -957,14 +989,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.2",
@@ -983,14 +1019,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.3",
@@ -1009,14 +1049,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.4",
@@ -1035,14 +1079,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.5",
@@ -1061,14 +1109,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.6",
@@ -1085,14 +1137,18 @@
       ],
       "verification_evidence": [],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Missing"
     },
     {
       "id": "2.4.7",
@@ -1111,14 +1167,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.8",
@@ -1137,14 +1197,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.9",
@@ -1163,14 +1227,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.10",
@@ -1189,14 +1257,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.4.11",
@@ -1215,14 +1287,18 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied declarations and normalized graphs; no live LDAP collector, native GPO resolution or verified effective access.",
-      "delivery_status": "Selected LDAPS collection and account/domain policy review implemented; real Samba validation pending; effective ACL/GPO/AD CS coverage incomplete",
+      "delivery_status": "Selected read-only LDAPS and account/domain policy analysis passed actual isolated Samba AD at 656e896; purpose-separated credentials and further changes require latest CI. Effective DACL/GPO-content/AD CS evaluation remains incomplete",
       "increment_files": [
         "hunterqa/ad_directory.py",
         "tools/verify_ad_lab.py"
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "increment_evidence": [
+        "E81-SAMBA"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.1",
@@ -1245,7 +1321,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.2",
@@ -1253,22 +1340,31 @@
       "requirement": "Cloud asset inventory",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/cloud_review.py",
         "hunterqa/azure_inventory.py",
         "hunterqa/gcp_inventory.py",
-        "hunterqa/gcp_permissions.py"
+        "hunterqa/cloud_account.py"
       ],
       "test_files": [
-        "tests/test_cloud_review.py",
         "tests/test_azure_inventory.py",
         "tests/test_gcp_inventory.py",
-        "tests/test_gcp_permissions.py"
+        "tests/test_assessment_adapters.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.3",
@@ -1291,7 +1387,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.4",
@@ -1300,21 +1407,30 @@
       "baseline_status": "Partially Implemented",
       "implementation_files": [
         "hunterqa/cloud_review.py",
-        "hunterqa/azure_inventory.py",
-        "hunterqa/gcp_inventory.py",
-        "hunterqa/gcp_permissions.py"
+        "hunterqa/gcp_permissions.py",
+        "hunterqa/access_graph.py"
       ],
       "test_files": [
         "tests/test_cloud_review.py",
-        "tests/test_azure_inventory.py",
-        "tests/test_gcp_inventory.py",
-        "tests/test_gcp_permissions.py"
+        "tests/test_gcp_permissions.py",
+        "tests/test_expansion_scenarios.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.5",
@@ -1337,7 +1453,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.6",
@@ -1360,7 +1487,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.7",
@@ -1383,7 +1521,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.8",
@@ -1406,7 +1555,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.9",
@@ -1429,7 +1589,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.10",
@@ -1452,7 +1623,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.11",
@@ -1475,7 +1657,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.12",
@@ -1498,7 +1691,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.5.13",
@@ -1521,7 +1725,18 @@
         "E80"
       ],
       "remaining_limitations": "Bounded real-configurable connectors and selected offline policy analysis; no complete inventory/effective IAM or actual-provider verification.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Shared native-policy readers and collector adapters added; bounded AWS EC2/SG/S3 inventory implemented and mock-tested; actual AWS/Azure/GCP validation and complete posture remain unverified",
+      "increment_files": [
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/assessment_modes.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_aws_inventory.py",
+        "tests/test_assessment_collect.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.1",
@@ -1529,18 +1744,19 @@
       "requirement": "Identity inventory",
       "baseline_status": "Partially Implemented",
       "implementation_files": [
-        "hunterqa/identity_review.py",
-        "hunterqa/access_graph.py"
+        "hunterqa/access_graph.py",
+        "hunterqa/ad_review.py"
       ],
       "test_files": [
-        "tests/test_identity_review.py",
-        "tests/test_expansion_scenarios.py"
+        "tests/test_expansion_scenarios.py",
+        "tests/test_ad_review.py"
       ],
       "verification_evidence": [
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.2",
@@ -1559,7 +1775,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.3",
@@ -1578,7 +1795,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.4",
@@ -1597,7 +1815,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.5",
@@ -1616,7 +1835,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.6",
@@ -1635,7 +1855,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.7",
@@ -1654,7 +1875,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.8",
@@ -1673,7 +1895,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.6.9",
@@ -1692,7 +1915,8 @@
         "E80"
       ],
       "remaining_limitations": "Selected supplied identity policy and token checks; broad live inventory and target federation incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.1",
@@ -1715,7 +1939,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.2",
@@ -1738,7 +1963,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.3",
@@ -1761,7 +1987,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.4",
@@ -1784,7 +2011,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.5",
@@ -1807,7 +2035,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.6",
@@ -1830,7 +2059,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.7",
@@ -1853,7 +2083,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.8",
@@ -1876,7 +2107,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.7.9",
@@ -1899,7 +2131,8 @@
         "E80"
       ],
       "remaining_limitations": "Existing SAST/API/CVE/fuzz/AI components retained; per-class real-world detection coverage remains incomplete.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.8.1",
@@ -1928,7 +2161,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.2",
@@ -1957,7 +2191,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.3",
@@ -1986,7 +2221,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.4",
@@ -2015,7 +2251,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.5",
@@ -2044,7 +2281,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.6",
@@ -2073,7 +2311,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.7",
@@ -2094,7 +2333,7 @@
         "E80"
       ],
       "remaining_limitations": "Separate report schemas and histories exist; digest equality is not independent provenance or verified impact.",
-      "delivery_status": "Shared facade and demo/history/export increment implemented; broad requirement remains limited as documented",
+      "delivery_status": "Explicit evidence-based confidence basis added; score remains null because no calibrated probability or independently validated score exists",
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
@@ -2102,7 +2341,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "2.8.8",
@@ -2131,7 +2371,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.9",
@@ -2160,7 +2401,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.10",
@@ -2189,7 +2431,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.11",
@@ -2218,7 +2461,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.12",
@@ -2247,7 +2491,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "2.8.13",
@@ -2276,7 +2521,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "3D.1",
@@ -2306,7 +2552,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.2",
@@ -2336,7 +2583,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.3",
@@ -2366,7 +2614,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.4",
@@ -2396,7 +2645,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.5",
@@ -2426,7 +2676,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.6",
@@ -2456,7 +2707,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.7",
@@ -2486,7 +2738,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.8",
@@ -2516,7 +2769,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.9",
@@ -2546,7 +2800,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.10",
@@ -2576,7 +2831,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3D.11",
@@ -2606,7 +2862,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.1",
@@ -2628,7 +2885,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.2",
@@ -2650,7 +2908,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.3",
@@ -2672,7 +2931,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.4",
@@ -2701,7 +2961,8 @@
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.5",
@@ -2723,7 +2984,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.6",
@@ -2745,7 +3007,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.7",
@@ -2767,7 +3030,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.8",
@@ -2789,7 +3053,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.9",
@@ -2811,7 +3076,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.10",
@@ -2833,7 +3099,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.11",
@@ -2855,7 +3122,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.12",
@@ -2877,7 +3145,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3L.13",
@@ -2899,7 +3168,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.1",
@@ -2921,7 +3191,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.2",
@@ -2943,7 +3214,17 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented",
+      "increment_files": [
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ]
     },
     {
       "id": "3V.3",
@@ -2965,7 +3246,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.4",
@@ -2987,7 +3269,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.5",
@@ -3009,7 +3292,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.6",
@@ -3031,7 +3315,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.7",
@@ -3053,7 +3338,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.8",
@@ -3075,7 +3361,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.9",
@@ -3097,7 +3384,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.10",
@@ -3119,7 +3407,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.11",
@@ -3141,7 +3430,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "3V.12",
@@ -3163,7 +3453,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.1",
@@ -3185,7 +3476,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.2",
@@ -3207,7 +3499,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.3",
@@ -3229,7 +3522,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.4",
@@ -3251,7 +3545,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.5",
@@ -3273,7 +3568,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.6",
@@ -3295,7 +3591,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.7",
@@ -3317,7 +3614,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.8",
@@ -3339,7 +3637,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.9",
@@ -3361,7 +3660,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.10",
@@ -3383,7 +3683,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4S.11",
@@ -3405,7 +3706,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.1",
@@ -3427,7 +3729,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.2",
@@ -3449,7 +3752,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.3",
@@ -3478,7 +3782,8 @@
       ],
       "increment_tests": [
         "tests/test_ad_directory.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.4",
@@ -3500,7 +3805,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.5",
@@ -3522,7 +3828,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.6",
@@ -3544,7 +3851,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.7",
@@ -3566,7 +3874,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.8",
@@ -3588,7 +3897,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.9",
@@ -3610,7 +3920,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.10",
@@ -3632,7 +3943,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.11",
@@ -3654,7 +3966,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.12",
@@ -3676,7 +3989,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.13",
@@ -3698,7 +4012,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.14",
@@ -3720,7 +4035,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4L.15",
@@ -3742,7 +4058,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4P.1",
@@ -3764,7 +4081,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.2",
@@ -3786,7 +4104,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.3",
@@ -3808,7 +4127,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.4",
@@ -3830,7 +4150,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4P.5",
@@ -3852,7 +4173,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.6",
@@ -3874,7 +4196,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.7",
@@ -3896,7 +4219,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.8",
@@ -3918,7 +4242,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.9",
@@ -3940,7 +4265,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.10",
@@ -3962,7 +4288,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.11",
@@ -3984,7 +4311,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.12",
@@ -4006,7 +4334,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.13",
@@ -4028,7 +4357,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "4P.14",
@@ -4050,7 +4380,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "4P.15",
@@ -4072,7 +4403,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.1",
@@ -4098,11 +4430,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.2",
@@ -4132,7 +4470,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.3",
@@ -4158,11 +4497,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.4",
@@ -4192,7 +4537,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.5",
@@ -4222,7 +4568,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.6",
@@ -4252,7 +4599,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.7",
@@ -4282,7 +4630,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.8",
@@ -4312,7 +4661,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.9",
@@ -4342,7 +4692,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.10",
@@ -4368,11 +4719,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.11",
@@ -4398,11 +4755,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.12",
@@ -4428,11 +4791,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.13",
@@ -4458,11 +4827,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.14",
@@ -4488,11 +4863,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.15",
@@ -4518,11 +4899,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.16",
@@ -4548,11 +4935,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "5.17",
@@ -4578,11 +4971,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "6D.1",
@@ -4603,7 +5002,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.2",
@@ -4624,7 +5024,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "6D.3",
@@ -4645,7 +5046,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.4",
@@ -4666,7 +5068,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.5",
@@ -4687,7 +5090,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.6",
@@ -4708,7 +5112,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.7",
@@ -4729,7 +5134,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6D.8",
@@ -4750,7 +5156,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.1",
@@ -4771,7 +5178,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.2",
@@ -4792,7 +5200,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.3",
@@ -4813,7 +5222,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.4",
@@ -4834,7 +5244,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.5",
@@ -4855,7 +5266,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.6",
@@ -4876,7 +5288,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6N.7",
@@ -4897,7 +5310,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "6W.1",
@@ -4918,7 +5332,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "6W.2",
@@ -4939,7 +5354,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "6W.3",
@@ -4960,7 +5376,8 @@
         "E80"
       ],
       "remaining_limitations": "Actual Ubuntu Compose/systemd lifecycle passed. Host networking is not a general tenant/egress boundary; WSL2/Desktop not actually verified.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.1",
@@ -4981,7 +5398,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.2",
@@ -5002,7 +5420,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "7.3",
@@ -5023,7 +5442,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Blocked by External Dependencies"
     },
     {
       "id": "7.4",
@@ -5044,7 +5464,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.5",
@@ -5065,7 +5486,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.6",
@@ -5086,7 +5508,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.7",
@@ -5107,7 +5530,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.8",
@@ -5128,7 +5552,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.9",
@@ -5149,7 +5574,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.10",
@@ -5170,7 +5596,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.11",
@@ -5191,7 +5618,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.12",
@@ -5212,7 +5640,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.13",
@@ -5233,7 +5662,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "7.14",
@@ -5254,7 +5684,8 @@
         "E80"
       ],
       "remaining_limitations": "Local/MFA/roles and signed owned-provider fixtures verified; actual Google/Entra owner acceptance outstanding.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.1",
@@ -5276,7 +5707,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.2",
@@ -5298,7 +5730,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.3",
@@ -5320,7 +5753,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.4",
@@ -5342,7 +5776,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.5",
@@ -5364,7 +5799,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.6",
@@ -5386,7 +5822,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.7",
@@ -5408,7 +5845,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.8",
@@ -5430,7 +5868,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.9",
@@ -5452,7 +5891,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.10",
@@ -5474,7 +5914,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.11",
@@ -5496,7 +5937,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "8.12",
@@ -5518,7 +5960,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.13",
@@ -5540,7 +5983,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "8.14",
@@ -5562,7 +6006,8 @@
         "E80"
       ],
       "remaining_limitations": "Scoped local trust model; operator consent is an attestation, not independently verified ownership; no universal OS/enterprise tenant isolation.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "9.1",
@@ -5588,11 +6033,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.2",
@@ -5618,11 +6069,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.3",
@@ -5648,11 +6105,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.4",
@@ -5676,11 +6139,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.5",
@@ -5706,11 +6175,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.6",
@@ -5736,11 +6211,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.7",
@@ -5766,11 +6247,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.8",
@@ -5796,11 +6283,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.9",
@@ -5826,11 +6319,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.10",
@@ -5856,11 +6355,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "9.11",
@@ -5886,11 +6391,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "10.1",
@@ -5912,7 +6423,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.2",
@@ -5934,7 +6446,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.3",
@@ -5956,7 +6469,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.4",
@@ -5978,7 +6492,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.5",
@@ -6000,7 +6515,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.6",
@@ -6022,7 +6538,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.7",
@@ -6044,7 +6561,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.8",
@@ -6066,7 +6584,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "10.9",
@@ -6088,7 +6607,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.10",
@@ -6110,7 +6630,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.11",
@@ -6132,7 +6653,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.12",
@@ -6154,7 +6676,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.13",
@@ -6176,7 +6699,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.14",
@@ -6198,7 +6722,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "10.15",
@@ -6220,7 +6745,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "10.16",
@@ -6242,7 +6768,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "10.17",
@@ -6264,7 +6791,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "10.18",
@@ -6286,7 +6814,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.1",
@@ -6315,7 +6844,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.2",
@@ -6344,7 +6874,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.3",
@@ -6371,7 +6902,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.4",
@@ -6400,7 +6932,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.5",
@@ -6429,7 +6962,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.6",
@@ -6458,7 +6992,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.7",
@@ -6487,7 +7022,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.8",
@@ -6516,7 +7052,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.9",
@@ -6545,7 +7082,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.10",
@@ -6574,7 +7112,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.11",
@@ -6603,7 +7142,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.12",
@@ -6632,7 +7172,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.13",
@@ -6661,7 +7202,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.14",
@@ -6690,7 +7232,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.15",
@@ -6719,7 +7262,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "11.16",
@@ -6748,7 +7292,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.1",
@@ -6778,7 +7323,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.2",
@@ -6808,7 +7354,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.3",
@@ -6838,7 +7385,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.4",
@@ -6868,7 +7416,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.5",
@@ -6898,7 +7447,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.6",
@@ -6928,7 +7478,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.7",
@@ -6958,7 +7509,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.8",
@@ -6988,7 +7540,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.9",
@@ -7018,7 +7571,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.10",
@@ -7048,7 +7602,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.11",
@@ -7078,7 +7633,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.12",
@@ -7108,7 +7664,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "12.13",
@@ -7138,7 +7695,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13A.1",
@@ -7168,7 +7726,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13A.2",
@@ -7198,7 +7757,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13A.3",
@@ -7228,7 +7788,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13A.4",
@@ -7258,7 +7819,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13A.5",
@@ -7288,7 +7850,8 @@
       ],
       "increment_tests": [
         "tests/test_assessment_modes.py"
-      ]
+      ],
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13E.1",
@@ -7313,11 +7876,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13E.2",
@@ -7342,11 +7911,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13E.3",
@@ -7371,11 +7946,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13E.4",
@@ -7400,11 +7981,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13E.5",
@@ -7429,11 +8016,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13E.6",
@@ -7458,11 +8051,17 @@
       "increment_files": [
         "hunterqa/assessment_modes.py",
         "hunterqa/assessment_demo.py",
-        "hunterqa/assessment_ui.py"
+        "hunterqa/assessment_ui.py",
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
       ],
       "increment_tests": [
-        "tests/test_assessment_modes.py"
-      ]
+        "tests/test_assessment_modes.py",
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ],
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13R.1",
@@ -7484,7 +8083,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13R.2",
@@ -7506,7 +8106,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13R.3",
@@ -7528,7 +8129,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13R.4",
@@ -7550,7 +8152,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13R.5",
@@ -7572,7 +8175,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13R.6",
@@ -7594,7 +8198,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.1",
@@ -7616,7 +8221,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.2",
@@ -7638,7 +8244,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.3",
@@ -7660,7 +8267,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.4",
@@ -7682,7 +8290,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.5",
@@ -7704,7 +8313,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13L.6",
@@ -7726,7 +8336,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.1",
@@ -7748,7 +8359,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.2",
@@ -7770,7 +8382,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.3",
@@ -7792,7 +8405,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.4",
@@ -7814,7 +8428,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.5",
@@ -7836,7 +8451,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.6",
@@ -7858,7 +8474,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.7",
@@ -7880,7 +8497,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13S.8",
@@ -7902,7 +8520,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "13M.1",
@@ -7924,7 +8543,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13M.2",
@@ -7946,7 +8566,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13M.3",
@@ -7968,7 +8589,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13M.4",
@@ -7990,7 +8612,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13M.5",
@@ -8012,7 +8635,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "13M.6",
@@ -8034,7 +8658,17 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement",
+      "increment_files": [
+        "hunterqa/assessment_collect.py",
+        "hunterqa/aws_inventory.py",
+        "hunterqa/assessment_sessions.py"
+      ],
+      "increment_tests": [
+        "tests/test_assessment_collect.py",
+        "tests/test_aws_inventory.py"
+      ]
     },
     {
       "id": "14B.1",
@@ -8054,7 +8688,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.2",
@@ -8074,7 +8709,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.3",
@@ -8094,7 +8730,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.4",
@@ -8114,7 +8751,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.5",
@@ -8134,7 +8772,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.6",
@@ -8154,7 +8793,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14B.7",
@@ -8174,7 +8814,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Already Implemented and Verified"
     },
     {
       "id": "14D.1",
@@ -8194,7 +8835,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.2",
@@ -8214,7 +8856,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.3",
@@ -8234,7 +8877,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.4",
@@ -8254,7 +8898,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.5",
@@ -8274,7 +8919,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.6",
@@ -8294,7 +8940,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.7",
@@ -8314,7 +8961,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "14D.8",
@@ -8334,7 +8982,8 @@
         "E80"
       ],
       "remaining_limitations": "Repository inspected before implementation; traceability records intended scope without equating docs or mocks with operational proof.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Implemented but Requires Improvement"
     },
     {
       "id": "15.1",
@@ -8356,7 +9005,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.2",
@@ -8378,7 +9028,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.3",
@@ -8400,7 +9051,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.4",
@@ -8422,7 +9074,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.5",
@@ -8444,7 +9097,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.6",
@@ -8466,7 +9120,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.7",
@@ -8488,7 +9143,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.8",
@@ -8510,7 +9166,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.9",
@@ -8532,7 +9189,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.10",
@@ -8554,7 +9212,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.11",
@@ -8576,7 +9235,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.12",
@@ -8598,7 +9258,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.13",
@@ -8620,7 +9281,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.14",
@@ -8642,7 +9304,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.15",
@@ -8664,7 +9327,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.16",
@@ -8686,7 +9350,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "15.17",
@@ -8708,7 +9373,8 @@
         "E80"
       ],
       "remaining_limitations": "Owned fixtures and actual IO are distinguished from simulation; no independent representative field effectiveness study.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.1",
@@ -8730,7 +9396,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.2",
@@ -8752,7 +9419,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.3",
@@ -8774,7 +9442,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.4",
@@ -8796,7 +9465,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.5",
@@ -8818,7 +9488,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.6",
@@ -8840,7 +9511,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.7",
@@ -8862,7 +9534,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.8",
@@ -8884,7 +9557,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.9",
@@ -8906,7 +9580,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.10",
@@ -8928,7 +9603,8 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     },
     {
       "id": "16.11",
@@ -8950,13 +9626,17 @@
         "E80"
       ],
       "remaining_limitations": "Reusable engines exist, but global three-mode contracts and uniform per-module verification provenance are absent.",
-      "delivery_status": "Not changed in this increment"
+      "delivery_status": "Not changed in this increment",
+      "current_status": "Partially Implemented"
     }
   ],
   "increment_verification": {
     "local_targeted_tests": 75,
     "scope": "Shared modes, directory mocks and actual owned TLS; not actual AD or providers",
-    "actual_samba_ad": "pending CI",
-    "external_providers": "not verified"
+    "actual_samba_ad": "E81-SAMBA",
+    "external_providers": "not verified",
+    "cloud_native_transport_tests": "Mocks only, outputs labeled DEMO",
+    "actual_owned_native_facade": "HTTP and Redis TCP tested locally; actual providers unverified",
+    "shared_collection_scope": "Existing native delegates reused; actual owned HTTP/TCP tested, real provider validation unverified"
   }
 }

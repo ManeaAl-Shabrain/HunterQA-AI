@@ -64,6 +64,9 @@ hunterqa assessment-review --module cloud --mode LAB \
 ```
 
 `ad`, `cloud`, `iam` and `network` reuse their existing normalized review schemas.
+Native cloud exports use `--input-mode aws-iam`, `gcp-iam` or `azure-nsg`;
+network settings use `sysctl-text` or `resolved-conf`. These reuse the original
+readers and preserve their limitations.
 `web` and `vulnerability` accept an approved source directory. The latter reuses
 configuration and OpenAPI checks; existing Semgrep/CVE/fuzz/AI commands remain
 available independently. `evidence` accepts `{"reports":["/absolute/one.json",
@@ -80,6 +83,24 @@ For real collection, use the existing scoped commands shown by
 `assessment-modules`, or the new [read-only LDAPS collector](AD_DIRECTORY_COLLECTION.md).
 Their scopes, approval fingerprints, private credentials, deadlines, quotas and
 stop controls remain mandatory. Selecting LIVE does not bypass them.
+
+The common collection facade preserves the original native report and links its
+exact file hash into the shared report:
+
+```bash
+hunterqa assessment-collect --connector gcp-inventory --mode LIVE \
+  --input /approved/gcp-scope.json --credentials /approved/private-token.json \
+  --native-out /approved/new-native.json --out /approved/new-shared.json --authorized
+```
+
+Connectors: `azure-inventory`, `gcp-inventory`, `gcp-permissions`, `aws-inventory`,
+`ad-directory`, `network-service` and `web-scenarios`. AWS/directory/scenario
+connectors still require their original approval and credential options. Cloud
+provider APIs require LIVE intent; this is not a provider-validation claim.
+The shared LAB facade accepts numeric private network/web targets only; original
+scoped commands continue to support their documented DNS-based lab contracts.
+Successful inert uploads and matched authorization-denial contracts are not
+converted into vulnerability findings. Timing signals remain informational.
 
 ## 3. Dashboard and project history
 
@@ -114,6 +135,9 @@ made-up probability. Severity is a triage priority, not verified impact.
 Saved dashboard records verify the exact persisted file hash before inspection
 or export. Tampered reports become unavailable. Exports never upload results.
 Use the existing workspace backup/recovery workflow for retained data.
+Cross-module digest correlation retains each report's source and flags mixed
+DEMO/LAB/LIVE/UNCLASSIFIED evidence without promoting a claim to another source.
+Legacy evidence without provenance stays UNCLASSIFIED.
 
 ## Remaining scope
 

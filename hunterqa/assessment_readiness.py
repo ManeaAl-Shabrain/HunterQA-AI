@@ -41,6 +41,8 @@ def assessment_readiness(*, benchmark_dir=None, profile=None):
     except (PackageNotFoundError, InvalidVersion):
         network = False
     add("network_extra", "ok" if network else "optional_missing", "Install .[network] for exact-endpoint UDP DNS inspection; no socket opened")
+    directory = importlib.util.find_spec("ldap3") is not None
+    add("directory_extra", "ok" if directory else "optional_missing", "Install .[directory,identity] for bounded read-only LDAPS; no credential file or target is probed")
     operator_db = os.environ.get("HUNTERQA_OPERATOR_DB")
     if operator_db:
         try:

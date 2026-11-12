@@ -16,7 +16,10 @@ attributes. Do not supply a domain administrator. Environments that deny these
 reads return incomplete evidence; the connector does not request more rights.
 
 Create a dedicated assessment vault using the existing
-[private session mechanism](SCENARIO_ASSESSMENTS.md). Its only actor must be
+[private session mechanism](SCENARIO_ASSESSMENTS.md). Create it with
+`assessment-session-create --purpose directory-reader`; this
+cryptographic purpose cannot be loaded as a web session or AWS signing vault.
+Its only actor must be
 `directory`, with origin `https://dc.example.test:636`, empty cookies/storage and
 exactly two headers: `X-LDAP-Bind-DN` and `Authorization`. For this connector only,
 these hold the reader's distinguished name and password. They are encrypted at
@@ -79,6 +82,8 @@ contract stops further work; configuration/key/CA changes and expiry invalidate
 approval. Closing a connection after stop does not issue another LDAP operation.
 Collection is bounded by five pages, 100 entries per page, a 60-second total
 deadline and 1 MB of received application data. Truncation/errors remain explicit.
+The normalized snapshot is capped at 512 KiB; omitted trailing entries are
+counted and collection completeness becomes false.
 
 ## 3. Interpret the output
 

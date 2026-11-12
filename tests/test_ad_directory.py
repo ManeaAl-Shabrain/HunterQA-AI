@@ -33,7 +33,7 @@ def owned(tmp_path, monkeypatch):
             assessment_sessions.create(vault, key, json.dumps({"schema_version": 1, "expires_at": data["expires_at"], "actors": {
                 "directory": {"origin": f'https://localhost:{data["server_port"]}', "headers": {
                     "X-LDAP-Bind-DN": "CN=reader,CN=Users,DC=owned,DC=test", "Authorization": "Public-directory-fixture-2026!"},
-                    "cookies": [], "local_storage": {}}}}).encode(), authorized=True)
+                    "cookies": [], "local_storage": {}}}}).encode(), authorized=True, purpose="directory-reader")
         return plan, vault, key
     configure()
     return data, configure, (plan, vault, key)

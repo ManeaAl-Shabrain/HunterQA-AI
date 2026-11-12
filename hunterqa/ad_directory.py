@@ -2,6 +2,7 @@
 import hashlib
 import hmac
 import ipaddress
+import json
 import math
 import re
 import ssl
@@ -43,7 +44,7 @@ def contract(path, session_file, session_key):
         context.minimum_version = ssl.TLSVersion.TLSv1_2
     except (ssl.SSLError, UnicodeError):
         raise ValueError("Invalid reviewed directory CA bundle") from None
-    actors, binding = assessment_sessions.load(session_file, session_key)
+    actors, binding = assessment_sessions.load(session_file, session_key, purpose="directory-reader")
     actor = actors.get("directory")
     if (set(actors) != {"directory"} or actor is None or actor["origin"] != f'https://{data["tls_server_name"]}:{data["server_port"]}'
             or set(actor["headers"]) != {"X-LDAP-Bind-DN", "Authorization"} or actor["cookies"] or actor["local_storage"]
@@ -212,6 +213,7 @@ def collect(path, session_file, session_key, approval, *, authorized=False, stop
     end = time.monotonic() + min(data["timeout_seconds"], (_expiry(data["expires_at"]) - utcnow()).total_seconds())
     stop = _approved_file(path).parent / stop_file
     response = {"source": "ldaps-read-only", "execution_source": data["mode"], "started_at": utcnow().isoformat(), "endpoint_sha256": digest([data["server_ip"], data["server_port"]]),
+        "approval_sha256": fingerprint, "naming_context_sha256": digest(data["base_dn"].casefold()),
         "operations": 0, "pages": 0, "phase": "admission", "complete": False, "error_type": None, "real_provider_verified": False}
     entries = []
     with shared_quota.invocation(data["max_pages"] + 3) as admission:
@@ -298,7 +300,29 @@ def collect(path, session_file, session_key, approval, *, authorized=False, stop
     except (ValueError, TypeError, KeyError):
         normalized = []
         response["complete"], response["error_type"] = False, "DirectoryResponseError"
+    response["ranged_attributes_not_expanded"] = sum(
+        ";range=" in name.lower() for entry in entries
+        if isinstance(entry, Mapping) and isinstance(entry.get("raw_attributes"), Mapping)
+        for name in entry["raw_attributes"] if isinstance(name, str))
+    response["entries_missing_objectclass"] = sum(not row["attributes"].get("objectclass") for row in normalized)
+    if response["ranged_attributes_not_expanded"] or response["entries_missing_objectclass"]:
+        response["complete"] = False
     snapshot = {"schema_version": 1, "collected_at": utcnow().isoformat(), "entries": normalized,
         "minimum_password_length": data["minimum_password_length"]}
+    # Hashing short repeated names can expand normalized evidence. Keep a
+    # bounded prefix, disclose omissions, and never call it complete.
+    response["entries_not_retained"] = 0
+    if len(json.dumps(snapshot, indent=2).encode()) > 524288:
+        low, high = 0, len(normalized)
+        while low < high:
+            middle = (low + high + 1) // 2
+            snapshot["entries"] = normalized[:middle]
+            if len(json.dumps(snapshot, indent=2).encode()) <= 524288:
+                low = middle
+            else:
+                high = middle - 1
+        snapshot["entries"] = normalized[:low]
+        response["entries_not_retained"] = len(normalized) - low
+        response["complete"] = False
     response["finished_at"] = snapshot["collected_at"]
     return snapshot, response

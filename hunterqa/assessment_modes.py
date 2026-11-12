@@ -52,12 +52,21 @@ def _reject_demo_source(path):
             raise ValueError("Generated demonstration sources cannot be relabeled LAB/LIVE")
 
 
-def analyze(module, path, *, mode, authorized=False):
+def analyze(module, path, *, mode, authorized=False, input_mode="normalized"):
     if authorized is not True:
         raise PermissionError("Evidence review requires --authorized")
     if module not in MODULES or mode not in {"LAB", "LIVE"}:
         raise ValueError("Use a supported module and explicit LAB/LIVE source intent")
     _reject_demo_source(path)
+    if input_mode != "normalized":
+        from . import cloud_review, network_review
+        supported = {"cloud": (cloud_review, {"aws-iam", "gcp-iam", "azure-nsg"}),
+            "network": (network_review, {"sysctl-text", "resolved-conf"})}
+        if module not in supported or input_mode not in supported[module][1]:
+            raise ValueError("Input mode is not supported by this module")
+        source = read_bounded(_approved_file(path), 1048576)
+        result = supported[module][0].review_file(path, authorized=True, mode=input_mode)
+        return envelope(module, mode, result, [{"sha256": hashlib.sha256(source).hexdigest()}], origin="operator-supplied-evidence")
     if module in {"web", "vulnerability"}:
         from .cli import _approved_root
         root = _approved_root(str(path))
@@ -114,20 +123,23 @@ def envelope(module, mode, result, receipts, *, origin):
             seen[identity]["duplicate_count"] += 1
             continue
         severity = row.get("severity") if row.get("severity") in {"ERROR", "WARNING", "INFO"} else "INFO"
-        item = {"id": identity, "rule_id": rule, "module": module, "execution_source": mode,
+        linked = [e["id"] for e in evidence if e.get("relative_path_sha256") == digest(str(row.get("file_path", "")).replace("\\", "/"))]
+        if not linked and not any(e.get("relative_path_sha256") for e in evidence):
+            linked = list(dict.fromkeys(e["id"] for e in evidence[:16]))
+        item = {"id": identity, "target_ref_hash": identity, "rule_id": rule, "module": module, "execution_source": mode,
             "title": str(row.get("title", "Review candidate"))[:300], "severity": severity,
             "risk": {"ERROR": "high-review-priority", "WARNING": "medium-review-priority", "INFO": "informational"}[severity],
             "cwe": str(row.get("cwe", ""))[:32], "verification_status": "unverified",
             "confidence": {"score": None, "basis": "synthetic-fixture-analysis" if mode == "DEMO" else "supplied-evidence-not-runtime-confirmation"},
             "remediation": str(row.get("remediation") or row.get("message") or "Review the original evidence and enforce the intended security policy.")[:2000],
             "file_path": "external-evidence", "line_start": 1,
-            "evidence_ids": [e["id"] for e in evidence if len(evidence) == 1 or e.get("relative_path_sha256") == digest(str(row.get("file_path", "")).replace("\\", "/"))],
+            "evidence_ids": linked,
             "source_set_sha256": source_fingerprint,
             "created_at": stamp, "duplicate_count": 0}
         seen[identity] = item
         findings.append(item)
     from .scenario_assessment import runtime_identity
-    return {"engine": "unified-assessment-review", "schema_version": 1, "module": module, "rule_runtime_sha256": runtime_identity(),
+    report = {"engine": "unified-assessment-review", "schema_version": 1, "module": module, "rule_runtime_sha256": runtime_identity(),
         "execution_source": mode, "synthetic": mode == "DEMO", "generated_at": stamp,
         "implementation_status": "Implemented", "verification_status": "Tested with Mocks" if mode == "DEMO" else "Not Yet Verified",
         "collector": "synthetic-fixture-generator" if mode == "DEMO" else "not-collected-by-this-command",
@@ -137,6 +149,9 @@ def envelope(module, mode, result, receipts, *, origin):
         "limitations": ["Source labels describe execution intent; supplied evidence is not authenticated live collection",
             "Triage priority is not independently verified impact or a calibrated probability",
             "Existing collectors, scopes, reports and analyst decisions remain separate and are not overwritten"]}
+    if len(json.dumps(report, indent=2).encode("utf-8")) > 960000:
+        raise ValueError("Shared report exceeds the bounded viewer size; split the evidence or retain the original engine report")
+    return report
 
 
 def load_report(path):

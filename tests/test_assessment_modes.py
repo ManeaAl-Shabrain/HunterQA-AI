@@ -102,12 +102,16 @@ def test_business_rules_detect_role_tenant_amount_and_state_inconsistency():
         business_rules.review(data)
 
 
-def test_duplicate_findings_are_counted_without_collapsing_separate_events():
+def test_duplicate_findings_are_counted_without_collapsing_separate_events(approved):
     source = {"sha256": "1" * 64}
     row = business_rules.review(demo.business_fixture())["findings"][0]
     result = {"findings": [row, copy.deepcopy(row), {**row, "test_case": "different-event"}]}
     report = modes.envelope("business", "DEMO", result, [source], origin="generated-synthetic")
     assert len(report["findings"]) == 2 and report["findings"][0]["duplicate_count"] == 1
+    path = approved / "events.json"
+    path.write_text(json.dumps(report))
+    rows = json.loads(modes.export(path, "sarif"))["runs"][0]["results"]
+    assert len({r["partialFingerprints"]["hunterqaCandidate/v1"] for r in rows}) == 2
 
 
 def test_demo_dashboard_preserves_rbac_csrf_project_history_export_and_integrity(tmp_path, monkeypatch):

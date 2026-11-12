@@ -45,7 +45,7 @@ def assess():
     save(source, contract)
     assessment_sessions.create(vault, key, json.dumps({"schema_version": 1, "expires_at": expiry, "actors": {"directory": {
         "origin": "https://dc.owned.lab.test:636", "headers": {"X-LDAP-Bind-DN": "CN=hq-reader,CN=Users," + BASE, "Authorization": READER},
-        "cookies": [], "local_storage": {}}}}).encode(), authorized=True)
+        "cookies": [], "local_storage": {}}}}).encode(), authorized=True, purpose="directory-reader")
     approval = ad_directory.preflight(source, vault, key)["approval_sha256"]
     snapshot, receipt = ad_directory.collect(source, vault, key, approval, authorized=True)
     if receipt["error_type"]:
@@ -130,7 +130,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--assess", action="store_true")
     args = parser.parse_args()
-    if os.name != "posix" or os.environ.get("HUNTERQA_OWNED_AD_TEST") != "1" or socket.gethostname() != "dc.owned.lab.test":
+    if (os.name != "posix" or os.environ.get("HUNTERQA_OWNED_AD_TEST") != "1" or socket.gethostname() != "dc.owned.lab.test"
+            or not Path("/.dockerenv").is_file() or {p.name for p in Path("/sys/class/net").iterdir()} != {"lo"}):
         raise ValueError("Run only the explicit disposable, isolated owned AD container")
     if args.assess:
         # Capture the sanitized JSON receipt for the root fixture coordinator.
