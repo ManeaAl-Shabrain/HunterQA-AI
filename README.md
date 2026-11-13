@@ -1,6 +1,10 @@
 # HunterQA
 
+[![XERJ Corpus Hub contributor](https://hub.xerj.org/contributors/ManeaAl-Shabrain/badge.svg)](https://hub.xerj.org/contributors/ManeaAl-Shabrain)
+
 A local workspace for authorized security assessments: review source code and saved evidence, run scoped checks, and prepare reports for review and retesting.
+
+HunterQA-AI is included in the [XERJ Corpus Hub](https://hub.xerj.org/corpus/maneaal-shabrain--hunterqa-ai) as a searchable reference, with attribution to the author and repository.
 
 **Python 3.11+ · Linux / WSL2 · CLI and local dashboard**
 
